@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 25, 2014 2:46:55 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.shrinfo.ibs.gen.pojo.IbsQuoteSlipHeader" table="IBS_QUOTE_SLIP_HEADER" schema="IBSUSER">
+        <composite-id name="id" class="com.shrinfo.ibs.gen.pojo.IbsQuoteSlipHeaderId">
+            <key-property name="id" type="java.lang.Long">
+                <column name="ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="quoteSlipVersion" type="java.lang.Long">
+                <column name="QUOTE_SLIP_VERSION" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="ibsStatusMaster" class="com.shrinfo.ibs.gen.pojo.IbsStatusMaster" fetch="select" lazy="false">
+            <column name="STATUS_CODE" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="ibsProductMaster" class="com.shrinfo.ibs.gen.pojo.IbsProductMaster" fetch="select" lazy="false">
+            <column name="PRODUCT_CLASS" precision="22" scale="0" />
+        </many-to-one>
+        <property name="enquiryNo" type="java.lang.Long">
+            <column name="ENQUIRY_NO" precision="22" scale="0" />
+        </property>
+        <property name="quoteSlipDate" type="java.sql.Date">
+            <column name="QUOTE_SLIP_DATE" />
+        </property>
+        <property name="subClass" type="string">
+            <column name="SUB_CLASS" length="50" />
+        </property>
+        <property name="customerId" type="java.lang.Long">
+            <column name="CUSTOMER_ID" precision="22" scale="0" />
+        </property>
+        <property name="insuredId" type="java.lang.Long">
+            <column name="INSURED_ID" precision="22" scale="0" />
+        </property>
+        <property name="insuredName" type="string">
+            <column name="INSURED_NAME" length="50" />
+        </property>
+        <property name="contractPeriodFrom" type="java.sql.Date">
+            <column name="CONTRACT_PERIOD_FROM" />
+        </property>
+        <property name="contractPeriodTo" type="java.sql.Date">
+            <column name="CONTRACT_PERIOD_TO" />
+        </property>
+        <property name="policyStartDate" type="java.sql.Date">
+            <column name="POLICY_START_DATE" />
+        </property>
+        <property name="policyExpiryDate" type="java.sql.Date">
+            <column name="POLICY_EXPIRY_DATE" />
+        </property>
+        <property name="quoteSlipEmailed" type="string">
+            <column name="QUOTE_SLIP_EMAILED" length="1" />
+        </property>
+        <property name="remarks" type="string">
+            <column name="REMARKS" length="200" />
+        </property>
+        <property name="recCreUserId" type="java.lang.Long">
+            <column name="REC_CRE_USER_ID" precision="22" scale="0" />
+        </property>
+        <property name="recCreDate" type="java.sql.Date">
+            <column name="REC_CRE_DATE" />
+        </property>
+        <property name="recUpdUserId" type="java.lang.Long">
+            <column name="REC_UPD_USER_ID" precision="22" scale="0" />
+        </property>
+        <property name="recUpdDate" type="java.sql.Date">
+            <column name="REC_UPD_DATE" />
+        </property>
+        <set name="ibsUwTransactionHeaders" table="IBS_UW_TRANSACTION_HEADER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="QUOTE_SLIP_ID" precision="22" scale="0" />
+                <column name="QUOTE_SLIP_VERSION" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsUwTransactionHeader" />
+        </set>
+        <set name="ibsUwTransactionDetails" table="IBS_UW_TRANSACTION_DETAIL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="QUOTE_SLIP_ID" precision="22" scale="0" />
+                <column name="QUOTE_SLIP_VERSION" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsUwTransactionDetail" />
+        </set>
+        <set name="ibsQuoteComparisionDetails" table="IBS_QUOTE_COMPARISION_DETAIL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="QUOTE_SLIP_ID" precision="22" scale="0" />
+                <column name="QUOTE_SLIP_VERSION" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsQuoteComparisionDetail" />
+        </set>
+        <set name="ibsQuoteSlipDetails" cascade="save-update" table="IBS_QUOTE_SLIP_DETAIL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="QUOTE_SLIP_ID" precision="22" scale="0" />
+                <column name="QUOTE_SLIP_VERSION" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsQuoteSlipDetail" />
+        </set>
+        <set name="ibsQuoteComparisionHeaders" table="IBS_QUOTE_COMPARISION_HEADER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="QUOTE_SLIP_ID" precision="22" scale="0" />
+                <column name="QUOTE_SLIP_VERSION" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsQuoteComparisionHeader" />
+        </set>
+    </class>
+</hibernate-mapping>

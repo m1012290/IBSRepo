@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+       xmlns:custom="http://www.shrinfo.com/custom"
+      >
+    <h:body>
+    	
+    	<ui:composition template="/template/common/commonLayout.xhtml">
+    	<ui:define name="content">
+    			<h:form id="form"> 
+    			<p:growl id="messages1" showDetail="true"/>
+    				<p:breadCrumb>  
+	    				<p:menuitem value="Home" url="enquiry.xhtml" /> 
+	    				<p:menuitem value="Enquiry Details" url="editenquiry.xhtml" />
+	    				<p:menuitem value="Quote Slip Details" url="quoteslip.xhtml" />
+	    				<p:menuitem value="Closing Slip Details" url="closeslip.xhtml" /> 
+    				</p:breadCrumb><br/><br/>
+    				<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" /> 
+    					<p:panel id="panelPolicy" header="Policy Details" style="margin-bottom:10px;"> 
+				       			 <h:panelGrid columns="8">  
+				       			 
+				       			 	<h:outputLabel for="insuredID" value="Insured ID" />  
+						            <p:inputText id="insuredID" value="#{policyMB.insuredDetails.id}" readonly="true" required="false" /> 
+						            
+						       		<h:outputLabel for="name" value="Insured Name" />  
+						            <p:inputText id="name" value="#{policyMB.insuredDetails.name}" readonly="true" required="false" />  
+						            
+            						<h:outputLabel for="products" value="Products" />  
+            						<p:selectOneMenu id="products"  value="#{policyMB.quoteDetailVO.productDetails.productClass}">
+                						<f:selectItem itemLabel="Select Product-" itemValue="" />  
+                						<f:selectItems value="#{quotationMB.products}" />  
+            						</p:selectOneMenu>
+                						
+            						<h:outputLabel for="companyName" value="Company Name" />  
+            						<p:inputText id="companyName" value="#{policyMB.quoteDetailVO.companyCode}"  />
+            						
+            						<h:outputLabel for="quoteSlipID" value="Quote Slip Number" />  
+						            <p:inputText id="quoteSlipID"  value="#{policyMB.quoteDetailVO.quoteSlipId}" readonly="true" required="false" /> 
+						            
+						           	<h:outputLabel for="quoteSlipVersion" value="Quote Slip Version" />  
+						            <p:inputText id="quoteSlipVersion" value="#{policyMB.quoteDetailVO.quoteSlipVersion}" readonly="true"  required="false" />  
+						            
+						            <h:outputLabel for="quoteSlipDate" value="Quote Slip Date" />  
+						            <p:inputText id="quoteSlipDate" value="#{policyMB.quoteDetailVO.quoteSlipDate}"  required="false" />  
+						    
+						            <h:outputLabel for="policyNum" value="Policy Number" />  
+						            <p:inputText id="policyNum" value="#{policyMB.policyVO.policyNo}" required="false" />  
+						            
+						             <h:outputLabel for="policyID" value="Policy ID" />  
+						            <p:inputText id="policyID" value="#{policyMB.policyVO.policyId}" readonly="true"  required="false" />   			            
+						       
+			       				</h:panelGrid>
+					   </p:panel>
+					   <p:panel id="panelPremium" header="Premium Details" style="margin-bottom:10px;"> 
+				       			 <h:panelGrid columns="2">  
+				       			 
+				       			 	<h:outputLabel for="premium" value="Premium" />  
+						            <p:inputText id="premium" value="#{policyMB.policyVO.premiumDetails.premium}"/> 
+						      			
+						       		<h:outputLabel for="discountPercentage" value="Discount Percentage" />  
+						            <p:inputText id="discountPercentage" value="#{policyMB.policyVO.premiumDetails.discountPercentage}" required="false">  
+						         		<p:ajax event="blur" update="totalPremium" listener="#{policyMB.calculatePremiumBasedOnDiscPercentage}" process="discountPercentage,premium" partialSubmit="true"/> 
+						         	</p:inputText> 
+						            
+						            <h:outputLabel for="loadingpercentage" value="Loading Percentage" />  
+            						<p:inputText id="loadingpercentage" value="#{policyMB.policyVO.premiumDetails.loadingPercentage}">
+            							<p:ajax event="blur" update="totalPremium"  listener="#{policyMB.calculatePremiumBasedOnLoadPercentage}" process="loadingpercentage,premium" partialSubmit="true" /> 
+            						</p:inputText>
+            						
+                						
+            						<h:outputLabel for="totalPremium" value="Total Premium" />  
+            						<p:inputText id="totalPremium" value="#{policyMB.policyVO.premiumDetails.totalPremium}"  />
+            						
+			       				</h:panelGrid>
+					   </p:panel>
+					   
+					
+					   
+					  
+					<h:form enctype="multipart/form-data">   
+						       			
+						   <p:panel id="panelDocUpl" header="Document Upload" style="margin-bottom:10px;"> 
+								  <h:panelGrid columns="8">  
+									
+		    					<p:messages showDetail="true"/>  
+		  
+		    						<p:fileUpload value="#{fileUploadController.file}" mode="simple"/>  
+		  
+		   								 <p:commandButton value="Submit" ajax="false"  
+		                					actionListener="#{fileUploadController.upload}"/>
+		                					
+		                			</h:panelGrid>
+							   </p:panel>  
+  
+				 </h:form>    
+				 
+				 <p:panel id="panelAudit" header="Audit Details" style="margin-bottom:10px;">
+									<h:panelGrid columns="8">
+						            
+						            <h:outputLabel for="recCreatedUsrID" value="Record Created UserID" />  
+						            <p:inputText id="recCreatedUsrID"  value="#{editCustEnqDetailsMB.recCreatedUserID}"  readonly="true" required="false" /> 
+						            
+						            <h:outputLabel for="recCreatedDate" value="Record Created Date" />  
+						            <p:inputText id="recCreatedDate"  value="#{editCustEnqDetailsMB.recCreatedDate}"  readonly="true" required="false" /> 
+						            
+						            <h:outputLabel for="recUpdUsrID" value="Record Updated UserID" />  
+						            <p:inputText id="recUpdUsrID"  value="#{editCustEnqDetailsMB.recUpdatedUserID}"  readonly="true" required="false" /> 
+						            
+						            <h:outputLabel for="recUpdDate" value="Record Updated Date" />  
+						            <p:inputText id="recUpdDate"  value="#{editCustEnqDetailsMB.recUpdatedDate}"  readonly="true" required="false" /> 
+						            
+						           
+								</h:panelGrid>
+				</p:panel>
+	
+					   
+						<p:commandButton value="Save" action="#{policyMB.save}"  update="messages,panelPolicy" icon="ui-icon-disk"  style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
+						
+					   	
+	   		</h:form>
+    		</ui:define>
+    	</ui:composition>
+    	
+    	
+    </h:body>
+
+</html>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+       xmlns:custom="http://www.shrinfo.com/custom"
+      >
+    <h:body>
+    
+    	<ui:composition template="/template/common/commonLayout.xhtml">
+    	<ui:define name="content">
+    			<h:form> 
+    				<p:breadCrumb>  
+	    				<p:menuitem value="Home" url="enquiry.xhtml" /> 
+	    				<p:menuitem value="Enquiry Details" url="editenquiry.xhtml" />
+	    				<p:menuitem value="Quote Slip Details" url="quoteslip.xhtml" />
+	    				<p:menuitem value="Closing Slip Details" url="closeslip.xhtml" /> 
+    				</p:breadCrumb><br/><br/>
+    				<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" /> 
+    					<p:panel id="panelInsured" header="Insured Details" style="margin-bottom:10px;"> 
+				       			 <h:panelGrid columns="8">  
+				       			 
+				       			 	<h:outputLabel for="salutation" value="Salutation" />  
+            						<p:selectOneMenu id="salutation" value="#{quoteSlipMB.insuredDetails.salutation}">  
+                						<f:selectItem itemLabel="---Select Salutation---" itemValue="" />  
+                						<f:selectItems value="#{editCustEnqDetailsMB.salutations}" />  
+            						</p:selectOneMenu>  
+				   
+						       		<h:outputLabel for="name" value="Name" />  
+						            <p:inputText id="name" value="#{quoteSlipMB.insuredDetails.name}" required="false" />  
+						            			              
+						            <h:outputLabel for="primaryEmailID" value="EmailID" />  
+						            <p:inputText id="primaryEmailID" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.emailId}" required="false" />  
+						            
+						            <h:outputLabel for="primMobNum" value="Mobile Number" />  
+						            <p:inputText id="primMobNum" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.mobileNo}" required="false" />  
+						            
+						            <h:outputLabel for="primLandNum" value="LandLine Number" /> 
+						       		<h:inputText id="primLandNum" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.landlineNo}" required="false" />  
+            					
+						            <h:outputLabel for="faxNum" value="Fax Number" />  
+						            <p:inputText id="faxNum" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.faxNo}" required="false" />  
+						            
+						            <h:outputLabel for="city" value="City"/>  
+						            <p:inputText id="city" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.addressVO.city}" required="false" />  
+						            
+						            <p:outputLabel for="country" value="Country" />  
+						            <p:inputText id="country"  value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.addressVO.country}" required="false" /> 
+						            
+						            <h:outputLabel for="address" value="Address" />  
+						            <p:inputText id="address" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.addressVO.address}"  required="false" />  
+						  
+						            <h:outputLabel for="poBox" value="PO Box" />  
+						            <p:inputText id="poBox" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.addressVO.poBox}" required="false" />  
+						            
+						            <h:outputLabel for="insuredID" value="Insured ID" />  
+						            <p:inputText id="insuredID" value="#{quoteSlipMB.insuredDetails.id}" readonly="true" required="false" />  
+						       
+			       				</h:panelGrid>
+					   </p:panel>
+					   <p:panel id="panelProductDetails" header="Product Details" style="margin-bottom:10px;">
+								<h:panelGrid columns="6">
+								
+								 	<h:outputLabel for="quoteSlipID" value="Quote Slip Number" />  
+						            <p:inputText id="quoteSlipID"  value="#{quoteSlipMB.quoteDetailVO.quoteSlipId}" required="false" /> 
+						            
+						            <h:outputLabel for="quoteSlipVersion" value="Quote Slip Version" />  
+						            <p:inputText id="quoteSlipVersion" value="#{quoteSlipMB.quoteDetailVO.quoteSlipVersion}"  required="false" />  
+						            
+						            <h:outputLabel for="quoteSlipDate" value="Quote Slip Date" />  
+						            <p:inputText id="quoteSlipDate" value="#{quoteSlipMB.quoteDetailVO.quoteSlipDate}"  required="false" />  
+						        
+									<h:outputLabel value="Remarks" />
+								    <p:inputTextarea rows="6" cols="50" value="#{quoteSlipMB.quoteDetailVO.remarks}"/>
+																		
+						            <h:outputLabel for="products" value="Products" />  
+            						<p:selectOneMenu id="products" value="#{quoteSlipMB.quoteDetailVO.productDetails.productClass}"  >
+            							<p:ajax listener="#{quoteSlipMB.retrieveProductUWFields}" update="panelProductDetails, panelUWDetails" />  
+                						<f:selectItem itemLabel="---Select Product---" itemValue="" />
+                						<f:selectItems value="#{quoteSlipMB.products}" />  
+            						</p:selectOneMenu>
+            						
+            						<h:outputLabel for="insurancecompanies" value="Companies" />  
+            						<p:selectManyMenu id="insurancecompanies" value="#{quoteSlipMB.selectedInsCompanies}" >
+            							<f:selectItem itemLabel="---Select Companies---" itemValue="" />
+            							<f:selectItems value="#{quoteSlipMB.insCompanies}"/>
+            						</p:selectManyMenu>
+						          </h:panelGrid>
+						 </p:panel>
+						 <p:panel id="panelUWDetails" header="Underwriting Details" style="margin-bottom:10px;">
+						 	<custom:uwdetails value="#{quoteSlipMB.quoteDetailVO.productDetails}"/>
+						 </p:panel>
+						            
+						            <p:panel id="panelAudit" header="Audit Details" style="margin-bottom:10px;">
+									<h:panelGrid columns="8">
+						            
+						            <h:outputLabel for="recCreatedUsrID" value="Record Created UserID" />  
+						            <p:inputText id="recCreatedUsrID"  value="#{editCustEnqDetailsMB.recCreatedUserID}"  readonly="true" required="false" /> 
+						            
+						            <h:outputLabel for="recCreatedDate" value="Record Created Date" />  
+						            <p:inputText id="recCreatedDate"  value="#{editCustEnqDetailsMB.recCreatedDate}"  readonly="true" required="false" /> 
+						            
+						            <h:outputLabel for="recUpdUsrID" value="Record Updated UserID" />  
+						            <p:inputText id="recUpdUsrID"  value="#{editCustEnqDetailsMB.recUpdatedUserID}"  readonly="true" required="false" /> 
+						            
+						            <h:outputLabel for="recUpdDate" value="Record Updated Date" />  
+						            <p:inputText id="recUpdDate"  value="#{editCustEnqDetailsMB.recUpdatedDate}"  readonly="true" required="false" /> 
+						            
+						           
+								</h:panelGrid>
+								</p:panel>
+						
+						<p:commandButton value="Save" action="#{quoteSlipMB.save}"  update="messages, panelProductDetails, panelInsured" icon="ui-icon-disk"  style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
+						<p:commandButton value="Next" action="#{quotationMB.loadQuoteSlipDetails}"  style="float:right:20px;" />
+						
+					   	
+	   		</h:form>
+    		</ui:define>
+    	</ui:composition>
+    	
+    </h:body>
+
+</html>

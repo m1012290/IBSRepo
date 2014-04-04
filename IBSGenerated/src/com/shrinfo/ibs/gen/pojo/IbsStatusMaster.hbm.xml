@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 25, 2014 2:46:55 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.shrinfo.ibs.gen.pojo.IbsStatusMaster" table="IBS_STATUS_MASTER" schema="IBSUSER">
+        <id name="code" type="java.lang.Long">
+            <column name="CODE" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="25" />
+        </property>
+        <set name="ibsTasks" table="IBS_TASK" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STATUS_CODE" precision="2" scale="0" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsTask" />
+        </set>
+        <set name="ibsUwTransactionHeaders" table="IBS_UW_TRANSACTION_HEADER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STATUS_CODE" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsUwTransactionHeader" />
+        </set>
+        <set name="ibsUwTransactionDetails" table="IBS_UW_TRANSACTION_DETAIL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STATUS_CODE" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsUwTransactionDetail" />
+        </set>
+        <set name="ibsQuoteSlipDetails" table="IBS_QUOTE_SLIP_DETAIL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STATUS_CODE" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsQuoteSlipDetail" />
+        </set>
+        <set name="ibsQuoteSlipHeaders" table="IBS_QUOTE_SLIP_HEADER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STATUS_CODE" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsQuoteSlipHeader" />
+        </set>
+        <set name="ibsQuoteComparisionHeaders" table="IBS_QUOTE_COMPARISION_HEADER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STATUS_CODE" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsQuoteComparisionHeader" />
+        </set>
+        <set name="ibsQuoteComparisionDetails" table="IBS_QUOTE_COMPARISION_DETAIL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="STATUS_CODE" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsQuoteComparisionDetail" />
+        </set>
+    </class>
+</hibernate-mapping>

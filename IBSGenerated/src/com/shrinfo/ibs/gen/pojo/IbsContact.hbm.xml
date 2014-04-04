@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 25, 2014 2:46:55 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.shrinfo.ibs.gen.pojo.IbsContact" table="IBS_CONTACT" schema="IBSUSER">
+        <id name="id" type="java.lang.Long">
+            <column name="ID" precision="22" scale="0" />
+            <generator class="sequence">
+				<param name="sequence">IBS_CONTACT_SEQ</param>
+			</generator>
+        </id>
+        <property name="firstName" type="string">
+            <column name="FIRST_NAME" length="50" />
+        </property>
+        <property name="middleName" type="string">
+            <column name="MIDDLE_NAME" length="50" />
+        </property>
+        <property name="lastName" type="string">
+            <column name="LAST_NAME" length="50" />
+        </property>
+        <property name="salutation" type="string">
+            <column name="SALUTATION" length="4" />
+        </property>
+        <property name="title" type="string">
+            <column name="TITLE" length="100" />
+        </property>
+        <property name="primaryEmailId" type="string">
+            <column name="PRIMARY_EMAIL_ID" length="50" />
+        </property>
+        <property name="primaryMobileNo" type="string">
+            <column name="PRIMARY_MOBILE_NO" length="20" />
+        </property>
+        <property name="primaryLandlineNo" type="string">
+            <column name="PRIMARY_LANDLINE_NO" length="25" />
+        </property>
+        <property name="faxno" type="string">
+            <column name="FAXNO" length="25" />
+        </property>
+        <property name="city" type="string">
+            <column name="CITY" length="30" />
+        </property>
+        <property name="country" type="string">
+            <column name="COUNTRY" length="30" />
+        </property>
+        <property name="address" type="string">
+            <column name="ADDRESS" length="100" />
+        </property>
+        <property name="pobox" type="string">
+            <column name="POBOX" length="10" />
+        </property>
+        <property name="locationLattitude" type="java.lang.Integer">
+            <column name="LOCATION_LATTITUDE" precision="5" scale="0" />
+        </property>
+        <property name="locationLongitude" type="java.lang.Integer">
+            <column name="LOCATION_LONGITUDE" precision="5" scale="0" />
+        </property>
+        <property name="alternateEmailId1" type="string">
+            <column name="ALTERNATE_EMAIL_ID_1" length="50" />
+        </property>
+        <property name="alternateMobileNo1" type="string">
+            <column name="ALTERNATE_MOBILE_NO_1" length="20" />
+        </property>
+        <property name="alternateLandlineNo1" type="string">
+            <column name="ALTERNATE_LANDLINE_NO_1" length="25" />
+        </property>
+        <property name="alternateEmailId2" type="string">
+            <column name="ALTERNATE_EMAIL_ID_2" length="50" />
+        </property>
+        <property name="alternateMobileNo2" type="string">
+            <column name="ALTERNATE_MOBILE_NO_2" length="20" />
+        </property>
+        <property name="alternateLandlineNo2" type="string">
+            <column name="ALTERNATE_LANDLINE_NO_2" length="25" />
+        </property>
+        <property name="recordType" type="java.lang.Byte">
+            <column name="RECORD_TYPE" precision="2" scale="0" />
+        </property>
+        <property name="isStatusActive" type="string">
+            <column name="IS_STATUS_ACTIVE" length="1" />
+        </property>
+        <property name="recCreUserId" type="java.lang.Long">
+            <column name="REC_CRE_USER_ID" precision="22" scale="0" />
+        </property>
+        <property name="recCreDate" type="java.sql.Date">
+            <column name="REC_CRE_DATE" />
+        </property>
+        <property name="recUpdUserId" type="java.lang.Long">
+            <column name="REC_UPD_USER_ID" precision="22" scale="0" />
+        </property>
+        <property name="recUpdDate" type="java.sql.Date">
+            <column name="REC_UPD_DATE" />
+        </property>
+        <set name="ibsCustomerEnquiries" cascade="save-update" table="IBS_CUSTOMER_ENQUIRY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="RCVD_FROM_CONTACT_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsCustomerEnquiry" />
+        </set>
+        <set name="ibsInsuranceCompanies" cascade="save-update" table="IBS_INSURANCE_COMPANY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTACT_ID" precision="25" scale="0" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsInsuranceCompany" />
+        </set>
+        <set name="ibsUsers" table="IBS_USER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="USER_CONTACT_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsUser" />
+        </set>
+        <set name="ibsInsuredMasters" cascade="save-update" table="IBS_INSURED_MASTER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTACT_ID" precision="25" scale="0" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsInsuredMaster" />
+        </set>
+        <set name="ibsInsuranceCompanyContacts" cascade="save-update" table="IBS_INSURANCE_COMPANY_CONTACT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTACT_ID" precision="25" scale="0" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsInsuranceCompanyContact" />
+        </set>
+        <set name="ibsCompanies" cascade="save-update"  table="IBS_COMPANY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTACT_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsCompany" />
+        </set>
+        <set name="ibsCompanyBranches" cascade="save-update" table="IBS_COMPANY_BRANCH" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTACT_ID" precision="25" scale="0" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsCompanyBranch" />
+        </set>
+        <set name="ibsCustomers" cascade="save-update" table="IBS_CUSTOMER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="CONTACT_ID" precision="25" scale="0" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsCustomer" />
+        </set>
+    </class>
+</hibernate-mapping>

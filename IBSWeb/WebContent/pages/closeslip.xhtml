@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+       xmlns:custom="http://www.shrinfo.com/custom"
+      >
+    <h:body>
+    	
+    	<ui:composition template="/template/common/commonLayout.xhtml">
+    	<ui:define name="content">
+    			<h:form id="form"> 
+    			<p:growl id="messages1" showDetail="true"/>
+    				<p:breadCrumb>  
+	    				<p:menuitem value="Home" url="enquiry.xhtml" /> 
+	    				<p:menuitem value="Enquiry Details" url="editenquiry.xhtml" />
+	    				<p:menuitem value="Quote Slip Details" url="quoteslip.xhtml" />
+	    				<p:menuitem value="Closing Slip Details" url="closeslip.xhtml" /> 
+    				</p:breadCrumb><br/><br/>
+    				<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" /> 
+    					<p:panel id="panelQuotation" header="Insured Details" style="margin-bottom:10px;"> 
+				       			 <h:panelGrid columns="8">  
+				       			 
+				       			 
+						       		<h:outputLabel for="name" value="Name" />  
+						            <p:inputText id="name" value="#{quoteSlipMB.insuredDetails.name}" readonly="true" required="false" />  
+						            
+						            <h:outputLabel for="products" value="Products" />  
+            						<p:selectOneMenu id="products"  value="#{quotationMB.quoteDetailVO.productDetails.productClass}">
+                						<f:selectItem itemLabel="Select Product-" itemValue="" />  
+                						<f:selectItems value="#{quotationMB.products}" />  
+            						</p:selectOneMenu>
+            						
+            						
+            						<h:outputLabel for="insurancecompanies" value="Companies" />  
+            						<p:selectManyMenu id="insurancecompanies" value="#{quoteSlipMB.selectedInsCompanies}" >
+            							<f:selectItems value="#{quotationMB.insCompanies}"/>
+            						</p:selectManyMenu>
+            						
+            						
+            						<h:outputLabel for="quoteSlipID" value="Quote Slip Number" />  
+						            <p:inputText id="quoteSlipID"  value="#{quotationMB.quoteDetailVO.quoteSlipId}" readonly="true" required="false" /> 
+						            
+				                  	<h:outputLabel for="quoteSlipVersion" value="Quote Slip Version" />  
+						            <p:inputText id="quoteSlipVersion" value="#{quotationMB.quoteDetailVO.quoteSlipVersion}" readonly="true"  required="false" />  
+						            			              
+						            
+						            <h:outputLabel for="insuredID" value="Insured ID" />  
+						            <p:inputText id="insuredID" value="#{quoteSlipMB.insuredDetails.id}" readonly="true" required="false" />  
+						       
+			       				</h:panelGrid>
+					   </p:panel>
+					   <p:panel id="panelUWDetails" header="Underwriting Details" style="margin-bottom:10px;">
+						 	<custom:uwdetails value="#{quotationMB.quoteDetailVO.productDetails}"/>
+					  </p:panel>
+					  
+		<p:panel header="Enter the quotation Details" style="margin-bottom:10px;"> 
+                			<p:panelGrid columns="08">
+                    <h:outputLabel for="compName" value="CompanyName: " />
+					<p:selectOneMenu value="#{quotationMB.quoteDetailVO.companyCode}">
+                            <f:selectItem itemLabel="---Select Company Name---" itemValue="" />
+            				<f:selectItems value="#{quotationMB.insCompanies}"/>
+                   `</p:selectOneMenu>                     
+                   <h:outputLabel for="quoteNum" value="Quotation Number: " />
+                    <p:inputText value="#{quotationMB.quoteDetailVO.quoteNo}"/>
+                    <h:outputLabel for="quotedPremium" value="Quoted Premium:" />
+                    <p:inputText  value="#{quotationMB.quoteDetailVO.quoteSlipPrmDetails.premium}"/>
+                    <h:outputLabel for="sumInsured" value="Sum Insured:" />
+                    <p:inputText value="#{quotationMB.quoteDetailVO.sumInsured}"/>
+                    <h:outputLabel for="policyTerm" value="Policy Term:" />
+                    <p:inputText  value="#{quotationMB.quoteDetailVO.policyTerm}"/>
+                    <h:outputLabel for="coverDesc" value="Cover Description:" />
+                    <p:inputText  value="#{quotationMB.quoteDetailVO.quoteSlipPrmDetails.coverDescription}"/>
+                    <h:outputLabel for="recSummary" value="Recommendation Summary:" />
+                    <p:inputText  value="#{quotationMB.quoteDetailVO.recommendationSummary}"/>
+                    
+                    <f:facet name="footer">
+                        <h:commandButton value="Add Item" action="#{quotationMB.addAction()}" update="quotationList"/>
+                    </f:facet>
+                </p:panelGrid>
+                <p:spacer height="30px;"/>
+		</p:panel>
+        <p:panel id="quotationList" header="Quotation List" style="margin-bottom:10px;">
+                <p:dataTable value="#{quotationMB.quoteDetailList}" var="o"  widgetVar="50" style="width: 60px;" editable="true">
+                    <p:ajax event="rowEdit" listener="#{quotationMB.onEdit}" update=":form:messages1" />  
+                    <p:ajax event="rowEditCancel" listener="#{quotationMB.onCancel}" update=":form:messages1" /> 
+                    
+                    <p:column>
+                        <f:facet name="header">  
+                            <h:outputText value="" />  
+                        </f:facet>
+                        <p:cellEditor>  
+                            <f:facet name="output">  
+                                <h:selectBooleanCheckbox value="#{o.isQuoteRecommended}" />  
+                            </f:facet>
+                            <f:facet name="input">  
+                                <p:selectBooleanCheckbox value="#{o.isQuoteRecommended}" style="width:100%" />  
+                            </f:facet>  
+                        </p:cellEditor> 
+                    </p:column>
+                    
+                    <p:column>
+                        <f:facet name="header">  
+                            <h:outputText value="Company Name" />  
+                        </f:facet>
+                        <p:cellEditor>  
+                            <f:facet name="output">  
+                                <h:outputText value="#{o.companyCode}" />  
+                            </f:facet>  
+                            <f:facet name="input">  
+                                <p:inputText value="#{o.companyCode}" style="width:100%"/>  
+                            </f:facet>  
+                        </p:cellEditor> 
+                    </p:column>
+ 
+                    <p:column>
+                        <f:facet name="header">  
+                            <h:outputText value="Quote Number" />  
+                        </f:facet>
+                        <p:cellEditor>  
+                            <f:facet name="output">  
+                                <h:outputText value="#{o.quoteNo}" />  
+                            </f:facet>  
+                            <f:facet name="input">  
+                                <p:inputText value="#{o.quoteNo}" style="width:100%"/>  
+                            </f:facet>  
+                        </p:cellEditor>
+                    </p:column>
+ 
+                    <p:column>
+                        <f:facet name="header">  
+                            <h:outputText value="Quoted Premium" />  
+                        </f:facet>
+                        <p:cellEditor>  
+                            <f:facet name="output">  
+                                <h:outputText value="#{o.quoteSlipPrmDetails.premium}" />  
+                            </f:facet>  
+                            <f:facet name="input">  
+                                <p:inputText value="#{o.quoteSlipPrmDetails.premium}" style="width:100%"/>  
+                            </f:facet>  
+                        </p:cellEditor>
+                    </p:column>  
+                    
+                    <p:column>
+                        <f:facet name="header">  
+                            <h:outputText value="Sum Insured" />  
+                        </f:facet>
+                        <p:cellEditor>  
+                            <f:facet name="output">  
+                                <h:outputText value="#{o.sumInsured}" />  
+                            </f:facet>  
+                            <f:facet name="input">  
+                                <p:inputText value="#{o.sumInsured}" style="width:100%"/>  
+                            </f:facet>  
+                        </p:cellEditor>
+                    </p:column> 
+                    
+                    <p:column>
+                        <f:facet name="header">  
+                            <h:outputText value="Policy Term" />  
+                        </f:facet>
+                        <p:cellEditor>  
+                            <f:facet name="output">  
+                                <h:outputText value="#{o.policyTerm}" />  
+                            </f:facet>  
+                            <f:facet name="input">  
+                                <p:inputText value="#{o.policyTerm}" style="width:100%"/>  
+                            </f:facet>  
+                        </p:cellEditor>
+                    </p:column> 
+                    
+                    <p:column>
+                        <f:facet name="header">  
+                            <h:outputText value="Cover Description" />  
+                        </f:facet>
+                        <p:cellEditor>  
+                            <f:facet name="output">  
+                                <h:outputText value="#{o.quoteSlipPrmDetails.coverDescription}" />  
+                            </f:facet>  
+                            <f:facet name="input">  
+                                <p:inputText value="#{o.quoteSlipPrmDetails.coverDescription}" style="width:100%"/>  
+                            </f:facet>  
+                        </p:cellEditor>
+                    </p:column> 
+                    
+                    <p:column>
+                        <f:facet name="header">  
+                            <h:outputText value="Recommendation Summary" />  
+                        </f:facet>
+                        <p:cellEditor>  
+                            <f:facet name="output">  
+                                <h:outputText value="#{o.recommendationSummary}" />  
+                            </f:facet>  
+                            <f:facet name="input">  
+                                <p:inputText value="#{o.recommendationSummary}" style="width:100%"/>  
+                            </f:facet>  
+                        </p:cellEditor>
+                    </p:column>              
+                    <p:column headerText="Options" style="width:50px">  
+                        <p:rowEditor />  
+                    </p:column> 
+                </p:dataTable>
+            </p:panel>
+					   
+						<p:commandButton value="Save" action="#{quotationMB.save}"  update="messages" icon="ui-icon-disk"  style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
+						<p:commandButton value="Next" action="#{policyMB.loadQuotationDetails}"  style="float:right:20px;" />
+						
+					   	
+	   		</h:form>
+    		</ui:define>
+    	</ui:composition>
+    	
+    	
+    </h:body>
+
+</html>

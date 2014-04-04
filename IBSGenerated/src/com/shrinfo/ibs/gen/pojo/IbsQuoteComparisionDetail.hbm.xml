@@ -1,0 +1,105 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 25, 2014 2:46:55 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.shrinfo.ibs.gen.pojo.IbsQuoteComparisionDetail" table="IBS_QUOTE_COMPARISION_DETAIL" schema="IBSUSER">
+        <id name="id" type="java.lang.Long">
+            <column name="ID" precision="22" scale="0" />
+            <generator class="sequence" >
+            <param name="sequence">IBS_QUOTE_COMPRISN_DETAIL_SEQ</param>
+            </generator>
+        </id>
+        <many-to-one name="ibsProductUwFields" class="com.shrinfo.ibs.gen.pojo.IbsProductUwFields" fetch="select" lazy="false">
+            <column name="PRODUCT_UW_FIELD_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="ibsStatusMaster" class="com.shrinfo.ibs.gen.pojo.IbsStatusMaster" fetch="select" lazy="false">
+            <column name="STATUS_CODE" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="ibsQuoteComparisionHeader" class="com.shrinfo.ibs.gen.pojo.IbsQuoteComparisionHeader" fetch="select" lazy="false">
+            <column name="QUOTE_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="ibsQuoteSlipHeader" class="com.shrinfo.ibs.gen.pojo.IbsQuoteSlipHeader" fetch="select" lazy="false">
+            <column name="QUOTE_SLIP_ID" precision="22" scale="0" />
+            <column name="QUOTE_SLIP_VERSION" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="ibsProductMaster" class="com.shrinfo.ibs.gen.pojo.IbsProductMaster" fetch="select" lazy="false">
+            <column name="PRODUCT_CLASS" precision="22" scale="0" />
+        </many-to-one>
+        <property name="enquiryNo" type="java.lang.Long">
+            <column name="ENQUIRY_NO" precision="22" scale="0" />
+        </property>
+        <property name="enquiryType" type="string">
+            <column name="ENQUIRY_TYPE" length="15" />
+        </property>
+        <property name="quotedCompanyCode" type="string">
+            <column name="QUOTED_COMPANY_CODE" length="10" />
+        </property>
+        <property name="policyStartDate" type="java.sql.Date">
+            <column name="POLICY_START_DATE" />
+        </property>
+        <property name="policyExpiryDate" type="java.sql.Date">
+            <column name="POLICY_EXPIRY_DATE" />
+        </property>
+        <property name="productUwFieldAnswer" type="string">
+            <column name="PRODUCT_UW_FIELD_ANSWER" length="100" />
+        </property>
+        <property name="quoteNo" type="string">
+            <column name="QUOTE_NO" length="50" />
+        </property>
+        <property name="quotedPremium" type="big_decimal">
+            <column name="QUOTED_PREMIUM" precision="15" scale="3" />
+        </property>
+        <property name="discountPercentage" type="java.lang.Long">
+            <column name="DISCOUNT_PERCENTAGE" precision="22" scale="0" />
+        </property>
+        <property name="loadingPercentage" type="java.lang.Long">
+            <column name="LOADING_PERCENTAGE" precision="22" scale="0" />
+        </property>
+        <property name="totalPremium" type="big_decimal">
+            <column name="TOTAL_PREMIUM" precision="15" scale="3" />
+        </property>
+        <property name="commissionOnPrm" type="big_decimal">
+            <column name="COMMISSION_ON_PRM" precision="15" scale="3" />
+        </property>
+        <property name="policyNo" type="string">
+            <column name="POLICY_NO" length="50" />
+        </property>
+        <property name="sumInsured" type="java.lang.Long">
+            <column name="SUM_INSURED" precision="22" scale="0" />
+        </property>
+        <property name="policyTerm" type="big_decimal">
+            <column name="POLICY_TERM" precision="20" scale="3" />
+        </property>
+        <property name="coverDescription" type="string">
+            <column name="COVER_DESCRIPTION" length="1000" />
+        </property>
+        <property name="quoteDate" type="java.sql.Date">
+            <column name="QUOTE_DATE" />
+        </property>
+        <property name="quoteApprovedBy" type="string">
+            <column name="QUOTE_APPROVED_BY" length="10" />
+        </property>
+        <property name="quoteRecommended" type="string">
+            <column name="QUOTE_RECOMMENDED" length="1" />
+        </property>
+        <property name="closingSlipEmailed" type="string">
+            <column name="CLOSING_SLIP_EMAILED" length="1" />
+        </property>
+        <property name="quoteConvertedToPol" type="string">
+            <column name="QUOTE_CONVERTED_TO_POL" length="1" />
+        </property>
+        <property name="recCreUserId" type="java.lang.Long">
+            <column name="REC_CRE_USER_ID" precision="22" scale="0" />
+        </property>
+        <property name="recCreDate" type="java.sql.Date">
+            <column name="REC_CRE_DATE" />
+        </property>
+        <property name="recUpdUserId" type="java.lang.Long">
+            <column name="REC_UPD_USER_ID" precision="22" scale="0" />
+        </property>
+        <property name="recUpdDate" type="java.sql.Date">
+            <column name="REC_UPD_DATE" />
+        </property>
+    </class>
+</hibernate-mapping>

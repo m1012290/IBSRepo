@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<bean id="hibernateProperties"
+		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="properties">
+			<props>
+				<!-- <prop> key="hibernate.transaction.factory_class"> org.hibernate.transaction.JTATransactionFactory 
+					</prop> <prop key="hibernate.transaction.manager_lookup_class"> org.hibernate.transaction.WeblogicTransactionManagerLookup 
+					</prop> <prop key="jta.UserTransaction"> java:comp/UserTransaction </prop> -->
+				<prop key="hibernate.connection.isolation">1</prop>
+				<!-- <prop key="hibernate.query.factory_class"> org.hibernate.hql.classic.ClassicQueryTranslatorFactory 
+					org.hibernate.hql.ast.ASTQueryTranslatorFactory </prop> -->
+				<prop key="hibernate.dialect">
+					org.hibernate.dialect.Oracle9Dialect
+				</prop>
+				<!-- For MySQL database usage -->
+				<!-- <prop key="hibernate.dialect"> org.hibernate.dialect.MySQL5Dialect 
+					</prop> -->
+				<!-- <prop key="hibernate.query.substitutions"> true 'Y', false 'N' </prop> -->
+				<prop key="hibernate.show_sql">true</prop>
+				<!-- <prop key="hibernate.c3p0.minPoolSize">5</prop> <prop key="hibernate.c3p0.maxPoolSize">20</prop> 
+					<prop key="hibernate.c3p0.timeout">600</prop> <prop key="hibernate.c3p0.max_statement">50</prop> 
+					<prop key="hibernate.c3p0.testConnectionOnCheckout"> false </prop> -->
+				<prop key="hibernate.current_session_context_class">thread</prop>
+				<prop key="hibernate.use_sql_comments">true</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="ibsDS" />
+		</property>
+		<!-- <property name="packagesToScan" value="com.shrinfo.ibs.gen.pojo"/> -->
+		<property name="hibernateProperties" ref="hibernateProperties" />
+		<property name="mappingResources">
+			<list>
+				<value>com/shrinfo/ibs/gen/pojo/IbsQuoteSlipHeader.hbm.xml</value>
+				<value>com/shrinfo/ibs/gen/pojo/IbsTask.hbm.xml</value>
+				<value>com/shrinfo/ibs/gen/pojo/IbsQuoteSlipDetail.hbm.xml</value>
+				<value>com/shrinfo/ibs/gen/pojo/IbsRoles.hbm.xml</value>
+				<value>com/shrinfo/ibs/gen/pojo/IbsCustomer.hbm.xml</value>
+				<value>com/shrinfo/ibs/gen/pojo/IbsProductMaster.hbm.xml</value>
+				<value>com/shrinfo/ibs/gen/pojo/IbsVInsuredSearch.hbm.xml</value>
+				<value>com/shrinfo/ibs/gen/pojo/IbsDocumentTable.hbm.xml</value>
+				<value>com/shrinfo/ibs/gen/pojo/IbsCompanyBranch.hbm.xml</value>
+				<value>com/shrinfo/ibs/gen/pojo/IbsQuoteComparisionDetail.hbm.xml
+				</value>
+				<value>com/shrinfo/ibs/gen/pojo/IbsStatusMaster.hbm.xml</value>
+				<value>com/shrinfo/ibs/gen/pojo/IbsInsuranceCompProdLink.hbm.xml
+				</value>
+				<value>com/shrinfo/ibs/gen/pojo/IbsUser.hbm.xml</value>
+				<value>com/shrinfo/ibs/gen/pojo/IbsUserRoleLink.hbm.xml</value>
+				<value>com/shrinfo/ibs/gen/pojo/IbsMasLookup.hbm.xml</value>
+				<value>com/shrinfo/ibs/gen/pojo/IbsCustomerEnquiry.hbm.xml</value>
+				<value>com/shrinfo/ibs/gen/pojo/IbsUserProductLink.hbm.xml</value>
+				<value>com/shrinfo/ibs/gen/pojo/IbsRolesProductPrivileges.hbm.xml
+				</value>
+				<value>com/shrinfo/ibs/gen/pojo/IbsContact.hbm.xml</value>
+				<value>com/shrinfo/ibs/gen/pojo/IbsCompany.hbm.xml</value>
+				<value>com/shrinfo/ibs/gen/pojo/IbsRecordTypes.hbm.xml</value>
+				<value>com/shrinfo/ibs/gen/pojo/IbsInsuranceCompanyContact.hbm.xml
+				</value>
+				<value>com/shrinfo/ibs/gen/pojo/IbsInsuredMaster.hbm.xml</value>
+				<value>com/shrinfo/ibs/gen/pojo/IbsProductUwFields.hbm.xml</value>
+				<value>com/shrinfo/ibs/gen/pojo/IbsInsuranceCompany.hbm.xml</value>
+				<value>com/shrinfo/ibs/gen/pojo/IbsQuoteComparisionHeader.hbm.xml
+				</value>
+				<value>com/shrinfo/ibs/gen/pojo/IbsUwTransactionHeader.hbm.xml
+				</value>
+				<value>com/shrinfo/ibs/gen/pojo/IbsUwTransactionDetail.hbm.xml
+				</value>
+			</list>
+		</property>
+
+	</bean>
+
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location">
+			<value>config/appconfig.properties</value>
+		</property>
+	</bean>
+
+	<bean id="ibsDS"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${IBSDataSource_DSCLASSNAME}" />
+		<property name="url" value="${IBSDataSource_URL}" />
+		<property name="username" value="${IBSDataSource_USER}" />
+		<property name="password" value="${IBSDataSource_PWD}" />
+	</bean>
+
+	<bean id="hibernateTransactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+	<!-- <bean id="jndiObject" abstract="true" class="org.springframework.jndi.JndiObjectFactoryBean"> 
+		<property name="jndiName"> <value>java:comp/env/IBSDataSource</value> </property> 
+		</bean> -->
+	<!-- Sample data source configuration -->
+	<!-- <bean id="ibsDS" class="org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy"> 
+		<constructor-arg ref="ibsDataSource"/> </bean> <bean id="ibsDataSource" parent="jndiObject"> 
+		<property name="jndiName" value="IBSDataSource" /> </bean> -->
+
+	<bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate"
+		scope="prototype">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+
+	<!-- Configuration for the transaction manager -->
+	<bean id="baseProxyBean"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+		abstract="true">
+		<property name="transactionManager" ref="hibernateTransactionManager" />
+		<property name="transactionAttributes">
+			<props>
+				<prop key="*">
+					PROPAGATION_REQUIRED,-com.shrinfo.ibs.cmn.exception.BusinessException,-com.shrinfo.ibs.cmn.exception.SystemException
+				</prop>
+			</props>
+		</property>
+		<property name="proxyTargetClass" value="true" />
+	</bean>
+
+	<!-- Test entries for transaction management on services and dao -->
+	<!-- <bean id="saveClaimsHistoryService" parent="baseProxyBean"> <property 
+		name="target" ref="saveClaimsHistoryServiceBean" /> </bean> <bean id="saveClaimsHistoryServiceBean" 
+		class="com.rsaame.pas.quote.svc.SaveClaimsHistSvc"> <property name="claimsHistoryDAO" 
+		ref="saveClaimsHistDAO" /> </bean> <bean id="saveClaimsHistDAO" class="com.rsaame.pas.quote.dao.SaveClaimsHistoryDAO"> 
+		<property name="hibernateTemplate" ref="hibernateTemplate" /> </bean> -->
+	<!-- <bean id="masterDataLookupSvc" parent="baseProxyBean"> <property name="target" 
+		ref="masterDataLookupSvcBean" /> </bean> <bean id="masterDataLookupSvcBean" 
+		class="com.shrinfo.ibs.lookup.svc.MasterDataLookupServiceImpl"> <property 
+		name="masterDataLookupDAO" ref="masterDataLookupSvcDAOBean" /> </bean> <bean 
+		id="masterDataLookupSvcDAOBean" class="com.shrinfo.ibs.lookup.dao.MasterDataLookupDAOImpl"> 
+		<property name="hibernateTemplate" ref="hibernateTemplate" /> </bean> -->
+
+	<bean id="customerInsuredSearchSvc" parent="baseProxyBean">
+		<property name="target" ref="customerInsuredSearchSvcBean" />
+	</bean>
+	<bean id="customerInsuredSearchSvcBean" class="com.shrinfo.ibs.search.svc.SearchServiceImpl">
+		<property name="searchDao" ref="customerSearchSvcDAOBean" />
+	</bean>
+	<bean id="customerSearchSvcDAOBean" class="com.shrinfo.ibs.search.dao.SearchDaoImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+
+	<bean id="customerEnquirySvc" parent="baseProxyBean">
+		<property name="target" ref="customerEnquirySvcBean" />
+	</bean>
+	<bean id="customerEnquirySvcBean"
+		class="com.shrinfo.ibs.customerenquiry.svc.CustomerEnquiryServiceImpl">
+		<property name="customerDao" ref="customerSvcDAOBean" />
+		<property name="enquiryDao" ref="enquirySvcDAOBean" />
+	</bean>
+	<bean id="customerSvcDAOBean" class="com.shrinfo.ibs.customer.dao.CustomerDaoImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+
+
+	<bean id="enquirySvc" parent="baseProxyBean">
+		<property name="target" ref="enquirySvcBean" />
+	</bean>
+	<bean id="enquirySvcBean" class="com.shrinfo.ibs.enquiry.svc.EnquiryServiceImpl">
+		<property name="enquiryDao" ref="enquirySvcDAOBean" />
+	</bean>
+	<bean id="enquirySvcDAOBean" class="com.shrinfo.ibs.enquiry.dao.EnquiryDaoImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+
+	<bean id="quoteSlipSvc" parent="baseProxyBean">
+		<property name="target" ref="quoteSlipSvcBean" />
+	</bean>
+	<bean id="quoteSlipSvcBean" class="com.shrinfo.ibs.quoteslip.svc.QuoteSlipServiceImpl">
+		<property name="quoteSlipDao" ref="quoteSlipDAOBean" />
+		<property name="insuredDao" ref="insuredDAOBean" />
+	</bean>
+	<bean id="quoteSlipDAOBean" class="com.shrinfo.ibs.quoteslip.dao.QuoteSlipDaoImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+	<bean id="insuredDAOBean" class="com.shrinfo.ibs.insured.dao.InsuredDaoImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+
+	<bean id="quotationSvc" parent="baseProxyBean">
+		<property name="target" ref="quotationSvcBean" />
+	</bean>
+	<bean id="quotationSvcBean" class="com.shrinfo.ibs.quotation.svc.QuotationServiceImpl">
+		<property name="quotationDao" ref="quotationSvcDAOBean" />
+	</bean>
+	<bean id="quotationSvcDAOBean" class="com.shrinfo.ibs.quotation.dao.QuotationDaoImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+
+	<bean id="productSvc" parent="baseProxyBean">
+		<property name="target" ref="productSvcBean" />
+	</bean>
+	<bean id="productSvcBean" class="com.shrinfo.ibs.product.svc.ProductServiceImpl">
+		<property name="productDao" ref="productSvcDAOBean" />
+	</bean>
+	<bean id="productSvcDAOBean" class="com.shrinfo.ibs.product.dao.ProductDaoImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+
+	<bean id="policySvc" parent="baseProxyBean">
+		<property name="target" ref="policySvcBean" />
+	</bean>
+	<bean id="policySvcBean" class="com.shrinfo.ibs.policy.svc.PolicyServiceImpl">
+		<property name="policyDao" ref="policySvcDAOBean" />
+	</bean>
+	<bean id="policySvcDAOBean" class="com.shrinfo.ibs.policy.dao.PolicyDaoImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+
+	<bean id="taskSvc" parent="baseProxyBean">
+		<property name="target" ref="taskSvcBean" />
+	</bean>
+	<bean id="taskSvcBean" class="com.shrinfo.ibs.task.svc.ReferralTaskServiceImpl">
+		<property name="taskDao" ref="taskSvcDAOBean" />
+	</bean>
+	<bean id="taskSvcDAOBean" class="com.shrinfo.ibs.task.dao.TaskDaoImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+
+
+
+</beans>
+
+	

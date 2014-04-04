@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 25, 2014 2:46:55 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.shrinfo.ibs.gen.pojo.IbsCompany" table="IBS_COMPANY" schema="IBSUSER">
+        <id name="code" type="string">
+            <column name="CODE" length="10" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="ibsContact" class="com.shrinfo.ibs.gen.pojo.IbsContact" fetch="select">
+            <column name="CONTACT_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="shortname" type="string">
+            <column name="SHORTNAME" length="10" />
+        </property>
+        <property name="name" type="string">
+            <column name="NAME" length="10" />
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" length="1" />
+        </property>
+        <property name="recCreUserId" type="java.lang.Long">
+            <column name="REC_CRE_USER_ID" precision="22" scale="0" />
+        </property>
+        <property name="recCreDate" type="java.sql.Date">
+            <column name="REC_CRE_DATE" />
+        </property>
+        <property name="recUpdUserId" type="java.lang.Long">
+            <column name="REC_UPD_USER_ID" precision="22" scale="0" />
+        </property>
+        <property name="recUpdDate" type="java.sql.Date">
+            <column name="REC_UPD_DATE" />
+        </property>
+        <set name="ibsCompanyBranches" table="IBS_COMPANY_BRANCH" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="COMPANY_CODE" length="10" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsCompanyBranch" />
+        </set>
+    </class>
+</hibernate-mapping>

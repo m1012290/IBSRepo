@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 25, 2014 2:46:55 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.shrinfo.ibs.gen.pojo.IbsProductUwFields" table="IBS_PRODUCT_UW_FIELDS" schema="IBSUSER">
+        <id name="id" type="java.lang.Long">
+            <column name="ID" precision="22" scale="0" />
+            <generator class="sequence" >
+            	<param name="sequence">IBS_PRODUCT_UWFIELDS_SEQ</param>
+            </generator>
+        </id>
+        <many-to-one name="ibsProductMaster" class="com.shrinfo.ibs.gen.pojo.IbsProductMaster" fetch="select">
+            <column name="PRODUCT_CLASS" precision="22" scale="0" />
+        </many-to-one>
+        <property name="srlNo" type="java.lang.Long">
+            <column name="SRL_NO" precision="22" scale="0" />
+        </property>
+        <property name="fieldName" type="string">
+            <column name="FIELD_NAME" length="30" />
+        </property>
+        <property name="fieldType" type="string">
+            <column name="FIELD_TYPE" length="30" />
+        </property>
+        <property name="isMandatory" type="string">
+            <column name="IS_MANDATORY" length="1" />
+        </property>
+        <property name="fieldLength" type="java.lang.Long">
+            <column name="FIELD_LENGTH" precision="22" scale="0" />
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" length="1" />
+        </property>
+        <property name="sourceOfData" type="string">
+            <column name="SOURCE_OF_DATA" length="25" />
+        </property>
+        <property name="recCreUserId" type="java.lang.Long">
+            <column name="REC_CRE_USER_ID" precision="22" scale="0" />
+        </property>
+        <property name="recCreDate" type="java.sql.Date">
+            <column name="REC_CRE_DATE" />
+        </property>
+        <property name="recUpdUserId" type="java.lang.Long">
+            <column name="REC_UPD_USER_ID" precision="22" scale="0" />
+        </property>
+        <property name="recUpdDate" type="java.sql.Date">
+            <column name="REC_UPD_DATE" />
+        </property>
+        <set name="ibsUwTransactionDetails" table="IBS_UW_TRANSACTION_DETAIL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PRODUCT_UW_FIELD_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsUwTransactionDetail" />
+        </set>
+        <set name="ibsQuoteComparisionDetails" table="IBS_QUOTE_COMPARISION_DETAIL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PRODUCT_UW_FIELD_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsQuoteComparisionDetail" />
+        </set>
+        <set name="ibsQuoteSlipDetails" table="IBS_QUOTE_SLIP_DETAIL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PRODUCT_UW_FIELD_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsQuoteSlipDetail" />
+        </set>
+    </class>
+</hibernate-mapping>

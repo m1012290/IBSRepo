@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 25, 2014 2:46:55 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.shrinfo.ibs.gen.pojo.IbsRecordTypes" table="IBS_RECORD_TYPES" schema="IBSUSER">
+        <composite-id name="id" class="com.shrinfo.ibs.gen.pojo.IbsRecordTypesId">
+            <key-property name="type" type="java.lang.Byte">
+                <column name="TYPE" precision="2" scale="0" />
+            </key-property>
+            <key-property name="description" type="string">
+                <column name="DESCRIPTION" length="25" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

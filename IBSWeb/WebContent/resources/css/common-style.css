@@ -1,0 +1,29 @@
+#page{
+	width: 1200px;
+	margin: 0 auto;
+	background-color:#D1FFFF;
+}
+
+#header{
+	width: 150%;
+	height:100px;
+	border: 2px solid #000;
+	margin-bottom:16px;
+	background-color:#D1FFFF;
+}
+
+#content{
+	width: 150%;
+	height:400px;
+	margin-right:8px;
+	margin-bottom:16px;
+	border: 1px solid #000;
+	background-color:#D1FFFF;
+}
+
+#footer{
+	width: 150%;
+	height:50px;
+	border: 1px solid #ADD6FF;
+	background-color:#D1FFFF;	
+}

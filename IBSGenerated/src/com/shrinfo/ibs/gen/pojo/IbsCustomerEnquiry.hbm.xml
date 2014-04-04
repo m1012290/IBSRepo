@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 25, 2014 2:46:55 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.shrinfo.ibs.gen.pojo.IbsCustomerEnquiry" table="IBS_CUSTOMER_ENQUIRY" schema="IBSUSER">
+        <id name="enquiryNo" type="java.lang.Long">
+            <column name="ENQUIRY_NO" precision="22" scale="0" />
+            <generator class="sequence" >
+                <param name="sequence">IBS_ENQUIRY_SEQ</param>
+                </generator>
+        </id>
+        <many-to-one name="ibsCustomer" class="com.shrinfo.ibs.gen.pojo.IbsCustomer" fetch="select" lazy="false">
+            <column name="CUSTOMER_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="ibsProductMaster" class="com.shrinfo.ibs.gen.pojo.IbsProductMaster" fetch="select" lazy="false">
+            <column name="PRODUCT_CLASS" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="ibsContact" class="com.shrinfo.ibs.gen.pojo.IbsContact" fetch="select" lazy="false">
+            <column name="RCVD_FROM_CONTACT_ID" precision="22" scale="0" />
+        </many-to-one>
+        <property name="type" type="string">
+            <column name="TYPE" length="15" />
+        </property>
+        <property name="receivedDate" type="java.sql.Date">
+            <column name="RECEIVED_DATE" />
+        </property>
+        <property name="enquiryDescription" type="string">
+            <column name="ENQUIRY_DESCRIPTION" length="500" />
+        </property>
+        <property name="enquirySubjectmatterExpert" type="string">
+            <column name="ENQUIRY_SUBJECTMATTER_EXPERT" length="50" />
+        </property>
+        <property name="recCreUserId" type="java.lang.Long">
+            <column name="REC_CRE_USER_ID" precision="22" scale="0" />
+        </property>
+        <property name="recCreDate" type="java.sql.Date">
+            <column name="REC_CRE_DATE" />
+        </property>
+        <property name="recUpdUserId" type="java.lang.Long">
+            <column name="REC_UPD_USER_ID" precision="22" scale="0" />
+        </property>
+        <property name="recUpdDate" type="java.sql.Date">
+            <column name="REC_UPD_DATE" />
+        </property>
+        <property name="isActive" type="string">
+            <column name="IS_ACTIVE" length="1" />
+        </property>
+    </class>
+</hibernate-mapping>

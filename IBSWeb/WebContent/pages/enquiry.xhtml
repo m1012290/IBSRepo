@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      >
+    <h:body>
+    	
+    	<ui:composition template="/template/common/commonLayout.xhtml">
+    	
+    		<ui:define name="content">
+    			<h2>Enquiry Search</h2>
+    			
+    			<h:form>  
+    			 
+				    <p:panel id="panel" header="Search" style="margin-bottom:10px;">  
+				        <p:messages id="messages" />  
+				        <h:panelGrid columns="10">  
+				            <h:outputLabel for="customerID" value="Customer Name" />  
+				            <p:inputText id="customerID" value="#{enquirySearchMB.custName}" required="false" />  
+				  
+				            <h:outputLabel for="mobileNumberID" value="Mobile Number" />  
+				            <p:inputText id="mobileNumberID" value="#{enquirySearchMB.mobNumber}" required="false" />  
+				            
+				            <h:outputLabel for="emailID" value="EmailID" />  
+				            <p:inputText id="emailID" value="#{enquirySearchMB.emailID}" required="false" />  
+				            
+				            <p:outputLabel for="insuredID" value="Insured Name" />  
+				            <p:inputText id="insuredID"  value="#{enquirySearchMB.insuredName}" required="false" /> 
+				            
+				            <h:outputLabel for="enquiryID" value="Enquiry Number" />  
+				            <p:inputText id="enquiryID" value="#{enquirySearchMB.enquiryNumber}"  required="false" />  
+				  
+				            <h:outputLabel for="quoteSlipID" value="QuoteSlip Number" />  
+				            <p:inputText id="quoteSlipID" value="#{enquirySearchMB.quoteSlipNumber}" required="false" />  
+				            
+				            <h:outputLabel for="policyNumber" value="Policy Number" />  
+				            <p:inputText id="policyNumber" value="#{enquirySearchMB.policyNumber}" required="false" />  
+				            
+				        </h:panelGrid> 
+				    </p:panel>  
+				    
+			 		<p:commandButton value="Search" action="#{enquirySearchMB.submit}"  ajax="true"  update="panel,searchDataTableID" style="margin-right:20px;" /> 
+			 
+			 		<p:commandButton value="New Enquiry" action="#{enquirySearchMB.newEnquiry}" style="margin-right:20px;" />  <br></br><br></br>
+			 	
+			 
+			 
+			 <p:dataTable id ="searchDataTableID" var="esb" value="#{enquirySearchMB.searchItemVODataModel}" paginator="true" rows="5"  
+                 selection="#{enquirySearchMB.searchItem}" selectionMode="single">  
+                 
+                   <p:ajax event="rowSelect" listener="#{editCustEnqDetailsMB.onRowSelect}"/> 
+                    
+		        <p:column headerText="CustomerName">  
+		            <h:outputText value="#{esb.customerName}" />  
+		        </p:column>  
+		  
+		        <p:column headerText="MobileNumber">  
+		            <h:outputText value="#{esb.customerMob}" />  
+		        </p:column> 
+		        
+		        <p:column headerText="EmailID">  
+		            <h:outputText value="#{esb.customerEmail}" />  
+		        </p:column> 
+		  
+		        <p:column headerText="InsuredName">  
+		            <h:outputText value="#{esb.insuredName}" />  
+		        </p:column>  
+		  
+		        <p:column headerText="EnquiryNumber">  
+		            <h:outputText value="#{esb.enquiryNum}" />  
+		        </p:column> 
+		        
+		        <p:column headerText="QuoteSlipNumber">  
+		            <h:outputText value="#{esb.quotationNum}" />  
+		        </p:column>  
+		  
+		        <p:column headerText="PolicyNumber">  
+		            <h:outputText value="#{esb.policyNum}" />  
+		        </p:column>  
+		        
+    		</p:dataTable> 
+			 </h:form>  
+    		</ui:define>
+    				
+    	</ui:composition>
+    	
+    </h:body>
+
+</html>

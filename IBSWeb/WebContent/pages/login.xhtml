@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      >
+      <h2>Login Details</h2>
+    			
+    <h:body>
+		<h:form name="loginform">
+		<p:panel aling="center" id="panel" header="Login Details" style="margin-bottom:10px;">
+			<h:panelGrid columns="2" cellpadding="10" >
+			<h:outputLabel for="username" value="Username:"  style="height: 50px; font-size: 20px"/>
+			<p:inputText  value="#{loginBean.userName}"
+			                id="username" required="true" label="username" />
+			<h:outputLabel for="password" value="Password:" style="height: 50px; font-size: 20px"/>
+			<h:inputSecret value="#{loginBean.password}"
+			                id="password" required="true" label="password" />
+
+			<p:commandButton id="loginButton" value="Login" action="#{loginBean.submit}"  style="height: 30px; font-size: 20px"  />
+			<p:commandButton type="reset" value="Clear" style="height: 30px; font-size: 20px"/>
+
+			</h:panelGrid>
+		</p:panel>
+		</h:form>
+    
+    </h:body>
+</html>

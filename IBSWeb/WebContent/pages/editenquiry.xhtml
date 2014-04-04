@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      >
+    <h:body>
+    	
+    	<ui:composition template="/template/common/commonLayout.xhtml">
+    		<ui:define name="content">
+    			<h:form> 
+    			<p:breadCrumb>  
+	    				<p:menuitem value="Home" url="enquiry.xhtml" /> 
+	    				<p:menuitem value="Enquiry Details" url="editenquiry.xhtml" />
+	    				<p:menuitem value="Quote Slip Details" url="quoteslip.xhtml" />
+	    				<p:menuitem value="Closing Slip Details" url="closeslip.xhtml" /> 
+    				</p:breadCrumb><br/><br/>
+    				<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" /> 
+    					<p:panel id="panelCustomer" header="Customer Details" style="margin-bottom:10px;"> 
+    				  
+				       			 <h:panelGrid columns="8">  
+				       			 
+				       			 	<h:outputLabel for="salutation" value="Salutation" />  
+            						<p:selectOneMenu id="salutation" value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.salutation}">  
+                						<f:selectItem itemLabel="---Select Salutation---" itemValue="" />  
+                						<f:selectItems value="#{editCustEnqDetailsMB.salutations}" />  
+            						</p:selectOneMenu>  
+				   
+						       		<h:outputLabel for="customerID" value="Name" /> 
+						       		<h:inputText id="customerID" value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.name}" required="false" /> 
+						       		
+						       		<h:outputLabel for="firstName" value="First Name" />  
+						            <p:inputText id="firstName" value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.firstName}" required="false" />  
+						            
+						            <p:outputLabel for="middleName" value="Middle Name" />  
+						            <p:inputText id="middleName"  value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.middleName}" required="false" /> 
+						            
+						            <h:outputLabel for="lastName" value="Last Name" />  
+						            <p:inputText id="lastName" value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.lastName}"  required="false" />   
+						       		
+						       		 <h:outputLabel for="custGroup" value="Group" />  
+						            <p:inputText id="custGroup" value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.group}" required="false" />  
+						            
+						            <h:outputLabel for="custCat" value="Category" /> 
+						            <p:selectOneMenu id="custCat" value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.category}">  
+                						<f:selectItem itemLabel="----Select Category---" itemValue="" />  
+                						<f:selectItems value="#{editCustEnqDetailsMB.custCategories}" />  
+            						</p:selectOneMenu>
+            						
+            						
+            						<h:outputLabel for="custClass" value="Classification" />  
+						            <p:selectOneMenu id="custClass" value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.classification}">  
+                						<f:selectItem itemLabel="-Select Classification-" itemValue="" />  
+                						<f:selectItems value="#{editCustEnqDetailsMB.custClassifications}" />  
+            						</p:selectOneMenu>  
+            						
+            						 <h:outputLabel for="sourceOfBusiness" value="Source of Business" />  
+						            <p:inputText id="sourceOfBusiness"  value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.sourceOfBusiness}" required="false" /> 
+						            
+						            <h:outputLabel for="salesExe" value="Sales Executive" />  
+						            <p:inputText id="salesExe" value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.salesExecutive}"  required="false" />  
+						            
+    						        <h:outputLabel for="title" value="Title" />  
+						            <p:selectOneMenu id="title" value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.title}">  
+                						<f:selectItem itemLabel="------Select Title-------" itemValue="" />  
+                						<f:selectItems value="#{editCustEnqDetailsMB.titles}" />  
+            						</p:selectOneMenu>  
+            					 
+						          
+						            <h:outputLabel for="primaryEmailID" value="EmailID" />  
+						            <p:inputText id="primaryEmailID" value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.emailId}" required="false" />  
+						            
+						            <h:outputLabel for="primMobNum" value="Mobile Number" />  
+						            <p:inputText id="primMobNum" value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.mobileNo}" required="false" />  
+						            
+						            <h:outputLabel for="primLandNum" value="LandLine Number" /> 
+						       		<h:inputText id="primLandNum" value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.landlineNo}" required="false" />  
+            					
+						            <h:outputLabel for="faxNum" value="Fax Number" />  
+						            <p:inputText id="faxNum" value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.faxNo}" required="false" />  
+						            
+						            <h:outputLabel for="city" value="City"/>  
+						            <p:inputText id="city" value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.addressVO.city}" required="false" />  
+						            
+						            <p:outputLabel for="country" value="Country" />  
+						            <p:inputText id="country"  value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.addressVO.country}" required="false" /> 
+						            
+						            <h:outputLabel for="address" value="Address" />  
+						            <p:inputText id="address" value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.addressVO.address}"  required="false" />  
+						  
+						            <h:outputLabel for="poBox" value="PO Box" />  
+						            <p:inputText id="poBox" value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.addressVO.poBox}" required="false" />  
+						            
+						            <h:outputLabel for="locLatitude" value="Location Latitude" />  
+						            <p:inputText id="locLatitude" value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.addressVO.lattitude}" required="false" />  
+						            
+						            <h:outputLabel for="locLongitude" value="Location Longitude" /> 
+						       		<h:inputText id="locLongitude" value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.addressVO.longitude}" required="false" />  
+            					
+						            <h:outputLabel for="altEmailID1" value="Alternate EmailID1" />  
+						            <p:inputText id="altEmailID1" value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.alternateEmailId1}" required="false" />  
+						            
+						            <h:outputLabel for="altMobNum1" value="Alternate MobileNumber1" />  
+						            <p:inputText id="altMobNum1" value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.alternateMobileNo1}" required="false" />  
+						            
+						            <h:outputLabel for="altLandNum1" value="Alternate LandLineNumber1" />  
+						            <p:inputText id="altLandNum1"  value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.alternateLandlineNo1}" required="false" /> 
+						            
+						            <h:outputLabel for="altEmailID2" value="Alternate EmailID2" />  
+						            <p:inputText id="altEmailID2" value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.alternateEmailId2}"  required="false" />  
+						  
+						            <h:outputLabel for="altMobNum2" value="Alternate MobileNumber2" />  
+						            <p:inputText id="altMobNum2" value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.alternateMobileNo2}" required="false" />  
+						            
+						            <h:outputLabel for="altLandNum2" value="Alternate LandLineNumber2" />  
+						            <p:inputText id="altLandNum2" value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.alternateLandLineNo2}" required="false" />
+						            
+						            <h:outputLabel for="custId" value="CustomerId" /> 
+						       		<h:inputText id="custId" value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.customerId}" readonly="true" required="false"/> 
+						       		
+						       		
+						       		
+			       				</h:panelGrid>
+					   </p:panel>
+					   <p:panel id="panelEnquiry" header="Enquiry Details" style="margin-bottom:10px;">
+						
+								<h:panelGrid columns="4">
+								
+									<h:outputLabel for="enqNum"  value="Enquiry Number" />  
+						            <p:inputText id="enqNum" readonly="true" value="#{editCustEnqDetailsMB.enquiryVO.enquiryNo}" required="false" />  
+						            
+						            <h:outputLabel for="enqType" value="Type" />  
+            						<p:selectOneMenu id="enqType" value="#{editCustEnqDetailsMB.enquiryVO.type}">  
+                						<f:selectItem itemLabel="---Select Enquiry Type---" itemValue="" />  
+                						<f:selectItems value="#{editCustEnqDetailsMB.enquiryTypes}" />  
+            						</p:selectOneMenu> 
+            						
+						            <p:outputLabel for="quotNum"  value="Quotation Number" />  
+						            <p:inputText id="quotNum"  value="#{editCustEnqDetailsMB.quoteDetailVO.quoteSlipId}" readonly="true" required="false" /> 
+						            
+						            <h:outputLabel for="polNum" value="Policy Number" />  
+						            <p:inputText id="polNum"  value="#{editCustEnqDetailsMB.policyVO.policyNo}" readonly="true" required="false" /> 
+						            
+						            <h:outputLabel value="Description" />
+								    <p:inputTextarea rows="6" cols="50" value="#{editCustEnqDetailsMB.enquiryVO.description}"/>
+						            
+						        	    
+						         
+						          </h:panelGrid>
+						 </p:panel>
+						            
+						            <p:panel id="panelAudit" header="Audit Details" style="margin-bottom:10px;">
+						
+											<h:panelGrid columns="8">
+						            
+						            <h:outputLabel for="recCreatedUsrID" value="Record Created UserID" />  
+						            <p:inputText id="recCreatedUsrID"  value="#{editCustEnqDetailsMB.recCreatedUserID}"  readonly="true" required="false" /> 
+						            
+						            <h:outputLabel for="recCreatedDate" value="Record Created Date" />  
+						            <p:inputText id="recCreatedDate"  value="#{editCustEnqDetailsMB.recCreatedDate}"  readonly="true" required="false" /> 
+						            
+						            <h:outputLabel for="recUpdUsrID" value="Record Updated UserID" />  
+						            <p:inputText id="recUpdUsrID"  value="#{editCustEnqDetailsMB.recUpdatedUserID}"  readonly="true" required="false" /> 
+						            
+						            <h:outputLabel for="recUpdDate" value="Record Updated Date" />  
+						            <p:inputText id="recUpdDate"  value="#{editCustEnqDetailsMB.recUpdatedDate}"  readonly="true" required="false" /> 
+						            
+						           
+								</h:panelGrid>
+						</p:panel>
+						
+						<p:commandButton value="Save" action="#{editCustEnqDetailsMB.save}" update="messages, panelCustomer, panelEnquiry" icon="ui-icon-disk"  style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
+						<p:commandButton value="Next" ajax="false" action="#{quoteSlipMB.retrieveInsuredQuoteDetails}"  style="float:right:20px;" />
+						
+					   	
+	   		</h:form>
+    		</ui:define>
+    	</ui:composition>
+    	
+    </h:body>
+
+</html>

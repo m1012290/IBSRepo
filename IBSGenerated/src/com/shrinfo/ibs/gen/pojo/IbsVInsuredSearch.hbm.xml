@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 25, 2014 2:46:55 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.shrinfo.ibs.gen.pojo.IbsVInsuredSearch" table="IBS_V_INSURED_SEARCH" schema="IBSUSER">
+        <composite-id name="id" class="com.shrinfo.ibs.gen.pojo.IbsVInsuredSearchId">
+            <key-property name="custId" type="java.lang.Long">
+                <column name="CUST_ID" precision="22" scale="0" />
+            </key-property>
+            <key-property name="custName" type="string">
+                <column name="CUST_NAME" length="100" />
+            </key-property>
+            <key-property name="email" type="string">
+                <column name="EMAIL" length="50" />
+            </key-property>
+            <key-property name="mobNo" type="string">
+                <column name="MOB_NO" length="20" />
+            </key-property>
+            <key-property name="insuredName" type="string">
+                <column name="INSURED_NAME" length="100" />
+            </key-property>
+            <key-property name="enquiryNo" type="java.lang.Long">
+                <column name="ENQUIRY_NO" precision="22" scale="0" />
+            </key-property>
+            <key-property name="quotationNo" type="java.lang.Long">
+                <column name="QUOTATION_NO" precision="22" scale="0" />
+            </key-property>
+            <key-property name="policyNo" type="string">
+                <column name="POLICY_NO" length="20" />
+            </key-property>
+            <key-property name="custContactId" type="big_decimal">
+                <column name="CUST_CONTACT_ID" precision="25" scale="0" />
+            </key-property>
+            <key-property name="insuredId" type="java.lang.Long">
+                <column name="INSURED_ID" precision="22" scale="0" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

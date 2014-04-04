@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
+        <property name="hibernate.connection.driver_class">oracle.jdbc.OracleDriver</property>
+        <property name="hibernate.connection.password">oracle</property>
+        <property name="hibernate.connection.url">jdbc:oracle:thin:@localhost:1521:xe</property>
+        <property name="hibernate.connection.username">IBSUser</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</property>
+        <property name="hibernate.search.autoregister_listeners">false</property>
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsQuoteSlipHeader.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsTask.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsQuoteSlipDetail.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsRoles.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsCustomer.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsProductMaster.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsVInsuredSearch.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsDocumentTable.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsCompanyBranch.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsQuoteComparisionDetail.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsUwTransactionHeader.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsStatusMaster.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsInsuranceCompProdLink.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsUser.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsUserRoleLink.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsMasLookup.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsCustomerEnquiry.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsUserProductLink.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsRolesProductPrivileges.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsContact.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsCompany.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsRecordTypes.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsInsuranceCompanyContact.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsInsuredMaster.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsProductUwFields.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsUwTransactionDetail.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsInsuranceCompany.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsQuoteComparisionHeader.hbm.xml" />
+    </session-factory>
+</hibernate-configuration>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+       xmlns:custom="http://www.shrinfo.com/custom"
+      >
+    <h:body>
+    	<ui:composition template="/template/common/commonLayout.xhtml">
+    	<ui:define name="content">
+    			<h:form id="form"> 
+    			<p:growl id="messages1" showDetail="true"/>
+    				
+    		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" /> 
+    		<p:panel header="Product Details" style="margin-bottom:10px;"> 
+                <p:panelGrid columns="08">
+                    <h:outputLabel for="productname" value="Name " />
+					<p:inputText value="#{productMB.productDetails.name}"/>
+					<h:outputLabel for="shortname" value="Short Name" />
+                    <p:inputText value="#{productMB.productDetails.shortName}"/>
+                    <h:outputLabel for="productcategory" value="Category" /> 
+			        <p:selectOneMenu id="productcategory" value="#{productMB.productDetails.category}">  
+	            		<f:selectItem itemLabel="----Select Category---" itemValue="" />  
+	            			<f:selectItems value="#{productMB.custCategories}" />
+	        		</p:selectOneMenu>
+	        		<h:outputLabel for="insurancecompanies" value="Companies" />  
+            						<p:selectManyMenu id="insurancecompanies" value="#{productMB.productDetails.applicableInsCompanies}" >
+            							<f:selectItem itemLabel="---Select Companies---" itemValue="" />
+            							<f:selectItems value="#{productMB.insCompanies}"/>
+            						</p:selectManyMenu>                                        
+                </p:panelGrid>
+                <p:spacer height="30px;"/>
+			</p:panel>
+			<p:panel header="Product Underwriting Details" style="margin-bottom:10px;">
+					<p:panelGrid columns="10">
+                    <h:outputLabel for="srlno" value="SRL No" />
+					<p:inputText value="#{productMB.productUWDetails.fieldOrder}"/>
+					<h:outputLabel for="fieldname" value="Field Name" />
+                    <p:inputText value="#{productMB.productUWDetails.fieldName}"/>
+                    <h:outputLabel for="fieldtype" value="Field Type" />
+                    <!-- <p:inputText value="#{productMB.productUWDetails.fieldType}"/> -->
+                    <p:selectOneMenu id="fieldtype" value="#{productMB.productUWDetails.fieldType}">  
+	            		<f:selectItem itemLabel="----Select Category---" itemValue="" />  
+	            		<f:selectItem itemLabel="Textbox" itemValue="textbox"/>
+	        		</p:selectOneMenu> 
+                    <h:outputLabel for="fieldtype" value="Field Length" />
+                    <p:inputText value="#{productMB.productUWDetails.fieldLength}"/>
+                    </p:panelGrid>
+                    <f:facet name="footer">
+                        <h:commandButton value="Add Item" action="#{productMB.addAction()}" update="uwdetailstable"/>
+                    </f:facet>
+			</p:panel>
+        	<p:panel id="uwdetailstable" header="Product Underwriting Details" style="margin-bottom:10px;">
+        		<p:dataTable value="#{productMB.productDetails.uwFieldsList}" var="uwField"  widgetVar="50" style="width: 60px;" editable="false">
+        			<p:column headerText="SRLNo">  
+		            	<h:outputText value="#{uwField.fieldOrder}" /> 
+		        	</p:column> 
+		        	<p:column headerText="FieldName">  
+		            	<h:outputText value="#{uwField.fieldName}" /> 
+		        	</p:column>
+		        	<p:column headerText="FieldType">  
+		            	<h:outputText value="#{uwField.fieldType}" /> 
+		        	</p:column>
+		        	<p:column headerText="FieldLength">  
+		            	<h:outputText value="#{uwField.fieldLength}" />
+		        	</p:column>
+        		</p:dataTable>
+        	</p:panel>
+			<p:commandButton value="Save" action="#{productMB.save}"  update="messages" icon="ui-icon-disk"  style="float:right:20px;" />
+	   		</h:form>
+    		</ui:define>
+    	</ui:composition>
+    	
+    	
+    </h:body>
+
+</html>

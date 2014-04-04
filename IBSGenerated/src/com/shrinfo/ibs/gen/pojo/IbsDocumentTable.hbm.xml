@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 25, 2014 2:46:55 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.shrinfo.ibs.gen.pojo.IbsDocumentTable" table="IBS_DOCUMENT_TABLE" schema="IBSUSER">
+        <id name="id" type="java.lang.Long">
+            <column name="ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="enquiryNo" type="java.lang.Long">
+            <column name="ENQUIRY_NO" precision="22" scale="0" />
+        </property>
+        <property name="enquiryType" type="string">
+            <column name="ENQUIRY_TYPE" length="20" />
+        </property>
+        <property name="docSlipId" type="java.lang.Long">
+            <column name="DOC_SLIP_ID" precision="22" scale="0" />
+        </property>
+        <property name="docSlipVersion" type="java.lang.Long">
+            <column name="DOC_SLIP_VERSION" precision="22" scale="0" />
+        </property>
+        <property name="docRecievedDesc" type="string">
+            <column name="DOC_RECIEVED_DESC" length="500" />
+        </property>
+        <property name="document" type="blob">
+            <column name="DOCUMENT" />
+        </property>
+        <property name="documentType" type="string">
+            <column name="DOCUMENT_TYPE" length="50" />
+        </property>
+        <property name="recCreUserId" type="java.lang.Long">
+            <column name="REC_CRE_USER_ID" precision="22" scale="0" />
+        </property>
+        <property name="recCreDate" type="java.sql.Date">
+            <column name="REC_CRE_DATE" />
+        </property>
+        <property name="recUpdUserId" type="java.lang.Long">
+            <column name="REC_UPD_USER_ID" precision="22" scale="0" />
+        </property>
+        <property name="recUpdDate" type="java.sql.Date">
+            <column name="REC_UPD_DATE" />
+        </property>
+    </class>
+</hibernate-mapping>

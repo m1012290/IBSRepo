@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 25, 2014 2:46:55 AM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.shrinfo.ibs.gen.pojo.IbsRolesProductPrivileges" table="IBS_ROLES_PRODUCT_PRIVILEGES" schema="IBSUSER">
+        <id name="id" type="java.lang.Long">
+            <column name="ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="ibsRoles" class="com.shrinfo.ibs.gen.pojo.IbsRoles" fetch="select">
+            <column name="ROLE_ID" precision="22" scale="0" />
+        </many-to-one>
+        <many-to-one name="ibsProductMaster" class="com.shrinfo.ibs.gen.pojo.IbsProductMaster" fetch="select">
+            <column name="PRODUCT_CLASS" precision="22" scale="0" />
+        </many-to-one>
+        <property name="roleName" type="string">
+            <column name="ROLE_NAME" length="30" />
+        </property>
+        <property name="productName" type="string">
+            <column name="PRODUCT_NAME" length="30" />
+        </property>
+        <property name="fromSiLimit" type="big_decimal">
+            <column name="FROM_SI_LIMIT" precision="13" scale="3" />
+        </property>
+        <property name="toSiLimit" type="big_decimal">
+            <column name="TO_SI_LIMIT" precision="13" scale="3" />
+        </property>
+        <property name="emailRequisition" type="string">
+            <column name="EMAIL_REQUISITION" length="1" />
+        </property>
+        <property name="generateClosingslip" type="string">
+            <column name="GENERATE_CLOSINGSLIP" length="1" />
+        </property>
+        <property name="emailClosingslip" type="string">
+            <column name="EMAIL_CLOSINGSLIP" length="1" />
+        </property>
+        <property name="generateQuoteslip" type="string">
+            <column name="GENERATE_QUOTESLIP" length="1" />
+        </property>
+        <property name="emailQuoteslip" type="string">
+            <column name="EMAIL_QUOTESLIP" length="1" />
+        </property>
+        <property name="freetext1" type="string">
+            <column name="FREETEXT1" length="100" />
+        </property>
+        <property name="freetext2" type="string">
+            <column name="FREETEXT2" length="100" />
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" length="1" />
+        </property>
+        <property name="remarks" type="string">
+            <column name="REMARKS" length="50" />
+        </property>
+        <property name="recCreUserId" type="java.lang.Long">
+            <column name="REC_CRE_USER_ID" precision="22" scale="0" />
+        </property>
+        <property name="recCreDate" type="java.sql.Date">
+            <column name="REC_CRE_DATE" />
+        </property>
+        <property name="recUpdUserId" type="java.lang.Long">
+            <column name="REC_UPD_USER_ID" precision="22" scale="0" />
+        </property>
+        <property name="recUpdDate" type="java.sql.Date">
+            <column name="REC_UPD_DATE" />
+        </property>
+    </class>
+</hibernate-mapping>
