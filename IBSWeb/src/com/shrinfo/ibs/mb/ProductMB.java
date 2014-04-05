@@ -22,7 +22,7 @@ import com.shrinfo.ibs.vo.business.ProductVO;
 
 
 /**
- * @author Uday kumar
+ * @author Sunil kumar
  *
  */
 @ManagedBean(name="productMB")
