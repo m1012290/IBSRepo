@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/IIG-RSA_EPlatform_Development/!svn/ver/10128/Release_Phase1/PAS/tags/RC10.3/AntBuild
+END
+build_with_mtruc.xml
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/IIG-RSA_EPlatform_Development/!svn/ver/10128/Release_Phase1/PAS/tags/RC10.3/AntBuild/build_with_mtruc.xml
+END
+.project
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/IIG-RSA_EPlatform_Development/!svn/ver/10128/Release_Phase1/PAS/tags/RC10.3/AntBuild/.project
+END
+build_without_mtruc.xml
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/IIG-RSA_EPlatform_Development/!svn/ver/10128/Release_Phase1/PAS/tags/RC10.3/AntBuild/build_without_mtruc.xml
+END

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="IBSFullBuild"  basedir=".">
+<property name="appserver.home" value="I:\Sunil\jboss-as-7.1.1.Final\jboss-as-7.1.1.Final"/>
+	<property name="build-root" value="."/>
+	<property name="src-root" value=".."/>
+
+	<!-- START: Set CLASSPATH variables -->
+	<path id="classpath.web">
+		<fileset dir="${src-root}/IBSWeb/WebContent/WEB-INF/lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+	<path id="classpath.appserver">
+	    <!-- Include all JARs that the application server exposes to applications -->
+	    <fileset dir="${appserver.home}">
+	      <include name="/modules/**"/>
+	    </fileset>
+	</path>
+	<path id="classpath.orm">
+		<fileset dir="${src-root}/IBSResources/lib">
+			<!-- Include the ORM JARs here. -->
+		</fileset>
+	</path>
+	
+	<path id="classpath.tp">
+		<fileset dir="${src-root}/IBSResources/TPJars">
+			<include name="*.jar"/>
+			<include name="hibernate3.jar"/>
+			<!-- Include the ORM JARs here. -->
+		</fileset>
+	</path>
+	
+	<path id="classpath.mtruc">
+		<fileset dir="${src-root}/IBSResources/IBSJars">
+			<include name="ibs*.jar"/>
+		</fileset>
+	</path>
+	
+	
+	<!-- END: Set CLASSPATH variables -->
+
+	<target name="clean">
+		<delete dir="${build-root}/dist" />
+		<delete dir="${build-root}/build" />
+	</target>
+
+	<target name="init" depends="clean">
+		<mkdir dir="${build-root}/build/classes" />
+		<mkdir dir="${build-root}/build/classes/config" />
+		<mkdir dir="${build-root}/dist" />
+		<mkdir dir="${build-root}/jars" />
+		<mkdir dir="${build-root}/temp" />
+	</target>
+
+	<!-- START: Build IBSCommon -->
+	<target name="ibscommon-compile" depends="init">
+		<mkdir dir="${build-root}/temp/ibscommon" />
+		<javac destdir="${build-root}/temp/ibscommon" debug="true" srcdir="${src-root}/IBSCommon/src">
+			<classpath path="${src-root}/IBSResources/TPJars/hibernate3.jar"/>
+			<classpath refid="classpath.appserver" />
+			<classpath refid="classpath.tp" />
+			
+		</javac>
+	</target>
+	
+	<target name="ibscommon-jar" depends="ibscommon-compile">
+		<jar basedir="${build-root}/temp/ibscommon"	jarfile="${build-root}/jars/ibscommon.jar"/>
+		<delete dir="${build-root}/temp/ibscommon"/>
+	</target>
+	<!-- END: Build IBSCommon -->
+	
+	<!-- START: Build IBSGenerated -->
+	<target name="ibsgenerated-compile" depends="init">
+		<mkdir dir="${build-root}/temp/ibsgenerated" />
+		<javac destdir="${build-root}/temp/ibsgenerated" debug="true" srcdir="${src-root}/IBSGenerated/src">
+			<classpath refid="classpath.appserver" />
+			<classpath refid="classpath.tp"/>
+		</javac>
+		<copy todir="${build-root}/temp/ibsgenerated">
+					<fileset dir="${src-root}/IBSGenerated/src">
+						<include name="**/*.xml"/>
+					</fileset>
+				</copy>
+	</target>
+	
+	<target name="ibsgenerated-jar" depends="ibsgenerated-compile">
+		<jar basedir="${build-root}/temp/ibsgenerated"	jarfile="${build-root}/jars/ibsgenerated.jar"/>
+		<delete dir="${build-root}/temp/ibsgenerated"/>
+	</target>
+	<!-- END: Build IBSGenerated -->
+	
+
+	<!-- START : Build IBSVO -->
+	<target name="ibsvo-compile" depends="ibscommon-jar,ibsgenerated-jar">
+		<mkdir dir="${build-root}/temp/ibsvo" />
+		<javac destdir="${build-root}/temp/ibsvo" debug="true" srcdir="${src-root}/IBSVO/src">
+			<classpath path="${build-root}/jars/ibsgenerated.jar"/>
+			<classpath path="${build-root}/jars/ibscommon.jar"/>
+			<classpath refid="classpath.appserver" />
+			<classpath refid="classpath.tp"/>
+		</javac>
+	</target>
+		
+	<target name="ibsvo-jar" depends="ibsvo-compile">
+		<jar basedir="${build-root}/temp/ibsvo"	jarfile="${build-root}/jars/ibsvo.jar"/>
+		<delete dir="${build-root}/temp/ibsvo"/>
+	</target>
+			
+	
+	<!-- END : Build IBSVO -->
+	
+	<!-- START: Build IBSServices -->
+	<target name="ibsservices-compile" depends="ibscommon-jar,ibsgenerated-jar,ibsvo-jar">
+		<mkdir dir="${build-root}/temp/ibsservices" />
+		<javac destdir="${build-root}/temp/ibsservices" debug="true" srcdir="${src-root}/IBSServices/src">
+			<classpath path="${build-root}/jars/ibscommon.jar"/>
+			<classpath path="${build-root}/jars/ibsvo.jar"/>
+			<classpath path="${build-root}/jars/ibsgenerated.jar"/>
+			<classpath path="${src-root}/IBSResources/TPJars/hibernate3.jar"/>
+			<classpath refid="classpath.appserver"/>
+			<classpath refid="classpath.tp"/>
+			
+		</javac>
+	</target>
+	
+	<target name="ibsservices-jar" depends="ibsservices-compile">
+		<jar basedir="${build-root}/temp/ibsservices"	jarfile="${build-root}/jars/ibsservices.jar"/>
+		<delete dir="${build-root}/temp/ibsservices"/>
+	</target>
+	<!-- END: Build IBSServices -->
+	
+	
+	
+	<!-- START: Build PAS WAR -->
+	
+	<target name="warcompile" depends="ibscommon-jar,ibsgenerated-jar,ibsvo-jar,ibsservices-jar">
+		
+		
+		<copy todir="${src-root}/IBSResources/IBSJars">
+			<fileset dir="${build-root}/jars">
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${src-root}/IBSWeb/WebContent/WEB-INF/lib">
+			<fileset dir="${src-root}/IBSResources/IBSJars">
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
+		<!--
+		
+		<javac destdir="${build-root}/build/classes" debug="true" srcdir="${src-root}/IBSWeb/src">
+			<classpath>
+				<pathelement location="${build-root}/jars/ibscommon.jar"/>
+				<pathelement location="${build-root}/jars/ibsgenerated.jar"/>
+				<pathelement location="${build-root}/jars/ibsvo.jar"/>
+				<pathelement location="${build-root}/jars/ibsservices.jar"/>
+			</classpath>
+			<classpath refid="classpath.web" />
+			<classpath refid="classpath.appserver" />
+		</javac>
+
+		<copy todir="${build-root}/build/classes">
+			<fileset dir="${src-root}/IBSWeb/src">
+				<include name="**/*.properties"/>
+				<include name="**/*.xml"/>
+			</fileset>
+		</copy>-->
+	</target>
+
+	<target name="war" depends="warcompile">
+		<war destfile="${build-root}/dist/ibs.war" webxml="${src-root}/IBSWeb/WebContent/WEB-INF/web.xml">
+			<fileset dir="${src-root}/IBSWeb/WebContent" />
+			<classes dir="${build-root}/build/classes" />
+		</war>
+	</target>
+	<!-- END: Build IBS WAR -->
+	
+</project>

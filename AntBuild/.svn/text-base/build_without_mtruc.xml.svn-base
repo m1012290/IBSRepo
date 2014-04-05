@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="PASFullBuild" default="war" basedir=".">
+<property name="appserver.home" value="D:/tomcat_7.0.0"/>
+	<property name="build-root" value="."/>
+	<property name="src-root" value=".."/>
+
+	<!-- START: Set CLASSPATH variables -->
+	<path id="classpath.web">
+		<fileset dir="${src-root}/PAS/WebContent/WEB-INF/lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+	<path id="classpath.appserver">
+	    <!-- Include all JARs that the application server exposes to applications -->
+	    <fileset dir="${appserver.home}/lib">
+	      <include name="*.jar"/>
+	    </fileset>
+	</path>
+	<path id="classpath.orm">
+		<fileset dir="${src-root}/MTResources/lib">
+			<!-- Include the ORM JARs here. -->
+		</fileset>
+	</path>
+	
+	<path id="classpath.tp">
+		<fileset dir="${src-root}/PASResources/TP_JARs">
+			<include name="*.jar"/>
+			<!-- Include the ORM JARs here. -->
+		</fileset>
+	</path>
+	
+	<path id="classpath.mtruc">
+		<fileset dir="${src-root}/PASResources/PAS_JARs">
+			<include name="mt*.jar"/>
+		</fileset>
+	</path>
+	<path id="classpath.rules">
+		<fileset dir="${src-root}/PASResources/PAS_JARs">
+			<include name="rule*.jar"/>
+		</fileset>
+	</path>
+	
+	<path id="classpath.rating">
+			<fileset dir="${src-root}/PASResources/PAS_JARs">
+				<include name="rating*.jar"/>
+			</fileset>
+	</path>
+	<path id="classpath.reportgen">
+				<fileset dir="${src-root}/PASResources/PAS_JARs">
+					<include name="reportgen.jar"/>
+				</fileset>
+		</path>
+	
+	
+	<path id="classpath.kaizen">
+		<fileset dir="${src-root}/PASResources/Kaizen_JARs">
+			<include name="*.jar"/>
+		</fileset>
+	</path>
+	
+	<!-- END: Set CLASSPATH variables -->
+
+	<target name="clean">
+		<delete dir="${build-root}/dist" />
+		<delete dir="${build-root}/build" />
+		<delete dir="${build-root}/jars" />
+	</target>
+
+	<target name="init" depends="clean">
+		<mkdir dir="${build-root}/build/classes" />
+		<mkdir dir="${build-root}/build/classes/config" />
+		<mkdir dir="${build-root}/dist" />
+		<mkdir dir="${build-root}/jars" />
+		<mkdir dir="${build-root}/temp" />
+	</target>
+
+	<!-- START: Build PASCommon -->
+	<target name="pascommon-compile" depends="init">
+		<mkdir dir="${build-root}/temp/pascommon" />
+		<javac destdir="${build-root}/temp/pascommon" debug="true" srcdir="${src-root}/PASCommon/src">
+			<classpath refid="classpath.appserver" />
+			<classpath refid="classpath.mtruc"/>
+			<classpath refid="classpath.kaizen"/>
+		</javac>
+	</target>
+	
+	<target name="pascommon-jar" depends="pascommon-compile">
+		<jar basedir="${build-root}/temp/pascommon"	jarfile="${build-root}/jars/pascommon.jar"/>
+		<delete dir="${build-root}/temp/pascommon"/>
+	</target>
+	<!-- END: Build PASCommon -->
+	
+	<!-- START: Build PASVO -->
+	<target name="pasvo-compile" depends="pascommon-jar">
+		<mkdir dir="${build-root}/temp/pasvo" />
+		<javac destdir="${build-root}/temp/pasvo" debug="true" srcdir="${src-root}/PASVO/src">
+			<classpath path="${build-root}/jars/pascommon.jar"/>
+			<classpath refid="classpath.appserver" />
+			<classpath refid="classpath.mtruc"/>
+		</javac>
+	</target>
+	
+	<target name="pasvo-jar" depends="pasvo-compile">
+		<jar basedir="${build-root}/temp/pasvo"	jarfile="${build-root}/jars/pasvo.jar"/>
+		<delete dir="${build-root}/temp/pasvo"/>
+	</target>
+	<!-- END: Build PASVO -->
+	
+	<!-- START: Build PASKAIZENOverrides -->
+	<target name="paskaizenoverrides-compile" depends="pasvo-jar">
+		<mkdir dir="${build-root}/temp/paskaizenoverrides" />
+		<javac destdir="${build-root}/temp/paskaizenoverrides" debug="true" srcdir="${src-root}/PASKaizenOverrides/src">
+			<classpath refid="classpath.kaizen"/>
+			<classpath refid="classpath.appserver"/>
+			<classpath refid="classpath.mtruc"/>
+			<classpath refid="classpath.tp"/>
+		</javac>
+		<copy todir="${build-root}/temp/paskaizenoverrides">
+			<fileset dir="${src-root}/PASKaizenOverrides/src">
+				<include name="**/*.properties"/>
+				<include name="**/*.xml"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="paskaizenoverrides-jar" depends="paskaizenoverrides-compile">
+		<jar basedir="${build-root}/temp/paskaizenoverrides"	jarfile="${build-root}/jars/1_paskaizenoverrides.jar"/>
+		<delete dir="${build-root}/temp/paskaizenoverrides"/>
+	</target>
+	<!-- END: Build PASKAIZENOverrides -->
+	
+	<!-- START: Build PASGenerated -->
+	<target name="pasgenerated-compile" depends="paskaizenoverrides-jar">
+		<mkdir dir="${build-root}/temp/pasgenerated" />
+		<javac destdir="${build-root}/temp/pasgenerated" debug="true" srcdir="${src-root}/PASGenerated/src">
+			<classpath path="${build-root}/jars/pascommon.jar"/>
+			<classpath path="${build-root}/jars/pasvo.jar"/>
+			<classpath path="${build-root}/jars/1_paskaizenoverrides.jar"/>
+			<classpath refid="classpath.orm"/>
+			<classpath refid="classpath.appserver"/>
+			<classpath refid="classpath.mtruc"/>
+			<classpath refid="classpath.tp"/>
+			<classpath refid="classpath.kaizen"/>
+			
+			
+		</javac>
+		<copy todir="${build-root}/temp/pasgenerated">
+			<fileset dir="${src-root}/PASGenerated/src">
+				<include name="**/*.properties"/>
+				<include name="**/*.xml"/>
+			</fileset>
+		</copy>
+		
+	</target>
+	
+	<target name="pasgenerated-jar" depends="pasgenerated-compile">
+		<jar basedir="${build-root}/temp/pasgenerated"	jarfile="${build-root}/jars/pasgenerated.jar"/>
+		<delete dir="${build-root}/temp/pasgenerated"/>
+	</target>
+	<!-- END: Build PASGenerated -->
+	
+	<!-- START: Build PASServices -->
+	<target name="passervices-compile" depends="pascommon-jar,pasvo-jar,pasgenerated-jar">
+		<mkdir dir="${build-root}/temp/passervices" />
+		<javac destdir="${build-root}/temp/passervices" debug="true" srcdir="${src-root}/PASServices/src">
+			<classpath path="${build-root}/jars/pascommon.jar"/>
+			<classpath path="${build-root}/jars/pasvo.jar"/>
+			<classpath path="${build-root}/jars/pasgenerated.jar"/>
+			<classpath refid="classpath.appserver"/>
+			<classpath refid="classpath.orm"/>
+			<classpath refid="classpath.mtruc"/>
+			<classpath refid="classpath.rules"/>
+			<classpath refid="classpath.kaizen"/>
+			<classpath refid="classpath.rating"/>
+			<classpath refid="classpath.tp"/>
+			<classpath refid="classpath.reportgen"/>
+			
+			
+			
+			
+		</javac>
+		<copy todir="${build-root}/temp/passervices">
+			<fileset dir="${src-root}/PASServices/src">
+				<include name="**/*.properties"/>
+				<include name="**/*.xml"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="passervices-jar" depends="passervices-compile">
+		<jar basedir="${build-root}/temp/passervices"	jarfile="${build-root}/jars/passervices.jar"/>
+		<delete dir="${build-root}/temp/passervices"/>
+	</target>
+	<!-- END: Build PASServices -->
+	
+	
+	<!-- START: Build PASWrappers -->
+	<target name="paswrappers-compile">
+		<mkdir dir="${build-root}/temp/paswrappers" />
+		<javac destdir="${build-root}/temp/paswrappers" debug="true" srcdir="${src-root}/PASWrappers/src">
+			<classpath path="${build-root}/jars/pascommon.jar"/>
+			<classpath path="${build-root}/jars/pasvo.jar"/>
+			<classpath path="${build-root}/jars/pasgenerated.jar"/>
+			<classpath path="${build-root}/jars/passervices.jar"/>
+			<classpath refid="classpath.orm"/>
+			<classpath refid="classpath.appserver"/>
+			<classpath refid="classpath.mtruc"/>
+			<classpath refid="classpath.rules"/>
+			<classpath refid="classpath.kaizen"/>
+			<classpath refid="classpath.tp"/>
+			
+		</javac>
+		<copy todir="${build-root}/temp/paswrappers">
+			<fileset dir="${src-root}/PASWrappers/src">
+				<include name="**/*.properties"/>
+				<include name="**/*.xml"/>
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="paswrappers-jar" depends="paswrappers-compile">
+		<jar basedir="${build-root}/temp/paswrappers"	jarfile="${build-root}/jars/paswrappers.jar"/>
+		<delete dir="${build-root}/temp/paswrappers"/>
+	</target>
+	
+	<!-- END: Build PASWrappers -->
+
+	
+	<!-- START: Build PAS WAR -->
+	<target name="warcompile" depends="pascommon-jar,pasgenerated-jar,passervices-jar,paswrappers-jar,paskaizenoverrides-jar">
+		
+		
+		<copy todir="${src-root}/PASResources/PAS_JARs">
+					<fileset dir="${build-root}/jars">
+						<include name="*.jar"/>
+					</fileset>
+		</copy>
+		
+		<copy todir="${src-root}/PAS/WebContent/WEB-INF/lib">
+					<fileset dir="${src-root}/PASResources/PAS_JARs">
+						<include name="*.jar"/>
+					</fileset>
+		</copy>
+		
+				
+		
+		<javac destdir="${build-root}/build/classes" debug="true" srcdir="${src-root}/PAS/src">
+			<classpath>
+				<pathelement location="${build-root}/jars/pascommon.jar"/>
+				<pathelement location="${build-root}/jars/pasvo.jar"/>
+				<pathelement location="${build-root}/jars/pasgenerated.jar"/>
+				<pathelement location="${build-root}/jars/passervices.jar"/>
+			</classpath>
+			<classpath refid="classpath.web" /> <!-- Should be having MTRUC JARs in it. -->
+			<classpath refid="classpath.appserver" />
+		</javac>
+
+		<copy todir="${build-root}/build/classes">
+			<fileset dir="${src-root}/PAS/src">
+				<include name="**/*.properties"/>
+				<include name="**/*.xml"/>
+			</fileset>
+		</copy>
+		
+		<!--copy todir="${src-root}/PAS/WebContent/WEB-INF/lib">
+			<fileset dir="${build-root}/jars">
+				<include name="*.jar"/>
+			</fileset>
+		</copy>
+
+		<copy todir="${src-root}/PASResources/PAS_JARs">
+			<fileset dir="${build-root}/jars">
+				<include name="*.jar"/>
+			</fileset>
+		</copy-->
+		
+	</target>
+
+	<target name="war" depends="warcompile">
+		<war destfile="${build-root}/dist/pas.war" webxml="${src-root}/PAS/WebContent/WEB-INF/web.xml">
+			<fileset dir="${src-root}/PAS/WebContent" />
+			<!--lib dir="${src-root}/PAS/WebContent/WEB-INF/lib" /> -->
+			<classes dir="${build-root}/build/classes" />
+		</war>
+	</target>
+	<!-- END: Build PAS WAR -->
+
+</project>

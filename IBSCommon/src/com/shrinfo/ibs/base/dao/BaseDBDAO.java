@@ -25,7 +25,6 @@ public class BaseDBDAO{
     private HibernateTemplate hibernateTemplate;
 
     private Logger log = Logger.getLogger( this.getClass() );
-
     /**
      * This method will delete records from table
      * @param entity
