@@ -327,7 +327,7 @@ public class DAOUtils {
         return slipDetailSet;
     }
 
-    private static IbsProductUwFields constructIbsProductUwField(ProductUWFieldVO uwFieldVO) {
+    public static IbsProductUwFields constructIbsProductUwField(ProductUWFieldVO uwFieldVO) {
         IbsProductUwFields field = new IbsProductUwFields();
         field.setId(uwFieldVO.getUwFieldId());
         field.setFieldName(uwFieldVO.getFieldName());
@@ -342,7 +342,7 @@ public class DAOUtils {
         return field;
     }
 
-    private static IbsProductMaster constructIbsProduct(ProductVO productDetails) {
+    public static IbsProductMaster constructIbsProduct(ProductVO productDetails) {
 
         IbsProductMaster ibsProductMaster = new IbsProductMaster();
         if (Utils.isEmpty(productDetails)) {
