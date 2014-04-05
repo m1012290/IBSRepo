@@ -212,6 +212,8 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 				 LookupVO responseVO = MasterDataRetrievalUtil.getInsCompanies(lookupVO);
 				 this.insCompanies = responseVO.getCodeDescMap();
 				 
+				 this.policyVO = policyVO;
+				 
 	
 				
 			}

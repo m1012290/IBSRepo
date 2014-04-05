@@ -31,18 +31,28 @@ public class QuotationDaoImpl extends BaseDBDAO implements QuotationDao {
         PolicyVO policyVO = new PolicyVO();
 
         if (null == baseVO || !(baseVO instanceof QuoteDetailVO)
-            || Utils.isEmpty(((QuoteDetailVO) baseVO).getQuoteId())) {
+            || Utils.isEmpty(((QuoteDetailVO) baseVO).getQuoteSlipId())
+            || Utils.isEmpty(((QuoteDetailVO) baseVO).getQuoteSlipVersion())) {
             throw new BusinessException("cmn.unknownError", null,
-                "Invalid Quotation details. No data passed to fetch details");
+                "Invalid Quotation details. No quote slip data passed to fetch details");
         }
         IbsQuoteComparisionHeader ibsQuoteComparisionHeader = null;
 
+        List headerList = null;
+
         try {
-            ibsQuoteComparisionHeader =
-                (IbsQuoteComparisionHeader) getHibernateTemplate().find(
+            headerList =
+                getHibernateTemplate().find(
                     " from IbsQuoteComparisionHeader ibsQuoteComparisionHeader "
-                        + "where ibsQuoteComparisionHeader.id = ? ",
-                    ((QuoteDetailVO) baseVO).getQuoteId()).get(0);
+                        + "where ibsQuoteComparisionHeader.ibsQuoteSlipHeader.id.id = ? and "
+                        + "ibsQuoteComparisionHeader.ibsQuoteSlipHeader.id.quoteSlipVersion = ?",
+                    ((QuoteDetailVO) baseVO).getQuoteSlipId(),
+                    ((QuoteDetailVO) baseVO).getQuoteSlipVersion());
+            if (Utils.isEmpty(headerList)) {
+                return null;
+            } else {
+                ibsQuoteComparisionHeader = (IbsQuoteComparisionHeader) headerList.get(0);
+            }
         } catch (HibernateException hibernateException) {
             throw new BusinessException("pas.gi.couldNotGetQuotationDetails", hibernateException,
                 "Error while insured search");

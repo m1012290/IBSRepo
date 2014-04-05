@@ -261,14 +261,14 @@ public class DAOUtils {
             }
             ibsQuoteSlipDetailsAll.addAll(ibsQuoteSlipDetails);
             slipHeader.setRemarks(quoteDetailVO.getRemarks());
-            
+
             // set quote slip header ID if already present.
-            if(!Utils.isEmpty(quoteDetailVO.getQuoteSlipId())){
-            	IbsQuoteSlipHeaderId ibsQuoteSlipHeaderId = new IbsQuoteSlipHeaderId();
+            if (!Utils.isEmpty(quoteDetailVO.getQuoteSlipId())) {
+                IbsQuoteSlipHeaderId ibsQuoteSlipHeaderId = new IbsQuoteSlipHeaderId();
                 ibsQuoteSlipHeaderId.setId(quoteDetailVO.getQuoteSlipId());
                 ibsQuoteSlipHeaderId.setQuoteSlipVersion(quoteDetailVO.getQuoteSlipVersion());
                 slipHeader.setId(ibsQuoteSlipHeaderId);
-            }            
+            }
 
         }
         slipHeader.setIbsQuoteSlipDetails(ibsQuoteSlipDetailsAll);
@@ -318,7 +318,7 @@ public class DAOUtils {
             slipDetail.setIbsProductMaster(constructIbsProduct(productVO));
             slipDetail.setProductUwFieldAnswer(uwFieldVO.getFieldValue());
             slipDetail.setIbsProductUwFields(constructIbsProductUwField(uwFieldVO));
-            //slipDetail.setId(uwFieldVO.getTableId());
+            // slipDetail.setId(uwFieldVO.getTableId());
             slipDetail.setProductUwFieldAnswer(uwFieldVO.getResponse());
             slipDetail.setQuoteSlipDate(constructSqlDate(quoteDetailVO.getQuoteDate()));
             slipDetail.setQuoteSlipEmailed(quoteDetailVO.getIsClosingSlipEmailed());
@@ -327,11 +327,9 @@ public class DAOUtils {
         return slipDetailSet;
     }
 
-    public static IbsProductUwFields constructIbsProductUwField(ProductUWFieldVO uwFieldVO) {
+    private static IbsProductUwFields constructIbsProductUwField(ProductUWFieldVO uwFieldVO) {
         IbsProductUwFields field = new IbsProductUwFields();
-        if(!Utils.isEmpty(uwFieldVO.getUwFieldId())){
-            field.setId(uwFieldVO.getUwFieldId());
-        }
+        field.setId(uwFieldVO.getUwFieldId());
         field.setFieldName(uwFieldVO.getFieldName());
         if (!Utils.isEmpty(uwFieldVO.getFieldLength())) {
             field.setFieldLength((long) uwFieldVO.getFieldLength());
@@ -341,11 +339,10 @@ public class DAOUtils {
             field.setSrlNo((long) uwFieldVO.getFieldOrder());
         }
         field.setStatus(uwFieldVO.getIsStatusActive());
-        field.setFieldType(uwFieldVO.getFieldType());
         return field;
     }
 
-    public static IbsProductMaster constructIbsProduct(ProductVO productDetails) {
+    private static IbsProductMaster constructIbsProduct(ProductVO productDetails) {
 
         IbsProductMaster ibsProductMaster = new IbsProductMaster();
         if (Utils.isEmpty(productDetails)) {
@@ -361,7 +358,6 @@ public class DAOUtils {
         if (null != productDetails.getSubClass()) {
             ibsProductMaster.setSubclass(Long.valueOf(productDetails.getSubClass()));
         }
-        ibsProductMaster.setStatus(productDetails.getIsStatusActive());
 
         return ibsProductMaster;
     }
@@ -420,12 +416,17 @@ public class DAOUtils {
         // following details in quote comparison header will be same in each of
         // insurance company
         // quote details
+        quoteHeader.setRecommendationSummary(quoteDetailVO.getRecommendationSummary());
         quoteHeader.setId(quoteDetailVO.getQuoteId());
         quoteHeader.setCustomerId(quoteDetailVO.getCustomerId());
         quoteHeader.setIbsProductMaster(constructIbsProduct(quoteDetailVO.getProductDetails()));
         IbsStatusMaster ibsStatusMaster = new IbsStatusMaster();
-        //ibsStatusMaster.setCode((long) quoteDetailVO.getStatusCode());
-        ibsStatusMaster.setCode(1L);
+        if (!Utils.isEmpty(quoteDetailVO.getStatusCode())) {
+            ibsStatusMaster.setCode((long) quoteDetailVO.getStatusCode());
+        } else {
+            // default record will be active. i.e active code=1
+            ibsStatusMaster.setCode(1l);
+        }
         quoteHeader.setIbsStatusMaster(ibsStatusMaster);
         if (!Utils.isEmpty(policyVO.getInsuredDetails())) {
             quoteHeader.setInsuredId(policyVO.getInsuredDetails().getId());
@@ -453,10 +454,14 @@ public class DAOUtils {
         IbsQuoteComparisionDetail ibsQuoteDetail = null;
         for (ProductUWFieldVO uwFieldVO : productVO.getUwFieldsList()) {
             ibsQuoteDetail = new IbsQuoteComparisionDetail();
-            ibsQuoteDetail.setId(uwFieldVO.getTableId());
+            //ibsQuoteDetail.setId(uwFieldVO.getTableId());
             // ibsQuoteDetail.setEnquiryNo(quoteDetailVO.getEnquiryNum());
             // slipDetail.setIbsProductMaster(ibsProductMaster)
             ibsQuoteDetail.setClosingSlipEmailed(quoteDetailVO.getIsClosingSlipEmailed());
+            if(!Utils.isEmpty(quoteDetailVO.getPolicyTerm())){
+                ibsQuoteDetail.setPolicyTerm(BigDecimal.valueOf(quoteDetailVO.getPolicyTerm()));
+            }
+            
             PremiumVO premiumVO = quoteDetailVO.getQuoteSlipPrmDetails();
             if (null != premiumVO) {
 
@@ -477,14 +482,16 @@ public class DAOUtils {
                 if (!Utils.isEmpty(quoteDetailVO.getSumInsured())) {
                     ibsQuoteDetail.setSumInsured(quoteDetailVO.getSumInsured().longValue());
                 }
-
+                ibsQuoteDetail.setProductUwFieldAnswer(uwFieldVO.getResponse());
             }
             // ibsQuoteDetail.setEnquiryNo(quoteDetailVO.getEnquiryNum());
             // ibsQuoteDetail.setEnquiryType(quoteDetailVO.gete);
             ibsQuoteDetail.setIbsProductMaster(constructIbsProduct(quoteDetailVO
                     .getProductDetails()));
             ibsQuoteDetail.setIbsProductUwFields(constructIbsProductUwField(uwFieldVO));
-            // ibsQuoteDetail.setIbsStatusMaster(ibsStatusMaster);
+            StatusVO statusVO = new StatusVO();
+            statusVO.setCode(quoteDetailVO.getStatusCode());
+            ibsQuoteDetail.setIbsStatusMaster(constructIbsStatusMaster(statusVO));
             /*
              * if (!Utils.isEmpty(quoteDetailVO.getPolicyVO())) { PolicyVO policyVO =
              * quoteDetailVO.getPolicyVO();
@@ -599,7 +606,8 @@ public class DAOUtils {
                             .setDiscountPercentage((long) premiumVO.getDiscountPercentage());
                     ibsUwTransDetail.setLoadingPercentage((long) premiumVO.getLoadingPercentage());
                     ibsUwTransDetail.setPolicyPremium(premiumVO.getPremium());
-                    ibsUwTransDetail.setTotalPremium(premiumVO.getTotalPremium());//Added by Hafeezur
+                    ibsUwTransDetail.setTotalPremium(premiumVO.getTotalPremium());// Added by
+                                                                                  // Hafeezur
                     if (!Utils.isEmpty(premiumVO.getTotalPremium())) {
                         ibsUwTransDetail.setSumInsured(premiumVO.getTotalPremium().longValue());
                     }

@@ -2,6 +2,7 @@ package com.shrinfo.ibs.dao.utils;
 
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -457,6 +458,8 @@ public class MapperUtil {
             ProductVO productVO = new ProductVO();
             populateProductVO(productVO, ibsQuoteComparisionHeader.getIbsProductMaster());
             quoteDetailVO.setProductDetails(productVO);
+            quoteDetailVO.setRecommendationSummary(ibsQuoteComparisionHeader
+                    .getRecommendationSummary());            
 
             insCmpnyQuoteDetails.put(insCompanyVO, quoteDetailVO);
         }
@@ -502,8 +505,55 @@ public class MapperUtil {
         quoteDetailVO.setIsClosingSlipGenerated(ibsQuoteCompDetail.getQuoteRecommended());
         quoteDetailVO.setIsQuoteRecommended(Boolean.valueOf(ibsQuoteCompDetail
                 .getQuoteRecommended()));
+        quoteDetailVO.setQuoteNo(ibsQuoteCompDetail.getQuoteNo());
         quoteDetailVO.setQuoteDate(ibsQuoteCompDetail.getQuoteDate());
+        quoteDetailVO.setCompanyCode(ibsQuoteCompDetail.getQuotedCompanyCode());
+        if (!Utils.isEmpty(ibsQuoteCompDetail.getSumInsured())) {
+            quoteDetailVO.setSumInsured(BigDecimal.valueOf(ibsQuoteCompDetail.getSumInsured()));
+        }
+        if (!Utils.isEmpty(ibsQuoteCompDetail.getPolicyTerm())) {
+            quoteDetailVO.setPolicyTerm(ibsQuoteCompDetail.getPolicyTerm().intValue());
+        }
+        BigDecimal premium = null;
+        if (!Utils.isEmpty(ibsQuoteCompDetail.getQuotedPremium())) {
+            premium = ibsQuoteCompDetail.getQuotedPremium();
+        }
+        BigDecimal totalPremium = null;
+        if (!Utils.isEmpty(ibsQuoteCompDetail.getTotalPremium())) {
+            totalPremium = ibsQuoteCompDetail.getTotalPremium();
+        }
+        double discountPercentage = 0d;
+        if (!Utils.isEmpty(ibsQuoteCompDetail.getDiscountPercentage())) {
+            discountPercentage = ibsQuoteCompDetail.getDiscountPercentage();
+        }
+        double loadingPercentage = 0d;
+        if (!Utils.isEmpty(ibsQuoteCompDetail.getLoadingPercentage())) {
+            loadingPercentage = ibsQuoteCompDetail.getLoadingPercentage();
+        }
+        BigDecimal commissionAmt = null;
+        if (!Utils.isEmpty(ibsQuoteCompDetail.getCommissionOnPrm())) {
+            commissionAmt = ibsQuoteCompDetail.getCommissionOnPrm();
+        }
 
+        PremiumVO premiumVO =
+            populatePremiumDetails(premium, totalPremium, discountPercentage, loadingPercentage,
+                commissionAmt, ibsQuoteCompDetail.getCoverDescription());
+        quoteDetailVO.setQuoteSlipPrmDetails(premiumVO);
+
+    }
+
+    private static PremiumVO populatePremiumDetails(BigDecimal premium, BigDecimal totalPremium,
+            double discountPercentage, double loadingPercentage, BigDecimal commissionAmt,
+            String coverDescription) {
+        PremiumVO premiumDetails = new PremiumVO();
+        premiumDetails.setCommissionAmt(commissionAmt);
+        premiumDetails.setCoverDescription(coverDescription);
+        premiumDetails.setDiscountPercentage(discountPercentage);
+        // premiumDetails.setIsStatusActive(ibsUwTransactionDetail);
+        premiumDetails.setLoadingPercentage(loadingPercentage);
+        premiumDetails.setPremium(premium);
+        premiumDetails.setTotalPremium(totalPremium);
+        return premiumDetails;
     }
 
     private static void populateAuditFields(BaseVO baseVO, Object pojo) {
