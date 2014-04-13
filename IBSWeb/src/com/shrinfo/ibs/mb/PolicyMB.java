@@ -143,6 +143,9 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
                     .get("quotationMB");
         this.quoteDetailVO = quotation.getQuoteDetailVOClosed();
         this.insuredDetails = quotation.getInsuredDetails();
+        if (Utils.isEmpty(this.quoteDetailVO.getQuoteId())) {
+            return "policy";
+        }
         this.policyDetails.setQuoteId(this.quoteDetailVO.getQuoteId());
         this.policyDetails.setInsuredDetails(insuredDetails);
         PolicyVO policyVO =

@@ -16,6 +16,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
+import org.primefaces.event.CloseEvent;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.RowEditEvent;
 
@@ -62,8 +63,27 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 
     private PolicyVO policyDetails = new PolicyVO();
 
+    private QuoteDetailVODataModel quoteDetailVODataModel;
+
+    private QuoteDetailVO quoteDetSelection = new QuoteDetailVO();
+
+    private List<QuoteDetailVO> quoteDetailListClosed = new ArrayList<QuoteDetailVO>();
 
 
+    /**
+     * @return the quoteDetSelection
+     */
+    public QuoteDetailVO getQuoteDetSelection() {
+        return quoteDetSelection;
+    }
+
+
+    /**
+     * @param quoteDetSelection the quoteDetSelection to set
+     */
+    public void setQuoteDetSelection(QuoteDetailVO quoteDetSelection) {
+        this.quoteDetSelection = quoteDetSelection;
+    }
     public PolicyVO getPolicyDetails() {
         return policyDetails;
     }
@@ -135,7 +155,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
     }
 
     public List<QuoteDetailVO> getQuoteDetailList() {
-        return quoteDetailList;
+        return this.quoteDetailList;
     }
 
     public void setQuoteDetailList(List<QuoteDetailVO> quoteDetailList) {
@@ -145,11 +165,14 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
     /**
      * This adds a new quote into UI table. Here data which is edited in
      * the table itself will not be captured.
+
+
      * 
      * @return
      */
     public String addAction() {
-        quoteDetailList.add(getQuoteDetailTableData(this.quoteDetailVO));
+        this.quoteDetailList.add(getQuoteDetailTableData(this.quoteDetailVO));
+        this.quoteDetailVODataModel = new QuoteDetailVODataModel(this.getQuoteDetailList());
         return null;
     }
 
@@ -172,10 +195,12 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
         premiumVO.setCoverDescription(quoteDetailVO.getQuoteSlipPrmDetails().getCoverDescription());
         detailVO.setQuoteSlipPrmDetails(premiumVO);
         
+
         // populate UW Field details
         ProductVO productVO = new ProductVO();
         productVO.setProductClass(this.quoteDetailVO.getProductDetails().getProductClass());
         
+
         FacesContext fc = FacesContext.getCurrentInstance();
         Map<String, String> requestMap = fc.getExternalContext().getRequestParameterMap();
 
@@ -212,9 +237,31 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
         FacesMessage msg = new FacesMessage("Item Cancelled");
         FacesContext.getCurrentInstance().addMessage(null, msg);
         quoteDetailList.remove((QuoteDetailVO) event.getObject());
+}
+
+    public void handleClose(CloseEvent event) {
+        // Panel Component is retrieved from closeevent which was fired when a grid
+        // is being removed i.e. one of the quote details pertaining to a company
+        // is removed...
+        String companyCode = (String) event.getComponent().getAttributes().get("header");
+        QuoteDetailVO tempQuoteDetailVO = new QuoteDetailVO();
+        tempQuoteDetailVO.setCompanyCode(companyCode);
+        this.quoteDetailList.remove(tempQuoteDetailVO);
+        this.quoteDetailListClosed = new ArrayList<QuoteDetailVO>();
+        for (QuoteDetailVO detailVO : quoteDetailList) {
+            this.quoteDetailListClosed.add(getQuoteDetailTableData(detailVO));
+        }
+
+        /*
+         * Iterator<QuoteDetailVO> it = this.quoteDetailList.iterator(); while (it.hasNext()) { if
+         * (it.next().getCompanyCode().endsWith(companyCode)) { it.remove(); break; } }
+         */
     }
 
     public String save() {
+if (!Utils.isEmpty(this.quoteDetailListClosed)) {
+            this.quoteDetailList = this.quoteDetailListClosed;
+        }
         // At least one quote detail data should be added to save quote details
         if (Utils.isEmpty(this.quoteDetailList)) {
             FacesContext.getCurrentInstance().addMessage(
@@ -228,12 +275,17 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
             Map<InsCompanyVO, QuoteDetailVO> addedQuotes =
                 new HashMap<InsCompanyVO, QuoteDetailVO>();
 
+int recommendedFlagcnt = 0;
             for (Entry<InsCompanyVO, QuoteDetailVO> entry : this.policyDetails.getQuoteDetails()
                     .entrySet()) {
                 QuoteDetailVO quoteDetVO = entry.getValue();
+
                 for (QuoteDetailVO quoteDetailVO : this.quoteDetailList) {
 
                     if (entry.getKey().getCode().equals(quoteDetailVO.getCompanyCode())) {
+if (quoteDetailVO.getIsQuoteRecommended()) {
+                            recommendedFlagcnt++;
+                        }
                         quoteDetVO.setQuoteNo(quoteDetailVO.getQuoteNo());
                         quoteDetVO.setIsQuoteRecommended(quoteDetailVO.getIsQuoteRecommended());
                         quoteDetVO.setRecommendationSummary(quoteDetailVO
@@ -256,6 +308,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
                         productVO.setUwFieldsList(quoteDetailVO.getProductDetails()
                                 .getUwFieldsList());
                         quoteDetVO.setProductDetails(productVO);
+						quoteDetVO.setPolicyTerm(quoteDetailVO.getPolicyTerm());
 
                         addedQuotes.put(entry.getKey(), quoteDetVO);
 
@@ -267,6 +320,15 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
             tempMap.putAll(this.policyDetails.getQuoteDetails());
 
             this.policyDetails.setQuoteDetails(addedQuotes);
+			
+			if (1 < recommendedFlagcnt) {
+                FacesContext.getCurrentInstance().addMessage(
+                    "ERROR_QUOTATION_SAVE",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+                        "Please select only one quotation to recommend"));
+                return null;
+
+            }
 
          // Before performing save operation let's check if there are any referrals
             TaskVO taskVO = ReferralHelper.checkForReferrals(this.policyDetails, SectionId.QUOTESLIP);
@@ -275,9 +337,15 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
                 RequestContext context = RequestContext.getCurrentInstance();
                 if( context.isAjaxRequest() ){
                     context.addCallbackParam("referral", Boolean.TRUE);
+
+
+
+
+
                     return null;
                 }
             }
+
             policyDetails =
                 (PolicyVO) ServiceTaskExecutor.INSTANCE.executeSvc("quotationSvc",
                     "createQuotation", this.policyDetails);
@@ -289,10 +357,12 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
                 this.policyDetails.getQuoteDetails().put(entry.getKey(), entry.getValue());
                 if(entry.getValue().getIsQuoteRecommended()){
                    // temp = 
+
                     this.quoteDetailVOClosed = entry.getValue();
                     tempCompCode = entry.getKey().getCode();
                     this.quoteDetailVOClosed.setCompanyCode(tempCompCode);                    
                 }                
+
             }
 
         } catch (Exception ex) {
@@ -396,8 +466,25 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
                  this.quoteDetailVOClosed = entry.getValue();
                  this.quoteDetailVOClosed.setCompanyCode(entry.getKey().getCode());                    
              }
+
         }
         this.quoteDetailList = quoteDetails;
+		this.quoteDetailVODataModel = new QuoteDetailVODataModel(this.quoteDetailList);
+
+    }
+	
+	/**
+     * @return the quoteDetailVODataModel
+     */
+    public QuoteDetailVODataModel getQuoteDetailVODataModel() {
+        return quoteDetailVODataModel;
     }
 
+
+    /**
+     * @param quoteDetailVODataModel the quoteDetailVODataModel to set
+     */
+    public void setQuoteDetailVODataModel(QuoteDetailVODataModel quoteDetailVODataModel) {
+        this.quoteDetailVODataModel = quoteDetailVODataModel;
+    }
 }
