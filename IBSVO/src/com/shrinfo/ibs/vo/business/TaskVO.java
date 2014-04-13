@@ -12,6 +12,9 @@ public class TaskVO extends BaseVO {
     private EnquiryVO enquiry;
 
     private DocumentVO document;
+    // this value could be quoteslip id, closing slip id or even policy id depending 
+    // on the screen where in referral was triggered.
+    private String documentId;
 
     private String desc;
 
@@ -116,13 +119,16 @@ public class TaskVO extends BaseVO {
         this.statusVO = statusVO;
     }
 
-    /**
-     * @return the serialversionuid
-     */
-    public static long getSerialversionuid() {
-        return serialVersionUID;
+    
+    public String getDocumentId() {
+        return documentId;
     }
 
+    
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
+    }
+    
     @Override
     public String toString() {
         return "TaskVO: assigneeUser=" + this.assigneeUser + ", assignerUser=" + this.assignerUser

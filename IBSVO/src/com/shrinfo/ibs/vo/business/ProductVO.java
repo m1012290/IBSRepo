@@ -100,4 +100,31 @@ public class ProductVO extends BaseVO {
         this.applicableInsCompanies = applicableInsCompanies;
     }
 
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((productClass == null) ? 0 : productClass.hashCode());
+        return result;
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ProductVO other = (ProductVO) obj;
+        if (productClass == null) {
+            if (other.productClass != null)
+                return false;
+        } else if (!productClass.equals(other.productClass))
+            return false;
+        return true;
+    }
+
 }

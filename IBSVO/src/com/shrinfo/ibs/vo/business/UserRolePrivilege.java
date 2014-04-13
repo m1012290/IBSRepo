@@ -1,5 +1,7 @@
 package com.shrinfo.ibs.vo.business;
 
+import java.math.BigDecimal;
+
 import com.shrinfo.ibs.cmn.vo.BaseVO;
 
 
@@ -12,16 +14,20 @@ public class UserRolePrivilege extends BaseVO {
     private ProductVO product;
 
     // sum insured
-    private Double minSiLimit;
+    private BigDecimal minSiLimit;
 
-    private Double maxSiLimit;
+    private BigDecimal maxSiLimit;
 
     private String emailRequisition;
 
-    private String generateClosignSlip;
-
     private String emailQuoteSlip;
 
+    private String generateQuoteSlip;
+    
+    private String emailClosingSlip;
+    
+    private String generateClosingSlip;
+    
     private String freeText1;
 
     private String freeText2;
@@ -59,28 +65,28 @@ public class UserRolePrivilege extends BaseVO {
     /**
      * @return the minSiLimit
      */
-    public Double getMinSiLimit() {
+    public BigDecimal getMinSiLimit() {
         return minSiLimit;
     }
 
     /**
      * @param minSiLimit the minSiLimit to set
      */
-    public void setMinSiLimit(Double minSiLimit) {
+    public void setMinSiLimit(BigDecimal minSiLimit) {
         this.minSiLimit = minSiLimit;
     }
 
     /**
      * @return the maxSiLimit
      */
-    public Double getMaxSiLimit() {
+    public BigDecimal getMaxSiLimit() {
         return maxSiLimit;
     }
 
     /**
      * @param maxSiLimit the maxSiLimit to set
      */
-    public void setMaxSiLimit(Double maxSiLimit) {
+    public void setMaxSiLimit(BigDecimal maxSiLimit) {
         this.maxSiLimit = maxSiLimit;
     }
 
@@ -101,15 +107,15 @@ public class UserRolePrivilege extends BaseVO {
     /**
      * @return the generateClosignSlip
      */
-    public String getGenerateClosignSlip() {
-        return generateClosignSlip;
+    public String getGenerateClosingSlip() {
+        return generateClosingSlip;
     }
 
     /**
      * @param generateClosignSlip the generateClosignSlip to set
      */
-    public void setGenerateClosignSlip(String generateClosignSlip) {
-        this.generateClosignSlip = generateClosignSlip;
+    public void setGenerateClosingSlip(String generateClosingSlip) {
+        this.generateClosingSlip = generateClosingSlip;
     }
 
     /**
@@ -168,11 +174,24 @@ public class UserRolePrivilege extends BaseVO {
         this.status = status;
     }
 
-    /**
-     * @return the serialversionuid
-     */
-    public static long getSerialversionuid() {
-        return serialVersionUID;
+    
+    public String getGenerateQuoteSlip() {
+        return generateQuoteSlip;
+    }
+
+    
+    public void setGenerateQuoteSlip(String generateQuoteSlip) {
+        this.generateQuoteSlip = generateQuoteSlip;
+    }
+
+    
+    public String getEmailClosingSlip() {
+        return emailClosingSlip;
+    }
+
+    
+    public void setEmailClosingSlip(String emailClosingSlip) {
+        this.emailClosingSlip = emailClosingSlip;
     }
 
 }

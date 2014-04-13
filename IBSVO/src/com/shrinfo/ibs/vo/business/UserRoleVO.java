@@ -1,5 +1,7 @@
 package com.shrinfo.ibs.vo.business;
 
+import java.util.List;
+
 import com.shrinfo.ibs.cmn.vo.BaseVO;
 
 public class UserRoleVO extends BaseVO {
@@ -9,7 +11,7 @@ public class UserRoleVO extends BaseVO {
 	 */
     private static final long serialVersionUID = 6083379196556678522L;
 
-    private Integer id;
+    private Long id;
 
     private String name;
 
@@ -17,19 +19,19 @@ public class UserRoleVO extends BaseVO {
 
     private String status;
 
-    private UserRolePrivilege rolePrivilege;
+    private List<UserRolePrivilege> roleProductPrivileges;
 
     /**
      * @return the id
      */
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
     /**
      * @param id the id to set
      */
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -75,24 +77,13 @@ public class UserRoleVO extends BaseVO {
         this.status = status;
     }
 
-    /**
-     * @return the rolePrivilege
-     */
-    public UserRolePrivilege getRolePrivilege() {
-        return rolePrivilege;
+    
+    public List<UserRolePrivilege> getRoleProductPrivileges() {
+        return roleProductPrivileges;
     }
 
-    /**
-     * @param rolePrivilege the rolePrivilege to set
-     */
-    public void setRolePrivilege(UserRolePrivilege rolePrivilege) {
-        this.rolePrivilege = rolePrivilege;
-    }
-
-    /**
-     * @return the serialversionuid
-     */
-    public static long getSerialversionuid() {
-        return serialVersionUID;
+    
+    public void setRoleProductPrivileges(List<UserRolePrivilege> roleProductPrivileges) {
+        this.roleProductPrivileges = roleProductPrivileges;
     }
 }

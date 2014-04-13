@@ -21,6 +21,8 @@ public class PolicyVO extends BaseVO {
 
     private String quoteNo;
 
+    private Long quoteId;
+
     private Integer quoteNoVersion;
 
     private Map<InsCompanyVO, QuoteDetailVO> quoteDetails;
@@ -33,7 +35,7 @@ public class PolicyVO extends BaseVO {
 
     private Integer statusCode;
 
-    private PremiumVO premiumDetails=new PremiumVO();
+    private PremiumVO premiumDetails = new PremiumVO();
 
     private BigDecimal sumInsured;
 
@@ -80,13 +82,13 @@ public class PolicyVO extends BaseVO {
 
 
 
-    
+
     public Integer getPolicyVersion() {
         return policyVersion;
     }
 
 
-    
+
     public void setPolicyVersion(Integer policyVersion) {
         this.policyVersion = policyVersion;
     }
@@ -109,6 +111,17 @@ public class PolicyVO extends BaseVO {
 
     public void setQuoteNo(String quoteNo) {
         this.quoteNo = quoteNo;
+    }
+
+
+    public Long getQuoteId() {
+        return quoteId;
+    }
+
+
+
+    public void setQuoteId(Long quoteId) {
+        this.quoteId = quoteId;
     }
 
 
