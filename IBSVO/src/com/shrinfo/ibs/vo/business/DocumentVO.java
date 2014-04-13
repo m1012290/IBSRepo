@@ -21,7 +21,7 @@ public class DocumentVO extends BaseVO {
 
     private String docDescreption;
 
-    private Byte[] document;
+    private byte[] document;
 
     private String docType;
 
@@ -95,17 +95,13 @@ public class DocumentVO extends BaseVO {
         this.docDescreption = docDescreption;
     }
 
-    /**
-     * @return the document
-     */
-    public Byte[] getDocument() {
+    
+    public byte[] getDocument() {
         return document;
     }
 
-    /**
-     * @param document the document to set
-     */
-    public void setDocument(Byte[] document) {
+    
+    public void setDocument(byte[] document) {
         this.document = document;
     }
 

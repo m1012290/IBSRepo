@@ -60,6 +60,20 @@ public class PolicyVO extends BaseVO {
 
     private String isQuoteConvertedToPolicy;
 
+    private DocumentListVO docListUploaded;
+
+
+
+    public DocumentListVO getDocListUploaded() {
+        return docListUploaded;
+    }
+
+
+
+    public void setDocListUploaded(DocumentListVO docListUploaded) {
+        this.docListUploaded = docListUploaded;
+    }
+
 
     public Long getUwTransactionId() {
         return uwTransactionId;
