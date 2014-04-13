@@ -9,7 +9,6 @@
        xmlns:custom="http://www.shrinfo.com/custom"
       >
     <h:body>
-    
     	<ui:composition template="/template/common/commonLayout.xhtml">
     	<ui:define name="content">
     			<h:form> 
@@ -109,13 +108,12 @@
 						            <h:outputLabel for="recUpdDate" value="Record Updated Date" />  
 						            <p:inputText id="recUpdDate"  value="#{editCustEnqDetailsMB.recUpdatedDate}"  readonly="true" required="false" /> 
 						            
-						           
+						           	
 								</h:panelGrid>
 								</p:panel>
 						
-						<p:commandButton value="Save" action="#{quoteSlipMB.save}"  update="messages, panelProductDetails, panelInsured" icon="ui-icon-disk"  style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
+						<p:commandButton value="Save" action="#{quoteSlipMB.save}"  update="messages, panelProductDetails, panelInsured" oncomplete="handleSaveResponse(xhr, status, args)" icon="ui-icon-disk"  style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
 						<p:commandButton value="Next" action="#{quotationMB.loadQuotationsDetail}"  style="float:right:20px;" />
-						
 					   	
 	   		</h:form>
     		</ui:define>

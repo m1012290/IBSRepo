@@ -3,12 +3,18 @@ package com.shrinfo.ibs.policy.svc;
 import java.util.List;
 
 import com.shrinfo.ibs.base.service.BaseService;
+import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.cmn.vo.BaseVO;
+import com.shrinfo.ibs.document.dao.DocumentDao;
 import com.shrinfo.ibs.policy.dao.PolicyDao;
+import com.shrinfo.ibs.vo.business.DocumentListVO;
+import com.shrinfo.ibs.vo.business.PolicyVO;
 
 public class PolicyServiceImpl extends BaseService implements PolicyService {
 
     PolicyDao policyDao;
+    
+    DocumentDao documentDao;
 
     @Override
     public Object invokeMethod(String methodName, Object... args) {
@@ -39,7 +45,14 @@ public class PolicyServiceImpl extends BaseService implements PolicyService {
 
     @Override
     public BaseVO createPolicy(BaseVO baseVO) {
-        return policyDao.createPolicy(baseVO);
+        PolicyVO policyVO = (PolicyVO) policyDao.createPolicy(baseVO);
+        DocumentListVO documentListVO = policyVO.getDocListUploaded();
+
+        if(!Utils.isEmpty(documentListVO) && !Utils.isEmpty(documentListVO.getDocumentVOs())) {
+            documentListVO = (DocumentListVO) documentDao.saveDocument(documentListVO);
+        }
+        policyVO.setDocListUploaded(documentListVO);
+        return policyVO;
     }
 
     @Override

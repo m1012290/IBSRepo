@@ -60,16 +60,18 @@
 				       			 <h:panelGrid columns="2">  
 				       			 
 				       			 	<h:outputLabel for="premium" value="Premium" />  
-						            <p:inputText id="premium" value="#{policyMB.policyVO.premiumDetails.premium}"/> 
+						            <p:inputText id="premium" value="#{policyMB.policyVO.premiumDetails.premium}"> 
+						            	<p:ajax event="blur" update="totalPremium" listener="#{policyMB.calculatePremiumBasedOnPremiumChange}" process="discountPercentage,loadingpercentage,premium" partialSubmit="true"/> 
+						         	</p:inputText>
 						      			
 						       		<h:outputLabel for="discountPercentage" value="Discount Percentage" />  
 						            <p:inputText id="discountPercentage" value="#{policyMB.policyVO.premiumDetails.discountPercentage}" required="false">  
-						         		<p:ajax event="blur" update="totalPremium" listener="#{policyMB.calculatePremiumBasedOnDiscPercentage}" process="discountPercentage,premium" partialSubmit="true"/> 
+						         		<p:ajax event="blur" update="totalPremium,loadingpercentage" listener="#{policyMB.calculatePremiumBasedOnDiscPercentage}" process="discountPercentage,loadingpercentage,premium" partialSubmit="true"/> 
 						         	</p:inputText> 
 						            
 						            <h:outputLabel for="loadingpercentage" value="Loading Percentage" />  
             						<p:inputText id="loadingpercentage" value="#{policyMB.policyVO.premiumDetails.loadingPercentage}">
-            							<p:ajax event="blur" update="totalPremium"  listener="#{policyMB.calculatePremiumBasedOnLoadPercentage}" process="loadingpercentage,premium" partialSubmit="true" /> 
+            							<p:ajax event="blur" update="totalPremium,discountPercentage"  listener="#{policyMB.calculatePremiumBasedOnLoadPercentage}" process="loadingpercentage,discountPercentage,premium" partialSubmit="true" /> 
             						</p:inputText>
             						
                 						

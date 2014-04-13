@@ -205,13 +205,31 @@
                 </p:dataTable>
             </p:panel>
 					   
-						<p:commandButton value="Save" action="#{quotationMB.save}"  update="messages" icon="ui-icon-disk"  style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
-						<p:commandButton value="Next" action="#{policyMB.loadQuotationDetails}"  style="float:right:20px;" />
-						
+			<p:commandButton value="Save" action="#{quotationMB.save}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" icon="ui-icon-disk"  style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
+			<p:commandButton value="Next" action="#{policyMB.loadQuotationDetails}"  style="float:right:20px;" />
+			
+			<p:dialog header="Referral Section" widgetVar="referraldialog">
+					<p:panel id="referralsection">	
+						<h:panelGrid columns="4">
+							<h:outputLabel for="name" value="Referred By" />  
+						    <p:inputText id="referredby" value="#{quotationMB.referralDesc}" readonly="true" required="false" />	 	
+							
+							<h:outputLabel value="Refer To" />
+							<p:selectOneMenu id="referredto">
+								<f:selectItem itemLabel="---Select User---" itemValue="" />	
+								<f:selectItems value="#{quotationMB.usersList}" />					
+							</p:selectOneMenu>
+							
+							<h:outputLabel value="Referral Description"/>
+							<p:inputTextarea  id="referraldesc" value="#{quotationMB.referralDesc}"/>
+						</h:panelGrid>	  				
+	  				</p:panel>
+	  			</p:dialog>
+    				
 					   	
 	   		</h:form>
     		</ui:define>
-    	</ui:composition>
+    		</ui:composition>
     	
     	
     </h:body>

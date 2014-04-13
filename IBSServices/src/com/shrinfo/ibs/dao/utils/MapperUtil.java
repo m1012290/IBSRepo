@@ -400,6 +400,7 @@ public class MapperUtil {
 
     }
 
+
     public static void populatePolicyVO(PolicyVO policyVO,
             IbsQuoteComparisionHeader ibsQuoteComparisionHeader) {
         if (null == ibsQuoteComparisionHeader) {
@@ -451,15 +452,29 @@ public class MapperUtil {
             // in quote slip
             // details table
             populateQuotationDetailVO(quoteDetailVO, ibsInsCmpnyQuoteDetailsEntry.getValue());
+            if (Utils.isEmpty(quoteDetailVO.getStatusCode()) || 1 != quoteDetailVO.getStatusCode()) {
+                quoteDetailVO = null;
+                continue;
+            }
             // Populate fields into QuoteDeatilVO which are present in quote
             // slip header table
             quoteDetailVO.setCustomerId(ibsQuoteComparisionHeader.getCustomerId());
-
-            ProductVO productVO = new ProductVO();
-            populateProductVO(productVO, ibsQuoteComparisionHeader.getIbsProductMaster());
-            quoteDetailVO.setProductDetails(productVO);
+            /*
+             * 
+             * ProductVO productVO = new ProductVO(); populateProductVO(productVO,
+             * ibsQuoteComparisionHeader.getIbsProductMaster());
+             * quoteDetailVO.setProductDetails(productVO);
+             */
             quoteDetailVO.setRecommendationSummary(ibsQuoteComparisionHeader
-                    .getRecommendationSummary());            
+                    .getRecommendationSummary());
+            quoteDetailVO.setQuoteId(ibsQuoteComparisionHeader.getId());
+            if (!Utils.isEmpty(ibsQuoteComparisionHeader.getIbsQuoteSlipHeader())) {
+                quoteDetailVO.setQuoteSlipId(ibsQuoteComparisionHeader.getIbsQuoteSlipHeader()
+                        .getId().getId());
+                quoteDetailVO.setQuoteSlipVersion(ibsQuoteComparisionHeader.getIbsQuoteSlipHeader()
+                        .getId().getQuoteSlipVersion());
+            }
+
 
             insCmpnyQuoteDetails.put(insCompanyVO, quoteDetailVO);
         }
@@ -484,6 +499,7 @@ public class MapperUtil {
         }
         // sIbsQuoteSlipDetail ibsQuoteSlipDetail = ibsQuoteSlipDetails.get(0);
         ProductVO productVO = new ProductVO();
+
         List<ProductUWFieldVO> productUWFieldVOs = new ArrayList<ProductUWFieldVO>();
         ProductUWFieldVO productUWFieldVO = null;
         IbsQuoteComparisionDetail ibsQuoteCompDetail = null;
@@ -494,17 +510,19 @@ public class MapperUtil {
             populateProductUWFieldVO(productUWFieldVO, ibsQuoteCompDetail.getIbsProductUwFields());
             productUWFieldVO.setResponse(ibsQuoteCompDetail.getProductUwFieldAnswer());
             productUWFieldVOs.add(productUWFieldVO);
+            populateProductVO(productVO, ibsQuoteCompDetail.getIbsProductMaster());
         }
         productVO.setUwFieldsList(productUWFieldVOs);
         quoteDetailVO.setProductDetails(productVO);
         if (!Utils.isEmpty(ibsQuoteCompDetail.getIbsStatusMaster())) {
-            quoteDetailVO.setIsStatusActive(String.valueOf(ibsQuoteCompDetail.getIbsStatusMaster()
-                    .getCode()));
+            quoteDetailVO.setStatusCode(ibsQuoteCompDetail.getIbsStatusMaster().getCode()
+                    .intValue());
+
         }
         quoteDetailVO.setIsClosingSlipEmailed(ibsQuoteCompDetail.getClosingSlipEmailed());
         quoteDetailVO.setIsClosingSlipGenerated(ibsQuoteCompDetail.getQuoteRecommended());
-        quoteDetailVO.setIsQuoteRecommended(Boolean.valueOf(ibsQuoteCompDetail
-                .getQuoteRecommended()));
+        quoteDetailVO.setIsQuoteRecommended(ibsQuoteCompDetail.getQuoteRecommended().equals("Y") ? true
+            : false);
         quoteDetailVO.setQuoteNo(ibsQuoteCompDetail.getQuoteNo());
         quoteDetailVO.setQuoteDate(ibsQuoteCompDetail.getQuoteDate());
         quoteDetailVO.setCompanyCode(ibsQuoteCompDetail.getQuotedCompanyCode());
@@ -794,7 +812,7 @@ public class MapperUtil {
      * @param ibsDocument
      * @throws SQLException
      */
-    private static void populateDocumentVO(DocumentVO documentVO, IbsDocumentTable ibsDocument)
+    public static void populateDocumentVO(DocumentVO documentVO, IbsDocumentTable ibsDocument)
             throws SQLException {
         if (Utils.isEmpty(ibsDocument)) {
             return;

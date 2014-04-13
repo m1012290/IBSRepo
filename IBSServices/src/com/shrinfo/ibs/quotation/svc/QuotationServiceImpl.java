@@ -45,8 +45,7 @@ public class QuotationServiceImpl extends BaseService implements QuotationServic
 
     @Override
     public BaseVO createQuotation(BaseVO baseVO) {
-        quotationDao.createQuotation(baseVO);
-        return null;
+        return quotationDao.createQuotation(baseVO);
     }
 
     @Override
