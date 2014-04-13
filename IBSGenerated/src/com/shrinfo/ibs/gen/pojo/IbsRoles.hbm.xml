@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated Mar 25, 2014 2:46:55 AM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated 6 Apr, 2014 3:03:14 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.shrinfo.ibs.gen.pojo.IbsRoles" table="IBS_ROLES" schema="IBSUSER">
         <id name="id" type="java.lang.Long">
@@ -29,7 +29,13 @@
         <property name="recUpdDate" type="java.sql.Date">
             <column name="REC_UPD_DATE" />
         </property>
-        <set name="ibsRolesProductPrivilegeses" table="IBS_ROLES_PRODUCT_PRIVILEGES" inverse="true" lazy="true" fetch="select">
+        <set name="ibsUserRoleLinks" table="IBS_USER_ROLE_LINK" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ROLE_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsUserRoleLink" />
+        </set>
+        <set name="ibsRolesProductPrivilegeses" table="IBS_ROLES_PRODUCT_PRIVILEGES" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="ROLE_ID" precision="22" scale="0" />
             </key>

@@ -1,27 +1,27 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated Mar 25, 2014 2:46:55 AM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated 6 Apr, 2014 3:03:14 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.shrinfo.ibs.gen.pojo.IbsUser" table="IBS_USER" schema="IBSUSER">
         <id name="id" type="java.lang.Long">
             <column name="ID" precision="22" scale="0" />
             <generator class="assigned" />
         </id>
-        <many-to-one name="ibsContact" class="com.shrinfo.ibs.gen.pojo.IbsContact" fetch="select">
+        <many-to-one name="ibsCompanyBranch" class="com.shrinfo.ibs.gen.pojo.IbsCompanyBranch" lazy="false" fetch="select">
+            <column name="BRANCH_CODE" length="10" />
+        </many-to-one>
+        <many-to-one name="ibsContact" class="com.shrinfo.ibs.gen.pojo.IbsContact" fetch="select" lazy="false">
             <column name="USER_CONTACT_ID" precision="22" scale="0" />
         </many-to-one>
         <property name="loginName" type="string">
             <column name="LOGIN_NAME" length="10" />
         </property>
         <property name="password" type="string">
-            <column name="PASSWORD" length="10" />
+            <column name="PASSWORD" length="100" />
         </property>
         <property name="description" type="string">
             <column name="DESCRIPTION" length="45" />
-        </property>
-        <property name="branchCode" type="java.lang.Long">
-            <column name="BRANCH_CODE" precision="22" scale="0" />
         </property>
         <property name="freezeFlag" type="string">
             <column name="FREEZE_FLAG" length="1" />
@@ -41,7 +41,13 @@
         <property name="recUpdDate" type="java.sql.Date">
             <column name="REC_UPD_DATE" />
         </property>
-        <set name="ibsUserProductLinks" table="IBS_USER_PRODUCT_LINK" inverse="true" lazy="true" fetch="select">
+        <set name="ibsUserRoleLinks" table="IBS_USER_ROLE_LINK" inverse="true" lazy="false" fetch="select">
+            <key>
+                <column name="USER_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsUserRoleLink" />
+        </set>
+        <set name="ibsUserProductLinks" table="IBS_USER_PRODUCT_LINK" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="USER_ID" precision="22" scale="0" />
             </key>

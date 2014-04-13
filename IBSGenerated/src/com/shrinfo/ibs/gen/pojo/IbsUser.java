@@ -1,7 +1,6 @@
 package com.shrinfo.ibs.gen.pojo;
 
-// Generated Mar 25, 2014 2:46:55 AM by Hibernate Tools 3.4.0.CR1
-
+// Generated 6 Apr, 2014 3:03:12 PM by Hibernate Tools 3.4.0.CR1
 
 import java.sql.Date;
 import java.util.HashSet;
@@ -12,8 +11,9 @@ import java.util.Set;
  */
 public class IbsUser implements java.io.Serializable {
 
-
     private Long id;
+
+    private IbsCompanyBranch ibsCompanyBranch;
 
     private IbsContact ibsContact;
 
@@ -22,8 +22,6 @@ public class IbsUser implements java.io.Serializable {
     private String password;
 
     private String description;
-
-    private Long branchCode;
 
     private String freezeFlag;
 
@@ -37,31 +35,33 @@ public class IbsUser implements java.io.Serializable {
 
     private Date recUpdDate;
 
+    private Set<IbsUserRoleLink> ibsUserRoleLinks = new HashSet<IbsUserRoleLink>(0);
+
     private Set<IbsUserProductLink> ibsUserProductLinks = new HashSet<IbsUserProductLink>(0);
 
     public IbsUser() {}
-
 
     public IbsUser(Long id) {
         this.id = id;
     }
 
-    public IbsUser(Long id, IbsContact ibsContact, String loginName, String password,
-            String description, Long branchCode, String freezeFlag, String status,
-            Long recCreUserId, Date recCreDate, Long recUpdUserId, Date recUpdDate,
-            Set<IbsUserProductLink> ibsUserProductLinks) {
+    public IbsUser(Long id, IbsCompanyBranch ibsCompanyBranch, IbsContact ibsContact,
+            String loginName, String password, String description, String freezeFlag,
+            String status, Long recCreUserId, Date recCreDate, Long recUpdUserId, Date recUpdDate,
+            Set<IbsUserRoleLink> ibsUserRoleLinks, Set<IbsUserProductLink> ibsUserProductLinks) {
         this.id = id;
+        this.ibsCompanyBranch = ibsCompanyBranch;
         this.ibsContact = ibsContact;
         this.loginName = loginName;
         this.password = password;
         this.description = description;
-        this.branchCode = branchCode;
         this.freezeFlag = freezeFlag;
         this.status = status;
         this.recCreUserId = recCreUserId;
         this.recCreDate = recCreDate;
         this.recUpdUserId = recUpdUserId;
         this.recUpdDate = recUpdDate;
+        this.ibsUserRoleLinks = ibsUserRoleLinks;
         this.ibsUserProductLinks = ibsUserProductLinks;
     }
 
@@ -71,6 +71,14 @@ public class IbsUser implements java.io.Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public IbsCompanyBranch getIbsCompanyBranch() {
+        return this.ibsCompanyBranch;
+    }
+
+    public void setIbsCompanyBranch(IbsCompanyBranch ibsCompanyBranch) {
+        this.ibsCompanyBranch = ibsCompanyBranch;
     }
 
     public IbsContact getIbsContact() {
@@ -103,14 +111,6 @@ public class IbsUser implements java.io.Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Long getBranchCode() {
-        return this.branchCode;
-    }
-
-    public void setBranchCode(Long branchCode) {
-        this.branchCode = branchCode;
     }
 
     public String getFreezeFlag() {
@@ -161,6 +161,14 @@ public class IbsUser implements java.io.Serializable {
         this.recUpdDate = recUpdDate;
     }
 
+    public Set<IbsUserRoleLink> getIbsUserRoleLinks() {
+        return this.ibsUserRoleLinks;
+    }
+
+    public void setIbsUserRoleLinks(Set<IbsUserRoleLink> ibsUserRoleLinks) {
+        this.ibsUserRoleLinks = ibsUserRoleLinks;
+    }
+
     public Set<IbsUserProductLink> getIbsUserProductLinks() {
         return this.ibsUserProductLinks;
     }
@@ -168,8 +176,5 @@ public class IbsUser implements java.io.Serializable {
     public void setIbsUserProductLinks(Set<IbsUserProductLink> ibsUserProductLinks) {
         this.ibsUserProductLinks = ibsUserProductLinks;
     }
-
-
-
 
 }

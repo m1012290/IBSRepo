@@ -1,7 +1,6 @@
 package com.shrinfo.ibs.gen.pojo;
 
-// Generated Mar 25, 2014 2:46:55 AM by Hibernate Tools 3.4.0.CR1
-
+// Generated 6 Apr, 2014 3:03:12 PM by Hibernate Tools 3.4.0.CR1
 
 import java.sql.Date;
 
@@ -10,12 +9,11 @@ import java.sql.Date;
  */
 public class IbsUserRoleLink implements java.io.Serializable {
 
-
     private Long id;
 
-    private Long userId;
+    private IbsUser ibsUser;
 
-    private Long roleId;
+    private IbsRoles ibsRoles;
 
     private String status;
 
@@ -29,16 +27,15 @@ public class IbsUserRoleLink implements java.io.Serializable {
 
     public IbsUserRoleLink() {}
 
-
     public IbsUserRoleLink(Long id) {
         this.id = id;
     }
 
-    public IbsUserRoleLink(Long id, Long userId, Long roleId, String status, Long recCreUserId,
-            Date recCreDate, Long recUpdUserId, Date recUpdDate) {
+    public IbsUserRoleLink(Long id, IbsUser ibsUser, IbsRoles ibsRoles, String status,
+            Long recCreUserId, Date recCreDate, Long recUpdUserId, Date recUpdDate) {
         this.id = id;
-        this.userId = userId;
-        this.roleId = roleId;
+        this.ibsUser = ibsUser;
+        this.ibsRoles = ibsRoles;
         this.status = status;
         this.recCreUserId = recCreUserId;
         this.recCreDate = recCreDate;
@@ -54,20 +51,20 @@ public class IbsUserRoleLink implements java.io.Serializable {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return this.userId;
+    public IbsUser getIbsUser() {
+        return this.ibsUser;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setIbsUser(IbsUser ibsUser) {
+        this.ibsUser = ibsUser;
     }
 
-    public Long getRoleId() {
-        return this.roleId;
+    public IbsRoles getIbsRoles() {
+        return this.ibsRoles;
     }
 
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
+    public void setIbsRoles(IbsRoles ibsRoles) {
+        this.ibsRoles = ibsRoles;
     }
 
     public String getStatus() {
@@ -109,8 +106,5 @@ public class IbsUserRoleLink implements java.io.Serializable {
     public void setRecUpdDate(Date recUpdDate) {
         this.recUpdDate = recUpdDate;
     }
-
-
-
 
 }

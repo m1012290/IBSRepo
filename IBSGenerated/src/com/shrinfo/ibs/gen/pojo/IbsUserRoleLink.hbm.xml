@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<!-- Generated Mar 25, 2014 2:46:55 AM by Hibernate Tools 3.4.0.CR1 -->
+<!-- Generated 6 Apr, 2014 3:03:14 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="com.shrinfo.ibs.gen.pojo.IbsUserRoleLink" table="IBS_USER_ROLE_LINK" schema="IBSUSER">
         <id name="id" type="java.lang.Long">
             <column name="ID" precision="22" scale="0" />
             <generator class="assigned" />
         </id>
-        <property name="userId" type="java.lang.Long">
+        <many-to-one name="ibsUser" class="com.shrinfo.ibs.gen.pojo.IbsUser" fetch="select">
             <column name="USER_ID" precision="22" scale="0" />
-        </property>
-        <property name="roleId" type="java.lang.Long">
+        </many-to-one>
+        <many-to-one name="ibsRoles" class="com.shrinfo.ibs.gen.pojo.IbsRoles" lazy="false" fetch="select">
             <column name="ROLE_ID" precision="22" scale="0" />
-        </property>
+        </many-to-one>
         <property name="status" type="string">
             <column name="STATUS" length="1" />
         </property>
