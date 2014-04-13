@@ -427,6 +427,10 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
 	public void setPolicyVO(PolicyVO policyVO) {
 		this.policyVO = policyVO;
 	}
+	
+	public void onTaskSelect(SelectEvent event){
+	    
+	}
 
 	/**
 	 * 
