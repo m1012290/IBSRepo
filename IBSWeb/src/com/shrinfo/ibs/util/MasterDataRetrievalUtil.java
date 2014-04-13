@@ -92,4 +92,21 @@ public class MasterDataRetrievalUtil {
         return svcResponseVO;
     }
 	
+   public static Map<String, String> getAvailableUsers(){
+        LookupVO lookUpVO = new LookupVO();
+        lookUpVO.setCategory(AppConstants.LOOKUP_CATEGORY_USER);
+        LookupVO svcResponseVO = null;
+        try{    
+            svcResponseVO = (LookupVO)ServiceTaskExecutor.INSTANCE.executeSvc("masterDataLookupSvc", "getMasterData", lookUpVO);
+        }catch(BusinessException be){
+            logger.error(be, "Exception ["+ be +"] encountered while retrieving ins companies list ");
+            FacesContext.getCurrentInstance().addMessage("ERROR_INSCOMPANIES_RETRIEVAL", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Insurance Companies list couldn't be loaded , please try after sometime", null));
+            return null;
+        }catch(SystemException se){
+            logger.error(se, "Exception ["+ se +"] encountered while retrieving ins companies list");
+            FacesContext.getCurrentInstance().addMessage("ERROR_INSCOMPANIES_RETRIEVAL", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Insurance Companies list couldn't be loaded , please try after sometime"));
+            return null;
+        }
+        return svcResponseVO.getCodeDescMap();
+    }
 }

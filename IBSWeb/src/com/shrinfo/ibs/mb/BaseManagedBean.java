@@ -23,6 +23,9 @@ public class BaseManagedBean implements Serializable {
 	private Map<String,EnquiryType>  enquiryTypes= new HashMap<String, EnquiryType>();
 	private Map<String, String> products = new HashMap<String, String>();
 	
+	private Map<String, String> usersList = new HashMap<String, String>();
+	private String referralDesc = new String();
+	
 	public Map<String, String> getTitles() {
 		return titles;
 	}
@@ -81,8 +84,28 @@ public class BaseManagedBean implements Serializable {
 		this.products = products;
 	}
 
+    public String getReferralDesc() {
+        return referralDesc;
+    }
+    
+    public void setReferralDesc(String referralDesc) {
+        this.referralDesc = referralDesc;
+    }
 
-	//public constructor
+
+    
+    public Map<String, String> getUsersList() {
+        return usersList;
+    }
+
+
+    
+    public void setUsersList(Map<String, String> usersList) {
+        this.usersList = usersList;
+    }
+
+
+    //public constructor
 	public BaseManagedBean(){
 		titles.put("Business Executive ", "Business Executive");
 		titles.put(" Govt Servant", "Govt Servant");
@@ -105,6 +128,7 @@ public class BaseManagedBean implements Serializable {
 		enquiryTypes.put("Claim", EnquiryType.CLAIMS);
 		
 		products = MasterDataRetrievalUtil.getProductDetails();
+		usersList = MasterDataRetrievalUtil.getAvailableUsers();
 	}
 	
 }

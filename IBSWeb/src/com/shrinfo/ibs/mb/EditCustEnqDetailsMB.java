@@ -442,7 +442,7 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
 			this.quoteSlipId = searchItemVO.getQuotationNum();
 			this.policyNum=searchItemVO.getPolicyNum();
 			this.policyVO.setPolicyNo(this.policyNum);
-	        FacesContext.getCurrentInstance().getExternalContext().redirect("/IBSWeb/faces/pages/editenquiry.xhtml");
+	        FacesContext.getCurrentInstance().getExternalContext().redirect("/faces/pages/editenquiry.xhtml");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}catch(BusinessException be){

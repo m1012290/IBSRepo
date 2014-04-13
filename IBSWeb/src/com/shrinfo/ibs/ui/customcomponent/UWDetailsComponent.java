@@ -20,6 +20,7 @@ import javax.faces.component.html.HtmlPanelGrid;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
+import org.primefaces.component.calendar.Calendar;
 import org.primefaces.component.inputtext.InputText;
 import org.primefaces.component.selectonemenu.SelectOneMenu;
 
@@ -60,6 +61,7 @@ public class UWDetailsComponent extends UIComponentBase {
     }
     
     //Service call would be done to retrieve applicable product details
+    /*
     private ProductVO getUWFields(Integer forProductClass){
         ProductVO productVO = new ProductVO();
         List<ProductUWFieldVO> uwFieldsList = new ArrayList<ProductUWFieldVO>();
@@ -80,7 +82,7 @@ public class UWDetailsComponent extends UIComponentBase {
       
         productVO.setUwFieldsList(uwFieldsList);
         return productVO;
-    }
+    }*/
     
     private void encodeMarkUp(FacesContext context, BaseVO inputVO) throws IOException{
         if(!Utils.isEmpty(inputVO)){
@@ -105,9 +107,8 @@ public class UWDetailsComponent extends UIComponentBase {
                 }else if(productUWField.getFieldType().equalsIgnoreCase("radiobutton")){
                     
                 }else if(productUWField.getFieldType().equalsIgnoreCase("datepicker")){
-                    
+                    childComponents.add(encodeDatePicker(context, productUWField));
                 }
-                
                 i= i + 1;
             }
             panelGrid.getChildren().addAll(childComponents);
@@ -138,6 +139,7 @@ public class UWDetailsComponent extends UIComponentBase {
         //outputText.encodeAll(context);
         return outputText;
     }
+    
     private void encodeDataTable(FacesContext context){
     	
     }
@@ -158,7 +160,14 @@ public class UWDetailsComponent extends UIComponentBase {
         return textBox;
     }
     
-    private void encodeDatePicker(FacesContext context){
-    
+    // Adds calendar picker
+    private UIComponent encodeDatePicker(FacesContext context, BaseVO inputVO){
+        ProductUWFieldVO productUWFieldVO = (ProductUWFieldVO)inputVO;
+        Calendar calendar = new Calendar();
+        calendar.setEffect("slideDown");
+        calendar.setNavigator(true);
+        calendar.setPattern("dd/MM/yyyy");
+        calendar.setId(Utils.concat("field_",String.valueOf(productUWFieldVO.getFieldOrder())));
+        return calendar;
     }
 }

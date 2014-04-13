@@ -13,7 +13,7 @@ import com.shrinfo.ibs.vo.business.SearchVO;
 
 @ManagedBean(name="enquirySearchMB")
 @SessionScoped
-public class EnquirySearchMB implements Serializable{
+public class EnquirySearchMB extends BaseManagedBean implements Serializable{
 
 	/**
 	 * 

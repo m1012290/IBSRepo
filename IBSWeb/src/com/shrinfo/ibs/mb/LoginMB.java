@@ -10,6 +10,7 @@ import javax.faces.bean.SessionScoped;
 
 import com.shrinfo.ibs.cmn.exception.BusinessException;
 import com.shrinfo.ibs.cmn.exception.SystemException;
+import com.shrinfo.ibs.cmn.vo.UserVO;
 import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
 import com.shrinfo.ibs.util.EncryptionUtil;
 import com.shrinfo.ibs.vo.business.IBSUserVO;
@@ -23,19 +24,29 @@ import com.shrinfo.ibs.vo.business.IBSUserVO;
 public class LoginMB extends BaseManagedBean implements Serializable{
 	private String userName;
 	private String password;
+	private UserVO userDetails;
+	
 	public String getPassword() {
 		return password;
 	}
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String submit(){
+	
+    public UserVO getUserDetails() {
+        return userDetails;
+    }
+    
+    public void setUserDetails(UserVO userDetails) {
+        this.userDetails = userDetails;
+    }
+    public String submit(){
 		IBSUserVO ibsUserVO = new IBSUserVO();
 		ibsUserVO.setLoginName(userName);
 		ibsUserVO.setPassword(password);
 		
 		try{	
-			ServiceTaskExecutor.INSTANCE.executeSvc("loginDetsSvc", "getUserDetails", ibsUserVO);
+			this.userDetails = (UserVO)ServiceTaskExecutor.INSTANCE.executeSvc("loginDetsSvc", "getUserDetails", ibsUserVO);
 		}catch(BusinessException be){
 	    	System.out.println("BusinessException ["+be+"] encountered");
 			//logger.error(be, "Exception ["+ be +"] encountered while retrieving available products ");

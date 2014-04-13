@@ -6,21 +6,25 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
+import org.primefaces.context.RequestContext;
+
 import com.shrinfo.ibs.cmn.exception.BusinessException;
 import com.shrinfo.ibs.cmn.exception.SystemException;
 import com.shrinfo.ibs.cmn.logger.Logger;
 import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
+import com.shrinfo.ibs.helper.ReferralHelper;
 import com.shrinfo.ibs.util.AppConstants;
 import com.shrinfo.ibs.util.MasterDataRetrievalUtil;
+import com.shrinfo.ibs.vo.app.SectionId;
 import com.shrinfo.ibs.vo.business.EnquiryVO;
 import com.shrinfo.ibs.vo.business.InsCompanyVO;
 import com.shrinfo.ibs.vo.business.InsuredVO;
@@ -29,6 +33,7 @@ import com.shrinfo.ibs.vo.business.PolicyVO;
 import com.shrinfo.ibs.vo.business.ProductUWFieldVO;
 import com.shrinfo.ibs.vo.business.ProductVO;
 import com.shrinfo.ibs.vo.business.QuoteDetailVO;
+import com.shrinfo.ibs.vo.business.TaskVO;
 
 @ManagedBean(name="quoteSlipMB")
 @SessionScoped
@@ -85,9 +90,8 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 		this.policyVO = policyVO;
 	}
 	public String save(){
-		
 		PolicyVO policyVO=new PolicyVO();
-
+		
 		try {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			
@@ -127,7 +131,16 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 				quoteDetMap.put(insComp, this.quoteDetailVO);	
 			}
 			policyVO.setQuoteDetails(quoteDetMap);
-			
+			// Before performing save operation let's check if there are any referrals
+			TaskVO taskVO = ReferralHelper.checkForReferrals(policyVO, SectionId.QUOTESLIP);
+			if(!Utils.isEmpty(taskVO)){
+			    setReferralDesc(taskVO.getDesc());
+			    RequestContext context = RequestContext.getCurrentInstance();
+		        if( context.isAjaxRequest() ){
+		            context.addCallbackParam("referral", Boolean.TRUE);
+		            return null;
+		        }
+			}
 			policyVO=(PolicyVO) ServiceTaskExecutor.INSTANCE.executeSvc("quoteSlipSvc","createQuoteSlip",policyVO);
 			this.policyVO = policyVO;
 			Set<Entry<InsCompanyVO, QuoteDetailVO>> quouEntries = policyVO.getQuoteDetails().entrySet();
@@ -142,6 +155,10 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 	    	logger.error(se, "Exception ["+ se +"] encountered while saving customer/enquiry details");
 	    	FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Unexpected error encountered, please try again after sometime"));
 	    	return null;
+	    }catch(Exception ex){
+	        logger.error(ex, "Exception ["+ ex +"] encountered while saving customer/enquiry details");
+            FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Unexpected error encountered, please try again after sometime"));
+            return null;
 	    }
         FacesContext.getCurrentInstance().addMessage("MESSAGE_SUCCESS", new FacesMessage(FacesMessage.SEVERITY_INFO,"Insured Details ","Data saved successfully. Quote slip NO:"+quoteDetailVO.getQuoteSlipId()));
 

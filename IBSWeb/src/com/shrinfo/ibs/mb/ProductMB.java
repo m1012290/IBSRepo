@@ -31,10 +31,7 @@ public class ProductMB extends BaseManagedBean implements java.io.Serializable{
     private ProductVO productDetails = new ProductVO();
     private ProductUWFieldVO productUWDetails = new ProductUWFieldVO();
     private Map<String,String> insCompanies = new HashMap<String, String>();
-    private List<String> selectedInsCompanies = new ArrayList<String>(); 
-    
-    private ProductVO test = new ProductVO();
-    
+    private List<String> selectedInsCompanies = new ArrayList<String>();
     
     public String addAction(){
         ProductUWFieldVO productUWFieldVO = new ProductUWFieldVO();
