@@ -14,12 +14,7 @@
     	<ui:define name="content">
     			<h:form id="form"> 
     			<p:growl id="messages1" showDetail="true"/>
-    				<p:breadCrumb>  
-	    				<p:menuitem value="Home" url="enquiry.xhtml" /> 
-	    				<p:menuitem value="Enquiry Details" url="editenquiry.xhtml" />
-	    				<p:menuitem value="Quote Slip Details" url="quoteslip.xhtml" />
-	    				<p:menuitem value="Closing Slip Details" url="closeslip.xhtml" /> 
-    				</p:breadCrumb><br/><br/>
+    				
     				<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" /> 
     					<p:panel id="panelQuotation" header="Insured Details" style="margin-bottom:10px;"> 
 				       			 <h:panelGrid columns="8">  
@@ -53,9 +48,9 @@
 						       
 			       				</h:panelGrid>
 					   </p:panel>
-					   <p:panel id="panelUWDetails" header="Underwriting Details" style="margin-bottom:10px;">
+					  <!--  <p:panel id="panelUWDetails" header="Underwriting Details" style="margin-bottom:10px;">
 						 	<custom:uwdetails value="#{quotationMB.quoteDetailVO.productDetails}"/>
-					  </p:panel>
+					  </p:panel> -->
 					  
 		<p:panel header="Enter the quotation Details" style="margin-bottom:10px;"> 
                 			<p:panelGrid columns="08">
@@ -76,6 +71,7 @@
                     <p:inputText  value="#{quotationMB.quoteDetailVO.quoteSlipPrmDetails.coverDescription}"/>
                     <h:outputLabel for="recSummary" value="Recommendation Summary:" />
                     <p:inputText  value="#{quotationMB.quoteDetailVO.recommendationSummary}"/>
+                    <custom:uwdetails value="#{quotationMB.quoteDetailVO.productDetails}"/>
                     
                     <f:facet name="footer">
                         <h:commandButton value="Add Item" action="#{quotationMB.addAction()}" update="quotationList"/>
@@ -83,127 +79,64 @@
                 </p:panelGrid>
                 <p:spacer height="30px;"/>
 		</p:panel>
-        <p:panel id="quotationList" header="Quotation List" style="margin-bottom:10px;">
-                <p:dataTable value="#{quotationMB.quoteDetailList}" var="o"  widgetVar="50" style="width: 60px;" editable="true">
-                    <p:ajax event="rowEdit" listener="#{quotationMB.onEdit}" update=":form:messages1" />  
-                    <p:ajax event="rowEditCancel" listener="#{quotationMB.onCancel}" update=":form:messages1" /> 
-                    
-                    <p:column>
-                        <f:facet name="header">  
-                            <h:outputText value="" />  
-                        </f:facet>
-                        <p:cellEditor>  
-                            <f:facet name="output">  
-                                <h:selectBooleanCheckbox value="#{o.isQuoteRecommended}" />  
-                            </f:facet>
-                            <f:facet name="input">  
-                                <p:selectBooleanCheckbox value="#{o.isQuoteRecommended}" style="width:100%" />  
-                            </f:facet>  
-                        </p:cellEditor> 
-                    </p:column>
-                    
-                    <p:column>
-                        <f:facet name="header">  
-                            <h:outputText value="Company Name" />  
-                        </f:facet>
-                        <p:cellEditor>  
-                            <f:facet name="output">  
-                                <h:outputText value="#{o.companyCode}" />  
-                            </f:facet>  
-                            <f:facet name="input">  
-                                <p:inputText value="#{o.companyCode}" style="width:100%"/>  
-                            </f:facet>  
-                        </p:cellEditor> 
-                    </p:column>
- 
-                    <p:column>
-                        <f:facet name="header">  
-                            <h:outputText value="Quote Number" />  
-                        </f:facet>
-                        <p:cellEditor>  
-                            <f:facet name="output">  
-                                <h:outputText value="#{o.quoteNo}" />  
-                            </f:facet>  
-                            <f:facet name="input">  
-                                <p:inputText value="#{o.quoteNo}" style="width:100%"/>  
-                            </f:facet>  
-                        </p:cellEditor>
-                    </p:column>
- 
-                    <p:column>
-                        <f:facet name="header">  
-                            <h:outputText value="Quoted Premium" />  
-                        </f:facet>
-                        <p:cellEditor>  
-                            <f:facet name="output">  
-                                <h:outputText value="#{o.quoteSlipPrmDetails.premium}" />  
-                            </f:facet>  
-                            <f:facet name="input">  
-                                <p:inputText value="#{o.quoteSlipPrmDetails.premium}" style="width:100%"/>  
-                            </f:facet>  
-                        </p:cellEditor>
-                    </p:column>  
-                    
-                    <p:column>
-                        <f:facet name="header">  
-                            <h:outputText value="Sum Insured" />  
-                        </f:facet>
-                        <p:cellEditor>  
-                            <f:facet name="output">  
-                                <h:outputText value="#{o.sumInsured}" />  
-                            </f:facet>  
-                            <f:facet name="input">  
-                                <p:inputText value="#{o.sumInsured}" style="width:100%"/>  
-                            </f:facet>  
-                        </p:cellEditor>
-                    </p:column> 
-                    
-                    <p:column>
-                        <f:facet name="header">  
-                            <h:outputText value="Policy Term" />  
-                        </f:facet>
-                        <p:cellEditor>  
-                            <f:facet name="output">  
-                                <h:outputText value="#{o.policyTerm}" />  
-                            </f:facet>  
-                            <f:facet name="input">  
-                                <p:inputText value="#{o.policyTerm}" style="width:100%"/>  
-                            </f:facet>  
-                        </p:cellEditor>
-                    </p:column> 
-                    
-                    <p:column>
-                        <f:facet name="header">  
-                            <h:outputText value="Cover Description" />  
-                        </f:facet>
-                        <p:cellEditor>  
-                            <f:facet name="output">  
-                                <h:outputText value="#{o.quoteSlipPrmDetails.coverDescription}" />  
-                            </f:facet>  
-                            <f:facet name="input">  
-                                <p:inputText value="#{o.quoteSlipPrmDetails.coverDescription}" style="width:100%"/>  
-                            </f:facet>  
-                        </p:cellEditor>
-                    </p:column> 
-                    
-                    <p:column>
-                        <f:facet name="header">  
-                            <h:outputText value="Recommendation Summary" />  
-                        </f:facet>
-                        <p:cellEditor>  
-                            <f:facet name="output">  
-                                <h:outputText value="#{o.recommendationSummary}" />  
-                            </f:facet>  
-                            <f:facet name="input">  
-                                <p:inputText value="#{o.recommendationSummary}" style="width:100%"/>  
-                            </f:facet>  
-                        </p:cellEditor>
-                    </p:column>              
-                    <p:column headerText="Options" style="width:50px">  
-                        <p:rowEditor />  
-                    </p:column> 
-                </p:dataTable>
-            </p:panel>
+        
+        <p:dataGrid var="quote"
+					value="#{quotationMB.quoteDetailVODataModel}" columns="3" rows="12"
+					paginator="true"
+					paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rowsPerPageTemplate="9,12,15">
+					<p:panel header="#{quote.companyCode}" style="text-align:center;"
+						closable="true">
+						<p:ajax event="close" listener="#{quotationMB.handleClose}" />
+						<p:panelGrid columns="2" style="width:100%">
+
+							<h:outputLabel value="Recommended" />
+							<h:selectBooleanCheckbox value="#{quote.isQuoteRecommended}" />
+
+							<h:outputLabel value="Quote number" />
+							<h:inputText value="#{quote.quoteNo}" />
+
+							<h:outputLabel value="Quoted premium" />
+							<h:inputText value="#{quote.quoteSlipPrmDetails.premium}" />
+
+							<h:outputLabel value="Sum Insured" />
+							<h:inputText value="#{quote.sumInsured}" />
+
+							<h:outputLabel value="Policy Term" />
+							<h:inputText value="#{quote.policyTerm}" />
+
+							<h:outputLabel value="Cover Description" />
+							<h:inputText
+								value="#{quote.quoteSlipPrmDetails.coverDescription}" />
+
+							<h:outputLabel value="Recommendation Summary" />
+							<h:inputText value="#{quote.recommendationSummary}" />
+
+							<h:outputLabel value="UW fields" />
+							<p:commandLink update=":form:uwFieldDetail"
+								oncomplete="PF('uwFieldDetailDialog').show()"
+								title="View Detail">
+								<h:outputText styleClass="ui-icon ui-icon-search"
+									style="margin:0 auto;" />
+								<f:setPropertyActionListener value="#{quote}"
+									target="#{quotationMB.selectedQuoteDetailVO}" />
+							</p:commandLink>
+
+						</p:panelGrid>
+					</p:panel>
+				</p:dataGrid>
+				
+				<p:dialog header="UW Fields Detail" widgetVar="uwFieldDetailDialog"
+					modal="true" appendToBody="true">
+					<p:outputPanel id="uwFieldDetail" style="margin-bottom:10px;">
+
+						<h:panelGrid columns="2" cellpadding="5">
+							<custom:uwdetails
+								value="#{quotationMB.selectedQuoteDetailVO.productDetails}" />
+
+						</h:panelGrid>
+					</p:outputPanel>
+				</p:dialog>
 					   
 			<p:commandButton value="Save" action="#{quotationMB.save}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" icon="ui-icon-disk"  style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
 			<p:commandButton value="Next" action="#{policyMB.loadQuotationDetails}"  style="float:right:20px;" />
