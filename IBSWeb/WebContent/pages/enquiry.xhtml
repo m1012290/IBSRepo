@@ -15,7 +15,9 @@
     		<ui:define name="content">
     			
     			
-    			<h:form>  
+    			<h:form>
+    				
+    				<h2>Pending referral tasks</h2>  
     			   			
     				<p:dataTable id ="taskTable" var="task" value="#{loginBean.taskDataModel}" paginator="true" rows="5"  
                  	selection="#{enquirySearchMB.referralTask}" selectionMode="single">  
