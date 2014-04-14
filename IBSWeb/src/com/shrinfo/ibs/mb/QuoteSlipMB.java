@@ -202,13 +202,14 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 			if(!Utils.isEmpty(editCustEnqDetailsMB.getInsuredDetails().getId())){
 				this.insuredDetails.setId(editCustEnqDetailsMB.getInsuredDetails().getId());
 				
-				//Retrieving insured details based on insured id
-				this.insuredDetails =  (InsuredVO)ServiceTaskExecutor.INSTANCE.executeSvc("quoteSlipSvc","getInsuredDetails",this.insuredDetails);
-				
 				//Retrieve quote slip details basis quote slip id retained on enquiry form through search results on home page
 				this.quoteDetailVO.setQuoteSlipId(editCustEnqDetailsMB.getQuoteSlipId());
 				this.quoteDetailVO.setQuoteSlipVersion(Long.valueOf(1));
 				PolicyVO policyVO  =  (PolicyVO)ServiceTaskExecutor.INSTANCE.executeSvc("quoteSlipSvc","getQuoteSlipDetails",this.quoteDetailVO);
+				
+				this.insuredDetails.setId(policyVO.getInsuredDetails().getId());
+                //Retrieving insured details based on insured id
+                this.insuredDetails =  (InsuredVO)ServiceTaskExecutor.INSTANCE.executeSvc("quoteSlipSvc","getInsuredDetails",this.insuredDetails);
 				
 				policyVO.setPolicyNo(editCustEnqDetailsMB.getPolicyNum());//added
 				Map<InsCompanyVO, QuoteDetailVO>  mapOfQuoteDets = policyVO.getQuoteDetails();
