@@ -22,6 +22,7 @@ import com.shrinfo.ibs.vo.business.InsuredVO;
 import com.shrinfo.ibs.vo.business.PolicyVO;
 import com.shrinfo.ibs.vo.business.QuoteDetailVO;
 import com.shrinfo.ibs.vo.business.SearchItemVO;
+import com.shrinfo.ibs.vo.business.TaskVO;
 
 @ManagedBean(name="editCustEnqDetailsMB")
 @SessionScoped
@@ -427,6 +428,44 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
 	public void setPolicyVO(PolicyVO policyVO) {
 		this.policyVO = policyVO;
 	}
+	
+	public void onTaskSelect(SelectEvent event){
+	    
+	    try {
+            TaskVO taskVO = (TaskVO) event.getObject();
+            this.enquiryVO.setEnquiryNo(taskVO.getEnquiry().getEnquiryNo());
+            this.enquiryVO =
+                (EnquiryVO) ServiceTaskExecutor.INSTANCE.executeSvc("customerEnquirySvc",
+                    "getCustomerEnquiry", this.enquiryVO);
+
+            FacesContext.getCurrentInstance().getExternalContext()
+                    .redirect("editenquiry.xhtml");
+        } catch (IOException e) {
+            logger.error(e, "Exception [" + e
+                + "] encountered while loading customer/enquiry details");
+            FacesContext.getCurrentInstance().addMessage(
+                "ERROR_ENQUIRY_SAVE",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "encountered while loading customer/enquiry details", null));
+        } catch (BusinessException be) {
+            logger.error(be, "Exception [" + be
+                + "] encountered while loading customer/enquiry details");
+            FacesContext.getCurrentInstance().addMessage(
+                "ERROR_ENQUIRY_SAVE",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "encountered while loading customer/enquiry details", null));
+
+        } catch (SystemException se) {
+            logger.error(se, "Exception [" + se
+                + "] encountered while saving customer/enquiry details");
+            FacesContext.getCurrentInstance().addMessage(
+                "ERROR_ENQUIRY_SAVE",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+                    "Unexpected error encountered, please try again after sometime"));
+        }
+
+	    
+	}
 
 	/**
 	 * 
@@ -442,7 +481,8 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
 			this.quoteSlipId = searchItemVO.getQuotationNum();
 			this.policyNum=searchItemVO.getPolicyNum();
 			this.policyVO.setPolicyNo(this.policyNum);
-	        FacesContext.getCurrentInstance().getExternalContext().redirect("/faces/pages/editenquiry.xhtml");
+	        
+	        FacesContext.getCurrentInstance().getExternalContext().redirect("editenquiry.xhtml");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}catch(BusinessException be){
