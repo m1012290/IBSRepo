@@ -10,10 +10,35 @@
     	
     	<ui:composition template="/template/common/commonLayout.xhtml">
     	
+    	
+    	
     		<ui:define name="content">
-    			<h2>Enquiry Search</h2>
     			
-    			<h:form>  
+    			
+    			<h:form>
+    				
+    				<h2>Pending referral tasks</h2>  
+    			   			
+    				<p:dataTable id ="taskTable" var="task" value="#{loginBean.taskDataModel}" paginator="true" rows="5"  
+                 	selection="#{enquirySearchMB.referralTask}" selectionMode="single">  
+                 
+	                   <p:ajax event="rowSelect" listener="#{editCustEnqDetailsMB.onTaskSelect}"/> 
+	                    
+				        <p:column headerText="Enquiry Number">  
+				            <h:outputText value="#{task.enquiry.enquiryNo}" />  
+				        </p:column>  
+				  
+				        <p:column headerText="Referral description">  
+				            <h:outputText value="#{task.desc}" />  
+				        </p:column> 
+				        
+				        <p:column headerText="Assigned by">  
+				            <h:outputText value="#{task.assignerUser.loginName}" />  
+				        </p:column>
+			        
+	    			</p:dataTable> 
+    		
+    				<h2>Enquiry Search</h2>
     			 
 				    <p:panel id="panel" header="Search" style="margin-bottom:10px;">  
 				        <p:messages id="messages" />  
