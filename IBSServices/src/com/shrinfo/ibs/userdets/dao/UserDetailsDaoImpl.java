@@ -67,6 +67,7 @@ public class UserDetailsDaoImpl extends BaseDBDAO implements UserDetailsDao{
 		userVO.setIsActive(ibsUserList.get(0).getStatus());
 		userVO.setPassword(ibsUserList.get(0).getPassword());
 		userVO.setLoginName(ibsUserList.get(0).getLoginName());
+		userVO.setUserId(ibsUserList.get(0).getId());
 		//user contact details
 		populateUserContact(ibsUserList.get(0), ibsUser);
 		//user branch details

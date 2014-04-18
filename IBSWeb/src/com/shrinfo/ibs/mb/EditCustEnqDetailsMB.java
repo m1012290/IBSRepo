@@ -24,6 +24,8 @@ import com.shrinfo.ibs.vo.business.QuoteDetailVO;
 import com.shrinfo.ibs.vo.business.SearchItemVO;
 import com.shrinfo.ibs.vo.business.TaskVO;
 
+
+
 @ManagedBean(name="editCustEnqDetailsMB")
 @SessionScoped
 public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializable {
@@ -481,7 +483,6 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
 			this.quoteSlipId = searchItemVO.getQuotationNum();
 			this.policyNum=searchItemVO.getPolicyNum();
 			this.policyVO.setPolicyNo(this.policyNum);
-	        
 	        FacesContext.getCurrentInstance().getExternalContext().redirect("editenquiry.xhtml");
 		} catch (IOException e) {
 			e.printStackTrace();

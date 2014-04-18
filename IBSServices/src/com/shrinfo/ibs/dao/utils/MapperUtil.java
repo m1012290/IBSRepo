@@ -218,7 +218,9 @@ public class MapperUtil {
 
         enquiryVO.setEnquiryNo(ibsCustomerEnquiry.getEnquiryNo().longValue());
         enquiryVO.setEnquirySme(ibsCustomerEnquiry.getEnquirySubjectmatterExpert());
-        enquiryVO.setType(EnquiryType.valueOf(ibsCustomerEnquiry.getType()));
+        if(!Utils.isEmpty(ibsCustomerEnquiry.getType())){
+            enquiryVO.setType(EnquiryType.valueOf(ibsCustomerEnquiry.getType()));
+        }        
         CustomerVO customerVO = new CustomerVO();
         populateCustomerVO(customerVO, ibsCustomerEnquiry.getIbsCustomer());
         enquiryVO.setCustomerDetails(customerVO);
