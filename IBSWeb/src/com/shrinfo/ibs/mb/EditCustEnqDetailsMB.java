@@ -82,6 +82,61 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
 	
 	private InsuredVO insuredDetails = new InsuredVO();
 	
+	
+	//This is an important method which is overriden from parent managed bean
+    // this is an reinitializer block which includes all the instance fields which are bound to form
+    // this method is necessary as managed beans are defined as sessionscoped beans
+    protected void reinitializeBeanFields(){
+        this.custName = null;
+        this.custGroup = null;
+        this.firstName = null;
+        this.middleName = null;
+        this.lastName = null;
+        this.primaryEmailID = null;
+        this.primaryMobNum = null;
+        this.primaryLandLineNum = null;
+        this.faxNum = null;
+        this.city = null;
+        this.country = null;
+        this.address = null;
+        this.poBox = null;
+        this.locLattitude = null;
+        this.locLongitude = null;
+        this.altEmailID1 = null;
+        this.altMobNum1 = null;
+        this.altLandLineNum1 = null;
+        this.altEmailID2 = null;
+        this.altMobNum2 = null;
+        this.altLandLineNum2 = null;
+        this.sourceOfBusiness = null;
+        this.salesExecutive = null;
+        
+        this.title = null;
+        this.custCategory = null;
+        this.custClassification = null;
+        this.salutation = null;
+        
+        this.enquiryNum = null;
+        this.enquiryType = null;
+        this.enquiryDesc = null;
+        this.recCreatedUserID = null;
+        this.recCreatedDate = null;
+        this.recUpdatedUserID = null;
+        this.recUpdatedDate = null;
+        
+        this.quotationNum = null;
+        this.policyNum = null;
+        this.quoteVersion = null;
+        this.endorsementNum = null;
+        this.quoteSlipId = null;
+        
+        this.enquiryVO = new EnquiryVO();
+        this.quoteDetailVO=new QuoteDetailVO();
+        this.policyVO=new PolicyVO();
+        this.insuredDetails = new InsuredVO();
+
+    }
+	
 	public EditCustEnqDetailsMB() {
 		super();
 	}

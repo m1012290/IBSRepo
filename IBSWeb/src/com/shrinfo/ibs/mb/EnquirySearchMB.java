@@ -44,7 +44,24 @@ public class EnquirySearchMB extends BaseManagedBean implements Serializable {
     private SearchItemVODataModel searchItemVODataModel;
     
     private TaskVO referralTask = new TaskVO();
-    
+
+    //This is an important method which is overriden from parent managed bean
+    // this is an reinitializer block which includes all the instance fields which are bound to form
+    // this method is necessary as managed beans are defined as sessionscoped beans
+    protected void reinitializeBeanFields(){
+        this.custName = null;
+        this.mobNumber = null;
+        this.emailID = null;
+        this.insuredName = null;
+        this.enquiryNumber = null;
+        this.quoteSlipNumber = null;
+        this.policyNumber = null;
+        this.searchList = null;
+        this.searchItem = null;
+        this.searchItemVODataModel = null;
+        this.referralTask = new TaskVO();
+    }
+
 
     public EnquirySearchMB() {
         super();
@@ -213,6 +230,6 @@ public class EnquirySearchMB extends BaseManagedBean implements Serializable {
         }
 
         return "editenquiry";
-    }   
-
+    }
+    
 }

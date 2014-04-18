@@ -32,9 +32,16 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
     private PolicyVO policyDetails = new PolicyVO();
 
     private InsuredVO insuredDetails = new InsuredVO();
-
-    private InsuredVO test = new InsuredVO();
-
+    
+    //This is an important method which is overriden from parent managed bean
+    // this is an reinitializer block which includes all the instance fields which are bound to form
+    // this method is necessary as managed beans are defined as sessionscoped beans
+    protected void reinitializeBeanFields(){
+        this.quoteDetailVO = new QuoteDetailVO();
+        this.policyDetails = new PolicyVO();
+        this.insuredDetails = new InsuredVO();
+    }
+    
     public QuoteDetailVO getQuoteDetailVO() {
         return quoteDetailVO;
     }
@@ -159,7 +166,5 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
         return "policy";
 
     }
-
-
 
 }

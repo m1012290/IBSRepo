@@ -14,4 +14,19 @@ public class AppConstants {
 	public static final String LOOKUP_CATEGORY_USER = "USER";
 
 	public static final String SESSION_ATTRIBUTE_REFERRAL_DATA = "REFERRAL_DATA";
+	
+	public static final String HOME_PAGE_URI = "/faces/pages/enquiry.xhtml";
+	public static final String ENQUIRY_PAGE_URI = "/faces/pages/editenquiry.xhtml";
+	public static final String QUOTE_SLIP_PAGE_URI = "/faces/pages/quoteslip.xhtml";
+	public static final String CLOSING_SLIP_PAGE_URI = "/faces/pages/closeslip.xhtml";
+	public static final String POLICY_PAGE_URI = "/faces/pages/policy.xhtml";
+	
+	public static final String BEAN_NAME_HOME_PAGE = "enquirySearchMB";
+	public static final String BEAN_NAME_ENQUIRY_PAGE = "editCustEnqDetailsMB";
+	public static final String BEAN_NAME_QUOTE_SLIP_PAGE = "quoteSlipMB";
+	public static final String BEAN_NAME_CLOSING_SLIP_PAGE = "quotationMB";
+	public static final String BEAN_NAME_POLICY_PAGE = "policyMB";
+	
+	
+	public static final String APP_PAGES_IN_ORDER = "APP_PAGES_IN_ORDER";
 }

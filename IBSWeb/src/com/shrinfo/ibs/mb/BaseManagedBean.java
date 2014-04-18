@@ -13,7 +13,7 @@ import com.shrinfo.ibs.vo.app.EnquiryType;
 /**
  * @author Sunil Kumar
  */
-public class BaseManagedBean implements Serializable {
+public abstract class BaseManagedBean implements Serializable {
 
 	private static final long serialVersionUID = -4604529567842501787L;
 	private Map<String,String> titles = new HashMap<String, String>();
@@ -130,5 +130,7 @@ public class BaseManagedBean implements Serializable {
 		products = MasterDataRetrievalUtil.getProductDetails();
 		usersList = MasterDataRetrievalUtil.getAvailableUsers();
 	}
+	
+	protected abstract void reinitializeBeanFields();
 	
 }

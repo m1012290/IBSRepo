@@ -17,12 +17,14 @@
 		</script>
 			
 			<h1>Insurance Brokerage Solution</h1>
+			<h:form id="headerform">
 				<p:breadCrumb>
-					<p:menuitem value="Home" url="enquiry.xhtml" />
+					<p:menuitem value="Home" ajax="false" action="#{menuMB.redirectToHomePage}" />
 					<p:menuitem value="Enquiry Details" url="editenquiry.xhtml" />
 					<p:menuitem value="Quote Slip Details" url="quoteslip.xhtml" />
 					<p:menuitem value="Closing Slip Details" url="closeslip.xhtml" />
 				</p:breadCrumb>	
+	    	</h:form>
 	    </ui:composition>
 	    
     </body>

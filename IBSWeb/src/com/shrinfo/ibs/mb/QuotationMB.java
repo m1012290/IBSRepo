@@ -70,6 +70,25 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
     private List<QuoteDetailVO> quoteDetailListClosed = new ArrayList<QuoteDetailVO>();
 
 
+    //This is an important method which is overriden from parent managed bean
+    // this is an reinitializer block which includes all the instance fields which are bound to form
+    // this method is necessary as managed beans are defined as sessionscoped beans
+    protected void reinitializeBeanFields(){
+        this.selectedInsCompanies = new ArrayList<String>();
+        this.insCompanies = new HashMap<String, String>();
+        this.quoteDetailVO = new QuoteDetailVO();
+        this.selectedQuoteDetailVO = new QuoteDetailVO();
+        this.quoteProductDetails = new ProductVO();
+        this.quoteDetailVOClosed = new QuoteDetailVO();
+        this.insuredDetails = new InsuredVO();
+        this.quoteDetailList = new ArrayList<QuoteDetailVO>();
+        this.policyDetails = new PolicyVO();
+        
+        this.quoteDetailVODataModel = null;
+        this.quoteDetSelection = new QuoteDetailVO();
+        this.quoteDetailListClosed = new ArrayList<QuoteDetailVO>();
+    }
+    
     /**
      * @return the quoteDetSelection
      */
