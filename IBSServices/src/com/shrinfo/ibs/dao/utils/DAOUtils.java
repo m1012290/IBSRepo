@@ -415,6 +415,10 @@ public class DAOUtils {
                 if (!Utils.isEmpty(quoteDetailVO.getQuoteId())) {
                     quoteHeader.setId(quoteDetailVO.getQuoteId());
                 }
+                if (quoteDetailVO.getIsQuoteRecommended()
+                    && !Utils.isEmpty(quoteDetailVO.getRecommendationSummary())) {
+                    quoteHeader.setRecommendationSummary(quoteDetailVO.getRecommendationSummary());
+                }
             }
             ibsQuoteDetailsAll.addAll(ibsQuoteSlipDetails);
 
@@ -426,8 +430,6 @@ public class DAOUtils {
         // following details in quote comparison header will be same in each of
         // insurance company
         // quote details
-        quoteHeader.setRecommendationSummary(quoteDetailVO.getRecommendationSummary());
-
 
         quoteHeader.setCustomerId(quoteDetailVO.getCustomerId());
         quoteHeader.setIbsProductMaster(constructIbsProduct(quoteDetailVO.getProductDetails()));
@@ -495,11 +497,11 @@ public class DAOUtils {
             StatusVO statusVO = new StatusVO();
             statusVO.setCode(quoteDetailVO.getStatusCode());
             ibsQuoteDetail.setIbsStatusMaster(constructIbsStatusMaster(statusVO));
-           
+
             ibsQuoteDetail.setQuoteApprovedBy(String.valueOf(quoteDetailVO
                     .getQuoteSlipApprovedByUserId()));
             ibsQuoteDetail.setQuoteDate(constructSqlDate(quoteDetailVO.getQuoteDate()));
-          
+
             ibsQuoteDetail.setQuoteNo(quoteDetailVO.getQuoteNo());
             ibsQuoteDetail.setQuoteRecommended(quoteDetailVO.getIsQuoteRecommended() ? "Y" : "N");
 
