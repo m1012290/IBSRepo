@@ -80,24 +80,24 @@ public class SearchDaoImpl extends BaseDBDAO implements SearchDao {
                 + " CUST_CONTACT_ID,INSURED_ID, CUST_ID FROM IBS_V_INSURED_SEARCH IVIS ";
 
         if (!Utils.isEmpty(searchItem.getCustomerName())) {
-            buffer.append(" AND IVIS.CUST_NAME LIKE '%" + searchItem.getCustomerName() + "%'");
+            buffer.append(" AND UPPER(IVIS.CUST_NAME) LIKE '%" + searchItem.getCustomerName().toUpperCase() + "%'");
         }
         if (!Utils.isEmpty(searchItem.getCustomerMob())) {
             buffer.append(" AND IVIS.MOB_NO = '" + searchItem.getCustomerMob()+ "'");
         }
         if (!Utils.isEmpty(searchItem.getCustomerEmail())) {
-            buffer.append(" AND IVIS.EMAIL = '" + searchItem.getCustomerEmail()+ "'");
+            buffer.append(" AND UPPER(IVIS.EMAIL) = '" + searchItem.getCustomerEmail().toUpperCase()+ "'");
         }
         if (!Utils.isEmpty(searchItem.getInsuredName())) {
-            buffer.append(" AND IVIS.INSURED_NAME = '" + searchItem.getInsuredName()+ "'");
+            buffer.append(" AND UPPER(IVIS.INSURED_NAME) LIKE '%" + searchItem.getInsuredName().toUpperCase()+ "%'");
         }
-        if (0 < searchItem.getEnquiryNum()) {
+        if (!Utils.isEmpty(searchItem.getEnquiryNum()) && 0 < searchItem.getEnquiryNum()) {
             buffer.append(" AND IVIS.ENQUIRY_NO = " + searchItem.getEnquiryNum());
         }
-        if (0 < searchItem.getQuotationNum()) {
+        if (!Utils.isEmpty(searchItem.getQuotationNum()) && 0 < searchItem.getQuotationNum()) {
             buffer.append(" AND IVIS.QUOTATION_NO = " + searchItem.getQuotationNum());
         }
-        if (!Utils.isEmpty(searchItem.getPolicyNum())) {
+        if (!Utils.isEmpty(searchItem.getPolicyNum()) && !Utils.isEmpty(searchItem.getPolicyNum())) {
             buffer.append(" AND IVIS.POLICY_NO = '" + searchItem.getPolicyNum()+ "'");
         }
 
