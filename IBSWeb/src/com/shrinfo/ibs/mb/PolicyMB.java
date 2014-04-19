@@ -151,7 +151,11 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
         this.quoteDetailVO = quotation.getQuoteDetailVOClosed();
         this.insuredDetails = quotation.getInsuredDetails();
         if (Utils.isEmpty(this.quoteDetailVO.getQuoteId())) {
-            return "policy";
+            FacesContext.getCurrentInstance().addMessage(
+                "ERROR_QUOTATION_SAVE",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Quote Details : At least one quote has to be recommended",
+                    "Quote Details : At least one quote has to be recommended"));
+            return null;
         }
         this.policyDetails.setQuoteId(this.quoteDetailVO.getQuoteId());
         this.policyDetails.setInsuredDetails(insuredDetails);
