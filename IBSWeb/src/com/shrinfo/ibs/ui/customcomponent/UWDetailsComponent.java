@@ -4,6 +4,8 @@
 package com.shrinfo.ibs.ui.customcomponent;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -160,13 +162,21 @@ public class UWDetailsComponent extends UIComponentBase {
         return textBox;
     }
     
-    // Adds calendar picker
+    // Adds calendar picker8
     private UIComponent encodeDatePicker(FacesContext context, BaseVO inputVO){
         ProductUWFieldVO productUWFieldVO = (ProductUWFieldVO)inputVO;
         Calendar calendar = new Calendar();
         calendar.setEffect("slideDown");
         calendar.setNavigator(true);
         calendar.setPattern("dd/MM/yyyy");
+        if(!Utils.isEmpty(productUWFieldVO.getResponse())){
+            try {
+                calendar.setValue(new SimpleDateFormat("dd/MM/yyyy").parse(productUWFieldVO.getResponse()));
+            } catch (ParseException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
         calendar.setId(Utils.concat("field_",String.valueOf(productUWFieldVO.getFieldOrder())));
         return calendar;
     }

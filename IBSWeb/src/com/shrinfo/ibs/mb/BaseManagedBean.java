@@ -6,9 +6,10 @@ package com.shrinfo.ibs.mb;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-
+import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.util.MasterDataRetrievalUtil;
 import com.shrinfo.ibs.vo.app.EnquiryType;
+import com.shrinfo.ibs.vo.business.ProductUWFieldVO;
 
 /**
  * @author Sunil Kumar
@@ -131,6 +132,21 @@ public abstract class BaseManagedBean implements Serializable {
 		usersList = MasterDataRetrievalUtil.getAvailableUsers();
 	}
 	
+	//to be implemented by each of the child beans to reinitialize the state of declared instance fields
 	protected abstract void reinitializeBeanFields();
 	
+	/**
+	 * 
+	 * @param uwFieldVO
+	 * @return
+	 */
+	public String getComponentClientId(ProductUWFieldVO uwFieldVO){
+        String componentClientId = null;
+	    if(uwFieldVO.getFieldType().equalsIgnoreCase("datepicker")){
+            componentClientId = Utils.concat("field_",String.valueOf(uwFieldVO.getFieldOrder()), "_input");
+        }else{
+            componentClientId = Utils.concat("field_",String.valueOf(uwFieldVO.getFieldOrder()));
+        }
+	    return componentClientId;
+	}
 }

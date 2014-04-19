@@ -115,7 +115,7 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 			if(!Utils.isEmpty(requestMap)){
 				ProductVO productDetails = this.quoteDetailVO.getProductDetails();
 				for(ProductUWFieldVO uwField : productDetails.getUwFieldsList()){
-					String response = requestMap.get(Utils.concat("field_",String.valueOf(uwField.getFieldOrder())));
+				    String response = requestMap.get(getComponentClientId(uwField));
 					uwField.setResponse(response);
 				}
 			}
