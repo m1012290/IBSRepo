@@ -6,7 +6,7 @@ import com.shrinfo.ibs.cmn.vo.BaseVO;
  * @author Sunil Kumar This class represents Underwriting field details corresponding to a
  *         particular product class.
  */
-public class ProductUWFieldVO extends BaseVO implements Comparable<ProductUWFieldVO> {
+public class ProductUWFieldVO extends BaseVO implements Comparable<ProductUWFieldVO>, Cloneable {
 
     private static final long serialVersionUID = -8547918153558242262L;
 
