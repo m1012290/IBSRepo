@@ -8,6 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
+import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
 import com.shrinfo.ibs.vo.business.SearchItemVO;
 import com.shrinfo.ibs.vo.business.SearchVO;
@@ -69,7 +70,7 @@ public class EnquirySearchMB extends BaseManagedBean implements Serializable {
 
 
     public EnquirySearchMB(String custName, String mobNumber, String emailID, String insuredName,
-            long enquiryNumber, long quoteSlipNumber, String policyNumber) {
+            Long enquiryNumber, Long quoteSlipNumber, String policyNumber) {
         super();
         this.custName = custName;
         this.mobNumber = mobNumber;
@@ -200,6 +201,14 @@ public class EnquirySearchMB extends BaseManagedBean implements Serializable {
 
 
     public String submit() {
+        
+        // TODO: this is a temporary fix.
+        if(!Utils.isEmpty(this.enquiryNumber) && 0 == this.enquiryNumber){
+            this.enquiryNumber = null;
+        }        
+        if(!Utils.isEmpty(this.quoteSlipNumber) && 0 == this.quoteSlipNumber){
+            this.quoteSlipNumber = null;
+        }
 
         SearchItemVO inputSearchItem = new SearchItemVO();
         inputSearchItem.setCustomerName(this.custName);
