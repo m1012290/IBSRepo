@@ -144,4 +144,10 @@ public class LoginMB extends BaseManagedBean implements Serializable {
                 loginManageBean.getUserDetails());
         this.taskDataModel = new TaskItemVODataModel(this.referralTaskItems.getTaskVOs());
     }
+
+    @Override
+    protected void reinitializeBeanFields() {
+        // TODO Auto-generated method stub
+        
+    }
 }

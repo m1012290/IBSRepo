@@ -256,6 +256,16 @@
 	<bean id="policySvcDAOBean" class="com.shrinfo.ibs.policy.dao.PolicyDaoImpl">
 		<property name="hibernateTemplate" ref="hibernateTemplate" />
 	</bean>
+	
+	<bean id="referralTaskSvc" parent="baseProxyBean">
+		<property name="target" ref="referralTaskSvcBean" />
+	</bean>
+	<bean id="referralTaskSvcBean" class="com.shrinfo.ibs.task.svc.ReferralTaskServiceImpl">
+		<property name="taskDao" ref="referralTaskSvcDAOBean" />
+	</bean>
+	<bean id="referralTaskSvcDAOBean" class="com.shrinfo.ibs.task.dao.TaskDaoImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
 
 </beans>
 

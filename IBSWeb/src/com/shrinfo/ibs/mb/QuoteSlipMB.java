@@ -56,6 +56,17 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 	private InsuredVO insuredDetails=new InsuredVO();
 	private PolicyVO policyVO = new PolicyVO();
 	
+	//This is an important method which is overriden from parent managed bean
+    // this is an reinitializer block which includes all the instance fields which are bound to form
+    // this method is necessary as managed beans are defined as sessionscoped beans
+    protected void reinitializeBeanFields(){
+        this.selectedInsCompanies = new ArrayList<String>();
+        this.insCompanies = new HashMap<String, String>();
+        this.quoteDetailVO = new QuoteDetailVO();
+        this.insuredDetails=new InsuredVO();
+        this.policyVO = new PolicyVO();
+    }
+	
 	public Map<String, String> getInsCompanies() {
 		return insCompanies;
 	}
@@ -229,10 +240,7 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 				 lookupVO.setLevel1(String.valueOf(this.quoteDetailVO.getProductDetails().getUwFieldsList().get(0).getProductClass()));
 				 LookupVO responseVO = MasterDataRetrievalUtil.getInsCompanies(lookupVO);
 				 this.insCompanies = responseVO.getCodeDescMap();
-				 
 				 this.policyVO = policyVO;
-				 
-	
 				
 			}
 		}catch(Exception ex){

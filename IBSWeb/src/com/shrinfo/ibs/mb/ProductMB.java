@@ -96,4 +96,10 @@ public class ProductMB extends BaseManagedBean implements java.io.Serializable{
     public void setSelectedInsCompanies(List<String> selectedInsCompanies) {
         this.selectedInsCompanies = selectedInsCompanies;
     }
+
+    @Override
+    protected void reinitializeBeanFields() {
+        // TODO Auto-generated method stub
+        
+    }
 }
