@@ -190,7 +190,16 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
      * @return
      */
     public String addAction() {
-        this.quoteDetailList.add(getQuoteDetailTableData(this.quoteDetailVO));
+        if(this.quoteDetailList.contains(this.quoteDetailVO)){
+            FacesContext.getCurrentInstance().addMessage(
+                "ERROR_QUOTATION_SAVE",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Selected company record is already added",
+                    "Please select only one quotation to recommend"));
+            return null;
+        }
+        QuoteDetailVO temp = getQuoteDetailTableData(this.quoteDetailVO);
+        temp.setProductDetails(getProductFieldVOTableData(this.quoteDetailVO));
+        this.quoteDetailList.add(temp);
         this.quoteDetailVODataModel = new QuoteDetailVODataModel(this.getQuoteDetailList());
         return null;
     }
@@ -209,34 +218,69 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
         detailVO.setSumInsured(quoteDetailVO.getSumInsured());
         detailVO.setPolicyTerm(quoteDetailVO.getPolicyTerm());
         detailVO.setRecommendationSummary(quoteDetailVO.getRecommendationSummary());
+        detailVO.setIsQuoteRecommended(quoteDetailVO.getIsQuoteRecommended());
         PremiumVO premiumVO = new PremiumVO();
         premiumVO.setPremium(quoteDetailVO.getQuoteSlipPrmDetails().getPremium());
         premiumVO.setCoverDescription(quoteDetailVO.getQuoteSlipPrmDetails().getCoverDescription());
         detailVO.setQuoteSlipPrmDetails(premiumVO);
         
-
-        // populate UW Field details
         ProductVO productVO = new ProductVO();
-        productVO.setProductClass(this.quoteDetailVO.getProductDetails().getProductClass());
+        productVO.setProductClass(quoteDetailVO.getProductDetails().getProductClass());
+        List<ProductUWFieldVO> uwFieldList = new ArrayList<ProductUWFieldVO>();
+        for(ProductUWFieldVO uwField : quoteDetailVO.getProductDetails().getUwFieldsList()){
+            uwFieldList.add(getProductUwFieldVOClone(uwField));
+        }
+        
+        productVO.setUwFieldsList(uwFieldList);
+        detailVO.setProductDetails(productVO);
+        
+        return detailVO;
+    }
+    
+    private ProductVO getProductFieldVOTableData(QuoteDetailVO quoteDetailVO){
+        
+     // populate UW Field details
+        ProductVO productVO = new ProductVO();
+        productVO.setProductClass(quoteDetailVO.getProductDetails().getProductClass());
         
 
         FacesContext fc = FacesContext.getCurrentInstance();
         Map<String, String> requestMap = fc.getExternalContext().getRequestParameterMap();
 
+        List<ProductUWFieldVO> uwFieldList = new ArrayList<ProductUWFieldVO>();
         if (!Utils.isEmpty(requestMap)) {
             String response = null;
-            for (ProductUWFieldVO uwField : this.quoteDetailVO.getProductDetails()
+            for (ProductUWFieldVO uwField : quoteDetailVO.getProductDetails()
                     .getUwFieldsList()) {
                 response =
                     requestMap.get(Utils.concat("field_", String.valueOf(uwField.getFieldOrder())));
                 uwField.setResponse(response);
+                uwFieldList.add(getProductUwFieldVOClone(uwField));
             }
         }
-        productVO.setUwFieldsList(this.quoteDetailVO.getProductDetails().getUwFieldsList());
-        detailVO.setProductDetails(productVO);
-
-        return detailVO;
+        
+        productVO.setUwFieldsList(uwFieldList);
+        
+        return productVO;
     }
+    
+    private ProductUWFieldVO getProductUwFieldVOClone(ProductUWFieldVO fieldVO){
+        ProductUWFieldVO clone = new ProductUWFieldVO();
+        clone.setFieldName(fieldVO.getFieldName());
+        clone.setFieldOrder(fieldVO.getFieldOrder());
+        clone.setFieldType(fieldVO.getFieldType());
+        clone.setFieldValue(fieldVO.getFieldValue());
+        clone.setIsMandatory(fieldVO.getIsMandatory());
+        clone.setIsStatusActive(fieldVO.getIsStatusActive());
+        clone.setProductClass(fieldVO.getProductClass());
+        clone.setResponse(fieldVO.getResponse());
+        clone.setUwFieldId(fieldVO.getUwFieldId());
+        clone.setFieldLength(fieldVO.getFieldLength());        
+        
+        return clone;
+    }
+    
+    
 
     /**
      * This is to take care of saving latest edited data from the table
@@ -268,7 +312,8 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
         this.quoteDetailList.remove(tempQuoteDetailVO);
         this.quoteDetailListClosed = new ArrayList<QuoteDetailVO>();
         for (QuoteDetailVO detailVO : quoteDetailList) {
-            this.quoteDetailListClosed.add(getQuoteDetailTableData(detailVO));
+            QuoteDetailVO temp = getQuoteDetailTableData(detailVO);
+            this.quoteDetailListClosed.add(temp);
         }
 
         /*
@@ -278,14 +323,14 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
     }
 
     public String save() {
-if (!Utils.isEmpty(this.quoteDetailListClosed)) {
+        if (!Utils.isEmpty(this.quoteDetailListClosed)) {
             this.quoteDetailList = this.quoteDetailListClosed;
         }
         // At least one quote detail data should be added to save quote details
         if (Utils.isEmpty(this.quoteDetailList)) {
             FacesContext.getCurrentInstance().addMessage(
                 "ERROR_QUOTATION_SAVE",
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Quote Details save:",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Quote Details save: At least one quote should be added",
                     " At least one quote should be added"));
             return null;
         }
@@ -294,7 +339,7 @@ if (!Utils.isEmpty(this.quoteDetailListClosed)) {
             Map<InsCompanyVO, QuoteDetailVO> addedQuotes =
                 new HashMap<InsCompanyVO, QuoteDetailVO>();
 
-int recommendedFlagcnt = 0;
+            int recommendedFlagcnt = 0;
             for (Entry<InsCompanyVO, QuoteDetailVO> entry : this.policyDetails.getQuoteDetails()
                     .entrySet()) {
                 QuoteDetailVO quoteDetVO = entry.getValue();
@@ -302,7 +347,7 @@ int recommendedFlagcnt = 0;
                 for (QuoteDetailVO quoteDetailVO : this.quoteDetailList) {
 
                     if (entry.getKey().getCode().equals(quoteDetailVO.getCompanyCode())) {
-if (quoteDetailVO.getIsQuoteRecommended()) {
+                        if (quoteDetailVO.getIsQuoteRecommended()) {
                             recommendedFlagcnt++;
                         }
                         quoteDetVO.setQuoteNo(quoteDetailVO.getQuoteNo());
@@ -343,7 +388,7 @@ if (quoteDetailVO.getIsQuoteRecommended()) {
 			if (1 < recommendedFlagcnt) {
                 FacesContext.getCurrentInstance().addMessage(
                     "ERROR_QUOTATION_SAVE",
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please select only one quotation to recommend/close",
                         "Please select only one quotation to recommend"));
                 return null;
 
@@ -396,7 +441,7 @@ if (quoteDetailVO.getIsQuoteRecommended()) {
                     "MESSAGE_SUCCESS",
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Quote Details Captured ",
                         " successfully"));
-        return null;
+        return loadQuotationsDetail();
     }
 
     public String next() {
