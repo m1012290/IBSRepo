@@ -15,35 +15,38 @@
     			<h:form id="form"> 
     			<p:growl id="messages1" showDetail="true"/>
     				
-    				<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" /> 
+    				<p:messages id="messages" autoUpdate="true" closable="true" /> 
     					<p:panel id="panelQuotation" header="Insured Details" style="margin-bottom:10px;"> 
 				       			 <h:panelGrid columns="8">  
 				       			 
 				       			 
-						       		<h:outputLabel for="name" value="Name" />  
-						            <p:inputText id="name" value="#{quoteSlipMB.insuredDetails.name}" readonly="true" required="false" />  
+						       		<h:outputLabel for="name" value="Name: *" />  
+						            <p:inputText id="name" value="#{quotationMB.insuredDetails.name}" readonly="true" 
+						            required="true" label="Name" requiredMessage="Please enter the Name" validatorMessage="Name should be minimum of 4 character">
+									<f:validateLength minimum="4"/>  
+									</p:inputText>    
 						            
-						            <h:outputLabel for="products" value="Products" />  
+						            <h:outputLabel for="products" value="Products:" />  
             						<p:selectOneMenu id="products"  value="#{quotationMB.quoteDetailVO.productDetails.productClass}">
                 						<f:selectItem itemLabel="Select Product-" itemValue="" />  
                 						<f:selectItems value="#{quotationMB.products}" />  
             						</p:selectOneMenu>
             						
             						
-            						<h:outputLabel for="insurancecompanies" value="Companies" />  
+            						<h:outputLabel for="insurancecompanies" value="Companies:" />  
             						<p:selectManyMenu id="insurancecompanies" value="#{quoteSlipMB.selectedInsCompanies}" >
             							<f:selectItems value="#{quotationMB.insCompanies}"/>
             						</p:selectManyMenu>
             						
             						
-            						<h:outputLabel for="quoteSlipID" value="Quote Slip Number" />  
+            						<h:outputLabel for="quoteSlipID" value="Quote Slip Number:" />  
 						            <p:inputText id="quoteSlipID"  value="#{quotationMB.quoteDetailVO.quoteSlipId}" readonly="true" required="false" /> 
 						            
-				                  	<h:outputLabel for="quoteSlipVersion" value="Quote Slip Version" />  
+				                  	<h:outputLabel for="quoteSlipVersion" value="Quote Slip Version:" />  
 						            <p:inputText id="quoteSlipVersion" value="#{quotationMB.quoteDetailVO.quoteSlipVersion}" readonly="true"  required="false" />  
 						            			              
 						            
-						            <h:outputLabel for="insuredID" value="Insured ID" />  
+						            <h:outputLabel for="insuredID" value="Insured ID:" />  
 						            <p:inputText id="insuredID" value="#{quoteSlipMB.insuredDetails.id}" readonly="true" required="false" />  
 						       
 			       				</h:panelGrid>
@@ -59,18 +62,47 @@
                             <f:selectItem itemLabel="---Select Company Name---" itemValue="" />
             				<f:selectItems value="#{quotationMB.insCompanies}"/>
                    `</p:selectOneMenu>                     
-                   <h:outputLabel for="quoteNum" value="Quotation Number: " />
-                    <p:inputText value="#{quotationMB.quoteDetailVO.quoteNo}"/>
+                   	<h:outputLabel for="quoteNum" value="Quotation Number: " />
+                    <p:inputText value="#{quotationMB.quoteDetailVO.quoteNo}">
+                    <f:convertNumber integerOnly="true" type="number" for="quoteNum"/>
+						<f:validateLength minimum="1" maximum="8"  for="quoteNum"/>  
+				   </p:inputText>
+				   
+				   
                     <h:outputLabel for="quotedPremium" value="Quoted Premium:" />
-                    <p:inputText  value="#{quotationMB.quoteDetailVO.quoteSlipPrmDetails.premium}"/>
+                    <p:inputText  value="#{quotationMB.quoteDetailVO.quoteSlipPrmDetails.premium}">
+                    <f:convertNumber integerOnly="true" type="percentage" for="quotedPremium"/>
+						<f:validateLength minimum="1" maximum="8"  for="quotedPremium"/>  
+				   </p:inputText>
+                    
+                    
                     <h:outputLabel for="sumInsured" value="Sum Insured:" />
-                    <p:inputText value="#{quotationMB.quoteDetailVO.sumInsured}"/>
+                    <p:inputText value="#{quotationMB.quoteDetailVO.sumInsured}">
+                    <f:convertNumber integerOnly="true" type="number" for="sumInsured"/>
+						<f:validateLength minimum="1" maximum="8"  for="sumInsured"/>  
+				   </p:inputText>
+                    
+                    
                     <h:outputLabel for="policyTerm" value="Policy Term:" />
-                    <p:inputText  value="#{quotationMB.quoteDetailVO.policyTerm}"/>
-                    <h:outputLabel for="coverDesc" value="Cover Description:" />
-                    <p:inputText  value="#{quotationMB.quoteDetailVO.quoteSlipPrmDetails.coverDescription}"/>
-                    <h:outputLabel for="recSummary" value="Recommendation Summary:" />
-                    <p:inputText  value="#{quotationMB.quoteDetailVO.recommendationSummary}"/>
+                    <p:inputText  value="#{quotationMB.quoteDetailVO.policyTerm}">
+                    <f:convertNumber integerOnly="true" type="number" for="policyTerm"/>
+						<f:validateLength minimum="1" maximum="2"  for="policyTerm"/>  
+				   </p:inputText>
+				   
+                    
+                    <h:outputLabel  for="coverDesc" value="Cover Description:" />
+						<p:inputTextarea rows="6" cols="50" id="coverDesc" 
+							value="#{quotationMB.quoteDetailVO.quoteSlipPrmDetails.coverDescription}">
+					    </p:inputTextarea>
+                    
+                    
+                     
+                    <h:outputLabel  for="recSummary" value="Recommendation Summary:" />
+						<p:inputTextarea rows="6" cols="50" id="recSummary" validatorMessage="Recommendation Summary entered is short, Please enter full recommendation Summary"
+							value="#{quotationMB.quoteDetailVO.recommendationSummary}" required="true" requiredMessage="Please enter the Recommendation Summary">
+						 <f:validateLength minimum="10"  for="recSummary"/>  
+					  </p:inputTextarea>
+                    
                     <custom:uwdetails value="#{quotationMB.quoteDetailVO.productDetails}"/>
                     
                     <f:facet name="footer">

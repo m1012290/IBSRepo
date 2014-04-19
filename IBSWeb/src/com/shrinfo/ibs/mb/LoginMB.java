@@ -6,6 +6,7 @@ package com.shrinfo.ibs.mb;
 import java.io.Serializable;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -17,7 +18,6 @@ import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
 import com.shrinfo.ibs.util.EncryptionUtil;
 import com.shrinfo.ibs.vo.business.IBSUserVO;
 import com.shrinfo.ibs.vo.business.TaskItemsVO;
-import com.shrinfo.ibs.vo.business.TaskVO;
 
 /**
  * @author Sunil Kumar
@@ -96,12 +96,12 @@ public class LoginMB extends BaseManagedBean implements Serializable {
                 (UserVO) ServiceTaskExecutor.INSTANCE.executeSvc("loginDetsSvc", "getUserDetails",
                     ibsUserVO);
         } catch (BusinessException be) {
-            System.out.println("BusinessException [" + be + "] encountered");
+            //System.out.println("BusinessException [" + be + "] encountered");
             // logger.error(be, "Exception ["+ be
             // +"] encountered while retrieving available products ");
             // FacesContext.getCurrentInstance().addMessage("ERROR_PRODUCTUW_FIELDS_RETRIEVAL", new
-            // FacesMessage(FacesMessage.SEVERITY_ERROR,"Unexpected error encountered", null));
-            // return null;
+            FacesContext.getCurrentInstance().addMessage("MESSAGE_FAILURE", new FacesMessage(FacesMessage.SEVERITY_INFO,"Username entered is Incorrect",""));
+             return null;
         } catch (SystemException se) {
             System.out.println("SystemException [" + se + "] encountered");
             // logger.error(se, "Exception ["+ se
@@ -120,10 +120,14 @@ public class LoginMB extends BaseManagedBean implements Serializable {
                 loadTaskList();
                 return "enquiry";
             }
+            else {
+                FacesContext.getCurrentInstance().addMessage("MESSAGE_FAILURE", new FacesMessage(FacesMessage.SEVERITY_INFO,"Password entered is does not match",""));
+                return null;
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            FacesContext.getCurrentInstance().addMessage("MESSAGE_FAILURE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Unexpected error encountered, please try again after sometime"));
+            return null;
         }
-        return null;
     }
 
     public String getUserName() {

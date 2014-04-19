@@ -12,44 +12,73 @@
     	<ui:composition template="/template/common/commonLayout.xhtml">
     	<ui:define name="content">
     			<h:form> 
-    				<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" /> 
+    				
+    				<p:messages id="messages" autoUpdate="true" closable="true" /> 
     					<p:panel id="panelInsured" header="Insured Details" style="margin-bottom:10px;"> 
 				       			 <h:panelGrid columns="8">  
 				       			 
-				       			 	<h:outputLabel for="salutation" value="Salutation" />  
-            						<p:selectOneMenu id="salutation" value="#{quoteSlipMB.insuredDetails.salutation}">  
+				       			 	<h:outputLabel for="salutation" value="Salutation:" />  
+            						<p:selectOneMenu id="salutation" value="#{quoteSlipMB.insuredDetails.salutation}"  required="true"  label="Salutation" requiredMessage="Please select the Salutation">  
                 						<f:selectItem itemLabel="---Select Salutation---" itemValue="" />  
                 						<f:selectItems value="#{editCustEnqDetailsMB.salutations}" />  
             						</p:selectOneMenu>  
 				   
-						       		<h:outputLabel for="name" value="Name" />  
-						            <p:inputText id="name" value="#{quoteSlipMB.insuredDetails.name}" required="false" />  
+						       		<h:outputLabel for="name" value="Name: *" />  
+						            <p:inputText id="name" value="#{quoteSlipMB.insuredDetails.name}" 
+						            required="true" label="Name" requiredMessage="Please enter the Name" validatorMessage="Name should be minimum of 4 character">
+									<f:validateLength minimum="4"/>  
+									</p:inputText>  
 						            			              
-						            <h:outputLabel for="primaryEmailID" value="EmailID" />  
-						            <p:inputText id="primaryEmailID" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.emailId}" required="false" />  
+						            <h:outputLabel for="primaryEmailID" value="EmailID: *" />  
+						            <p:inputText id="primaryEmailID" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.emailId}" 
+										required="true"  label="EmailID" requiredMessage="Please enter the EmailID" validatorMessage="Invalid email format, Please enter the correct EmailID">
+									<f:validateRegex 
+									pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+					   				</p:inputText>
+					   				
 						            
-						            <h:outputLabel for="primMobNum" value="Mobile Number" />  
-						            <p:inputText id="primMobNum" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.mobileNo}" required="false" />  
+						            <h:outputLabel for="primMobNum" value="Mobile Number: *" />  
+						            <p:inputText id="primMobNum" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.mobileNo}" 
+						            	required="true" label="Mobile Number"  requiredMessage="Please enter the MobileNumber" converterMessage="Alphabets are not allowed , Please Enter the Correct Mobile Number" validatorMessage="MobileNumber should be of 8 digits">
+										<f:convertNumber integerOnly="true" type="number" for="primMobNum"/>
+										<f:validateLength minimum="8" maximum="8"  for="primMobNum"/>  
+									</p:inputText>
 						            
-						            <h:outputLabel for="primLandNum" value="LandLine Number" /> 
-						       		<h:inputText id="primLandNum" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.landlineNo}" required="false" />  
+						            <h:outputLabel for="primLandNum" value="LandLine Number:" /> 
+						       		<p:inputText id="primLandNum" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.landlineNo}" 
+						       		required="false" converterMessage="Alphabets are not allowed , Please enter the correct LandLine Number" validatorMessage="LandLine Number should be of 8 digits">
+									<f:convertNumber integerOnly="true" type="number" for="primLandNum"/>
+									<f:validateLength minimum="8" maximum="8"  for="primLandNum"/>  
+									</p:inputText> 
             					
-						            <h:outputLabel for="faxNum" value="Fax Number" />  
-						            <p:inputText id="faxNum" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.faxNo}" required="false" />  
+						            <h:outputLabel for="faxNum" value="Fax Number:" />  
+						            <p:inputText id="faxNum" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.faxNo}" 
+						            required="false" converterMessage="Alphabets are not allowed ,Please enter the correct Fax Number">
+									<f:convertNumber integerOnly="true" type="number" for="faxNum"/>
+									</p:inputText> 
 						            
-						            <h:outputLabel for="city" value="City"/>  
-						            <p:inputText id="city" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.addressVO.city}" required="false" />  
-						            
-						            <p:outputLabel for="country" value="Country" />  
-						            <p:inputText id="country"  value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.addressVO.country}" required="false" /> 
-						            
-						            <h:outputLabel for="address" value="Address" />  
+						            <h:outputLabel for="city" value="City:"/>  
+						            <p:inputText id="city" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.addressVO.city}" validatorMessage="Numbers\Special characters are not allowed in the city field"
+									required="false" >
+									<f:validateRegex pattern="[a-zA-Z]*"></f:validateRegex> 
+           			 				</p:inputText> 
+           			 				 
+						            <p:outputLabel for="country" value="Country:" />  
+						            <p:inputText id="country"  value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.addressVO.country}" validatorMessage="Numbers\Special characters are not allowed in the country field"
+									required="false" >
+									<f:validateRegex pattern="[a-zA-Z]*"></f:validateRegex> 
+           			 				</p:inputText> 
+           			 				 
+						            <h:outputLabel for="address" value="Address:" />  
 						            <p:inputText id="address" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.addressVO.address}"  required="false" />  
 						  
-						            <h:outputLabel for="poBox" value="PO Box" />  
-						            <p:inputText id="poBox" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.addressVO.poBox}" required="false" />  
+						            <h:outputLabel for="poBox" value="PO Box: *" />  
+						            <p:inputText id="poBox" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.addressVO.poBox}" 
+						            required="true"  label="PO Box" requiredMessage="Please enter the PO Box Number" converterMessage="Alphabets are not allowed, Please enter the correct PO Box Number">
+					   				<f:convertNumber integerOnly="true" type="number" for="poBox"/>
+					   				</p:inputText> 
 						            
-						            <h:outputLabel for="insuredID" value="Insured ID" />  
+						            <h:outputLabel for="insuredID" value="Insured ID:" />  
 						            <p:inputText id="insuredID" value="#{quoteSlipMB.insuredDetails.id}" readonly="true" required="false" />  
 						       
 			       				</h:panelGrid>
@@ -57,26 +86,29 @@
 					   <p:panel id="panelProductDetails" header="Product Details" style="margin-bottom:10px;">
 								<h:panelGrid columns="6">
 								
-								 	<h:outputLabel for="quoteSlipID" value="Quote Slip Number" />  
+								 	<h:outputLabel for="quoteSlipID" value="Quote Slip Number:" />  
 						            <p:inputText id="quoteSlipID"  value="#{quoteSlipMB.quoteDetailVO.quoteSlipId}" required="false" /> 
 						            
-						            <h:outputLabel for="quoteSlipVersion" value="Quote Slip Version" />  
+						            <h:outputLabel for="quoteSlipVersion" value="Quote Slip Version:" />  
 						            <p:inputText id="quoteSlipVersion" value="#{quoteSlipMB.quoteDetailVO.quoteSlipVersion}"  required="false" />  
 						            
-						            <h:outputLabel for="quoteSlipDate" value="Quote Slip Date" />  
-						            <p:inputText id="quoteSlipDate" value="#{quoteSlipMB.quoteDetailVO.quoteSlipDate}"  required="false" />  
-						        
-									<h:outputLabel value="Remarks" />
-								    <p:inputTextarea rows="6" cols="50" value="#{quoteSlipMB.quoteDetailVO.remarks}"/>
+						            <h:outputLabel for="quoteSlipDate" value="Quote Slip Date:" />  
+						            <p:calendar value="#{quoteSlipMB.quoteDetailVO.quoteSlipDate}" id="popupCal" />  
+						            	
+									<h:outputLabel value="Remarks: *" />
+								    <p:inputTextarea rows="6" cols="50" value="#{quoteSlipMB.quoteDetailVO.remarks}"
+								    required="true" requiredMessage="Please enter the Remarks">
+								    <f:validateLength minimum="10"  for="Description:"/>  
+									</p:inputTextarea>
 																		
-						            <h:outputLabel for="products" value="Products" />  
-            						<p:selectOneMenu id="products" value="#{quoteSlipMB.quoteDetailVO.productDetails.productClass}"  >
+						            <h:outputLabel for="products" value="Products:" />  
+            						<p:selectOneMenu id="products" value="#{quoteSlipMB.quoteDetailVO.productDetails.productClass}" required="true" label="Product" requiredMessage="Please select the Product">
             							<p:ajax listener="#{quoteSlipMB.retrieveProductUWFields}" update="panelProductDetails, panelUWDetails" />  
                 						<f:selectItem itemLabel="---Select Product---" itemValue="" />
                 						<f:selectItems value="#{quoteSlipMB.products}" />  
             						</p:selectOneMenu>
             						
-            						<h:outputLabel for="insurancecompanies" value="Companies" />  
+            						<h:outputLabel for="insurancecompanies" value="Companies:" />  
             						<p:selectManyMenu id="insurancecompanies" value="#{quoteSlipMB.selectedInsCompanies}" >
             							<f:selectItem itemLabel="---Select Companies---" itemValue="" />
             							<f:selectItems value="#{quoteSlipMB.insCompanies}"/>

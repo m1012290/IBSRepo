@@ -48,6 +48,10 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 	public QuoteSlipMB(){
 		super();
 		logger.info("In QuoteSlipMB Constructor");
+		
+		//invoke load quoteslip details method in order to retrieve existing quote slip
+		//details if required (existing quote record)
+		retrieveInsuredQuoteDetails();
 	}
 
 	private List<String> selectedInsCompanies = new ArrayList<String>();
