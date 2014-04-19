@@ -12,8 +12,7 @@
     	<ui:composition template="/template/common/commonLayout.xhtml">
     	<ui:define name="content">
     			<h:form> 
-    				
-    				<p:messages id="messages" autoUpdate="true" closable="true" /> 
+    				<p:messages id="messages" autoUpdate="true" showDetail="true" closable="true" /> 
     					<p:panel id="panelInsured" header="Insured Details" style="margin-bottom:10px;"> 
 				       			 <h:panelGrid columns="8">  
 				       			 
@@ -139,7 +138,7 @@
 								</p:panel>
 						
 						<p:commandButton value="Save" action="#{quoteSlipMB.save}"  update="messages, panelProductDetails, panelInsured" oncomplete="handleSaveResponse(xhr, status, args)" icon="ui-icon-disk"  style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
-						<p:commandButton value="Next" action="#{quotationMB.loadQuotationsDetail}"  style="float:right:20px;" />
+						<p:commandButton value="Next" action="#{quoteSlipMB.next}"  style="float:right:20px;" />
 					   	
 	   		</h:form>
     		</ui:define>

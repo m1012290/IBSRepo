@@ -42,6 +42,12 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
         this.insuredDetails = new InsuredVO();
     }
     
+    public PolicyMB(){
+        super();
+        //invoke load quotation details method to retrieve existing quote details in case quote is an existing quote
+        loadQuotationDetails();
+    }
+    
     public QuoteDetailVO getQuoteDetailVO() {
         return quoteDetailVO;
     }

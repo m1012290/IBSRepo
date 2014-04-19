@@ -662,8 +662,11 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
         return null;
     }
 
+    /**
+     * Action method which is invoked upon next button click from Enquiry details form
+     * @return
+     */
     public String next() {
-        
         //perform save operation first on click of next button
         save();
         //next check if quote slip mb is already available in session if so then invoke retrieveInsuredQuoteDetails method

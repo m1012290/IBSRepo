@@ -12,14 +12,14 @@
 		<ui:define name="content">
 			<h:form>
 				
-				<p:messages id="messages" autoUpdate="true"
+				<p:messages id="messages" showDetail="true" autoUpdate="true"
 					closable="true" />
 				<p:panel id="panelCustomer" header="Customer Details"
 					style="margin-bottom:10px;">
 
 					<h:panelGrid columns="8">
 
-						<h:outputLabel for="salutation" value="Salutation: *" />
+						<h:outputLabel for="salutation" value="Salutation"/><span style="color: #FF0000;" >*</span>
 						<p:selectOneMenu id="salutation"
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.salutation}" required="true" label="Salutation" requiredMessage="Please select the Salutation">
 							<f:selectItem itemLabel="---Select Salutation---" itemValue="" />

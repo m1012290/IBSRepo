@@ -7,22 +7,25 @@
       xmlns:p="http://primefaces.org/ui"
       >
       <h2>Login Details</h2>
-    			
+	<h:head>
+		<script src="../../js/commonjs.js"/>
+	   <link rel="stylesheet" type="text/css" href="../../css/commoncss.css"/>
+	</h:head>    			
     <h:body>
 		<h:form name="loginform">
 	    <p:messages id="messages" />  
 		
-		<p:panel aling="center" id="panel" header="Login Details" style="margin-bottom:10px;">
+		<p:panel aling="center" id="panel" header="Login Details">
 			<h:panelGrid columns="2" cellpadding="10" >
-			<h:outputLabel for="username" value="Username:"  style="height: 50px; font-size: 20px"/>
+			<h:outputLabel for="username" value="Username"/>
 			<p:inputText  value="#{loginBean.userName}"
 			                id="username" required="true" label="username"  requiredMessage="Username is required"/>
-			<h:outputLabel for="password" value="Password:" style="height: 50px; font-size: 20px"/>
+			<h:outputLabel for="password" value="Password"/>
 			<h:inputSecret value="#{loginBean.password}"
 			                id="password" required="true" label="password" requiredMessage="Password is required"/>
 
-			<p:commandButton id="loginButton" value="Login" action="#{loginBean.submit}"  style="height: 30px; font-size: 20px"  />
-			<p:commandButton type="reset" value="Clear" style="height: 30px; font-size: 20px"/>
+			<p:commandButton id="loginButton" value="Login" action="#{loginBean.submit}" />
+			<p:commandButton type="reset" value="Clear"/>
 
 			</h:panelGrid>
 		</p:panel>

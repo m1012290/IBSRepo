@@ -15,7 +15,7 @@
     			<h:form id="form"> 
     			<p:growl id="messages1" showDetail="true"/>
     				
-    				<p:messages id="messages" autoUpdate="true" closable="true" /> 
+    				<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" /> 
     					<p:panel id="panelQuotation" header="Insured Details" style="margin-bottom:10px;"> 
 				       			 <h:panelGrid columns="8">  
 				       			 
@@ -171,7 +171,7 @@
 				</p:dialog>
 					   
 			<p:commandButton value="Save" action="#{quotationMB.save}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" icon="ui-icon-disk"  style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
-			<p:commandButton value="Next" action="#{policyMB.loadQuotationDetails}"  style="float:right:20px;" />
+			<p:commandButton value="Next" action="#{quotationMB.next}"  style="float:right:20px;" />
 			
 			<p:dialog header="Referral Section" widgetVar="referraldialog">
 					<p:panel id="referralsection">	

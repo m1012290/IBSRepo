@@ -70,6 +70,12 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
     private List<QuoteDetailVO> quoteDetailListClosed = new ArrayList<QuoteDetailVO>();
 
 
+    public QuotationMB(){
+        super();
+        //invoke loadQuotationsDetail method to retrieve quotation details in case of existing
+        //quote
+        loadQuotationsDetail();
+    }
     //This is an important method which is overriden from parent managed bean
     // this is an reinitializer block which includes all the instance fields which are bound to form
     // this method is necessary as managed beans are defined as sessionscoped beans
@@ -400,7 +406,14 @@ if (quoteDetailVO.getIsQuoteRecommended()) {
     }
 
     public String next() {
-
+        //perform save operation first on click of next button
+        save();
+        //next check if quote slip mb is already available in session if so then invoke retrieveInsuredQuoteDetails method
+        //on the bean
+        PolicyMB policyMB = (PolicyMB)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(AppConstants.BEAN_NAME_POLICY_PAGE);
+        if(!Utils.isEmpty(policyMB)){
+            policyMB.loadQuotationDetails();
+        }
         return "policy";
     }
 
@@ -425,11 +438,13 @@ if (quoteDetailVO.getIsQuoteRecommended()) {
         return null;
     }
 
+    /**
+     * This method will load quotation details while loading closing slip screen
+     * @return
+     */
     public String loadQuotationsDetail() {
-
         loadQuoteSlipDetails();
         loadQuotations();
-
         return "closeslip";
     }
 

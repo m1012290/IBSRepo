@@ -180,8 +180,19 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
         return null;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public String next(){
-		
+	    //perform save operation first on click of next button
+        save();
+        //next check if quote slip mb is already available in session if so then invoke retrieveInsuredQuoteDetails method
+        //on the bean
+        QuotationMB quoteMB = (QuotationMB)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(AppConstants.BEAN_NAME_CLOSING_SLIP_PAGE);
+        if(!Utils.isEmpty(quoteMB)){
+            quoteMB.loadQuotationsDetail();
+        }
 		return "closeslip";
 	}
 	
@@ -206,6 +217,11 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 		return null;
 	}
 	
+	/**
+	 * This method loads insured plus quote details while loading quote slip details
+	 * screen
+	 * @return
+	 */
 	public String retrieveInsuredQuoteDetails(){
 		
 		// Fetch editcustenqdetailsMB from Session in order to retain search results required
