@@ -175,7 +175,7 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
             FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Unexpected error encountered, please try again after sometime"));
             return null;
 	    }
-        FacesContext.getCurrentInstance().addMessage("MESSAGE_SUCCESS", new FacesMessage(FacesMessage.SEVERITY_INFO,"Insured Details ","Data saved successfully. Quote slip NO:"+quoteDetailVO.getQuoteSlipId()));
+        FacesContext.getCurrentInstance().addMessage("MESSAGE_SUCCESS", new FacesMessage(FacesMessage.SEVERITY_INFO,"Insured Details: Data saved successfully. Quote slip NO:"+quoteDetailVO.getQuoteSlipId(),"Data saved successfully. Quote slip NO:"+quoteDetailVO.getQuoteSlipId()));
 
         return null;
 	}

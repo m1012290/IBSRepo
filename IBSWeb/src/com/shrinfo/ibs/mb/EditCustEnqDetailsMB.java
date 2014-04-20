@@ -657,7 +657,7 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
         this.enquiryVO = responseVO;
         FacesContext.getCurrentInstance().addMessage(
             "MESSAGE_SUCCESS",
-            new FacesMessage(FacesMessage.SEVERITY_INFO, "Customer Enquiry ",
+            new FacesMessage(FacesMessage.SEVERITY_INFO, "Customer Enquiry Data saved successfully. Enquiry No:" + responseVO.getEnquiryNo(),
                 "Data saved successfully. Enquiry No:" + responseVO.getEnquiryNo()));
         return null;
     }
