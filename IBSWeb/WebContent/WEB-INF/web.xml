@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-         xmlns="http://java.sun.com/xml/ns/javaee" 
-         xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" 
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
-  <display-name>PrimeFacesDataTableFiltering</display-name>
-  <welcome-file-list>
-    <welcome-file>first.xhtml</welcome-file>
-    <welcome-file>index.htm</welcome-file>
-    <welcome-file>index.jsp</welcome-file>
-    <welcome-file>default.html</welcome-file>
-    <welcome-file>default.htm</welcome-file>
-    <welcome-file>default.jsp</welcome-file>
-  </welcome-file-list>
-  
- <listener>
-  <display-name>TomcatDataSourceInitContextListener</display-name>
-  <listener-class>com.shrinfo.ibs.web.TomcatDataSourceInitContextListener</listener-class>
- </listener> 
- <!-- - Loads the root application context of this web app at startup. - 
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="WebApp_ID" version="3.0">
+	<display-name>PrimeFacesDataTableFiltering</display-name>
+	<welcome-file-list>
+		<welcome-file>first.xhtml</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+
+	<listener>
+		<display-name>TomcatDataSourceInitContextListener</display-name>
+		<listener-class>com.shrinfo.ibs.web.TomcatDataSourceInitContextListener</listener-class>
+	</listener>
+	<!-- - Loads the root application context of this web app at startup. - 
 		The application context is then available via - WebApplicationContextUtils.getWebApplicationContext(servletContext). -->
- <listener>
-  <description>Loads the spring context</description>
-  <display-name>PAS AppContext Loader</display-name>
-  <listener-class>com.shrinfo.ibs.web.IBSAppContextInit</listener-class>
- </listener>
-  
-  
+	<listener>
+		<description>Loads the spring context</description>
+		<display-name>PAS AppContext Loader</display-name>
+		<listener-class>com.shrinfo.ibs.web.IBSAppContextInit</listener-class>
+	</listener>
+
+
 	<!-- JSF mapping -->
 	<servlet>
 		<servlet-name>Faces Servlet</servlet-name>
 		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
-	
+
 	<!-- Map these files with JSF -->
 	<servlet-mapping>
 		<servlet-name>Faces Servlet</servlet-name>
@@ -50,11 +50,21 @@
 		<servlet-name>Faces Servlet</servlet-name>
 		<url-pattern>*.xhtml</url-pattern>
 	</servlet-mapping>
-	<context-param>  
+	<context-param>
 		<param-name>javax.faces.FACELETS_LIBRARIES</param-name>
 		<param-value>/WEB-INF/custom.taglib.xml</param-value>
 	</context-param>
-	
-	
-	
+
+	<filter>
+		<filter-name>PrimeFaces FileUpload Filter</filter-name>
+		<filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>PrimeFaces FileUpload Filter</filter-name>
+		<servlet-name>Faces Servlet</servlet-name>
+		<dispatcher>FORWARD</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+
+
 </web-app>
