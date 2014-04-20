@@ -230,8 +230,16 @@
 	<bean id="taskSvcDAOBean" class="com.shrinfo.ibs.task.dao.TaskDaoImpl">
 		<property name="hibernateTemplate" ref="hibernateTemplate" />
 	</bean>
-
-
+	
+	<bean id="companySvc" parent="baseProxyBean">
+		<property name="target" ref="companySvcBean" />
+	</bean>
+	<bean id="companySvcBean" class="com.shrinfo.ibs.company.svc.CompanyServiceImpl">
+		<property name="companyDao" ref="companySvcDAOBean" />
+	</bean>
+	<bean id="companySvcDAOBean" class="com.shrinfo.ibs.company.dao.CompanyDaoImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
 
 </beans>
 
