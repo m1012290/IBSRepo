@@ -742,8 +742,10 @@ public class DAOUtils {
         if (!Utils.isEmpty(documentVO.getDocSlipVersion())) {
             ibsDocument.setDocSlipVersion(documentVO.getDocSlipVersion().longValue());
         }
-        Blob blob = new BlobImpl(documentVO.getDocument());
-        ibsDocument.setDocument(blob);
+        if(!Utils.isEmpty(documentVO.getDocument())){
+            Blob blob = new BlobImpl(documentVO.getDocument());
+            ibsDocument.setDocument(blob);
+        }        
         ibsDocument.setDocumentType(documentVO.getDocType());
         if (!Utils.isEmpty(documentVO.getEnquiry())) {
             ibsDocument.setEnquiryNo(documentVO.getEnquiry().getEnquiryNo());

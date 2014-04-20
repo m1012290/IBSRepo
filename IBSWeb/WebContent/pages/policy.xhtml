@@ -12,7 +12,7 @@
     	
     	<ui:composition template="/template/common/commonLayout.xhtml">
     	<ui:define name="content">
-    			<h:form id="form"> 
+    			<h:form id="form" enctype="multipart/form-data" prependId="false"> 
     			<p:growl id="messages1" showDetail="true"/>
     				<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" /> 
     					<p:panel id="panelPolicy" header="Policy Details" style="margin-bottom:10px;"> 
@@ -76,24 +76,14 @@
 					   </p:panel>
 					   
 					
-					   
-					  
-					<h:form enctype="multipart/form-data">   
+					    
 						       			
-						   <p:panel id="panelDocUpl" header="Document Upload" style="margin-bottom:10px;"> 
-								  <h:panelGrid columns="8">  
-									
-		    					<p:messages showDetail="true"/>  
-		  
-		    						<p:fileUpload value="#{fileUploadController.file}" mode="simple"/>  
-		  
-		   								 <p:commandButton value="Submit" ajax="false"  
-		                					actionListener="#{fileUploadController.upload}"/>
-		                					
-		                			</h:panelGrid>
-							   </p:panel>  
-  
-				 </h:form>    
+					   <p:panel id="panelDocUpl" header="Document Upload" style="margin-bottom:10px;"> 
+							<h:panelGrid columns="8">  
+	    						<p:fileUpload value="#{policyMB.file}" mode="simple" />	
+	                		</h:panelGrid>
+						</p:panel>  
+ 
 				 
 				 <p:panel id="panelAudit" header="Audit Details" style="margin-bottom:10px;">
 									<h:panelGrid columns="8">
@@ -115,7 +105,7 @@
 				</p:panel>
 	
 					   
-						<p:commandButton value="Save" action="#{policyMB.save}"  update="messages,panelPolicy" icon="ui-icon-disk"  style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
+						<p:commandButton value="Save" ajax="false" action="#{policyMB.save}"  update="messages,panelPolicy" icon="ui-icon-disk"  style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
 						
 					   	
 	   		</h:form>

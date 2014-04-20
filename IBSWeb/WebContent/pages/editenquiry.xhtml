@@ -18,8 +18,7 @@
 					style="margin-bottom:10px;">
 
 					<h:panelGrid columns="8">
-
-						<h:outputLabel for="salutation" value="Salutation"/><span style="color: #FF0000;" >*</span>
+						<h:outputLabel for="salutation" value="Salutation: *"  style="red"/>
 						<p:selectOneMenu id="salutation"
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.salutation}" required="true" label="Salutation" requiredMessage="Please select the Salutation">
 							<f:selectItem itemLabel="---Select Salutation---" itemValue="" />
@@ -29,29 +28,45 @@
 						<h:outputLabel for="name" value="Name: *" />
 						<p:inputText id="name"
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.name}"
-							required="true" label="Name" requiredMessage="Please enter the Name" validatorMessage="Name should be minimum of 4 character" >
-						<f:validateLength minimum="4"/>  
+							required="true" label="Name" requiredMessage="Please enter the Name" validatorMessage="Name should be minimum of 4 character and maximum of 50 characters" >
+						<f:validateLength minimum="4" maximum="50"/>  
 						</p:inputText> 
 
 						<h:outputLabel for="firstName" value="First Name:" />
 						<p:inputText id="firstName"
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.firstName}"
-							required="false" />
+							required="false" validatorMessage="First Name should not be more than 50 characters">
+					    <f:validateLength  maximum="50"/> 
+					    </p:inputText> 
+					    
+						
+
 
 						<p:outputLabel for="middleName" value="Middle Name:" />
 						<p:inputText id="middleName"
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.middleName}"
-							required="false" />
+							required="false" validatorMessage="Middle Name should not be more than 50 characters">
+					    <f:validateLength  maximum="50"/> 
+					    </p:inputText> 
+
 
 						<h:outputLabel for="lastName" value="Last Name:" />
 						<p:inputText id="lastName"
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.lastName}"
-							required="false" />
+							required="false" validatorMessage="Last Name should not be more than 50 characters">
+					    <f:validateLength  maximum="50"/> 
+					    </p:inputText> 
+					    
+					    
+
 
 						<h:outputLabel for="custGroup" value="Group:" />
 						<p:inputText id="custGroup"
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.group}"
-							required="false" />
+							required="false" validatorMessage="Group should not be more than 50 characters">
+					    <f:validateLength  maximum="50"/> 
+					    </p:inputText> 
+
 
 						<h:outputLabel for="custCat" value="Category:" />
 						<p:selectOneMenu id="custCat"
@@ -72,12 +87,18 @@
 						<h:outputLabel for="sourceOfBusiness" value="Source of Business:" />
 						<p:inputText id="sourceOfBusiness"
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.sourceOfBusiness}"
-							required="false" />
+							required="false" validatorMessage="Source of Business field should not be more than 50 characters">
+					    <f:validateLength  maximum="50"/> 
+					    </p:inputText>
+
 
 						<h:outputLabel for="salesExe" value="Sales Executive:" />
 						<p:inputText id="salesExe"
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.salesExecutive}"
-							required="false" />
+							required="false" validatorMessage="Sales Executive field should not be more than 50 characters">
+					    <f:validateLength  maximum="50"/> 
+					    </p:inputText>
+
 
 						<h:outputLabel for="title" value="Title:" />
 						<p:selectOneMenu id="title"
@@ -99,7 +120,7 @@
 						<p:inputText id="primMobNum"
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.mobileNo}"
 							required="true" label="Mobile Number"  requiredMessage="Please enter the MobileNumber" converterMessage="Alphabets are not allowed , Please Enter the Correct Mobile Number" validatorMessage="MobileNumber should be of 8 digits">
-						<f:convertNumber integerOnly="true" type="number" for="primMobNum"/>
+						<f:convertNumber  integerOnly="true" type="number" for="primMobNum"/>
 						<f:validateLength minimum="8" maximum="8"  for="primMobNum"/>  
 						</p:inputText>
 
@@ -115,8 +136,9 @@
 						<h:outputLabel for="faxNum" value="Fax Number:" />
 						<p:inputText id="faxNum"
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.faxNo}"
-							required="false" converterMessage="Alphabets are not allowed ,Please enter the correct Fax Number">
+							required="false" converterMessage="Alphabets are not allowed ,Please enter the correct Fax Number" validatorMessage="fax number should not be more than 25 digits">
 						<f:convertNumber integerOnly="true" type="number" for="faxNum"/>
+						<f:validateLength maximum="25"  for="faxNum"/>  	
 						</p:inputText> 
 
 						<h:outputLabel for="city" value="City:" />
@@ -124,6 +146,7 @@
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.addressVO.city}" validatorMessage="Numbers\Special characters are not allowed in the city field"
 							required="false" >
 						<f:validateRegex pattern="[a-zA-Z]*"></f:validateRegex> 
+						<f:validateLength maximum="50"  for="City"/>  	
            			 	</p:inputText>  
 
 						<p:outputLabel for="country" value="Country:" />
@@ -131,33 +154,41 @@
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.addressVO.country}" validatorMessage="Numbers\Special characters are not allowed in the Country field"
 							required="false" >
 						<f:validateRegex pattern="[a-zA-Z]*"></f:validateRegex> 
+						<f:validateLength maximum="50"  for="City"/>  	
 					    </p:inputText>
 
 						<h:outputLabel for="address" value="Address:" />
 						<p:inputText id="address"
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.addressVO.address}"
-							required="false" />
+							required="false" validatorMessage="Address should not be more than 100 characters">
+						<f:validateLength maximum="100"  for="address"/> 
+						</p:inputText> 	
+						
+
 
 						<h:outputLabel for="poBox" value="PO Box: *" />
 						<p:inputText id="poBox"
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.addressVO.poBox}"
-							required="true"  label="PO Box" requiredMessage="Please enter the PO Box Number" converterMessage="Alphabets are not allowed, Please enter the correct PO Box Number">
+							required="true"  label="PO Box" requiredMessage="Please enter the PO Box Number" converterMessage="Alphabets are not allowed, Please enter the correct PO Box Number" validatorMessage="POBox number should not be more than 10 digits">
 					   <f:convertNumber integerOnly="true" type="number" for="poBox"/>
+					   <f:validateLength maximum="10"  for="poBox"/> 
 					   </p:inputText>
 							
 
 						<h:outputLabel for="locLatitude" value="Location Latitude:" />
 						<p:inputText id="locLatitude"
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.addressVO.lattitude}"
-							required="false" converterMessage="Location Latitude should be a Number" >
+							required="false" converterMessage="Location Latitude should be a Number" validatorMessage="Location Latitude should not be more than 5 digits">
 						<f:convertNumber integerOnly="true" type="number" for="locLatitude"/>
+						<f:validateLength maximum="5"  for="locLatitude"/> 
 						</p:inputText>
 
 						<h:outputLabel for="locLongitude" value="Location Longitude:" />
 						<p:inputText id="locLongitude"
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.addressVO.longitude}"
-							required="false" converterMessage="Location Longitude should be a Number">
+							required="false" converterMessage="Location Longitude should be a Number" validatorMessage="Location Longitude should not be more than 5 digits">
 						<f:convertNumber integerOnly="true" type="number" for="locLongitude"/>
+						<f:validateLength maximum="5"  for="locLatitude"/> 
 						</p:inputText>
 
 						<h:outputLabel for="altEmailID1" value="Alternate EmailID1:" />
@@ -230,7 +261,7 @@
 
 						<h:outputLabel for="enqType" value="Enquiry Type :" />
 						<p:selectOneMenu id="enqType"
-							value="#{editCustEnqDetailsMB.enquiryVO.type}" required="true" requiredMessage="Please select the Enquiry Type">
+							value="#{editCustEnqDetailsMB.enquiryVO.type}" required="true" requiredMessage="Please select the EnquiryType">
 							<f:selectItem itemLabel="---Select Enquiry Type---" itemValue="" />
 							<f:selectItems value="#{editCustEnqDetailsMB.enquiryTypes}" />
 						</p:selectOneMenu>
@@ -246,10 +277,10 @@
 							required="false" />
 
 						<h:outputLabel value="Description: *" />
-						<p:inputTextarea rows="6" cols="50" id="Description" validatorMessage="Enquiry Description entered is short, Please Enter the Full Description"
+						<p:inputTextarea rows="6" cols="50" id="Description" validatorMessage="Enquiry Description entered is short, Please Enter the Full Description within 500 characters "
 							value="#{editCustEnqDetailsMB.enquiryVO.description}" required="true" requiredMessage="Please enter the Enquiry Description">
 
-						 <f:validateLength minimum="10"  for="Description:"/>  
+						 <f:validateLength minimum="10"  maximum="500"     for="Description:"/>  
 						</p:inputTextarea>
 
 

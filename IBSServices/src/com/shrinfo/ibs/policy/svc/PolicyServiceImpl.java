@@ -8,6 +8,7 @@ import com.shrinfo.ibs.cmn.vo.BaseVO;
 import com.shrinfo.ibs.document.dao.DocumentDao;
 import com.shrinfo.ibs.policy.dao.PolicyDao;
 import com.shrinfo.ibs.vo.business.DocumentListVO;
+import com.shrinfo.ibs.vo.business.DocumentVO;
 import com.shrinfo.ibs.vo.business.PolicyVO;
 
 public class PolicyServiceImpl extends BaseService implements PolicyService {
@@ -47,8 +48,16 @@ public class PolicyServiceImpl extends BaseService implements PolicyService {
     public BaseVO createPolicy(BaseVO baseVO) {
         PolicyVO policyVO = (PolicyVO) policyDao.createPolicy(baseVO);
         DocumentListVO documentListVO = policyVO.getDocListUploaded();
+        
+        // populate policy related details in document list.    
 
         if(!Utils.isEmpty(documentListVO) && !Utils.isEmpty(documentListVO.getDocumentVOs())) {
+            for(DocumentVO document : documentListVO.getDocumentVOs()){
+                document.setDocSlipId(policyVO.getPolicyId());
+                document.setDocSlipVersion(policyVO.getPolicyVersion());
+                document.setDocType("POLICY");
+                document.setEnquiry(policyVO.getEnquiryDetails());                
+            }
             documentListVO = (DocumentListVO) documentDao.saveDocument(documentListVO);
         }
         policyVO.setDocListUploaded(documentListVO);
@@ -63,6 +72,14 @@ public class PolicyServiceImpl extends BaseService implements PolicyService {
 
     public void setPolicyDao(PolicyDao policyDao) {
         this.policyDao = policyDao;
+    }
+
+    
+    /**
+     * @param documentDao the documentDao to set
+     */
+    public void setDocumentDao(DocumentDao documentDao) {
+        this.documentDao = documentDao;
     }
 
 }
