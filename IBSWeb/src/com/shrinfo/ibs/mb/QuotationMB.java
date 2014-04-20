@@ -4,6 +4,7 @@
 package com.shrinfo.ibs.mb;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -16,12 +17,13 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
-import org.primefaces.event.CloseEvent;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.CloseEvent;
 import org.primefaces.event.RowEditEvent;
 
 import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
+import com.shrinfo.ibs.docgen.QuoteSlipPDFGenerator;
 import com.shrinfo.ibs.helper.ReferralHelper;
 import com.shrinfo.ibs.util.AppConstants;
 import com.shrinfo.ibs.util.MasterDataRetrievalUtil;
@@ -200,7 +202,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
             FacesContext.getCurrentInstance().addMessage(
                 "ERROR_QUOTATION_SAVE",
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, "Selected company record is already added",
-                    "Please select only one quotation to recommend"));
+                    "Selected company record is already added"));
             return null;
         }
         QuoteDetailVO temp = getQuoteDetailTableData(this.quoteDetailVO);
@@ -245,6 +247,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
     
     private ProductVO getProductFieldVOTableData(QuoteDetailVO quoteDetailVO){
         
+
      // populate UW Field details
         ProductVO productVO = new ProductVO();
         productVO.setProductClass(quoteDetailVO.getProductDetails().getProductClass());
@@ -284,6 +287,9 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
         clone.setFieldLength(fieldVO.getFieldLength());        
         
         return clone;
+
+
+
     }
     
     
@@ -448,6 +454,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Quote Details Captured ",
                         " successfully"));
         return loadQuotationsDetail();
+
     }
 
     public String next() {
@@ -459,6 +466,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
         if(!Utils.isEmpty(policyMB)){
             policyMB.loadQuotationDetails();
         }
+
         return "policy";
     }
 
@@ -488,8 +496,10 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
      * @return
      */
     public String loadQuotationsDetail() {
+
         loadQuoteSlipDetails();
         loadQuotations();
+
         return "closeslip";
     }
 
@@ -566,4 +576,58 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
     public void setQuoteDetailVODataModel(QuoteDetailVODataModel quoteDetailVODataModel) {
         this.quoteDetailVODataModel = quoteDetailVODataModel;
     }
+    
+    public String generatePDFForCloseSlip(){
+        
+        try {
+             QuoteSlipPDFGenerator quoteSlipPDFGenerator=new QuoteSlipPDFGenerator();
+             Map<InsCompanyVO, QuoteDetailVO>  mapOfQuoteDets = policyDetails.getQuoteDetails();
+            
+             Set<InsCompanyVO> setOfInsCompanies = mapOfQuoteDets.keySet();
+             Iterator<InsCompanyVO> iterator = setOfInsCompanies.iterator();
+             InsCompanyVO insCompanyVO = null;
+             while(iterator.hasNext()){
+                 insCompanyVO = iterator.next();
+                 this.selectedInsCompanies.add(insCompanyVO.getCode());
+             }
+             
+            Iterator<String> companyItr=selectedInsCompanies.iterator();
+            while(companyItr.hasNext()){
+                String insComp=companyItr.next();
+                quoteSlipPDFGenerator.generatePDFForCloseSlip(this.quoteDetailVO, this.insuredDetails, insCompanyVO.getContactAndAddrDetails(),insComp, Utils.getSingleValueAppConfig("closeSlipfilePath")+"_"+new Date().getTime(), Utils.getSingleValueAppConfig("imagePath"));
+            }
+        }catch(Exception e){
+            FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Error generating quote details document, see the error log"));
+
+        }
+                
+            return null;
+        }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

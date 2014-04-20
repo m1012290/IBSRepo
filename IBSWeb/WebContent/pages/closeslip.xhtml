@@ -162,6 +162,8 @@
 					   
 			<p:commandButton value="Save" action="#{quotationMB.save}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" icon="ui-icon-disk"  style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
 			<p:commandButton value="Next" action="#{quotationMB.next}"  style="float:right:20px;" />
+			<p:commandButton value="Generate CloseSlipDoc" action="#{quotationMB.generatePDFForCloseSlip()}"  style="float:right:20px;" />
+			
 			
 			<p:dialog header="Referral Section" widgetVar="referraldialog">
 					<p:panel id="referralsection">	

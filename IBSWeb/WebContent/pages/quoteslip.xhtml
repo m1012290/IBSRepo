@@ -149,6 +149,7 @@
 						
 						<p:commandButton value="Save" action="#{quoteSlipMB.save}"  update="messages, panelProductDetails, panelInsured" oncomplete="handleSaveResponse(xhr, status, args)" icon="ui-icon-disk"  style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
 						<p:commandButton value="Next" action="#{quoteSlipMB.next}"  style="float:right:20px;" />
+						<p:commandButton value="Generate QuoteSlipDoc" action="#{quoteSlipMB.generatePDFForQuoteSlip()}"  style="float:right:20px;" />
 					</h:form>
     		</ui:define>
     	</ui:composition>

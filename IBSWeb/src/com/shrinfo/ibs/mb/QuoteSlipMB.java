@@ -2,6 +2,7 @@ package com.shrinfo.ibs.mb;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -21,6 +22,7 @@ import com.shrinfo.ibs.cmn.exception.SystemException;
 import com.shrinfo.ibs.cmn.logger.Logger;
 import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
+import com.shrinfo.ibs.docgen.QuoteSlipPDFGenerator;
 import com.shrinfo.ibs.helper.ReferralHelper;
 import com.shrinfo.ibs.util.AppConstants;
 import com.shrinfo.ibs.util.MasterDataRetrievalUtil;
@@ -197,6 +199,7 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 	 * @return
 	 */
 	public String next(){
+
 	    //perform save operation first on click of next button
         save();
         //next check if quote slip mb is already available in session if so then invoke retrieveInsuredQuoteDetails method
@@ -282,4 +285,56 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 		}
 		return "quoteslip";
 	}
+	public String generatePDFForQuoteSlip(){
+		
+		try {
+			 QuoteSlipPDFGenerator quoteSlipPDFGenerator=new QuoteSlipPDFGenerator();
+			 Map<InsCompanyVO, QuoteDetailVO>  mapOfQuoteDets = policyVO.getQuoteDetails();
+			
+			 Set<InsCompanyVO> setOfInsCompanies = mapOfQuoteDets.keySet();
+			 Iterator<InsCompanyVO> iterator = setOfInsCompanies.iterator();
+			 InsCompanyVO insCompanyVO = null;
+			 while(iterator.hasNext()){
+				 insCompanyVO = iterator.next();
+				 this.selectedInsCompanies.add(insCompanyVO.getCode());
+			 }
+			 
+			Iterator<String> companyItr=selectedInsCompanies.iterator();
+			while(companyItr.hasNext()){
+				String insComp=companyItr.next();
+				quoteSlipPDFGenerator.generatePDF(this.quoteDetailVO, this.insuredDetails, insCompanyVO.getContactAndAddrDetails(),insComp, Utils.getSingleValueAppConfig("quoteSlipfilePath")+"_"+new Date().getTime(), Utils.getSingleValueAppConfig("imagePath"));
+			}
+		}catch(Exception e){
+			FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Error generating quote details document, see the error log"));
+
+		}
+			
+		return null;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
