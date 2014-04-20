@@ -22,6 +22,7 @@ import com.shrinfo.ibs.gen.pojo.IbsContact;
 import com.shrinfo.ibs.gen.pojo.IbsCustomer;
 import com.shrinfo.ibs.gen.pojo.IbsCustomerEnquiry;
 import com.shrinfo.ibs.gen.pojo.IbsDocumentTable;
+import com.shrinfo.ibs.gen.pojo.IbsInsuranceCompany;
 import com.shrinfo.ibs.gen.pojo.IbsInsuredMaster;
 import com.shrinfo.ibs.gen.pojo.IbsProductMaster;
 import com.shrinfo.ibs.gen.pojo.IbsProductUwFields;
@@ -218,9 +219,9 @@ public class MapperUtil {
 
         enquiryVO.setEnquiryNo(ibsCustomerEnquiry.getEnquiryNo().longValue());
         enquiryVO.setEnquirySme(ibsCustomerEnquiry.getEnquirySubjectmatterExpert());
-        if(!Utils.isEmpty(ibsCustomerEnquiry.getType())){
+        if (!Utils.isEmpty(ibsCustomerEnquiry.getType())) {
             enquiryVO.setType(EnquiryType.valueOf(ibsCustomerEnquiry.getType()));
-        }        
+        }
         CustomerVO customerVO = new CustomerVO();
         populateCustomerVO(customerVO, ibsCustomerEnquiry.getIbsCustomer());
         enquiryVO.setCustomerDetails(customerVO);
@@ -523,8 +524,8 @@ public class MapperUtil {
         }
         quoteDetailVO.setIsClosingSlipEmailed(ibsQuoteCompDetail.getClosingSlipEmailed());
         quoteDetailVO.setIsClosingSlipGenerated(ibsQuoteCompDetail.getQuoteRecommended());
-        quoteDetailVO.setIsQuoteRecommended(ibsQuoteCompDetail.getQuoteRecommended().equals("Y") ? true
-            : false);
+        quoteDetailVO.setIsQuoteRecommended(ibsQuoteCompDetail.getQuoteRecommended().equals("Y")
+            ? true : false);
         quoteDetailVO.setQuoteNo(ibsQuoteCompDetail.getQuoteNo());
         quoteDetailVO.setQuoteDate(ibsQuoteCompDetail.getQuoteDate());
         quoteDetailVO.setCompanyCode(ibsQuoteCompDetail.getQuotedCompanyCode());
@@ -839,5 +840,31 @@ public class MapperUtil {
         documentVO.setEnquiry(enquiryVO);
         documentVO.setId(ibsDocument.getId());
         // documentVO.setIsStatusActive(ibsDocument.gets);
+    }
+
+
+    public static void populateInsCompanyVO(InsCompanyVO insCompanyVO,
+            IbsInsuranceCompany ibsInsuranceCompany) {
+
+        if(Utils.isEmpty(ibsInsuranceCompany)){
+            return;
+        }
+        
+        if(Utils.isEmpty(insCompanyVO)){
+            insCompanyVO = new InsCompanyVO();
+        }
+        
+        insCompanyVO.setCode(ibsInsuranceCompany.getCode());
+        ContactVO contactVO = new ContactVO();
+        populateContactVO(contactVO, ibsInsuranceCompany.getIbsContact());
+        populateAuditFields(contactVO, ibsInsuranceCompany.getIbsContact());
+        insCompanyVO.setContactAndAddrDetails(contactVO);
+        insCompanyVO.setIsStatusActive(ibsInsuranceCompany.getStatus());
+        insCompanyVO.setName(ibsInsuranceCompany.getName());
+        
+        //TODO: set product wise contact details
+        
+        populateAuditFields(insCompanyVO, ibsInsuranceCompany);
+        
     }
 }
