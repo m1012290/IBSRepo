@@ -1,8 +1,15 @@
 package com.shrinfo.ibs.mb;
 
+import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
+import java.io.Flushable;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
@@ -11,8 +18,13 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import org.primefaces.model.UploadedFile;
+
+import com.shrinfo.ibs.cmn.logger.Logger;
 import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
+import com.shrinfo.ibs.vo.business.DocumentListVO;
+import com.shrinfo.ibs.vo.business.DocumentVO;
 import com.shrinfo.ibs.vo.business.InsCompanyVO;
 import com.shrinfo.ibs.vo.business.InsuredVO;
 import com.shrinfo.ibs.vo.business.PolicyVO;
@@ -21,6 +33,9 @@ import com.shrinfo.ibs.vo.business.QuoteDetailVO;
 @ManagedBean(name = "policyMB")
 @SessionScoped
 public class PolicyMB extends BaseManagedBean implements Serializable {
+
+
+    Logger logger = Logger.getLogger(PolicyMB.class);
 
     /**
 	 * 
@@ -32,16 +47,18 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
     private PolicyVO policyDetails = new PolicyVO();
 
     private InsuredVO insuredDetails = new InsuredVO();
-    
-    //This is an important method which is overriden from parent managed bean
+
+    private UploadedFile file;
+
+    // This is an important method which is overriden from parent managed bean
     // this is an reinitializer block which includes all the instance fields which are bound to form
     // this method is necessary as managed beans are defined as sessionscoped beans
-    protected void reinitializeBeanFields(){
+    protected void reinitializeBeanFields() {
         this.quoteDetailVO = new QuoteDetailVO();
         this.policyDetails = new PolicyVO();
         this.insuredDetails = new InsuredVO();
     }
-    
+
     public QuoteDetailVO getQuoteDetailVO() {
         return quoteDetailVO;
     }
@@ -66,6 +83,27 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
         this.insuredDetails = insuredDetails;
     }
 
+
+    /**
+     * @return the file
+     */
+    public UploadedFile getFile() {
+        return file;
+    }
+
+
+    /**
+     * @param file the file to set
+     */
+    public void setFile(UploadedFile file) {
+        this.file = file;
+    }
+    
+    public void loadFile(UploadedFile file) {
+        this.file = file;
+    }
+
+
     public void calculatePremiumBasedOnPremiumChange(AjaxBehaviorEvent event) {
 
         BigDecimal premium = this.policyDetails.getPremiumDetails().getPremium();
@@ -88,7 +126,7 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
             this.policyDetails.getPremiumDetails().setTotalPremium(
                 premium.add(premiumDiscountValue));
         }
-        
+
     }
 
 
@@ -127,19 +165,84 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
             this.policyDetails.setQuoteDetails(quoteDetailsMap);
 
             this.policyDetails.setInsuredDetails(this.insuredDetails);
+            DocumentListVO documentListVO = new DocumentListVO();
+            List<DocumentVO> docVOList = new ArrayList<DocumentVO>();
+            
+            DocumentVO document = new DocumentVO();
+            document.setEnquiry(this.policyDetails.getEnquiryDetails());
+            // document.setDocSlipId(this.policyDetails.getPolicyId());
+            document.setDocType("POLICY");
+            document.setDocument(getFilaDataAsArray(this.file));            
+            
+            docVOList.add(document);
+            documentListVO.setDocumentVOs(docVOList);
+            this.policyDetails.setDocListUploaded(documentListVO);
             policyDetailsOP =
                 (PolicyVO) ServiceTaskExecutor.INSTANCE.executeSvc("policySvc", "createPolicy",
                     this.policyDetails);
         } catch (Exception ex) {
+            logger.error(ex, "Error saving Policy details");
             FacesContext.getCurrentInstance()
                     .addMessage(
                         "ERROR_QUOTATION_SAVE",
                         new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
                             "Error saving Policy details."));
+            return null;
         }
         FacesContext.getCurrentInstance().addMessage("MESSAGE_SUCCESS",
             new FacesMessage(FacesMessage.SEVERITY_INFO, "Policy Details Saved ", " successfully"));
         return null;
+    }
+
+    /**
+     * 
+     * @throws IOException
+     */
+    public byte[] getFilaDataAsArray(UploadedFile file) throws IOException {
+
+        if (null == file) {
+            return null;
+        }
+        InputStream in = file.getInputstream();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+        int totalRead = 0;
+        if ((null != in) && (null != out)) {
+            int bufferSize = 16;
+            byte[] ba = new byte[1024 * bufferSize];
+            int len = 0;
+
+            while (-1 != (len = in.read(ba))) {
+                out.write(ba, 0, len);
+                totalRead += len;
+            }
+
+            close(in);
+            close(out);
+        }
+        return out.toByteArray();
+
+    }
+
+    public boolean close(Closeable c) {
+        if (null == c) {
+            return true;
+        }
+        try {
+            if (c instanceof Flushable) {
+                ((Flushable) c).flush();
+            }
+        } catch (Exception e) {
+            logger.warn(e, "couldn't close stream");
+        }
+
+        try {
+            c.close();
+        } catch (IOException e) {
+            logger.warn(e, "couldn't close stream");
+            return false;
+        }
+        return true;
     }
 
 
@@ -153,7 +256,8 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
         if (Utils.isEmpty(this.quoteDetailVO.getQuoteId())) {
             FacesContext.getCurrentInstance().addMessage(
                 "ERROR_QUOTATION_SAVE",
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Quote Details : At least one quote has to be recommended",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Quote Details : At least one quote has to be recommended",
                     "Quote Details : At least one quote has to be recommended"));
             return null;
         }
