@@ -115,11 +115,13 @@
 						          </h:panelGrid>
 						 </p:panel>
 						 <p:panel id="panelUWDetails" header="Underwriting Details" style="margin-bottom:10px;">
-						 	<custom:uwdetails value="#{quoteSlipMB.quoteDetailVO.productDetails}"/>
+						    <h:panelGrid id="uwdetailsgrid" rendered="#{quoteSlipMB.renderCustomUWComponent}">
+						 		<custom:uwdetails value="#{quoteSlipMB.quoteDetailVO.productDetails}" tablecols="2"/>
+						 	</h:panelGrid>
 						 </p:panel>
 						            
-						            <p:panel id="panelAudit" header="Audit Details" style="margin-bottom:10px;">
-									<h:panelGrid columns="8">
+						      <p:panel id="panelAudit" header="Audit Details" style="margin-bottom:10px;">
+							     <h:panelGrid columns="8" >
 						            
 						            <h:outputLabel for="recCreatedUsrID" value="Record Created UserID" />  
 						            <p:inputText id="recCreatedUsrID"  value="#{editCustEnqDetailsMB.recCreatedUserID}"  readonly="true" required="false" /> 

@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.el.ValueExpression;
+import javax.faces.application.FacesMessage;
 import javax.faces.application.ResourceDependencies;
 import javax.faces.application.ResourceDependency;
 import javax.faces.component.FacesComponent;
@@ -26,6 +27,7 @@ import org.primefaces.component.calendar.Calendar;
 import org.primefaces.component.inputtext.InputText;
 import org.primefaces.component.selectonemenu.SelectOneMenu;
 
+import com.shrinfo.ibs.cmn.exception.SystemException;
 import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.cmn.vo.BaseVO;
 import com.shrinfo.ibs.vo.business.ProductUWFieldVO;
@@ -57,8 +59,9 @@ public class UWDetailsComponent extends UIComponentBase {
         encodeMarkUp(context, getUWFields(productClass)); 
         */
         ProductVO productVO = (ProductVO)getAttributes().get("value");
+        String tableCols = (String)getAttributes().get("tablecols");
         if(!Utils.isEmpty(productVO) && !Utils.isEmpty(productVO.getUwFieldsList())){
-        	encodeMarkUp(context, productVO);
+        	encodeMarkUp(context, productVO, tableCols);
         }
     }
     
@@ -86,12 +89,19 @@ public class UWDetailsComponent extends UIComponentBase {
         return productVO;
     }*/
     
-    private void encodeMarkUp(FacesContext context, BaseVO inputVO) throws IOException{
+    private void encodeMarkUp(FacesContext context, BaseVO inputVO, String tableCols) throws IOException{
         if(!Utils.isEmpty(inputVO)){
+            int tableColSize = 0;
+            try{
+                tableColSize = Integer.valueOf(tableCols);
+            }catch(NumberFormatException nfe ){
+                FacesContext.getCurrentInstance().addMessage("ERROR_ATTRIBUTE_VALUE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Invalid tablecols value for custom underwriting component", null));
+                throw new SystemException("", nfe, "table col size is invalid for the custom component");
+            }
             //Iterate through product UW fields and render corresponding markup component
             ProductVO productVO = (ProductVO) inputVO;
             HtmlPanelGrid panelGrid = new HtmlPanelGrid();
-            panelGrid.setColumns(6);
+            panelGrid.setColumns(tableColSize);
             List<UIComponent> childComponents = new ArrayList<UIComponent>();
             ResponseWriter writer = context.getResponseWriter();
             int i = 0;
@@ -114,7 +124,6 @@ public class UWDetailsComponent extends UIComponentBase {
                 i= i + 1;
             }
             panelGrid.getChildren().addAll(childComponents);
-            
             panelGrid.encodeAll(context);
         }
     }
@@ -159,11 +168,12 @@ public class UWDetailsComponent extends UIComponentBase {
         textBox.setValueExpression("value", ve);
         textBox.setValue(productUWFieldVO.getResponse());
         //textBox.encodeAll(context);
+        
         return textBox;
     }
     
-    // Adds calendar picker8
-    private UIComponent encodeDatePicker(FacesContext context, BaseVO inputVO){
+    // Adds calendar picker
+    private UIComponent encodeDatePicker(FacesContext context, BaseVO inputVO) throws IOException{
         ProductUWFieldVO productUWFieldVO = (ProductUWFieldVO)inputVO;
         Calendar calendar = new Calendar();
         calendar.setEffect("slideDown");
@@ -178,6 +188,8 @@ public class UWDetailsComponent extends UIComponentBase {
             }
         }
         calendar.setId(Utils.concat("field_",String.valueOf(productUWFieldVO.getFieldOrder())));
+        //calendar.encodeAll(context);
+        
         return calendar;
     }
 }

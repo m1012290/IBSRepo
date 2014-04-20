@@ -59,6 +59,7 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 	private QuoteDetailVO quoteDetailVO = new QuoteDetailVO();
 	private InsuredVO insuredDetails=new InsuredVO();
 	private PolicyVO policyVO = new PolicyVO();
+	private Boolean renderCustomUWComponent = Boolean.FALSE;
 	
 	//This is an important method which is overriden from parent managed bean
     // this is an reinitializer block which includes all the instance fields which are bound to form
@@ -69,6 +70,7 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
         this.quoteDetailVO = new QuoteDetailVO();
         this.insuredDetails=new InsuredVO();
         this.policyVO = new PolicyVO();
+        this.renderCustomUWComponent = Boolean.FALSE;
     }
 	
 	public Map<String, String> getInsCompanies() {
@@ -104,7 +106,17 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 	public void setPolicyVO(PolicyVO policyVO) {
 		this.policyVO = policyVO;
 	}
-	public String save(){
+	
+    public boolean isRenderCustomUWComponent() {
+        return renderCustomUWComponent;
+    }
+
+    
+    public void setRenderCustomUWComponent(boolean renderCustomUWComponent) {
+        this.renderCustomUWComponent = renderCustomUWComponent;
+    }
+
+    public String save(){
 		PolicyVO policyVO=new PolicyVO();
 		
 		try {
@@ -213,6 +225,8 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 		lookupVO.setLevel1(String.valueOf(this.quoteDetailVO.getProductDetails().getProductClass()));
 		LookupVO responseVO = MasterDataRetrievalUtil.getInsCompanies(lookupVO);
 		this.insCompanies = responseVO.getCodeDescMap();
+		//enable rendering of custom underwriting component
+		this.renderCustomUWComponent = Boolean.TRUE;
 		
 		return null;
 	}
