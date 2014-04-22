@@ -413,11 +413,6 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
                 RequestContext context = RequestContext.getCurrentInstance();
                 if( context.isAjaxRequest() ){
                     context.addCallbackParam("referral", Boolean.TRUE);
-
-
-
-
-
                     return null;
                 }
             }
@@ -459,7 +454,9 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 
     public String next() {
         //perform save operation first on click of next button
-        save();
+        if(Utils.isEmpty(save())){
+            return null;
+        }
         //next check if quote slip mb is already available in session if so then invoke retrieveInsuredQuoteDetails method
         //on the bean
         PolicyMB policyMB = (PolicyMB)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(AppConstants.BEAN_NAME_POLICY_PAGE);

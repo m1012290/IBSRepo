@@ -12,7 +12,9 @@
     	
     	<ui:composition template="/template/common/commonLayout.xhtml">
     	<ui:define name="content">
-    			<h:form id="form"> 
+    			
+    			<h:form id="form">
+    			
     			<p:growl id="messages1" showDetail="true"/>
     				
     				<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" /> 
@@ -48,12 +50,10 @@
 						       
 			       				</h:panelGrid>
 					   </p:panel>
-					  <!--  <p:panel id="panelUWDetails" header="Underwriting Details" style="margin-bottom:10px;">
-						 	<custom:uwdetails value="#{quotationMB.quoteDetailVO.productDetails}"/>
-					  </p:panel> -->
+				
 					  
 		<p:panel header="Enter the quotation Details" style="margin-bottom:10px;"> 
-                			<p:panelGrid columns="08">
+               <h:panelGrid columns="08">
                     <h:outputLabel for="compName" value="CompanyName: " />
 					<p:selectOneMenu value="#{quotationMB.quoteDetailVO.companyCode}">
                             <f:selectItem itemLabel="---Select Company Name---" itemValue="" />
@@ -91,12 +91,17 @@
 							value="#{quotationMB.quoteDetailVO.recommendationSummary}" required="false" >
 					  </p:inputTextarea>
                     
-                    <custom:uwdetails value="#{quotationMB.quoteDetailVO.productDetails}"/>
+                   
                     
-                    <f:facet name="footer">
-                        <h:commandButton value="Add Item" action="#{quotationMB.addAction()}" update="quotationList"/>
-                    </f:facet>
-                </p:panelGrid>
+                       
+                  <!-- <f:facet name="footer"> -->
+                        
+                   <!-- </f:facet>  --> 
+                </h:panelGrid>
+	            
+                <custom:uwdetails value="#{quotationMB.quoteDetailVO.productDetails}" tablecols="8"/>
+                
+                <h:commandButton value="Add Item" action="#{quotationMB.addAction()}" update="quotationList"/>
                 <p:spacer height="30px;"/>
 		</p:panel>
         
@@ -134,7 +139,7 @@
 
 							<h:outputLabel value="UW fields" />
 							<custom:uwdetails
-								value="#{quote.productDetails}" />
+								value="#{quote.productDetails}" tablecols="1"/>
 							<p:commandLink update=":form:uwFieldDetail"
 								oncomplete="PF('uwFieldDetailDialog').show()"
 								title="View Detail">
@@ -154,18 +159,12 @@
 
 						<h:panelGrid columns="2" cellpadding="5">
 							<custom:uwdetails
-								value="#{quotationMB.selectedQuoteDetailVO.productDetails}" />
+								value="#{quotationMB.selectedQuoteDetailVO.productDetails}" tablecols="1"/>
 
 						</h:panelGrid>
 					</p:outputPanel>
 				</p:dialog>
-					   
-			<p:commandButton value="Save" action="#{quotationMB.save}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" icon="ui-icon-disk"  style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
-			<p:commandButton value="Next" action="#{quotationMB.next}"  style="float:right:20px;" />
-			<p:commandButton value="Generate CloseSlipDoc" action="#{quotationMB.generatePDFForCloseSlip()}"  style="float:right:20px;" />
-			
-			
-			<p:dialog header="Referral Section" widgetVar="referraldialog">
+					   <p:dialog header="Referral Section" widgetVar="referraldialog">
 					<p:panel id="referralsection">	
 						<h:panelGrid columns="4">
 							<h:outputLabel for="name" value="Referred By" />  
@@ -182,7 +181,9 @@
 						</h:panelGrid>	  				
 	  				</p:panel>
 	  			</p:dialog>
-    				
+			<p:commandButton value="Save" action="#{quotationMB.save}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" icon="ui-icon-disk"  style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
+			<p:commandButton value="Next" action="#{quotationMB.next}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" style="float:right:20px;" />
+			<p:commandButton value="Generate CloseSlipDoc" action="#{quotationMB.generatePDFForCloseSlip()}"  style="float:right:20px;" />
 					   	
 	   		</h:form>
     		</ui:define>

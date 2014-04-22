@@ -248,7 +248,8 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 			Map map=fc.getExternalContext().getSessionMap();
 			EditCustEnqDetailsMB editCustEnqDetailsMB=(EditCustEnqDetailsMB) map.get("editCustEnqDetailsMB");
 			if(!Utils.isEmpty(editCustEnqDetailsMB.getInsuredDetails().getId())){
-				this.insuredDetails.setId(editCustEnqDetailsMB.getInsuredDetails().getId());
+				this.renderCustomUWComponent = true;
+			    this.insuredDetails.setId(editCustEnqDetailsMB.getInsuredDetails().getId());
 				
 				//Retrieve quote slip details basis quote slip id retained on enquiry form through search results on home page
 				this.quoteDetailVO.setQuoteSlipId(editCustEnqDetailsMB.getQuoteSlipId());
