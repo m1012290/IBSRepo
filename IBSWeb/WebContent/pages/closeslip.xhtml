@@ -19,33 +19,33 @@
     				
     				<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" /> 
     					<p:panel id="panelQuotation" header="Insured Details" style="margin-bottom:10px;"> 
-				       			 <h:panelGrid columns="8">  
+				       			 <h:panelGrid columns="6" style="width:100%;">  
 				       			 
 				       			 
-						       		<h:outputLabel for="name" value="Name: *" />  
+						       		<h:outputLabel for="name" value="Name *" />  
 						            <p:inputText id="name" value="#{quotationMB.insuredDetails.name}" readonly="true" />
 						            
-						            <h:outputLabel for="products" value="Products:" />  
-            						<p:selectOneMenu id="products"  value="#{quotationMB.quoteDetailVO.productDetails.productClass}">
+						            <h:outputLabel for="products" value="Products" />  
+            						<p:selectOneMenu id="products"  style="width:158px;" value="#{quotationMB.quoteDetailVO.productDetails.productClass}">
                 						<f:selectItem itemLabel="Select Product-" itemValue="" />  
                 						<f:selectItems value="#{quotationMB.products}" />  
             						</p:selectOneMenu>
             						
             						
-            						<h:outputLabel for="insurancecompanies" value="Companies:" />  
+            						<h:outputLabel for="insurancecompanies" value="Companies" />  
             						<p:selectManyMenu id="insurancecompanies" value="#{quoteSlipMB.selectedInsCompanies}" >
             							<f:selectItems value="#{quotationMB.insCompanies}"/>
             						</p:selectManyMenu>
             						
             						
-            						<h:outputLabel for="quoteSlipID" value="Quote Slip Number:" />  
+            						<h:outputLabel for="quoteSlipID" value="Quote Slip Number" />  
 						            <p:inputText id="quoteSlipID"  value="#{quotationMB.quoteDetailVO.quoteSlipId}" readonly="true" required="false" /> 
 						            
-				                  	<h:outputLabel for="quoteSlipVersion" value="Quote Slip Version:" />  
+				                  	<h:outputLabel for="quoteSlipVersion" value="Quote Slip Version" />  
 						            <p:inputText id="quoteSlipVersion" value="#{quotationMB.quoteDetailVO.quoteSlipVersion}" readonly="true"  required="false" />  
 						            			              
 						            
-						            <h:outputLabel for="insuredID" value="Insured ID:" />  
+						            <h:outputLabel for="insuredID" value="Insured ID" />  
 						            <p:inputText id="insuredID" value="#{quoteSlipMB.insuredDetails.id}" readonly="true" required="false" />  
 						       
 			       				</h:panelGrid>
@@ -56,40 +56,43 @@
 				</p:panel>
 					  
 		<p:panel header="Enter the quotation Details" style="margin-bottom:10px;"> 
-               <h:panelGrid columns="08">
-                    <h:outputLabel for="compName" value="CompanyName: " />
+               <p:panelGrid styleClass="closeSlipTable" columns="6" style="width:100%; padding:0px;">
+                    <h:outputLabel for="compName" value="CompanyName" />
 					<p:selectOneMenu value="#{quotationMB.quoteDetailVO.companyCode}">
                             <f:selectItem itemLabel="---Select Company Name---" itemValue="" />
             				<f:selectItems value="#{quotationMB.insCompanies}"/>
                    `</p:selectOneMenu>                     
-                   	<h:outputLabel for="quoteNum" value="Quotation Number: " />
+                   	<h:outputLabel for="quoteNum" value="Quotation Number" />
                     <p:inputText value="#{quotationMB.quoteDetailVO.quoteNo}" required="false" >
 				   </p:inputText>
 				   
 				   
-                    <h:outputLabel for="quotedPremium" value="Quoted Premium:" />
+
+                    <h:outputLabel for="quotedPremium" value="Quoted Premium" />
                     <p:inputText  value="#{quotationMB.quoteDetailVO.quoteSlipPrmDetails.premium}">
 				   </p:inputText>
                     
                     
-                    <h:outputLabel for="sumInsured" value="Sum Insured:" />
+
+                    <h:outputLabel for="sumInsured" value="Sum Insured" />
                     <p:inputText value="#{quotationMB.quoteDetailVO.sumInsured}" >  
 				   </p:inputText>
                     
                     
-                    <h:outputLabel for="policyTerm" value="Policy Term:" />
+
+                    <h:outputLabel for="policyTerm" value="Policy Term" />
                     <p:inputText  value="#{quotationMB.quoteDetailVO.policyTerm}" > 
 				   </p:inputText>
 				   
                     
-                    <h:outputLabel  for="coverDesc" value="Cover Description:" />
+                    <h:outputLabel  for="coverDesc" value="Cover Description" />
 						<p:inputTextarea rows="6" cols="50" id="coverDesc" 
 							value="#{quotationMB.quoteDetailVO.quoteSlipPrmDetails.coverDescription}">
 					    </p:inputTextarea>
                     
                     
                      
-                    <h:outputLabel  for="recSummary" value="Recommendation Summary:" />
+                    <h:outputLabel  for="recSummary" value="Recommendation Summary" />
 						<p:inputTextarea rows="6" cols="50" id="recSummary" 
 							value="#{quotationMB.quoteDetailVO.recommendationSummary}" required="false" >
 					  </p:inputTextarea>
@@ -103,8 +106,18 @@
                 </h:panelGrid>
 	            
                 <custom:uwdetails value="#{quotationMB.quoteDetailVO.productDetails}" tablecols="8" prefix="quoteAdding"/>
+
+
+
+
+
                 
+
+
+
                 <h:commandButton value="Add Item" action="#{quotationMB.addAction()}" update="quotationList"/>
+
+
                 <p:spacer height="30px;"/>
 		</p:panel>
         
@@ -172,6 +185,10 @@
 						</h:panelGrid>
 					</p:outputPanel>
 				</p:dialog>
+
+
+
+
 					   <p:dialog header="Referral Section" widgetVar="referraldialog">
 					<p:panel id="referralsection">	
 						<h:panelGrid columns="4">
@@ -192,6 +209,7 @@
 			<p:commandButton value="Save" action="#{quotationMB.save}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" icon="ui-icon-disk"  style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
 			<p:commandButton value="Next" action="#{quotationMB.next}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" style="float:right:20px;" />
 			<p:commandButton value="Generate CloseSlipDoc" action="#{quotationMB.generatePDFForCloseSlip()}"  style="float:right:20px;" />
+
 					   	
 	   		</h:form>
     		</ui:define>

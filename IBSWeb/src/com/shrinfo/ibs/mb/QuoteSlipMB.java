@@ -297,14 +297,20 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 			 InsCompanyVO insCompanyVO = null;
 			 while(iterator.hasNext()){
 				 insCompanyVO = iterator.next();
-				 this.selectedInsCompanies.add(insCompanyVO.getCode());
+				 //this.selectedInsCompanies.add(insCompanyVO.getCode());
+				 insCompanyVO =  (InsCompanyVO)ServiceTaskExecutor.INSTANCE.executeSvc("companySvc","getPolicy",insCompanyVO);
+				 quoteSlipPDFGenerator.generatePDF(this.quoteDetailVO, this.insuredDetails, insCompanyVO.getContactAndAddrDetails(),insCompanyVO.getName(), Utils.getSingleValueAppConfig("quoteSlipfilePath")+"_"+new Date().getTime(), Utils.getSingleValueAppConfig("imagePath"));
+
 			 }
 			 
-			Iterator<String> companyItr=selectedInsCompanies.iterator();
+			FacesContext.getCurrentInstance().addMessage("SUCCESS_EMAIL_MSG", new FacesMessage(FacesMessage.SEVERITY_INFO,"Quoteslipdoc is successfully emailed to the selected insurance companies",null));
+
+			/*Iterator<String> companyItr=selectedInsCompanies.iterator();
 			while(companyItr.hasNext()){
 				String insComp=companyItr.next();
 				quoteSlipPDFGenerator.generatePDF(this.quoteDetailVO, this.insuredDetails, insCompanyVO.getContactAndAddrDetails(),insComp, Utils.getSingleValueAppConfig("quoteSlipfilePath")+"_"+new Date().getTime(), Utils.getSingleValueAppConfig("imagePath"));
-			}
+			}*/
+
 		}catch(Exception e){
 			FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Error generating quote details document, see the error log"));
 
@@ -312,30 +318,5 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 			
 		return null;
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

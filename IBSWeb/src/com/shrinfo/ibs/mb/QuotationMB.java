@@ -581,56 +581,30 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 	}
 
 	public String generatePDFForCloseSlip(){
+        
+        try {
+             QuoteSlipPDFGenerator quoteSlipPDFGenerator=new QuoteSlipPDFGenerator();
+             Map<InsCompanyVO, QuoteDetailVO>  mapOfQuoteDets = policyDetails.getQuoteDetails();
+            
+             Set<InsCompanyVO> setOfInsCompanies = mapOfQuoteDets.keySet();
+             Iterator<InsCompanyVO> iterator = setOfInsCompanies.iterator();
+             InsCompanyVO insCompanyVO = null;
+             while(iterator.hasNext()){
 
-		try {
-			QuoteSlipPDFGenerator quoteSlipPDFGenerator=new QuoteSlipPDFGenerator();
-			Map<InsCompanyVO, QuoteDetailVO>  mapOfQuoteDets = this.policyDetails.getQuoteDetails();
+                 insCompanyVO = iterator.next();
+                 insCompanyVO =  (InsCompanyVO)ServiceTaskExecutor.INSTANCE.executeSvc("companySvc","getPolicy",insCompanyVO);
+				 quoteSlipPDFGenerator.generatePDFForCloseSlip(this.quoteDetailVO, this.insuredDetails, insCompanyVO.getContactAndAddrDetails(),insCompanyVO.getName(), Utils.getSingleValueAppConfig("quoteSlipfilePath")+"_"+new Date().getTime(), Utils.getSingleValueAppConfig("imagePath"));
 
-			Set<InsCompanyVO> setOfInsCompanies = mapOfQuoteDets.keySet();
-			Iterator<InsCompanyVO> iterator = setOfInsCompanies.iterator();
-			InsCompanyVO insCompanyVO = null;
-			while(iterator.hasNext()){
-				insCompanyVO = iterator.next();
-				this.selectedInsCompanies.add(insCompanyVO.getCode());
-			}
 
-			Iterator<String> companyItr=this.selectedInsCompanies.iterator();
-			while(companyItr.hasNext()){
-				String insComp=companyItr.next();
-				quoteSlipPDFGenerator.generatePDFForCloseSlip(this.quoteDetailVO, this.insuredDetails, insCompanyVO.getContactAndAddrDetails(),insComp, Utils.getSingleValueAppConfig("closeSlipfilePath")+"_"+new Date().getTime(), Utils.getSingleValueAppConfig("imagePath"));
-			}
-		}catch(Exception e){
-			FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Error generating quote details document, see the error log"));
+             }
+			 FacesContext.getCurrentInstance().addMessage("SUCCESS_EMAIL_MSG", new FacesMessage(FacesMessage.SEVERITY_INFO,"Closingslip is successfully  emailed",null));
 
-		}
 
-		return null;
-	}
+        }catch(Exception e){
+            FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Error generating quote details document, see the error log"));
+
+        }
+                
+        return null;
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
