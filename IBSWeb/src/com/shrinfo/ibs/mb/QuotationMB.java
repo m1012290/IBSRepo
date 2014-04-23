@@ -210,6 +210,58 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 							"Selected company record is already added"));
 			return null;
 		}
+
+		/**
+		 * Validation for quotation details being added
+		 */
+		boolean fieldsValid = true;
+		if(Utils.isEmpty(this.quoteDetailVO.getCompanyCode())) {
+			fieldsValid = false;
+			FacesContext.getCurrentInstance().addMessage(
+					"ERROR_QUOTATION_SAVE",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please choose company name",
+							"Please choose company name"));
+		}
+		if(Utils.isEmpty(this.quoteDetailVO.getQuoteNo())) {
+			fieldsValid = false;
+			FacesContext.getCurrentInstance().addMessage(
+					"ERROR_QUOTATION_SAVE",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter valid quotation number",
+							"Please enter valid quotation number"));
+		}
+		if(!Utils.isNonZeroNumber(this.quoteDetailVO.getQuoteSlipPrmDetails().getPremium().toString())) {
+			fieldsValid = false;
+			FacesContext.getCurrentInstance().addMessage(
+					"ERROR_QUOTATION_SAVE",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter valid quoted premium amount",
+							"Please enter valid quoted premium amount"));
+		}
+		if(!Utils.isNonZeroNumber(this.quoteDetailVO.getSumInsured().toString())) {
+			fieldsValid = false;
+			FacesContext.getCurrentInstance().addMessage(
+					"ERROR_QUOTATION_SAVE",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter valid sum insured",
+							"Please enter valid sum insured"));
+		}
+		if(!Utils.isNonZeroNumber(this.quoteDetailVO.getPolicyTerm().toString())) {
+			fieldsValid = false;
+			FacesContext.getCurrentInstance().addMessage(
+					"ERROR_QUOTATION_SAVE",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter valid Policy term",
+							"Please enter valid Policy term"));
+		}
+		if(Utils.isEmpty(this.quoteDetailVO.getQuoteSlipPrmDetails().getCoverDescription())) {
+			fieldsValid = false;
+			FacesContext.getCurrentInstance().addMessage(
+					"ERROR_QUOTATION_SAVE",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter valid cover description",
+							"Please enter valid cover description"));
+		}
+		if(!fieldsValid) {
+			return null;
+		}
+
+
 		QuoteDetailVO temp = this.getQuoteDetailTableData(this.quoteDetailVO);
 		temp.setProductDetails(this.getProductFieldVOTableData(this.quoteDetailVO, "quoteAdding"));
 		this.quoteDetailList.add(temp);
