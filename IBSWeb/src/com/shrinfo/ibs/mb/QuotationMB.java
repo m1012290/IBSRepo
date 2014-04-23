@@ -384,7 +384,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 						// status as active
 						quoteDetVO.setStatusCode(1);
 						// populate UW Field details
-						quoteDetVO.setProductDetails(this.getProductFieldVOTableData(this.quoteDetailVO, "quoteAdded_"+quoteDetailVO.getCompanyCode()));
+						quoteDetVO.setProductDetails(this.getProductFieldVOTableData(quoteDetailVO, "quoteAdded_"+quoteDetailVO.getCompanyCode()));
 						quoteDetVO.setPolicyTerm(quoteDetailVO.getPolicyTerm());
 
 						addedQuotes.put(entry.getKey(), quoteDetVO);
@@ -581,30 +581,30 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 	}
 
 	public String generatePDFForCloseSlip(){
-        
-        try {
-             QuoteSlipPDFGenerator quoteSlipPDFGenerator=new QuoteSlipPDFGenerator();
-             Map<InsCompanyVO, QuoteDetailVO>  mapOfQuoteDets = policyDetails.getQuoteDetails();
-            
-             Set<InsCompanyVO> setOfInsCompanies = mapOfQuoteDets.keySet();
-             Iterator<InsCompanyVO> iterator = setOfInsCompanies.iterator();
-             InsCompanyVO insCompanyVO = null;
-             while(iterator.hasNext()){
 
-                 insCompanyVO = iterator.next();
-                 insCompanyVO =  (InsCompanyVO)ServiceTaskExecutor.INSTANCE.executeSvc("companySvc","getPolicy",insCompanyVO);
-				 quoteSlipPDFGenerator.generatePDFForCloseSlip(this.quoteDetailVO, this.insuredDetails, insCompanyVO.getContactAndAddrDetails(),insCompanyVO.getName(), Utils.getSingleValueAppConfig("quoteSlipfilePath")+"_"+new Date().getTime(), Utils.getSingleValueAppConfig("imagePath"));
+		try {
+			QuoteSlipPDFGenerator quoteSlipPDFGenerator=new QuoteSlipPDFGenerator();
+			Map<InsCompanyVO, QuoteDetailVO>  mapOfQuoteDets = this.policyDetails.getQuoteDetails();
 
+			Set<InsCompanyVO> setOfInsCompanies = mapOfQuoteDets.keySet();
+			Iterator<InsCompanyVO> iterator = setOfInsCompanies.iterator();
+			InsCompanyVO insCompanyVO = null;
+			while(iterator.hasNext()){
 
-             }
-			 FacesContext.getCurrentInstance().addMessage("SUCCESS_EMAIL_MSG", new FacesMessage(FacesMessage.SEVERITY_INFO,"Closingslip is successfully  emailed",null));
+				insCompanyVO = iterator.next();
+				insCompanyVO =  (InsCompanyVO)ServiceTaskExecutor.INSTANCE.executeSvc("companySvc","getPolicy",insCompanyVO);
+				quoteSlipPDFGenerator.generatePDFForCloseSlip(this.quoteDetailVO, this.insuredDetails, insCompanyVO.getContactAndAddrDetails(),insCompanyVO.getName(), Utils.getSingleValueAppConfig("quoteSlipfilePath")+"_"+new Date().getTime(), Utils.getSingleValueAppConfig("imagePath"));
 
 
-        }catch(Exception e){
-            FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Error generating quote details document, see the error log"));
+			}
+			FacesContext.getCurrentInstance().addMessage("SUCCESS_EMAIL_MSG", new FacesMessage(FacesMessage.SEVERITY_INFO,"Closingslip is successfully  emailed",null));
 
-        }
-                
-        return null;
-    }
+
+		}catch(Exception e){
+			FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Error generating quote details document, see the error log"));
+
+		}
+
+		return null;
+	}
 }
