@@ -73,6 +73,8 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 
 	private List<QuoteDetailVO> quoteDetailListClosed = new ArrayList<QuoteDetailVO>();
 
+	private int recommendedFlagcnt = 0;
+
 
 	public QuotationMB(){
 		super();
@@ -356,7 +358,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 			Map<InsCompanyVO, QuoteDetailVO> addedQuotes =
 					new HashMap<InsCompanyVO, QuoteDetailVO>();
 
-			int recommendedFlagcnt = 0;
+			this.recommendedFlagcnt = 0;
 			for (Entry<InsCompanyVO, QuoteDetailVO> entry : this.policyDetails.getQuoteDetails()
 					.entrySet()) {
 				QuoteDetailVO quoteDetVO = entry.getValue();
@@ -365,7 +367,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 
 					if (entry.getKey().getCode().equals(quoteDetailVO.getCompanyCode())) {
 						if (quoteDetailVO.getIsQuoteRecommended()) {
-							recommendedFlagcnt++;
+							this.recommendedFlagcnt++;
 						}
 						quoteDetVO.setCompanyCode(quoteDetailVO.getCompanyCode());
 						quoteDetVO.setQuoteNo(quoteDetailVO.getQuoteNo());
@@ -398,7 +400,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 
 			this.policyDetails.setQuoteDetails(addedQuotes);
 
-			if (1 < recommendedFlagcnt) {
+			if (1 < this.recommendedFlagcnt) {
 				FacesContext.getCurrentInstance().addMessage(
 						"ERROR_QUOTATION_SAVE",
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please select only one quotation to recommend/close",
@@ -457,6 +459,15 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 		//perform save operation first on click of next button
 		if(Utils.isEmpty(this.save())){
 			return null;
+		}
+
+		if (0 == this.recommendedFlagcnt) {
+			FacesContext.getCurrentInstance().addMessage(
+					"ERROR_QUOTATION_SAVE",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please recommend a quotation before proceeding to policy screen",
+							"Please recommend a quotation before proceeding to policy screen"));
+			return null;
+
 		}
 		//next check if quote slip mb is already available in session if so then invoke retrieveInsuredQuoteDetails method
 		//on the bean
