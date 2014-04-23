@@ -33,6 +33,20 @@
 			<required>true</required>
 			<type>java.lang.String</type>
         </attribute>
+        
+        <attribute>
+        	<description> <![CDATA[prefix for the formid]]> </description>
+		    <name>prefix</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+        </attribute>
+        
+        <attribute>
+        	<description> <![CDATA[Width of the panel grid]]> </description>
+		    <name>panelGridWidth</name>
+			<required>false</required>
+			<type>java.lang.String</type>
+        </attribute>
     </tag>
  	   
     	

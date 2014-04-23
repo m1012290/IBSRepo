@@ -51,6 +51,9 @@
 			       				</h:panelGrid>
 					   </p:panel>
 				
+				<p:panel header="Quote slip UW details" style="margin-bottom:10px;"> 
+						<custom:uwdetails value="#{quotationMB.quoteDetailVO.productDetails}" tablecols="8" prefix="quoteSlip"/>
+				</p:panel>
 					  
 		<p:panel header="Enter the quotation Details" style="margin-bottom:10px;"> 
                <h:panelGrid columns="08">
@@ -99,7 +102,7 @@
                    <!-- </f:facet>  --> 
                 </h:panelGrid>
 	            
-                <custom:uwdetails value="#{quotationMB.quoteDetailVO.productDetails}" tablecols="8"/>
+                <custom:uwdetails value="#{quotationMB.quoteDetailVO.productDetails}" tablecols="8" prefix="quoteAdding"/>
                 
                 <h:commandButton value="Add Item" action="#{quotationMB.addAction()}" update="quotationList"/>
                 <p:spacer height="30px;"/>
@@ -137,9 +140,7 @@
 							<h:outputLabel value="Recommendation Summary" />
 							<h:inputText value="#{quote.recommendationSummary}" />
 
-							<h:outputLabel value="UW fields" />
-							<custom:uwdetails
-								value="#{quote.productDetails}" tablecols="1"/>
+							<h:outputLabel value="UW fields" />							
 							<p:commandLink update=":form:uwFieldDetail"
 								oncomplete="PF('uwFieldDetailDialog').show()"
 								title="View Detail">
@@ -149,6 +150,13 @@
 									target="#{quotationMB.selectedQuoteDetailVO}" />
 							</p:commandLink>
 
+						</p:panelGrid>
+						
+						<h2>UW fields</h2>
+						
+						<p:panelGrid columns="1" style="width:100%">
+						<custom:uwdetails
+								value="#{quote.productDetails}" tablecols="2" panelGridWidth="100%" prefix="quoteAdded_#{quote.companyCode}"/>
 						</p:panelGrid>
 					</p:panel>
 				</p:dataGrid>

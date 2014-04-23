@@ -46,560 +46,566 @@ import com.shrinfo.ibs.vo.business.TaskVO;
 @SessionScoped
 public class QuotationMB extends BaseManagedBean implements java.io.Serializable {
 
-    // private ProductVO productVO = new ProductVO();
-    private List<String> selectedInsCompanies = new ArrayList<String>();
+	// private ProductVO productVO = new ProductVO();
+	private List<String> selectedInsCompanies = new ArrayList<String>();
 
-    private Map<String, String> insCompanies = new HashMap<String, String>();
+	private Map<String, String> insCompanies = new HashMap<String, String>();
 
-    private QuoteDetailVO quoteDetailVO = new QuoteDetailVO();
+	private QuoteDetailVO quoteDetailVO = new QuoteDetailVO();
 
-    private QuoteDetailVO selectedQuoteDetailVO = new QuoteDetailVO();
+	private List<ProductUWFieldVO> slipUwList = new ArrayList<ProductUWFieldVO>();
 
-    private ProductVO quoteProductDetails = new ProductVO();
+	private QuoteDetailVO selectedQuoteDetailVO = new QuoteDetailVO();
 
-    private QuoteDetailVO quoteDetailVOClosed = new QuoteDetailVO();
+	private ProductVO quoteProductDetails = new ProductVO();
 
-    private InsuredVO insuredDetails = new InsuredVO();
+	private QuoteDetailVO quoteDetailVOClosed = new QuoteDetailVO();
 
-    private List<QuoteDetailVO> quoteDetailList = new ArrayList<QuoteDetailVO>();
+	private InsuredVO insuredDetails = new InsuredVO();
 
-    private PolicyVO policyDetails = new PolicyVO();
+	private List<QuoteDetailVO> quoteDetailList = new ArrayList<QuoteDetailVO>();
 
-    private QuoteDetailVODataModel quoteDetailVODataModel;
+	private PolicyVO policyDetails = new PolicyVO();
 
-    private QuoteDetailVO quoteDetSelection = new QuoteDetailVO();
+	private QuoteDetailVODataModel quoteDetailVODataModel;
 
-    private List<QuoteDetailVO> quoteDetailListClosed = new ArrayList<QuoteDetailVO>();
+	private QuoteDetailVO quoteDetSelection = new QuoteDetailVO();
 
-
-    public QuotationMB(){
-        super();
-        //invoke loadQuotationsDetail method to retrieve quotation details in case of existing
-        //quote
-        loadQuotationsDetail();
-    }
-    //This is an important method which is overriden from parent managed bean
-    // this is an reinitializer block which includes all the instance fields which are bound to form
-    // this method is necessary as managed beans are defined as sessionscoped beans
-    protected void reinitializeBeanFields(){
-        this.selectedInsCompanies = new ArrayList<String>();
-        this.insCompanies = new HashMap<String, String>();
-        this.quoteDetailVO = new QuoteDetailVO();
-        this.selectedQuoteDetailVO = new QuoteDetailVO();
-        this.quoteProductDetails = new ProductVO();
-        this.quoteDetailVOClosed = new QuoteDetailVO();
-        this.insuredDetails = new InsuredVO();
-        this.quoteDetailList = new ArrayList<QuoteDetailVO>();
-        this.policyDetails = new PolicyVO();
-        
-        this.quoteDetailVODataModel = null;
-        this.quoteDetSelection = new QuoteDetailVO();
-        this.quoteDetailListClosed = new ArrayList<QuoteDetailVO>();
-    }
-    
-    /**
-     * @return the quoteDetSelection
-     */
-    public QuoteDetailVO getQuoteDetSelection() {
-        return quoteDetSelection;
-    }
+	private List<QuoteDetailVO> quoteDetailListClosed = new ArrayList<QuoteDetailVO>();
 
 
-    /**
-     * @param quoteDetSelection the quoteDetSelection to set
-     */
-    public void setQuoteDetSelection(QuoteDetailVO quoteDetSelection) {
-        this.quoteDetSelection = quoteDetSelection;
-    }
-    public PolicyVO getPolicyDetails() {
-        return policyDetails;
-    }
+	public QuotationMB(){
+		super();
+		//invoke loadQuotationsDetail method to retrieve quotation details in case of existing
+		//quote
+		this.loadQuotationsDetail();
+	}
+	//This is an important method which is overriden from parent managed bean
+	// this is an reinitializer block which includes all the instance fields which are bound to form
+	// this method is necessary as managed beans are defined as sessionscoped beans
+	@Override
+	protected void reinitializeBeanFields(){
+		this.selectedInsCompanies = new ArrayList<String>();
+		this.insCompanies = new HashMap<String, String>();
+		this.quoteDetailVO = new QuoteDetailVO();
+		this.selectedQuoteDetailVO = new QuoteDetailVO();
+		this.quoteProductDetails = new ProductVO();
+		this.quoteDetailVOClosed = new QuoteDetailVO();
+		this.insuredDetails = new InsuredVO();
+		this.quoteDetailList = new ArrayList<QuoteDetailVO>();
+		this.policyDetails = new PolicyVO();
 
-    public void setPolicyDetails(PolicyVO policyDetails) {
-        this.policyDetails = policyDetails;
-    }
+		this.quoteDetailVODataModel = null;
+		this.quoteDetSelection = new QuoteDetailVO();
+		this.quoteDetailListClosed = new ArrayList<QuoteDetailVO>();
+	}
 
-    public Map<String, String> getInsCompanies() {
-        return insCompanies;
-    }
-
-    public void setInsCompanies(Map<String, String> insCompanies) {
-        this.insCompanies = insCompanies;
-    }
-
-    public List<String> getSelectedInsCompanies() {
-        return selectedInsCompanies;
-    }
-
-    public void setSelectedInsCompanies(List<String> selectedInsCompanies) {
-        this.selectedInsCompanies = selectedInsCompanies;
-    }
-
-    public QuoteDetailVO getQuoteDetailVO() {
-        return quoteDetailVO;
-    }
-
-    public void setQuoteDetailVO(QuoteDetailVO quoteDetailVO) {
-        this.quoteDetailVO = quoteDetailVO;
-    }
+	/**
+	 * @return the quoteDetSelection
+	 */
+	public QuoteDetailVO getQuoteDetSelection() {
+		return this.quoteDetSelection;
+	}
 
 
+	/**
+	 * @param quoteDetSelection the quoteDetSelection to set
+	 */
+	public void setQuoteDetSelection(QuoteDetailVO quoteDetSelection) {
+		this.quoteDetSelection = quoteDetSelection;
+	}
+	public PolicyVO getPolicyDetails() {
+		return this.policyDetails;
+	}
 
-    public QuoteDetailVO getSelectedQuoteDetailVO() {
-        return selectedQuoteDetailVO;
-    }
+	public void setPolicyDetails(PolicyVO policyDetails) {
+		this.policyDetails = policyDetails;
+	}
 
+	public Map<String, String> getInsCompanies() {
+		return this.insCompanies;
+	}
 
-    public void setSelectedQuoteDetailVO(QuoteDetailVO selectedQuoteDetailVO) {
-        this.selectedQuoteDetailVO = selectedQuoteDetailVO;
-    }
+	public void setInsCompanies(Map<String, String> insCompanies) {
+		this.insCompanies = insCompanies;
+	}
 
+	public List<String> getSelectedInsCompanies() {
+		return this.selectedInsCompanies;
+	}
 
-    public ProductVO getQuoteProductDetails() {
-        return quoteProductDetails;
-    }
+	public void setSelectedInsCompanies(List<String> selectedInsCompanies) {
+		this.selectedInsCompanies = selectedInsCompanies;
+	}
 
+	public QuoteDetailVO getQuoteDetailVO() {
+		return this.quoteDetailVO;
+	}
 
-    public void setQuoteProductDetails(ProductVO quoteProductDetails) {
-        this.quoteProductDetails = quoteProductDetails;
-    }
-
-    public QuoteDetailVO getQuoteDetailVOClosed() {
-        return quoteDetailVOClosed;
-    }
-
-
-    public void setQuoteDetailVOClosed(QuoteDetailVO quoteDetailVOClosed) {
-        this.quoteDetailVOClosed = quoteDetailVOClosed;
-    }
-
-    public InsuredVO getInsuredDetails() {
-        return insuredDetails;
-    }
-
-    public void setInsuredDetails(InsuredVO insuredDetails) {
-        this.insuredDetails = insuredDetails;
-    }
-
-    public List<QuoteDetailVO> getQuoteDetailList() {
-        return this.quoteDetailList;
-    }
-
-    public void setQuoteDetailList(List<QuoteDetailVO> quoteDetailList) {
-        this.quoteDetailList = quoteDetailList;
-    }
-
-    /**
-     * This adds a new quote into UI table. Here data which is edited in
-     * the table itself will not be captured.
-
-
-     * 
-     * @return
-     */
-    public String addAction() {
-        if(this.quoteDetailList.contains(this.quoteDetailVO)){
-            FacesContext.getCurrentInstance().addMessage(
-                "ERROR_QUOTATION_SAVE",
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Selected company record is already added",
-                    "Selected company record is already added"));
-            return null;
-        }
-        QuoteDetailVO temp = getQuoteDetailTableData(this.quoteDetailVO);
-        temp.setProductDetails(getProductFieldVOTableData(this.quoteDetailVO));
-        this.quoteDetailList.add(temp);
-        this.quoteDetailVODataModel = new QuoteDetailVODataModel(this.getQuoteDetailList());
-        return null;
-    }
-
-    /**
-     * Constructs a new quote detail object containing data present in UI quotation table only
-     * 
-     * @param quoteDetailVO
-     * @return
-     */
-    private QuoteDetailVO getQuoteDetailTableData(QuoteDetailVO quoteDetailVO) {
-        QuoteDetailVO detailVO = new QuoteDetailVO();
-        detailVO.setQuoteNo(quoteDetailVO.getQuoteNo());
-        detailVO.setCompanyCode(quoteDetailVO.getCompanyCode());
-        detailVO.setQuoteSlipPrmDetails(quoteDetailVO.getQuoteSlipPrmDetails());
-        detailVO.setSumInsured(quoteDetailVO.getSumInsured());
-        detailVO.setPolicyTerm(quoteDetailVO.getPolicyTerm());
-        detailVO.setRecommendationSummary(quoteDetailVO.getRecommendationSummary());
-        detailVO.setIsQuoteRecommended(quoteDetailVO.getIsQuoteRecommended());
-        PremiumVO premiumVO = new PremiumVO();
-        premiumVO.setPremium(quoteDetailVO.getQuoteSlipPrmDetails().getPremium());
-        premiumVO.setCoverDescription(quoteDetailVO.getQuoteSlipPrmDetails().getCoverDescription());
-        detailVO.setQuoteSlipPrmDetails(premiumVO);
-        
-        ProductVO productVO = new ProductVO();
-        productVO.setProductClass(quoteDetailVO.getProductDetails().getProductClass());
-        List<ProductUWFieldVO> uwFieldList = new ArrayList<ProductUWFieldVO>();
-        for(ProductUWFieldVO uwField : quoteDetailVO.getProductDetails().getUwFieldsList()){
-            uwFieldList.add(getProductUwFieldVOClone(uwField));
-        }
-        
-        productVO.setUwFieldsList(uwFieldList);
-        detailVO.setProductDetails(productVO);
-        
-        return detailVO;
-    }
-    
-    private ProductVO getProductFieldVOTableData(QuoteDetailVO quoteDetailVO){
-        
-
-     // populate UW Field details
-        ProductVO productVO = new ProductVO();
-        productVO.setProductClass(quoteDetailVO.getProductDetails().getProductClass());
-        
-
-        FacesContext fc = FacesContext.getCurrentInstance();
-        Map<String, String> requestMap = fc.getExternalContext().getRequestParameterMap();
-
-        List<ProductUWFieldVO> uwFieldList = new ArrayList<ProductUWFieldVO>();
-        if (!Utils.isEmpty(requestMap)) {
-            String response = null;
-            for (ProductUWFieldVO uwField : quoteDetailVO.getProductDetails()
-                    .getUwFieldsList()) {
-                response =
-                    requestMap.get(Utils.concat("field_", String.valueOf(uwField.getFieldOrder())));
-                uwField.setResponse(response);
-                uwFieldList.add(getProductUwFieldVOClone(uwField));
-            }
-        }
-        
-        productVO.setUwFieldsList(uwFieldList);
-        
-        return productVO;
-    }
-    
-    private ProductUWFieldVO getProductUwFieldVOClone(ProductUWFieldVO fieldVO){
-        ProductUWFieldVO clone = new ProductUWFieldVO();
-        clone.setFieldName(fieldVO.getFieldName());
-        clone.setFieldOrder(fieldVO.getFieldOrder());
-        clone.setFieldType(fieldVO.getFieldType());
-        clone.setFieldValue(fieldVO.getFieldValue());
-        clone.setIsMandatory(fieldVO.getIsMandatory());
-        clone.setIsStatusActive(fieldVO.getIsStatusActive());
-        clone.setProductClass(fieldVO.getProductClass());
-        clone.setResponse(fieldVO.getResponse());
-        clone.setUwFieldId(fieldVO.getUwFieldId());
-        clone.setFieldLength(fieldVO.getFieldLength());        
-        
-        return clone;
+	public void setQuoteDetailVO(QuoteDetailVO quoteDetailVO) {
+		this.quoteDetailVO = quoteDetailVO;
+	}
 
 
 
-    }
-    
-    
+	public QuoteDetailVO getSelectedQuoteDetailVO() {
+		return this.selectedQuoteDetailVO;
+	}
 
-    /**
-     * This is to take care of saving latest edited data from the table
-     * 
-     * @param event
-     */
-    public void onEdit(RowEditEvent event) {
-        FacesMessage msg = new FacesMessage("Item Edited");
-        FacesContext.getCurrentInstance().addMessage(null, msg);
-    }
 
-    /**
-     * 
-     * @param event
-     */
-    public void onCancel(RowEditEvent event) {
-        FacesMessage msg = new FacesMessage("Item Cancelled");
-        FacesContext.getCurrentInstance().addMessage(null, msg);
-        quoteDetailList.remove((QuoteDetailVO) event.getObject());
-}
+	public void setSelectedQuoteDetailVO(QuoteDetailVO selectedQuoteDetailVO) {
+		this.selectedQuoteDetailVO = selectedQuoteDetailVO;
+	}
 
-    public void handleClose(CloseEvent event) {
-        // Panel Component is retrieved from closeevent which was fired when a grid
-        // is being removed i.e. one of the quote details pertaining to a company
-        // is removed...
-        String companyCode = (String) event.getComponent().getAttributes().get("header");
-        QuoteDetailVO tempQuoteDetailVO = new QuoteDetailVO();
-        tempQuoteDetailVO.setCompanyCode(companyCode);
-        this.quoteDetailList.remove(tempQuoteDetailVO);
-        this.quoteDetailListClosed = new ArrayList<QuoteDetailVO>();
-        for (QuoteDetailVO detailVO : quoteDetailList) {
-            QuoteDetailVO temp = getQuoteDetailTableData(detailVO);
-            this.quoteDetailListClosed.add(temp);
-        }
 
-        /*
-         * Iterator<QuoteDetailVO> it = this.quoteDetailList.iterator(); while (it.hasNext()) { if
-         * (it.next().getCompanyCode().endsWith(companyCode)) { it.remove(); break; } }
-         */
-    }
+	public ProductVO getQuoteProductDetails() {
+		return this.quoteProductDetails;
+	}
 
-    public String save() {
-        if (!Utils.isEmpty(this.quoteDetailListClosed)) {
-            this.quoteDetailList = this.quoteDetailListClosed;
-        }
-        // At least one quote detail data should be added to save quote details
-        if (Utils.isEmpty(this.quoteDetailList)) {
-            FacesContext.getCurrentInstance().addMessage(
-                "ERROR_QUOTATION_SAVE",
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Quote Details save: At least one quote should be added",
-                    " At least one quote should be added"));
-            return null;
-        }
-        PolicyVO policyDetails = new PolicyVO();
-        try {
-            Map<InsCompanyVO, QuoteDetailVO> addedQuotes =
-                new HashMap<InsCompanyVO, QuoteDetailVO>();
 
-            int recommendedFlagcnt = 0;
-            for (Entry<InsCompanyVO, QuoteDetailVO> entry : this.policyDetails.getQuoteDetails()
-                    .entrySet()) {
-                QuoteDetailVO quoteDetVO = entry.getValue();
+	public void setQuoteProductDetails(ProductVO quoteProductDetails) {
+		this.quoteProductDetails = quoteProductDetails;
+	}
 
-                for (QuoteDetailVO quoteDetailVO : this.quoteDetailList) {
+	public QuoteDetailVO getQuoteDetailVOClosed() {
+		return this.quoteDetailVOClosed;
+	}
 
-                    if (entry.getKey().getCode().equals(quoteDetailVO.getCompanyCode())) {
-                        if (quoteDetailVO.getIsQuoteRecommended()) {
-                            recommendedFlagcnt++;
-                        }
-                        quoteDetVO.setQuoteNo(quoteDetailVO.getQuoteNo());
-                        quoteDetVO.setIsQuoteRecommended(quoteDetailVO.getIsQuoteRecommended());
-                        quoteDetVO.setRecommendationSummary(quoteDetailVO
-                                .getRecommendationSummary());
-                        quoteDetVO.getQuoteSlipPrmDetails().setCoverDescription(
-                            quoteDetailVO.getQuoteSlipPrmDetails().getCoverDescription());
-                        quoteDetVO.setSumInsured(quoteDetailVO.getSumInsured());
-                        quoteDetVO.setQuoteDate(quoteDetailVO.getQuoteDate());
-                        PremiumVO premiumVO = new PremiumVO();
-                        premiumVO.setPremium(quoteDetailVO.getQuoteSlipPrmDetails().getPremium());
-                        premiumVO.setCoverDescription(quoteDetailVO.getQuoteSlipPrmDetails()
-                                .getCoverDescription());
-                        quoteDetVO.setQuoteSlipPrmDetails(premiumVO);
-                        // status as active
-                        quoteDetVO.setStatusCode(1);
-                        // populate UW Field details
-                        ProductVO productVO = new ProductVO();
-                        productVO.setProductClass(quoteDetailVO.getProductDetails()
-                                .getProductClass());
-                        productVO.setUwFieldsList(quoteDetailVO.getProductDetails()
-                                .getUwFieldsList());
-                        quoteDetVO.setProductDetails(productVO);
+
+	public void setQuoteDetailVOClosed(QuoteDetailVO quoteDetailVOClosed) {
+		this.quoteDetailVOClosed = quoteDetailVOClosed;
+	}
+
+	public InsuredVO getInsuredDetails() {
+		return this.insuredDetails;
+	}
+
+	public void setInsuredDetails(InsuredVO insuredDetails) {
+		this.insuredDetails = insuredDetails;
+	}
+
+	public List<QuoteDetailVO> getQuoteDetailList() {
+		return this.quoteDetailList;
+	}
+
+	public void setQuoteDetailList(List<QuoteDetailVO> quoteDetailList) {
+		this.quoteDetailList = quoteDetailList;
+	}
+
+	/**
+	 * This adds a new quote into UI table. Here data which is edited in
+	 * the table itself will not be captured.
+
+
+	 * 
+	 * @return
+	 */
+	public String addAction() {
+		if(this.quoteDetailList.contains(this.quoteDetailVO)){
+			FacesContext.getCurrentInstance().addMessage(
+					"ERROR_QUOTATION_SAVE",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Selected company record is already added",
+							"Selected company record is already added"));
+			return null;
+		}
+		QuoteDetailVO temp = this.getQuoteDetailTableData(this.quoteDetailVO);
+		temp.setProductDetails(this.getProductFieldVOTableData(this.quoteDetailVO, "quoteAdding"));
+		this.quoteDetailList.add(temp);
+		this.quoteDetailVODataModel = new QuoteDetailVODataModel(this.getQuoteDetailList());
+
+		this.quoteDetailVO.getProductDetails().setUwFieldsList(this.slipUwList);
+		return null;
+	}
+
+	/**
+	 * Constructs a new quote detail object containing data present in UI quotation table only
+	 * 
+	 * @param quoteDetailVO
+	 * @return
+	 */
+	private QuoteDetailVO getQuoteDetailTableData(QuoteDetailVO quoteDetailVO) {
+		QuoteDetailVO detailVO = new QuoteDetailVO();
+		detailVO.setQuoteNo(quoteDetailVO.getQuoteNo());
+		detailVO.setCompanyCode(quoteDetailVO.getCompanyCode());
+		detailVO.setQuoteSlipPrmDetails(quoteDetailVO.getQuoteSlipPrmDetails());
+		detailVO.setSumInsured(quoteDetailVO.getSumInsured());
+		detailVO.setPolicyTerm(quoteDetailVO.getPolicyTerm());
+		detailVO.setRecommendationSummary(quoteDetailVO.getRecommendationSummary());
+		detailVO.setIsQuoteRecommended(quoteDetailVO.getIsQuoteRecommended());
+		PremiumVO premiumVO = new PremiumVO();
+		premiumVO.setPremium(quoteDetailVO.getQuoteSlipPrmDetails().getPremium());
+		premiumVO.setCoverDescription(quoteDetailVO.getQuoteSlipPrmDetails().getCoverDescription());
+		detailVO.setQuoteSlipPrmDetails(premiumVO);
+
+		ProductVO productVO = new ProductVO();
+		productVO.setProductClass(quoteDetailVO.getProductDetails().getProductClass());
+		List<ProductUWFieldVO> uwFieldList = new ArrayList<ProductUWFieldVO>();
+		for(ProductUWFieldVO uwField : quoteDetailVO.getProductDetails().getUwFieldsList()){
+			uwFieldList.add(this.getProductUwFieldVOClone(uwField));
+		}
+
+		productVO.setUwFieldsList(uwFieldList);
+		detailVO.setProductDetails(productVO);
+
+		return detailVO;
+	}
+
+	private ProductVO getProductFieldVOTableData(QuoteDetailVO quoteDetailVO, String prefix){
+
+
+		// populate UW Field details
+		ProductVO productVO = new ProductVO();
+		productVO.setProductClass(quoteDetailVO.getProductDetails().getProductClass());
+
+
+		FacesContext fc = FacesContext.getCurrentInstance();
+		Map<String, String> requestMap = fc.getExternalContext().getRequestParameterMap();
+
+		List<ProductUWFieldVO> uwFieldList = new ArrayList<ProductUWFieldVO>();
+		if (!Utils.isEmpty(requestMap)) {
+			String response = null;
+			for (ProductUWFieldVO uwField : quoteDetailVO.getProductDetails()
+					.getUwFieldsList()) {
+				response =
+						requestMap.get(Utils.concat(prefix+"_field_", String.valueOf(uwField.getFieldOrder())));
+				uwField.setResponse(response);
+				uwFieldList.add(this.getProductUwFieldVOClone(uwField));
+			}
+		}
+
+		productVO.setUwFieldsList(uwFieldList);
+
+		return productVO;
+	}
+
+	private ProductUWFieldVO getProductUwFieldVOClone(ProductUWFieldVO fieldVO){
+		ProductUWFieldVO clone = new ProductUWFieldVO();
+		clone.setFieldName(fieldVO.getFieldName());
+		clone.setFieldOrder(fieldVO.getFieldOrder());
+		clone.setFieldType(fieldVO.getFieldType());
+		clone.setFieldValue(fieldVO.getFieldValue());
+		clone.setIsMandatory(fieldVO.getIsMandatory());
+		clone.setIsStatusActive(fieldVO.getIsStatusActive());
+		clone.setProductClass(fieldVO.getProductClass());
+		clone.setResponse(fieldVO.getResponse());
+		clone.setUwFieldId(fieldVO.getUwFieldId());
+		clone.setFieldLength(fieldVO.getFieldLength());
+
+		return clone;
+
+
+
+	}
+
+
+
+	/**
+	 * This is to take care of saving latest edited data from the table
+	 * 
+	 * @param event
+	 */
+	public void onEdit(RowEditEvent event) {
+		FacesMessage msg = new FacesMessage("Item Edited");
+		FacesContext.getCurrentInstance().addMessage(null, msg);
+	}
+
+	/**
+	 * 
+	 * @param event
+	 */
+	public void onCancel(RowEditEvent event) {
+		FacesMessage msg = new FacesMessage("Item Cancelled");
+		FacesContext.getCurrentInstance().addMessage(null, msg);
+		this.quoteDetailList.remove(event.getObject());
+	}
+
+	public void handleClose(CloseEvent event) {
+		// Panel Component is retrieved from closeevent which was fired when a grid
+		// is being removed i.e. one of the quote details pertaining to a company
+		// is removed...
+		String companyCode = (String) event.getComponent().getAttributes().get("header");
+		QuoteDetailVO tempQuoteDetailVO = new QuoteDetailVO();
+		tempQuoteDetailVO.setCompanyCode(companyCode);
+		this.quoteDetailList.remove(tempQuoteDetailVO);
+		this.quoteDetailListClosed = new ArrayList<QuoteDetailVO>();
+		for (QuoteDetailVO detailVO : this.quoteDetailList) {
+			QuoteDetailVO temp = this.getQuoteDetailTableData(detailVO);
+			this.quoteDetailListClosed.add(temp);
+		}
+
+		/*
+		 * Iterator<QuoteDetailVO> it = this.quoteDetailList.iterator(); while (it.hasNext()) { if
+		 * (it.next().getCompanyCode().endsWith(companyCode)) { it.remove(); break; } }
+		 */
+	}
+
+	public String save() {
+		if (!Utils.isEmpty(this.quoteDetailListClosed)) {
+			this.quoteDetailList = this.quoteDetailListClosed;
+		}
+		// At least one quote detail data should be added to save quote details
+		if (Utils.isEmpty(this.quoteDetailList)) {
+			FacesContext.getCurrentInstance().addMessage(
+					"ERROR_QUOTATION_SAVE",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Quote Details save: At least one quote should be added",
+							" At least one quote should be added"));
+			return null;
+		}
+		PolicyVO policyDetails = new PolicyVO();
+		try {
+			Map<InsCompanyVO, QuoteDetailVO> addedQuotes =
+					new HashMap<InsCompanyVO, QuoteDetailVO>();
+
+			int recommendedFlagcnt = 0;
+			for (Entry<InsCompanyVO, QuoteDetailVO> entry : this.policyDetails.getQuoteDetails()
+					.entrySet()) {
+				QuoteDetailVO quoteDetVO = entry.getValue();
+
+				for (QuoteDetailVO quoteDetailVO : this.quoteDetailList) {
+
+					if (entry.getKey().getCode().equals(quoteDetailVO.getCompanyCode())) {
+						if (quoteDetailVO.getIsQuoteRecommended()) {
+							recommendedFlagcnt++;
+						}
+						quoteDetVO.setCompanyCode(quoteDetailVO.getCompanyCode());
+						quoteDetVO.setQuoteNo(quoteDetailVO.getQuoteNo());
+						quoteDetVO.setIsQuoteRecommended(quoteDetailVO.getIsQuoteRecommended());
+						quoteDetVO.setRecommendationSummary(quoteDetailVO
+								.getRecommendationSummary());
+						quoteDetVO.getQuoteSlipPrmDetails().setCoverDescription(
+								quoteDetailVO.getQuoteSlipPrmDetails().getCoverDescription());
+						quoteDetVO.setSumInsured(quoteDetailVO.getSumInsured());
+						quoteDetVO.setQuoteDate(quoteDetailVO.getQuoteDate());
+						PremiumVO premiumVO = new PremiumVO();
+						premiumVO.setPremium(quoteDetailVO.getQuoteSlipPrmDetails().getPremium());
+						premiumVO.setCoverDescription(quoteDetailVO.getQuoteSlipPrmDetails()
+								.getCoverDescription());
+						quoteDetVO.setQuoteSlipPrmDetails(premiumVO);
+						// status as active
+						quoteDetVO.setStatusCode(1);
+						// populate UW Field details
+						quoteDetVO.setProductDetails(this.getProductFieldVOTableData(this.quoteDetailVO, "quoteAdded_"+quoteDetailVO.getCompanyCode()));
 						quoteDetVO.setPolicyTerm(quoteDetailVO.getPolicyTerm());
 
-                        addedQuotes.put(entry.getKey(), quoteDetVO);
+						addedQuotes.put(entry.getKey(), quoteDetVO);
 
-                        break;
-                    }
-                }
-            }
-            Map<InsCompanyVO, QuoteDetailVO> tempMap = new HashMap<InsCompanyVO, QuoteDetailVO>();
-            tempMap.putAll(this.policyDetails.getQuoteDetails());
+						break;
+					}
+				}
+			}
+			Map<InsCompanyVO, QuoteDetailVO> tempMap = new HashMap<InsCompanyVO, QuoteDetailVO>();
+			tempMap.putAll(this.policyDetails.getQuoteDetails());
 
-            this.policyDetails.setQuoteDetails(addedQuotes);
-			
+			this.policyDetails.setQuoteDetails(addedQuotes);
+
 			if (1 < recommendedFlagcnt) {
-                FacesContext.getCurrentInstance().addMessage(
-                    "ERROR_QUOTATION_SAVE",
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please select only one quotation to recommend/close",
-                        "Please select only one quotation to recommend"));
-                return null;
+				FacesContext.getCurrentInstance().addMessage(
+						"ERROR_QUOTATION_SAVE",
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please select only one quotation to recommend/close",
+								"Please select only one quotation to recommend"));
+				return null;
 
-            }
+			}
 
-         // Before performing save operation let's check if there are any referrals
-            TaskVO taskVO = ReferralHelper.checkForReferrals(this.policyDetails, SectionId.QUOTESLIP);
-            if(!Utils.isEmpty(taskVO)){
-                setReferralDesc(taskVO.getDesc());
-                RequestContext context = RequestContext.getCurrentInstance();
-                if( context.isAjaxRequest() ){
-                    context.addCallbackParam("referral", Boolean.TRUE);
-                    return null;
-                }
-            }
+			// Before performing save operation let's check if there are any referrals
+			TaskVO taskVO = ReferralHelper.checkForReferrals(this.policyDetails, SectionId.QUOTESLIP);
+			if(!Utils.isEmpty(taskVO)){
+				this.setReferralDesc(taskVO.getDesc());
+				RequestContext context = RequestContext.getCurrentInstance();
+				if( context.isAjaxRequest() ){
+					context.addCallbackParam("referral", Boolean.TRUE);
+					return null;
+				}
+			}
 
-            policyDetails =
-                (PolicyVO) ServiceTaskExecutor.INSTANCE.executeSvc("quotationSvc",
-                    "createQuotation", this.policyDetails);
+			policyDetails =
+					(PolicyVO) ServiceTaskExecutor.INSTANCE.executeSvc("quotationSvc",
+							"createQuotation", this.policyDetails);
 
-            this.policyDetails.setQuoteDetails(tempMap);
-            String tempCompCode = null;
-            for (Entry<InsCompanyVO, QuoteDetailVO> entry : policyDetails.getQuoteDetails()
-                    .entrySet()) {
-                this.policyDetails.getQuoteDetails().put(entry.getKey(), entry.getValue());
-                if(entry.getValue().getIsQuoteRecommended()){
-                   // temp = 
+			this.policyDetails.setQuoteDetails(tempMap);
+			String tempCompCode = null;
+			for (Entry<InsCompanyVO, QuoteDetailVO> entry : policyDetails.getQuoteDetails()
+					.entrySet()) {
+				this.policyDetails.getQuoteDetails().put(entry.getKey(), entry.getValue());
+				if(entry.getValue().getIsQuoteRecommended()){
+					// temp =
 
-                    this.quoteDetailVOClosed = entry.getValue();
-                    tempCompCode = entry.getKey().getCode();
-                    this.quoteDetailVOClosed.setCompanyCode(tempCompCode);                    
-                }                
+					this.quoteDetailVOClosed = entry.getValue();
+					tempCompCode = entry.getKey().getCode();
+					this.quoteDetailVOClosed.setCompanyCode(tempCompCode);
+				}
 
-            }
+			}
 
-        } catch (Exception ex) {
-            FacesContext.getCurrentInstance().addMessage(
-                "ERROR_QUOTATION_SAVE",
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-                    "Error saving quote details, please try again after sometime"));
-            ex.printStackTrace();
-        }
-        FacesContext.getCurrentInstance()
-                .addMessage(
-                    "MESSAGE_SUCCESS",
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Quote Details Captured ",
-                        " successfully"));
-        return loadQuotationsDetail();
+		} catch (Exception ex) {
+			FacesContext.getCurrentInstance().addMessage(
+					"ERROR_QUOTATION_SAVE",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							"Error saving quote details, please try again after sometime"));
+			ex.printStackTrace();
+		}
+		FacesContext.getCurrentInstance()
+		.addMessage(
+				"MESSAGE_SUCCESS",
+				new FacesMessage(FacesMessage.SEVERITY_INFO, "Quote Details Captured ",
+						" successfully"));
+		return this.loadQuotationsDetail();
 
-    }
+	}
 
-    public String next() {
-        //perform save operation first on click of next button
-        if(Utils.isEmpty(save())){
-            return null;
-        }
-        //next check if quote slip mb is already available in session if so then invoke retrieveInsuredQuoteDetails method
-        //on the bean
-        PolicyMB policyMB = (PolicyMB)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(AppConstants.BEAN_NAME_POLICY_PAGE);
-        if(!Utils.isEmpty(policyMB)){
-            policyMB.loadQuotationDetails();
-        }
+	public String next() {
+		//perform save operation first on click of next button
+		if(Utils.isEmpty(this.save())){
+			return null;
+		}
+		//next check if quote slip mb is already available in session if so then invoke retrieveInsuredQuoteDetails method
+		//on the bean
+		PolicyMB policyMB = (PolicyMB)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(AppConstants.BEAN_NAME_POLICY_PAGE);
+		if(!Utils.isEmpty(policyMB)){
+			policyMB.loadQuotationDetails();
+		}
 
-        return "policy";
-    }
+		return "policy";
+	}
 
-    /**
-     * 
-     * @param event
-     * @return
-     */
-    public String retrieveProductUWFields(javax.faces.event.AjaxBehaviorEvent event) {
-        ProductVO productVO = new ProductVO();
-        productVO.setProductClass(this.quoteDetailVO.getProductDetails().getProductClass());
-        // Product UW Fields retrieval through service call
-        ProductVO svcResponseVO = MasterDataRetrievalUtil.getProductUWDetails(productVO);
-        this.quoteDetailVO.setProductDetails(svcResponseVO);
+	/**
+	 * 
+	 * @param event
+	 * @return
+	 */
+	public String retrieveProductUWFields(javax.faces.event.AjaxBehaviorEvent event) {
+		ProductVO productVO = new ProductVO();
+		productVO.setProductClass(this.quoteDetailVO.getProductDetails().getProductClass());
+		// Product UW Fields retrieval through service call
+		ProductVO svcResponseVO = MasterDataRetrievalUtil.getProductUWDetails(productVO);
+		this.quoteDetailVO.setProductDetails(svcResponseVO);
 
-        LookupVO lookupVO = new LookupVO();
-        lookupVO.setCategory(AppConstants.LOOKUP_CATEGORY_INSCOMPPRODUCTLINK);
-        lookupVO.setLevel1(String.valueOf(this.quoteDetailVO.getProductDetails().getProductClass()));
-        LookupVO responseVO = MasterDataRetrievalUtil.getInsCompanies(lookupVO);
-        this.insCompanies = responseVO.getCodeDescMap();
+		LookupVO lookupVO = new LookupVO();
+		lookupVO.setCategory(AppConstants.LOOKUP_CATEGORY_INSCOMPPRODUCTLINK);
+		lookupVO.setLevel1(String.valueOf(this.quoteDetailVO.getProductDetails().getProductClass()));
+		LookupVO responseVO = MasterDataRetrievalUtil.getInsCompanies(lookupVO);
+		this.insCompanies = responseVO.getCodeDescMap();
 
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * This method will load quotation details while loading closing slip screen
-     * @return
-     */
-    public String loadQuotationsDetail() {
+	/**
+	 * This method will load quotation details while loading closing slip screen
+	 * @return
+	 */
+	public String loadQuotationsDetail() {
 
-        loadQuoteSlipDetails();
-        loadQuotations();
+		this.loadQuoteSlipDetails();
+		this.loadQuotations();
 
-        return "closeslip";
-    }
-
-
-    public String loadQuoteSlipDetails() {
-        QuoteSlipMB quoteSlipMB =
-            (QuoteSlipMB) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
-                    .get("quoteSlipMB");
-        this.policyDetails = quoteSlipMB.getPolicyVO();
-        this.insuredDetails = policyDetails.getInsuredDetails();
-        this.quoteDetailVO = quoteSlipMB.getQuoteDetailVO();
-
-        LookupVO lookupVO = new LookupVO();
-        lookupVO.setCategory(AppConstants.LOOKUP_CATEGORY_INSCOMPPRODUCTLINK);
-        lookupVO.setLevel1(String.valueOf(this.quoteDetailVO.getProductDetails().getProductClass()));
-        LookupVO responseVO = MasterDataRetrievalUtil.getInsCompanies(lookupVO);
-        this.insCompanies = responseVO.getCodeDescMap();
+		return "closeslip";
+	}
 
 
-        Map<InsCompanyVO, QuoteDetailVO> mapOfQuoteDets = this.policyDetails.getQuoteDetails();
+	public String loadQuoteSlipDetails() {
+		QuoteSlipMB quoteSlipMB =
+				(QuoteSlipMB) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+				.get("quoteSlipMB");
+		this.policyDetails = quoteSlipMB.getPolicyVO();
+		this.insuredDetails = this.policyDetails.getInsuredDetails();
+		this.quoteDetailVO = quoteSlipMB.getQuoteDetailVO();
+		List<ProductUWFieldVO> uwFieldList = new ArrayList<ProductUWFieldVO>();
+		for(ProductUWFieldVO uwField : this.quoteDetailVO.getProductDetails().getUwFieldsList()){
+			uwFieldList.add(this.getProductUwFieldVOClone(uwField));
+		}
+		this.slipUwList = uwFieldList;
 
-        if (!Utils.isEmpty(mapOfQuoteDets)) {
-            Set<InsCompanyVO> setOfInsCompanies = mapOfQuoteDets.keySet();
-            Iterator<InsCompanyVO> iterator = setOfInsCompanies.iterator();
-            InsCompanyVO insCompanyVO = null;
-            while (iterator.hasNext()) {
-                insCompanyVO = iterator.next();
-                this.selectedInsCompanies.add(insCompanyVO.getCode()); // Added by Hafeezur
-            }
-        }
+		LookupVO lookupVO = new LookupVO();
+		lookupVO.setCategory(AppConstants.LOOKUP_CATEGORY_INSCOMPPRODUCTLINK);
+		lookupVO.setLevel1(String.valueOf(this.quoteDetailVO.getProductDetails().getProductClass()));
+		LookupVO responseVO = MasterDataRetrievalUtil.getInsCompanies(lookupVO);
+		this.insCompanies = responseVO.getCodeDescMap();
 
 
-        // Getting the Company names in the drop down
+		Map<InsCompanyVO, QuoteDetailVO> mapOfQuoteDets = this.policyDetails.getQuoteDetails();
+
+		if (!Utils.isEmpty(mapOfQuoteDets)) {
+			Set<InsCompanyVO> setOfInsCompanies = mapOfQuoteDets.keySet();
+			Iterator<InsCompanyVO> iterator = setOfInsCompanies.iterator();
+			InsCompanyVO insCompanyVO = null;
+			while (iterator.hasNext()) {
+				insCompanyVO = iterator.next();
+				this.selectedInsCompanies.add(insCompanyVO.getCode()); // Added by Hafeezur
+			}
+		}
 
 
-        return "closeslip";
-    }
+		// Getting the Company names in the drop down
 
-    public void loadQuotations() {
 
-        PolicyVO policyVO =
-            (PolicyVO) ServiceTaskExecutor.INSTANCE.executeSvc("quotationSvc", "getQuotation",
-                this.quoteDetailVO);
+		return "closeslip";
+	}
 
-        if (Utils.isEmpty(policyVO)) {
-            return;
-        }
-        List<QuoteDetailVO> quoteDetails = new ArrayList<QuoteDetailVO>();
-        for (Entry<InsCompanyVO, QuoteDetailVO> entry : policyVO.getQuoteDetails().entrySet()) {
-            quoteDetails.add(entry.getValue());
-            this.policyDetails.getQuoteDetails().put(entry.getKey(), entry.getValue());
-            if(entry.getValue().getIsQuoteRecommended()){
-                 this.quoteDetailVOClosed = entry.getValue();
-                 this.quoteDetailVOClosed.setCompanyCode(entry.getKey().getCode());                    
-             }
+	public void loadQuotations() {
 
-        }
-        this.quoteDetailList = quoteDetails;
+		PolicyVO policyVO =
+				(PolicyVO) ServiceTaskExecutor.INSTANCE.executeSvc("quotationSvc", "getQuotation",
+						this.quoteDetailVO);
+
+		if (Utils.isEmpty(policyVO)) {
+			return;
+		}
+		List<QuoteDetailVO> quoteDetails = new ArrayList<QuoteDetailVO>();
+		for (Entry<InsCompanyVO, QuoteDetailVO> entry : policyVO.getQuoteDetails().entrySet()) {
+			quoteDetails.add(entry.getValue());
+			this.policyDetails.getQuoteDetails().put(entry.getKey(), entry.getValue());
+			if(entry.getValue().getIsQuoteRecommended()){
+				this.quoteDetailVOClosed = entry.getValue();
+				this.quoteDetailVOClosed.setCompanyCode(entry.getKey().getCode());
+			}
+
+		}
+		this.quoteDetailList = quoteDetails;
 		this.quoteDetailVODataModel = new QuoteDetailVODataModel(this.quoteDetailList);
 
-    }
-	
+	}
+
 	/**
-     * @return the quoteDetailVODataModel
-     */
-    public QuoteDetailVODataModel getQuoteDetailVODataModel() {
-        return quoteDetailVODataModel;
-    }
+	 * @return the quoteDetailVODataModel
+	 */
+	public QuoteDetailVODataModel getQuoteDetailVODataModel() {
+		return this.quoteDetailVODataModel;
+	}
 
 
-    /**
-     * @param quoteDetailVODataModel the quoteDetailVODataModel to set
-     */
-    public void setQuoteDetailVODataModel(QuoteDetailVODataModel quoteDetailVODataModel) {
-        this.quoteDetailVODataModel = quoteDetailVODataModel;
-    }
-    
-    public String generatePDFForCloseSlip(){
-        
-        try {
-             QuoteSlipPDFGenerator quoteSlipPDFGenerator=new QuoteSlipPDFGenerator();
-             Map<InsCompanyVO, QuoteDetailVO>  mapOfQuoteDets = policyDetails.getQuoteDetails();
-            
-             Set<InsCompanyVO> setOfInsCompanies = mapOfQuoteDets.keySet();
-             Iterator<InsCompanyVO> iterator = setOfInsCompanies.iterator();
-             InsCompanyVO insCompanyVO = null;
-             while(iterator.hasNext()){
-                 insCompanyVO = iterator.next();
-                 this.selectedInsCompanies.add(insCompanyVO.getCode());
-             }
-             
-            Iterator<String> companyItr=selectedInsCompanies.iterator();
-            while(companyItr.hasNext()){
-                String insComp=companyItr.next();
-                quoteSlipPDFGenerator.generatePDFForCloseSlip(this.quoteDetailVO, this.insuredDetails, insCompanyVO.getContactAndAddrDetails(),insComp, Utils.getSingleValueAppConfig("closeSlipfilePath")+"_"+new Date().getTime(), Utils.getSingleValueAppConfig("imagePath"));
-            }
-        }catch(Exception e){
-            FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Error generating quote details document, see the error log"));
+	/**
+	 * @param quoteDetailVODataModel the quoteDetailVODataModel to set
+	 */
+	public void setQuoteDetailVODataModel(QuoteDetailVODataModel quoteDetailVODataModel) {
+		this.quoteDetailVODataModel = quoteDetailVODataModel;
+	}
 
-        }
-                
-            return null;
-        }
+	public String generatePDFForCloseSlip(){
+
+		try {
+			QuoteSlipPDFGenerator quoteSlipPDFGenerator=new QuoteSlipPDFGenerator();
+			Map<InsCompanyVO, QuoteDetailVO>  mapOfQuoteDets = this.policyDetails.getQuoteDetails();
+
+			Set<InsCompanyVO> setOfInsCompanies = mapOfQuoteDets.keySet();
+			Iterator<InsCompanyVO> iterator = setOfInsCompanies.iterator();
+			InsCompanyVO insCompanyVO = null;
+			while(iterator.hasNext()){
+				insCompanyVO = iterator.next();
+				this.selectedInsCompanies.add(insCompanyVO.getCode());
+			}
+
+			Iterator<String> companyItr=this.selectedInsCompanies.iterator();
+			while(companyItr.hasNext()){
+				String insComp=companyItr.next();
+				quoteSlipPDFGenerator.generatePDFForCloseSlip(this.quoteDetailVO, this.insuredDetails, insCompanyVO.getContactAndAddrDetails(),insComp, Utils.getSingleValueAppConfig("closeSlipfilePath")+"_"+new Date().getTime(), Utils.getSingleValueAppConfig("imagePath"));
+			}
+		}catch(Exception e){
+			FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Error generating quote details document, see the error log"));
+
+		}
+
+		return null;
+	}
 }
 
 
