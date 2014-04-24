@@ -109,8 +109,9 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a7cfdf', end
 }
 .loginBox{
 	
-	width:300px;
+	width:400px;
 	background:#f3f3f3;
+	height:175px;
 	
 }
 .loginBox .ui-panel-title{
@@ -148,4 +149,22 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#606c88', end
 }
 .closeSlipTable .ui-widget-content{
 	border:0px !important;
+}
+.loginBox {
+	
+	border:2px solid;
+	border-radius:5px;
+}
+.OuterloginBox .ui-widget-header{
+	border-radius:25px;
+	
+}
+.OuterloginBox {
+	border-radius:25px;
+	margin:15% 35%;
+	
+}
+.loginButtonCls{
+	margin-right:20px;
+	
 }
