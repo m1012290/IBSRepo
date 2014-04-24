@@ -77,6 +77,8 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 
 	private List<QuoteDetailVO> quoteDetailListClosed = new ArrayList<QuoteDetailVO>();
 
+	private int recommendedFlagcnt = 0;
+
 
 	public QuotationMB(){
 		super();
@@ -213,6 +215,58 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 							"Selected company record is already added"));
 			return null;
 		}
+
+		/**
+		 * Validation for quotation details being added
+		 */
+		boolean fieldsValid = true;
+		if(Utils.isEmpty(this.quoteDetailVO.getCompanyCode())) {
+			fieldsValid = false;
+			FacesContext.getCurrentInstance().addMessage(
+					"ERROR_QUOTATION_SAVE",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please choose company name",
+							"Please choose company name"));
+		}
+		if(Utils.isEmpty(this.quoteDetailVO.getQuoteNo())) {
+			fieldsValid = false;
+			FacesContext.getCurrentInstance().addMessage(
+					"ERROR_QUOTATION_SAVE",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter valid quotation number",
+							"Please enter valid quotation number"));
+		}
+		if(!Utils.isNonZeroNumber(this.quoteDetailVO.getQuoteSlipPrmDetails().getPremium().toString())) {
+			fieldsValid = false;
+			FacesContext.getCurrentInstance().addMessage(
+					"ERROR_QUOTATION_SAVE",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter valid quoted premium amount",
+							"Please enter valid quoted premium amount"));
+		}
+		if(!Utils.isNonZeroNumber(this.quoteDetailVO.getSumInsured().toString())) {
+			fieldsValid = false;
+			FacesContext.getCurrentInstance().addMessage(
+					"ERROR_QUOTATION_SAVE",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter valid sum insured",
+							"Please enter valid sum insured"));
+		}
+		if(!Utils.isNonZeroNumber(this.quoteDetailVO.getPolicyTerm().toString())) {
+			fieldsValid = false;
+			FacesContext.getCurrentInstance().addMessage(
+					"ERROR_QUOTATION_SAVE",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter valid Policy term",
+							"Please enter valid Policy term"));
+		}
+		if(Utils.isEmpty(this.quoteDetailVO.getQuoteSlipPrmDetails().getCoverDescription())) {
+			fieldsValid = false;
+			FacesContext.getCurrentInstance().addMessage(
+					"ERROR_QUOTATION_SAVE",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter valid cover description",
+							"Please enter valid cover description"));
+		}
+		if(!fieldsValid) {
+			return null;
+		}
+
+
 		QuoteDetailVO temp = this.getQuoteDetailTableData(this.quoteDetailVO);
 		temp.setProductDetails(this.getProductFieldVOTableData(this.quoteDetailVO, "quoteAdding"));
 		this.quoteDetailList.add(temp);
@@ -361,7 +415,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 			Map<InsCompanyVO, QuoteDetailVO> addedQuotes =
 					new HashMap<InsCompanyVO, QuoteDetailVO>();
 
-			int recommendedFlagcnt = 0;
+			this.recommendedFlagcnt = 0;
 			for (Entry<InsCompanyVO, QuoteDetailVO> entry : this.policyDetails.getQuoteDetails()
 					.entrySet()) {
 				QuoteDetailVO quoteDetVO = entry.getValue();
@@ -370,7 +424,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 
 					if (entry.getKey().getCode().equals(quoteDetailVO.getCompanyCode())) {
 						if (quoteDetailVO.getIsQuoteRecommended()) {
-							recommendedFlagcnt++;
+							this.recommendedFlagcnt++;
 						}
 						quoteDetVO.setCompanyCode(quoteDetailVO.getCompanyCode());
 						quoteDetVO.setQuoteNo(quoteDetailVO.getQuoteNo());
@@ -403,7 +457,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 
 			this.policyDetails.setQuoteDetails(addedQuotes);
 
-			if (1 < recommendedFlagcnt) {
+			if (1 < this.recommendedFlagcnt) {
 				FacesContext.getCurrentInstance().addMessage(
 						"ERROR_QUOTATION_SAVE",
 						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please select only one quotation to recommend/close",
@@ -465,6 +519,15 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 		//perform save operation first on click of next button
 		if(Utils.isEmpty(this.save())){
 			return null;
+		}
+
+		if (0 == this.recommendedFlagcnt) {
+			FacesContext.getCurrentInstance().addMessage(
+					"ERROR_QUOTATION_SAVE",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please recommend a quotation before proceeding to policy screen",
+							"Please recommend a quotation before proceeding to policy screen"));
+			return null;
+
 		}
 		//next check if quote slip mb is already available in session if so then invoke retrieveInsuredQuoteDetails method
 		//on the bean
@@ -589,28 +652,26 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 	}
 
 	public String generatePDFForCloseSlip(){
-        
-        try {
-             QuoteSlipPDFGenerator quoteSlipPDFGenerator=new QuoteSlipPDFGenerator();
-             Map<InsCompanyVO, QuoteDetailVO>  mapOfQuoteDets = policyDetails.getQuoteDetails();
-            
-             Set<InsCompanyVO> setOfInsCompanies = mapOfQuoteDets.keySet();
-             Iterator<InsCompanyVO> iterator = setOfInsCompanies.iterator();
-             InsCompanyVO insCompanyVO = null;
-             while(iterator.hasNext()){
 
-                 insCompanyVO = iterator.next();
-                 insCompanyVO =  (InsCompanyVO)ServiceTaskExecutor.INSTANCE.executeSvc("companySvc","getPolicy",insCompanyVO);
-				 quoteSlipPDFGenerator.generatePDFForCloseSlip(this.quoteDetailVO, this.insuredDetails, insCompanyVO.getContactAndAddrDetails(),insCompanyVO.getName(), Utils.getSingleValueAppConfig("quoteSlipfilePath")+"_"+new Date().getTime(), Utils.getSingleValueAppConfig("imagePath"));
+		try {
+			QuoteSlipPDFGenerator quoteSlipPDFGenerator=new QuoteSlipPDFGenerator();
+			Map<InsCompanyVO, QuoteDetailVO>  mapOfQuoteDets = this.policyDetails.getQuoteDetails();
 
+			Set<InsCompanyVO> setOfInsCompanies = mapOfQuoteDets.keySet();
+			Iterator<InsCompanyVO> iterator = setOfInsCompanies.iterator();
+			InsCompanyVO insCompanyVO = null;
+			while(iterator.hasNext()){
 
-             }
-			 FacesContext.getCurrentInstance().addMessage("SUCCESS_EMAIL_MSG", new FacesMessage(FacesMessage.SEVERITY_INFO,"Closingslip is successfully  emailed",null));
+				insCompanyVO = iterator.next();
+				insCompanyVO =  (InsCompanyVO)ServiceTaskExecutor.INSTANCE.executeSvc("companySvc","getPolicy",insCompanyVO);
+				quoteSlipPDFGenerator.generatePDFForCloseSlip(this.quoteDetailVO, this.insuredDetails, insCompanyVO.getContactAndAddrDetails(),insCompanyVO.getName(), Utils.getSingleValueAppConfig("quoteSlipfilePath")+"_"+new Date().getTime(), Utils.getSingleValueAppConfig("imagePath"));
 
 
-        }catch(Exception e){
-            FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Error generating quote details document, see the error log"));
+			}
+			FacesContext.getCurrentInstance().addMessage("SUCCESS_EMAIL_MSG", new FacesMessage(FacesMessage.SEVERITY_INFO,"Closingslip is successfully  emailed",null));
 
+		}catch(Exception e){
+			FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Error generating quote details document, see the error log"));
         }
         return null;
     }
