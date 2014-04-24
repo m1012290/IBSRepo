@@ -26,6 +26,7 @@ public class AppConstants {
 	public static final String BEAN_NAME_QUOTE_SLIP_PAGE = "quoteSlipMB";
 	public static final String BEAN_NAME_CLOSING_SLIP_PAGE = "quotationMB";
 	public static final String BEAN_NAME_POLICY_PAGE = "policyMB";
+	public static final String BEAN_NAME_LOGIN_PAGE = "loginBean";
 	
 	
 	public static final String APP_PAGES_IN_ORDER = "APP_PAGES_IN_ORDER";

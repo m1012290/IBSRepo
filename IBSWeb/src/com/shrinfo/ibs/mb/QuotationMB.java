@@ -22,12 +22,15 @@ import org.primefaces.event.CloseEvent;
 import org.primefaces.event.RowEditEvent;
 
 import com.shrinfo.ibs.cmn.utils.Utils;
+import com.shrinfo.ibs.cmn.vo.UserVO;
 import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
 import com.shrinfo.ibs.docgen.QuoteSlipPDFGenerator;
 import com.shrinfo.ibs.helper.ReferralHelper;
 import com.shrinfo.ibs.util.AppConstants;
 import com.shrinfo.ibs.util.MasterDataRetrievalUtil;
 import com.shrinfo.ibs.vo.app.SectionId;
+import com.shrinfo.ibs.vo.business.EnquiryVO;
+import com.shrinfo.ibs.vo.business.IBSUserVO;
 import com.shrinfo.ibs.vo.business.InsCompanyVO;
 import com.shrinfo.ibs.vo.business.InsuredVO;
 import com.shrinfo.ibs.vo.business.LookupVO;
@@ -36,6 +39,7 @@ import com.shrinfo.ibs.vo.business.PremiumVO;
 import com.shrinfo.ibs.vo.business.ProductUWFieldVO;
 import com.shrinfo.ibs.vo.business.ProductVO;
 import com.shrinfo.ibs.vo.business.QuoteDetailVO;
+import com.shrinfo.ibs.vo.business.StatusVO;
 import com.shrinfo.ibs.vo.business.TaskVO;
 
 /**
@@ -98,6 +102,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 		this.quoteDetailVODataModel = null;
 		this.quoteDetSelection = new QuoteDetailVO();
 		this.quoteDetailListClosed = new ArrayList<QuoteDetailVO>();
+		setSaveFromReferralDialog("false");
 	}
 
 	/**
@@ -384,7 +389,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 						// status as active
 						quoteDetVO.setStatusCode(1);
 						// populate UW Field details
-						quoteDetVO.setProductDetails(this.getProductFieldVOTableData(this.quoteDetailVO, "quoteAdded_"+quoteDetailVO.getCompanyCode()));
+						quoteDetVO.setProductDetails(this.getProductFieldVOTableData(quoteDetailVO, "quoteAdded_"+quoteDetailVO.getCompanyCode()));
 						quoteDetVO.setPolicyTerm(quoteDetailVO.getPolicyTerm());
 
 						addedQuotes.put(entry.getKey(), quoteDetVO);
@@ -408,14 +413,16 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 			}
 
 			// Before performing save operation let's check if there are any referrals
-			TaskVO taskVO = ReferralHelper.checkForReferrals(this.policyDetails, SectionId.QUOTESLIP);
-			if(!Utils.isEmpty(taskVO)){
-				this.setReferralDesc(taskVO.getDesc());
-				RequestContext context = RequestContext.getCurrentInstance();
-				if( context.isAjaxRequest() ){
-					context.addCallbackParam("referral", Boolean.TRUE);
-					return null;
-				}
+			if(!Utils.isEmpty(getSaveFromReferralDialog()) && "true".equalsIgnoreCase(getSaveFromReferralDialog())){
+    			TaskVO taskVO = ReferralHelper.checkForReferrals(this.policyDetails, SectionId.QUOTESLIP);
+    			if(!Utils.isEmpty(taskVO)){
+    				this.setReferralDesc(taskVO.getDesc());
+    				RequestContext context = RequestContext.getCurrentInstance();
+    				if( context.isAjaxRequest() ){
+    					context.addCallbackParam("referral", Boolean.TRUE);
+    					return null;
+    				}
+    			}
 			}
 
 			policyDetails =
@@ -443,6 +450,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 							"Error saving quote details, please try again after sometime"));
 			ex.printStackTrace();
+			return null;
 		}
 		FacesContext.getCurrentInstance()
 		.addMessage(
@@ -604,7 +612,33 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
             FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Error generating quote details document, see the error log"));
 
         }
-                
         return null;
     }
+	
+	@Override
+	public String saveReferralTask() {
+	    setSaveFromReferralDialog("true");//highlight that save is getting invoked from referral dialog window
+	    save();//perform save operation first and then save the referral data
+	    
+	    Map map=FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+        
+	    EditCustEnqDetailsMB editCustEnqDetailsMB=(EditCustEnqDetailsMB) map.get(AppConstants.BEAN_NAME_ENQUIRY_PAGE);
+        QuoteSlipMB quoteSlipMB = (QuoteSlipMB) map.get(AppConstants.BEAN_NAME_QUOTE_SLIP_PAGE);
+        LoginMB loginMB = (LoginMB)map.get(AppConstants.BEAN_NAME_LOGIN_PAGE);
+	    //construct TaskVO to save referral desc 
+	    TaskVO taskVO = new TaskVO();
+	    taskVO.setDesc(getReferralDesc());
+	    StatusVO statusVO = new StatusVO();
+	    statusVO.setCode(3);//referred status
+	    statusVO.setDesc("Referred");
+	    taskVO.setStatusVO(statusVO);
+	    taskVO.setEnquiry(editCustEnqDetailsMB.getEnquiryVO());
+	    taskVO.setDocumentId(String.valueOf(quoteSlipMB.getQuoteDetailVO().getQuoteSlipId()));
+	    taskVO.setAssignerUser(loginMB.getUserDetails());
+	    UserVO assigneeUser = new IBSUserVO();
+	    assigneeUser.setUserId(getAssigneeUser());
+	    taskVO.setAssigneeUser(assigneeUser);
+	    saveReferralTask(taskVO);//perform referral save task
+	    return super.saveReferralTask();
+	}
 }

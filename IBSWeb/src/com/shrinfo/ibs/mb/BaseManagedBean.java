@@ -6,10 +6,16 @@ package com.shrinfo.ibs.mb;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+
 import com.shrinfo.ibs.cmn.utils.Utils;
+import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
 import com.shrinfo.ibs.util.MasterDataRetrievalUtil;
 import com.shrinfo.ibs.vo.app.EnquiryType;
 import com.shrinfo.ibs.vo.business.ProductUWFieldVO;
+import com.shrinfo.ibs.vo.business.TaskVO;
 
 /**
  * @author Sunil Kumar
@@ -26,6 +32,8 @@ public abstract class BaseManagedBean implements Serializable {
 	
 	private Map<String, String> usersList = new HashMap<String, String>();
 	private String referralDesc = new String();
+	private String saveFromReferralDialog;
+	private Long assigneeUser;
 	
 	public Map<String, String> getTitles() {
 		return titles;
@@ -106,6 +114,30 @@ public abstract class BaseManagedBean implements Serializable {
     }
 
 
+    
+    public String getSaveFromReferralDialog() {
+        return saveFromReferralDialog;
+    }
+
+
+    
+    public void setSaveFromReferralDialog(String saveFromReferralDialog) {
+        this.saveFromReferralDialog = saveFromReferralDialog;
+    }
+
+
+    
+    public Long getAssigneeUser() {
+        return assigneeUser;
+    }
+
+
+    
+    public void setAssigneeUser(Long assigneeUser) {
+        this.assigneeUser = assigneeUser;
+    }
+
+
     //public constructor
 	public BaseManagedBean(){
 		titles.put("Business Executive ", "Business Executive");
@@ -148,5 +180,33 @@ public abstract class BaseManagedBean implements Serializable {
             componentClientId = Utils.concat("field_",String.valueOf(uwFieldVO.getFieldOrder()));
         }
 	    return componentClientId;
+	}
+	
+	/**
+	 * @return
+	 */
+	public String saveReferralTask(){
+	    //to be overriden by child beans to perform referral save task
+	    return "enquiry";
+	}
+	
+	protected boolean saveReferralTask(TaskVO taskVO){
+	    boolean savedSuccessfully = false;
+	    if(Utils.isEmpty(taskVO)){
+	        return savedSuccessfully;
+	    }
+	    
+	    try{
+	        ServiceTaskExecutor.INSTANCE.executeSvc("referralTaskSvc", "createTask", taskVO);
+	        savedSuccessfully = true;
+	    }catch (Exception ex) {
+                FacesContext.getCurrentInstance().addMessage(
+                    "ERROR_TASK_SAVE",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+                            "Error saving referral task details, please try again after sometime"));
+            ex.printStackTrace();
+            return savedSuccessfully;
+    	}
+	    return savedSuccessfully;
 	}
 }

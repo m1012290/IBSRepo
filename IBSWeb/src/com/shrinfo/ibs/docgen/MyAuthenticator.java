@@ -15,7 +15,7 @@ public  class MyAuthenticator extends Authenticator {
     	try{
          username = Utils.getSingleValueAppConfig("SMTPUSERNAME");
          password = Utils.getSingleValueAppConfig("SMTPPASSWORD");
-        System.out.println("username/pwd=" + username + "--"+ password);
+         //System.out.println("username/pwd=" + username + "--"+ password);
         
     	}catch(Exception e){
     		e.printStackTrace();
