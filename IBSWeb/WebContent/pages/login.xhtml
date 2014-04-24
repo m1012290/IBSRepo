@@ -5,31 +5,31 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui"
-      >
-      <h2>Login Details</h2>
-	<h:head>
-		<script src="../../js/commonjs.js"/>
-	   <link rel="stylesheet" type="text/css" href="../../css/commoncss.css"/>
-	</h:head>    			
+      >    	
+      <h:head>
+     	<link href="../css/commoncss.css" type="text/css" rel="stylesheet" /> 
+      </h:head>		
     <h:body>
-		<h:form name="loginform">
-	    <p:messages id="messages" />  
-		
-		<p:panel aling="center" id="panel" header="Login Details">
-			<h:panelGrid columns="2" cellpadding="10" >
-			<h:outputLabel for="username" value="Username"/>
+    
+   
+		<h:form name="loginform" styleClass="OuterloginBox">
+		<p:panel aling="center" id="panel" styleClass="loginBox" header="Login Details" style="margin-bottom:10px;">
+			<h:panelGrid columns="2" cellpadding="10" style=" width:100%; margin: 5px 0px 0px 44px;" >
+			<h:outputLabel for="username" value="Username:"  style="height: 50px; font-size: 15px;font-family:arial;"/>
 			<p:inputText  value="#{loginBean.userName}"
-			                id="username" required="true" label="username"  requiredMessage="Username is required"/>
-			<h:outputLabel for="password" value="Password"/>
+			                id="username" required="true" label="username" requiredMessage="Username is required"/>
+			<h:outputLabel for="password" value="Password:" style="height: 50px; font-size: 15px; font-family:arial;"/>
 			<h:inputSecret value="#{loginBean.password}"
 			                id="password" required="true" label="password" requiredMessage="Password is required"/>
 
-			<p:commandButton id="loginButton" value="Login" action="#{loginBean.submit}" />
-			<p:commandButton type="reset" value="Clear"/>
+			
 
 			</h:panelGrid>
 		</p:panel>
+		<div style="position:relative; text-align:right; margin-top:-60px; padding-right:50px; float:right;">
+			<p:commandButton id="loginButton" styleClass="loginButtonCls" value="Login" action="#{loginBean.submit}"  style="height: 30px; font-size: 20px;"  />
+			<p:commandButton type="reset" id="clearform" value="Clear" styleClass="clearformCls" style="height: 30px; font-size: 20px"/>
+			</div>
 		</h:form>
-    
     </h:body>
 </html>
