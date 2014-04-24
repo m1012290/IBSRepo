@@ -29,7 +29,6 @@ import com.shrinfo.ibs.helper.ReferralHelper;
 import com.shrinfo.ibs.util.AppConstants;
 import com.shrinfo.ibs.util.MasterDataRetrievalUtil;
 import com.shrinfo.ibs.vo.app.SectionId;
-import com.shrinfo.ibs.vo.business.EnquiryVO;
 import com.shrinfo.ibs.vo.business.IBSUserVO;
 import com.shrinfo.ibs.vo.business.InsCompanyVO;
 import com.shrinfo.ibs.vo.business.InsuredVO;
@@ -104,7 +103,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 		this.quoteDetailVODataModel = null;
 		this.quoteDetSelection = new QuoteDetailVO();
 		this.quoteDetailListClosed = new ArrayList<QuoteDetailVO>();
-		setSaveFromReferralDialog("false");
+		this.setSaveFromReferralDialog("false");
 	}
 
 	/**
@@ -325,8 +324,9 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 			String response = null;
 			for (ProductUWFieldVO uwField : quoteDetailVO.getProductDetails()
 					.getUwFieldsList()) {
-				response =
-						requestMap.get(Utils.concat(prefix+"_field_", String.valueOf(uwField.getFieldOrder())));
+				/*response =
+						requestMap.get(Utils.concat(prefix+"_field_", String.valueOf(uwField.getFieldOrder())));*/
+				response = requestMap.get(this.getComponentClientId(uwField, prefix + "_"));
 				uwField.setResponse(response);
 				uwFieldList.add(this.getProductUwFieldVOClone(uwField));
 			}
@@ -467,16 +467,16 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 			}
 
 			// Before performing save operation let's check if there are any referrals
-			if(!Utils.isEmpty(getSaveFromReferralDialog()) && "true".equalsIgnoreCase(getSaveFromReferralDialog())){
-    			TaskVO taskVO = ReferralHelper.checkForReferrals(this.policyDetails, SectionId.QUOTESLIP);
-    			if(!Utils.isEmpty(taskVO)){
-    				this.setReferralDesc(taskVO.getDesc());
-    				RequestContext context = RequestContext.getCurrentInstance();
-    				if( context.isAjaxRequest() ){
-    					context.addCallbackParam("referral", Boolean.TRUE);
-    					return null;
-    				}
-    			}
+			if(!Utils.isEmpty(this.getSaveFromReferralDialog()) && "true".equalsIgnoreCase(this.getSaveFromReferralDialog())){
+				TaskVO taskVO = ReferralHelper.checkForReferrals(this.policyDetails, SectionId.QUOTESLIP);
+				if(!Utils.isEmpty(taskVO)){
+					this.setReferralDesc(taskVO.getDesc());
+					RequestContext context = RequestContext.getCurrentInstance();
+					if( context.isAjaxRequest() ){
+						context.addCallbackParam("referral", Boolean.TRUE);
+						return null;
+					}
+				}
 			}
 
 			policyDetails =
@@ -672,34 +672,34 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 
 		}catch(Exception e){
 			FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Error generating quote details document, see the error log"));
-        }
-        return null;
-    }
-	
+		}
+		return null;
+	}
+
 	@Override
 	public String saveReferralTask() {
-	    setSaveFromReferralDialog("true");//highlight that save is getting invoked from referral dialog window
-	    save();//perform save operation first and then save the referral data
-	    
-	    Map map=FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
-        
-	    EditCustEnqDetailsMB editCustEnqDetailsMB=(EditCustEnqDetailsMB) map.get(AppConstants.BEAN_NAME_ENQUIRY_PAGE);
-        QuoteSlipMB quoteSlipMB = (QuoteSlipMB) map.get(AppConstants.BEAN_NAME_QUOTE_SLIP_PAGE);
-        LoginMB loginMB = (LoginMB)map.get(AppConstants.BEAN_NAME_LOGIN_PAGE);
-	    //construct TaskVO to save referral desc 
-	    TaskVO taskVO = new TaskVO();
-	    taskVO.setDesc(getReferralDesc());
-	    StatusVO statusVO = new StatusVO();
-	    statusVO.setCode(3);//referred status
-	    statusVO.setDesc("Referred");
-	    taskVO.setStatusVO(statusVO);
-	    taskVO.setEnquiry(editCustEnqDetailsMB.getEnquiryVO());
-	    taskVO.setDocumentId(String.valueOf(quoteSlipMB.getQuoteDetailVO().getQuoteSlipId()));
-	    taskVO.setAssignerUser(loginMB.getUserDetails());
-	    UserVO assigneeUser = new IBSUserVO();
-	    assigneeUser.setUserId(getAssigneeUser());
-	    taskVO.setAssigneeUser(assigneeUser);
-	    saveReferralTask(taskVO);//perform referral save task
-	    return super.saveReferralTask();
+		this.setSaveFromReferralDialog("true");//highlight that save is getting invoked from referral dialog window
+		this.save();//perform save operation first and then save the referral data
+
+		Map map=FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+
+		EditCustEnqDetailsMB editCustEnqDetailsMB=(EditCustEnqDetailsMB) map.get(AppConstants.BEAN_NAME_ENQUIRY_PAGE);
+		QuoteSlipMB quoteSlipMB = (QuoteSlipMB) map.get(AppConstants.BEAN_NAME_QUOTE_SLIP_PAGE);
+		LoginMB loginMB = (LoginMB)map.get(AppConstants.BEAN_NAME_LOGIN_PAGE);
+		//construct TaskVO to save referral desc
+		TaskVO taskVO = new TaskVO();
+		taskVO.setDesc(this.getReferralDesc());
+		StatusVO statusVO = new StatusVO();
+		statusVO.setCode(3);//referred status
+		statusVO.setDesc("Referred");
+		taskVO.setStatusVO(statusVO);
+		taskVO.setEnquiry(editCustEnqDetailsMB.getEnquiryVO());
+		taskVO.setDocumentId(String.valueOf(quoteSlipMB.getQuoteDetailVO().getQuoteSlipId()));
+		taskVO.setAssignerUser(loginMB.getUserDetails());
+		UserVO assigneeUser = new IBSUserVO();
+		assigneeUser.setUserId(this.getAssigneeUser());
+		taskVO.setAssigneeUser(assigneeUser);
+		this.saveReferralTask(taskVO);//perform referral save task
+		return super.saveReferralTask();
 	}
 }
