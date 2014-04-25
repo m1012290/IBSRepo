@@ -25,13 +25,13 @@
 						            <p:inputText id="name" value="#{policyMB.insuredDetails.name}" readonly="true" required="false" />  
 						            
             						<h:outputLabel for="products" value="Products" />  
-            						<p:selectOneMenu id="products"  value="#{policyMB.quoteDetailVO.productDetails.productClass}">
+            						<p:selectOneMenu id="products"  value="#{policyMB.quoteDetailVO.productDetails.productClass}" disabled="true">
                 						<f:selectItem itemLabel="Select Product-" itemValue="" />  
                 						<f:selectItems value="#{quotationMB.products}" />  
             						</p:selectOneMenu>
                 						
             						<h:outputLabel for="companyName" value="Company Name" />  
-            						<p:inputText id="companyName" value="#{policyMB.quoteDetailVO.companyCode}"  />
+            						<p:inputText id="companyName" value="#{policyMB.quoteDetailVO.companyCode}"  readonly="true"/>
             						
             						<h:outputLabel for="quoteSlipID" value="Quote Slip Number" />  
 						            <p:inputText id="quoteSlipID"  value="#{policyMB.quoteDetailVO.quoteSlipId}" readonly="true" required="false" /> 
@@ -43,7 +43,7 @@
 						            <p:inputText id="quoteSlipDate" value="#{policyMB.quoteDetailVO.quoteSlipDate}"  required="false" />  
 						    
 						            <h:outputLabel for="policyNum" value="Policy Number" />  
-						            <p:inputText id="policyNum" value="#{policyMB.policyVO.policyNo}" required="false" />  
+						            <p:inputText id="policyNum" value="#{policyMB.policyVO.policyNo}" required="true" />  
 						            
 						             <h:outputLabel for="policyID" value="Policy ID" />  
 						            <p:inputText id="policyID" value="#{policyMB.policyVO.policyId}" readonly="true"  required="false" />   			            
@@ -54,7 +54,7 @@
 				       			 <h:panelGrid columns="2">  
 				       			 
 				       			 	<h:outputLabel for="premium" value="Premium" />  
-						            <p:inputText id="premium" value="#{policyMB.policyVO.premiumDetails.premium}"> 
+						            <p:inputText id="premium" value="#{policyMB.policyVO.premiumDetails.premium}" required="true"> 
 						            	<p:ajax event="blur" update="totalPremium" listener="#{policyMB.calculatePremiumBasedOnPremiumChange}" process="discountPercentage,loadingpercentage,premium" partialSubmit="true"/> 
 						         	</p:inputText>
 						      			
@@ -70,7 +70,7 @@
             						
                 						
             						<h:outputLabel for="totalPremium" value="Total Premium" />  
-            						<p:inputText id="totalPremium" value="#{policyMB.policyVO.premiumDetails.totalPremium}"  />
+            						<p:inputText id="totalPremium" value="#{policyMB.policyVO.premiumDetails.totalPremium}"  readonly="true"/>
             						
 			       				</h:panelGrid>
 					   </p:panel>

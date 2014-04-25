@@ -97,10 +97,10 @@
 								<h:panelGrid columns="6">
 								
 								 	<h:outputLabel for="quoteSlipID" value="Quote Slip Number" />  
-						            <p:inputText id="quoteSlipID"  value="#{quoteSlipMB.quoteDetailVO.quoteSlipId}" required="false" /> 
+						            <p:inputText id="quoteSlipID"  value="#{quoteSlipMB.quoteDetailVO.quoteSlipId}" readonly="true" required="false" /> 
 						            
 						            <h:outputLabel for="quoteSlipVersion" value="Quote Slip Version" />  
-						            <p:inputText id="quoteSlipVersion" value="#{quoteSlipMB.quoteDetailVO.quoteSlipVersion}"  required="false" />  
+						            <p:inputText id="quoteSlipVersion" value="#{quoteSlipMB.quoteDetailVO.quoteSlipVersion}" readonly="true" required="false" />  
 						            
 						            <h:outputLabel for="quoteSlipDate" value="Quote Slip Date" />  
 						            <p:calendar value="#{quoteSlipMB.quoteDetailVO.quoteSlipDate}" id="popupCal" />  
