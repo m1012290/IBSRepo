@@ -10,7 +10,9 @@ import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
+import com.shrinfo.ibs.cmn.logger.Logger;
 import com.shrinfo.ibs.cmn.utils.Utils;
+import com.shrinfo.ibs.cmn.vo.UserVO;
 import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
 import com.shrinfo.ibs.util.MasterDataRetrievalUtil;
 import com.shrinfo.ibs.vo.app.EnquiryType;
@@ -21,6 +23,8 @@ import com.shrinfo.ibs.vo.business.TaskVO;
  * @author Sunil Kumar
  */
 public abstract class BaseManagedBean implements Serializable {
+    
+    Logger logger = Logger.getLogger(BaseManagedBean.class);
 
 	private static final long serialVersionUID = -4604529567842501787L;
 	private Map<String,String> titles = new HashMap<String, String>();
@@ -34,6 +38,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private String referralDesc = new String();
 	private String saveFromReferralDialog;
 	private Long assigneeUser;
+	
 
 	public Map<String, String> getTitles() {
 		return this.titles;
@@ -138,7 +143,7 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 
-	//public constructor
+    //public constructor
 	public BaseManagedBean(){
 		this.titles.put("Business Executive ", "Business Executive");
 		this.titles.put(" Govt Servant", "Govt Servant");
@@ -222,4 +227,60 @@ public abstract class BaseManagedBean implements Serializable {
 		}
 		return savedSuccessfully;
 	}
+	
+	public TaskVO checkReferral(TaskVO taskVO) {
+		return checkReferral(taskVO, 3);
+	}
+	
+	/**
+	 * 
+	 * @param taskVO
+	 * @param statusCode
+	 * @return
+	 */
+	public TaskVO checkReferral(TaskVO taskVO, Integer statusCode) {
+	    if(null == statusCode || 3 != statusCode) {
+	        return null;
+	    }
+        TaskVO userTask= null;
+        try{
+            userTask = (TaskVO) ServiceTaskExecutor.INSTANCE.executeSvc("referralTaskSvc", "getTask", taskVO);
+        }catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(
+                    "ERROR_TASK_SAVE",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+                            "Error retrieving referral task details, please try again after sometime"));
+            logger.error(ex, "error retreiving task details");
+        }
+        return userTask;
+    }
+	/**
+	 * 
+	 * @param userVO : Logged in user details
+	 * @param taskVO : contains enquiry details
+	 * @param statusCode : status of transaction. if 3, then status=referral
+	 * @return
+	 */
+	public TaskVO checkReferral(UserVO userVO, TaskVO taskVO, Integer statusCode) {
+        if(null == statusCode || 3 != statusCode) {
+            return null;
+        }
+        TaskVO userTask= null;
+        try{
+            userTask = (TaskVO) ServiceTaskExecutor.INSTANCE.executeSvc("referralTaskSvc", "getTask", taskVO);
+        }catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(
+                    "ERROR_TASK_SAVE",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+                            "Error retrieving referral task details, please try again after sometime"));
+            ex.printStackTrace();
+        }
+        if(Utils.isEmpty(userTask)) {
+            return null;
+        }
+        if(userTask.getAssigneeUser().getUserId().longValue() != userVO.getUserId().longValue()) {
+            return userTask;
+        }
+        return null;
+    }
 }

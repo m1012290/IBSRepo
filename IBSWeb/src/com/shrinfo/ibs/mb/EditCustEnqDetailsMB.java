@@ -3,6 +3,7 @@ package com.shrinfo.ibs.mb;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -120,7 +121,18 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
     private PolicyVO policyVO = new PolicyVO();
 
     private InsuredVO insuredDetails = new InsuredVO();
+    
+    private Boolean screenFreeze = Boolean.FALSE;
 
+        
+    public Boolean getScreenFreeze() {
+        return screenFreeze;
+    }
+
+    
+    public void setScreenFreeze(Boolean screenFreeze) {
+        this.screenFreeze = screenFreeze;
+    }
 
     // This is an important method which is overriden from parent managed bean
     // this is an reinitializer block which includes all the instance fields which are bound to form
@@ -173,6 +185,7 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
         this.quoteDetailVO = new QuoteDetailVO();
         this.policyVO = new PolicyVO();
         this.insuredDetails = new InsuredVO();
+        this.screenFreeze = Boolean.FALSE;
 
     }
 
@@ -533,6 +546,7 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
             this.enquiryVO =
                 (EnquiryVO) ServiceTaskExecutor.INSTANCE.executeSvc("customerEnquirySvc",
                     "getCustomerEnquiry", this.enquiryVO);
+            setReferralFlag();
 
             FacesContext.getCurrentInstance().getExternalContext().redirect("editenquiry.xhtml");
         } catch (IOException e) {
@@ -578,6 +592,7 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
             this.quoteSlipId = searchItemVO.getQuotationNum();
             this.policyNum = searchItemVO.getPolicyNum();
             this.policyVO.setPolicyNo(this.policyNum);
+            setReferralFlag();
             FacesContext.getCurrentInstance().getExternalContext().redirect("editenquiry.xhtml");
         } catch (IOException e) {
             e.printStackTrace();
@@ -599,6 +614,20 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
                     "Unexpected error encountered, please try again after sometime"));
         }
 
+    }
+    
+    private void setReferralFlag() {
+        
+        FacesContext fc = FacesContext.getCurrentInstance();
+        Map map=fc.getExternalContext().getSessionMap();
+        // Referral
+        TaskVO taskVO = new TaskVO();               
+        taskVO.setEnquiry(this.enquiryVO);
+        LoginMB loginManageBean = (LoginMB) map.get("loginBean");
+        taskVO = this.checkReferral(loginManageBean.getUserDetails(), taskVO, 3);
+        if(!Utils.isEmpty(taskVO)) {
+            this.screenFreeze = Boolean.TRUE;         
+        }
     }
 
     // Save Customer and Enquiry details

@@ -115,8 +115,9 @@ public class MapperUtil {
         contactVO.setMiddleName(ibsContact.getMiddleName());
         contactVO.setMobileNo(ibsContact.getPrimaryMobileNo());
         contactVO.setTitle(ibsContact.getTitle());
-        if (null != ibsContact.getRecordType())
+        if (null != ibsContact.getRecordType()) {
             contactVO.setRecordType(ibsContact.getRecordType().intValue());
+        }
         // contactVO.setRecordTypeDesc(ibsContact.getRecordType());
         AddressVO addressVO = new AddressVO();
         populateAddressVO(addressVO, ibsContact);
@@ -187,8 +188,9 @@ public class MapperUtil {
             productUWFieldVO = new ProductUWFieldVO();
         }
 
-        if (Utils.isEmpty(fields.getFieldLength()))
+        if (Utils.isEmpty(fields.getFieldLength())) {
             productUWFieldVO.setFieldLength(fields.getFieldLength().intValue());
+        }
 
         productUWFieldVO.setFieldName(fields.getFieldName());
         if (null != fields.getSrlNo()) {
@@ -299,7 +301,7 @@ public class MapperUtil {
 
                 if (!Utils.isEmpty(slipDetail.getIbsStatusMaster())
                     && !Utils.isEmpty(slipDetail.getIbsStatusMaster().getCode())
-                    && 1 != slipDetail.getIbsStatusMaster().getCode()) {
+                    && (1 != slipDetail.getIbsStatusMaster().getCode())) {
                     continue;
                 }
                 insCopmnyCode = slipDetail.getEnquiryCompanyCode();
@@ -339,6 +341,10 @@ public class MapperUtil {
             quoteDetailVO.setQuoteSlipVersion(ibsQuoteSlipHeader.getId().getQuoteSlipVersion());
             quoteDetailVO.setQuoteSlipDate(ibsQuoteSlipHeader.getQuoteSlipDate());
             quoteDetailVO.setRemarks(ibsQuoteSlipHeader.getRemarks());
+            if (!Utils.isEmpty(ibsQuoteSlipHeader.getIbsStatusMaster())) {
+                quoteDetailVO.setStatusCode(ibsQuoteSlipHeader.getIbsStatusMaster().getCode()
+                        .intValue());
+            }
             /*
              * ProductVO productVO = new ProductVO(); populateProductVO(productVO,
              * ibsQuoteSlipHeader.getIbsProductMaster());
@@ -387,8 +393,9 @@ public class MapperUtil {
             productVO.setCategory(ibsProductMaster.getCategorisation());
             productVO.setIsStatusActive(ibsProductMaster.getStatus());
             productVO.setName(ibsProductMaster.getName());
-            if (!Utils.isEmpty(ibsProductMaster.getClass_()))
+            if (!Utils.isEmpty(ibsProductMaster.getClass_())) {
                 productVO.setProductClass(ibsProductMaster.getClass_().intValue());
+            }
             productVO.setShortName(ibsProductMaster.getShortname());
 
         }
@@ -455,7 +462,8 @@ public class MapperUtil {
             // in quote slip
             // details table
             populateQuotationDetailVO(quoteDetailVO, ibsInsCmpnyQuoteDetailsEntry.getValue());
-            if (Utils.isEmpty(quoteDetailVO.getStatusCode()) || 1 != quoteDetailVO.getStatusCode()) {
+            if (Utils.isEmpty(quoteDetailVO.getStatusCode())
+                || (1 != quoteDetailVO.getStatusCode())) {
                 quoteDetailVO = null;
                 continue;
             }
@@ -579,14 +587,18 @@ public class MapperUtil {
 
     private static void populateAuditFields(BaseVO baseVO, Object pojo) {
 
-        if (null != getFieldValue(pojo, "getRecCreUserId"))
+        if (null != getFieldValue(pojo, "getRecCreUserId")) {
             baseVO.setCreatedByUserId((Long) getFieldValue(pojo, "getRecCreUserId"));
-        if (null != getFieldValue(pojo, "getRecUpdUserId"))
+        }
+        if (null != getFieldValue(pojo, "getRecUpdUserId")) {
             baseVO.setUpdatedByUserId((Long) getFieldValue(pojo, "getRecUpdUserId"));
-        if (null != getFieldValue(pojo, "getRecCreDate"))
+        }
+        if (null != getFieldValue(pojo, "getRecCreDate")) {
             baseVO.setCreatedDate((Timestamp) getFieldValue(pojo, "getRecCreDate"));
-        if (null != getFieldValue(pojo, "getRecUpdDate"))
+        }
+        if (null != getFieldValue(pojo, "getRecUpdDate")) {
             baseVO.setUpdatedDate((Timestamp) getFieldValue(pojo, "getRecUpdDate"));
+        }
     }
 
     public static Object getFieldValue(Object obj, String method) {
@@ -846,14 +858,14 @@ public class MapperUtil {
     public static void populateInsCompanyVO(InsCompanyVO insCompanyVO,
             IbsInsuranceCompany ibsInsuranceCompany) {
 
-        if(Utils.isEmpty(ibsInsuranceCompany)){
+        if (Utils.isEmpty(ibsInsuranceCompany)) {
             return;
         }
-        
-        if(Utils.isEmpty(insCompanyVO)){
+
+        if (Utils.isEmpty(insCompanyVO)) {
             insCompanyVO = new InsCompanyVO();
         }
-        
+
         insCompanyVO.setCode(ibsInsuranceCompany.getCode());
         ContactVO contactVO = new ContactVO();
         populateContactVO(contactVO, ibsInsuranceCompany.getIbsContact());
@@ -861,10 +873,10 @@ public class MapperUtil {
         insCompanyVO.setContactAndAddrDetails(contactVO);
         insCompanyVO.setIsStatusActive(ibsInsuranceCompany.getStatus());
         insCompanyVO.setName(ibsInsuranceCompany.getName());
-        
-        //TODO: set product wise contact details
-        
+
+        // TODO: set product wise contact details
+
         populateAuditFields(insCompanyVO, ibsInsuranceCompany);
-        
+
     }
 }

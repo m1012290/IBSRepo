@@ -15,6 +15,8 @@
     			
 
     				<p:messages id="messages" autoUpdate="true" closable="true" /> 
+    				
+    				<p:panel id="referalpanel" style="padding:0px; border: none">
     					<p:panel id="panelInsured" header="Insured Details" style="margin-bottom:10px;"> 
 				       			 <h:panelGrid columns="6">  
 				       			 
@@ -169,10 +171,13 @@
 	  				</p:panel>
 	  			</p:dialog>
 						
-						<p:commandButton value="Save" action="#{quoteSlipMB.save}"  update="messages, panelProductDetails, panelInsured, referralsection" oncomplete="handleSaveResponse(xhr, status, args)" icon="ui-icon-disk"  style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
-						<p:commandButton value="Next" action="#{quoteSlipMB.next}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" style="float:right:20px;" />
-						<p:commandButton value="Generate QuoteSlipDoc" action="#{quoteSlipMB.generatePDFForQuoteSlip()}"  style="float:right:20px;" />
-
+				</p:panel>
+			<p:commandButton value="Save" action="#{quoteSlipMB.save}"  update="messages, panelProductDetails, panelInsured, referralsection" oncomplete="handleSaveResponse(xhr, status, args)" icon="ui-icon-disk"  style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
+			<p:commandButton value="Next" action="#{quoteSlipMB.next}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" style="float:right:20px;" />
+			<p:commandButton value="Generate QuoteSlipDoc" action="#{quoteSlipMB.generatePDFForQuoteSlip()}"  style="float:right:20px;" />
+			
+			
+			<p:blockUI block="referalpanel" widgetVar="bui" blocked="#{quoteSlipMB.screenFreeze}"> Referral message </p:blockUI> 
 
 					</h:form>
     		</ui:define>

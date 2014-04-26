@@ -29,6 +29,7 @@ import com.shrinfo.ibs.vo.business.InsCompanyVO;
 import com.shrinfo.ibs.vo.business.InsuredVO;
 import com.shrinfo.ibs.vo.business.PolicyVO;
 import com.shrinfo.ibs.vo.business.QuoteDetailVO;
+import com.shrinfo.ibs.vo.business.TaskVO;
 
 @ManagedBean(name = "policyMB")
 @SessionScoped
@@ -49,6 +50,8 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
     private InsuredVO insuredDetails = new InsuredVO();
 
     private UploadedFile file;
+    
+    private Boolean screenFreeze = Boolean.FALSE;
 
     // This is an important method which is overriden from parent managed bean
     // this is an reinitializer block which includes all the instance fields which are bound to form
@@ -57,6 +60,7 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
         this.quoteDetailVO = new QuoteDetailVO();
         this.policyDetails = new PolicyVO();
         this.insuredDetails = new InsuredVO();
+        this.screenFreeze = Boolean.FALSE;
     }
     
     public PolicyMB(){
@@ -108,7 +112,16 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
     public void loadFile(UploadedFile file) {
         this.file = file;
     }
+    
+    
+    public Boolean getScreenFreeze() {
+        return screenFreeze;
+    }
 
+    
+    public void setScreenFreeze(Boolean screenFreeze) {
+        this.screenFreeze = screenFreeze;
+    }
 
     public void calculatePremiumBasedOnPremiumChange(AjaxBehaviorEvent event) {
 
@@ -275,6 +288,19 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
 
         if (!Utils.isEmpty(policyVO)) {
             this.policyDetails = policyVO;
+        }
+        
+        // referral
+        FacesContext fc = FacesContext.getCurrentInstance();
+        Map map=fc.getExternalContext().getSessionMap();        
+        // Referral
+        EditCustEnqDetailsMB editCustEnqDetailsMB = (EditCustEnqDetailsMB) map.get("editCustEnqDetailsMB");
+        TaskVO taskVO = new TaskVO();               
+        taskVO.setEnquiry(editCustEnqDetailsMB.getEnquiryVO());
+        LoginMB loginManageBean = (LoginMB) map.get("loginBean");
+        taskVO = this.checkReferral(loginManageBean.getUserDetails(), taskVO, 3);
+        if(!Utils.isEmpty(taskVO)) {
+            this.screenFreeze = Boolean.TRUE;         
         }
 
         return "policy";

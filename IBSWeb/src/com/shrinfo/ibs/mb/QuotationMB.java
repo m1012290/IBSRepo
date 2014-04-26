@@ -77,9 +77,18 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 	private List<QuoteDetailVO> quoteDetailListClosed = new ArrayList<QuoteDetailVO>();
 
 	private int recommendedFlagcnt = 0;
-
-
-	public QuotationMB(){
+	
+	private Boolean screenFreeze = Boolean.FALSE;
+	
+		
+    public Boolean getScreenFreeze() {
+        return screenFreeze;
+    }
+    
+    public void setScreenFreeze(Boolean screenFreeze) {
+        this.screenFreeze = screenFreeze;
+    }
+    public QuotationMB(){
 		super();
 		//invoke loadQuotationsDetail method to retrieve quotation details in case of existing
 		//quote
@@ -104,6 +113,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 		this.quoteDetSelection = new QuoteDetailVO();
 		this.quoteDetailListClosed = new ArrayList<QuoteDetailVO>();
 		this.setSaveFromReferralDialog("false");
+		this.screenFreeze = Boolean.FALSE;
 	}
 
 	/**
@@ -568,6 +578,18 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 
 		this.loadQuoteSlipDetails();
 		this.loadQuotations();
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+        Map map=fc.getExternalContext().getSessionMap();		
+		// Referral
+        EditCustEnqDetailsMB editCustEnqDetailsMB = (EditCustEnqDetailsMB) map.get("editCustEnqDetailsMB");
+        TaskVO taskVO = new TaskVO();               
+        taskVO.setEnquiry(editCustEnqDetailsMB.getEnquiryVO());
+        LoginMB loginManageBean = (LoginMB) map.get("loginBean");
+        taskVO = this.checkReferral(loginManageBean.getUserDetails(), taskVO, 3);
+        if(!Utils.isEmpty(taskVO)) {
+            this.screenFreeze = Boolean.TRUE;         
+        }
 
 		return "closeslip";
 	}
