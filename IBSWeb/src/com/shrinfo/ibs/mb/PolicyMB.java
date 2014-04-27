@@ -127,6 +127,10 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
 
         BigDecimal premium = this.policyDetails.getPremiumDetails().getPremium();
         double premiumDiscount = this.policyDetails.getPremiumDetails().getDiscountPercentage();
+        double premiumLoading = this.policyDetails.getPremiumDetails().getLoadingPercentage();
+        if(0 == premiumDiscount && 0== premiumLoading) {
+            this.policyDetails.getPremiumDetails().setTotalPremium(premium);
+        }
         if (0 != premiumDiscount) {
             BigDecimal premiumDiscountValue =
                 premium.multiply(BigDecimal.valueOf(premiumDiscount)).divide(
@@ -136,7 +140,7 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
                 premium.subtract(premiumDiscountValue));
         }
 
-        double premiumLoading = this.policyDetails.getPremiumDetails().getLoadingPercentage();
+        
         if (0 != premiumLoading) {
             this.policyDetails.getPremiumDetails().setDiscountPercentage(0);
             BigDecimal premiumDiscountValue =
@@ -153,11 +157,15 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
 
         BigDecimal premium = this.policyDetails.getPremiumDetails().getPremium();
         double premiumDiscount = this.policyDetails.getPremiumDetails().getDiscountPercentage();
-        BigDecimal premiumDiscountValue =
-            premium.multiply(BigDecimal.valueOf(premiumDiscount)).divide(BigDecimal.valueOf(100));
-        this.policyDetails.getPremiumDetails().setLoadingPercentage(0);
-        this.policyDetails.getPremiumDetails().setTotalPremium(
-            premium.subtract(premiumDiscountValue));
+        if(0 != premiumDiscount) {
+            BigDecimal premiumDiscountValue =
+                    premium.multiply(BigDecimal.valueOf(premiumDiscount)).divide(BigDecimal.valueOf(100));
+                this.policyDetails.getPremiumDetails().setLoadingPercentage(0);
+                this.policyDetails.getPremiumDetails().setTotalPremium(
+                    premium.subtract(premiumDiscountValue));
+        }
+        
+        this.calculatePremiumBasedOnPremiumChange(event);
 
     }
 
@@ -165,10 +173,13 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
 
         BigDecimal premium = this.policyDetails.getPremiumDetails().getPremium();
         double premiumLoading = this.policyDetails.getPremiumDetails().getLoadingPercentage();
-        this.policyDetails.getPremiumDetails().setDiscountPercentage(0);
-        BigDecimal premiumDiscountValue =
-            premium.multiply(BigDecimal.valueOf(premiumLoading)).divide(BigDecimal.valueOf(100));
-        this.policyDetails.getPremiumDetails().setTotalPremium(premium.add(premiumDiscountValue));
+        if(0 != premiumLoading) {
+            this.policyDetails.getPremiumDetails().setDiscountPercentage(0);
+            BigDecimal premiumDiscountValue =
+                premium.multiply(BigDecimal.valueOf(premiumLoading)).divide(BigDecimal.valueOf(100));
+            this.policyDetails.getPremiumDetails().setTotalPremium(premium.add(premiumDiscountValue));
+        }
+        this.calculatePremiumBasedOnPremiumChange(event);
 
     }
 

@@ -1,6 +1,7 @@
 package com.shrinfo.ibs.quoteslip.dao;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.hibernate.HibernateException;
@@ -39,22 +40,63 @@ public class QuoteSlipDaoImpl extends BaseDBDAO implements QuoteSlipDao {
 
         IbsQuoteSlipHeader ibsQuoteSlipHeader = null;
 
-        try {
-            ibsQuoteSlipHeader =
-                (IbsQuoteSlipHeader) getHibernateTemplate().find(
-                    " from IbsQuoteSlipHeader ibsQuoteSlipHeader where ibsQuoteSlipHeader.id.id = ? "
-                        + "and ibsQuoteSlipHeader.id.quoteSlipVersion = ?",
-                    ((QuoteDetailVO) baseVO).getQuoteSlipId(),
-                    ((QuoteDetailVO) baseVO).getQuoteSlipVersion()).get(0);
-        } catch (HibernateException hibernateException) {
-            throw new BusinessException("pas.gi.couldNotGetCustDetails", hibernateException,
-                "Error while insured search");
+        if (!Utils.isEmpty(((QuoteDetailVO) baseVO).getQuoteSlipId())
+            && !Utils.isEmpty(((QuoteDetailVO) baseVO).getQuoteSlipVersion())) {
+            ibsQuoteSlipHeader = getQuoteSlipById(baseVO);
+        } else if (!Utils.isEmpty(((QuoteDetailVO) baseVO).getEnquiryNum())) {
+            ibsQuoteSlipHeader = getQuoteSlipByEnquiry(baseVO);
+        }
+
+        if (Utils.isEmpty(ibsQuoteSlipHeader)) {
+            return null;
         }
 
         MapperUtil.populatePolicyVO(policyVO, ibsQuoteSlipHeader);
 
         return policyVO;
     }
+
+    /**
+     * 
+     * @param baseVO
+     * @return
+     */
+    private IbsQuoteSlipHeader getQuoteSlipById(BaseVO baseVO) {
+        try {
+            return (IbsQuoteSlipHeader) getHibernateTemplate().find(
+                " from IbsQuoteSlipHeader ibsQuoteSlipHeader where ibsQuoteSlipHeader.id.id = ? "
+                    + "and ibsQuoteSlipHeader.id.quoteSlipVersion = ?",
+                ((QuoteDetailVO) baseVO).getQuoteSlipId(),
+                ((QuoteDetailVO) baseVO).getQuoteSlipVersion()).get(0);
+        } catch (HibernateException hibernateException) {
+            throw new BusinessException("pas.gi.couldNotGetCustDetails", hibernateException,
+                "Error while insured search");
+        }
+    }
+
+    /**
+     * 
+     * @param baseVO
+     * @return
+     */
+    private IbsQuoteSlipHeader getQuoteSlipByEnquiry(BaseVO baseVO) {
+        List objList = null;
+        try {
+            objList =
+                getHibernateTemplate()
+                        .find(
+                            " from IbsQuoteSlipHeader ibsQuoteSlipHeader where ibsQuoteSlipHeader.enquiryNo = ? ",
+                            ((QuoteDetailVO) baseVO).getEnquiryNum());
+        } catch (HibernateException hibernateException) {
+            throw new BusinessException("pas.gi.couldNotGetCustDetails", hibernateException,
+                "Error while insured search");
+        }
+        if (Utils.isEmpty(objList)) {
+            return null;
+        }
+        return (IbsQuoteSlipHeader) objList.get(0);
+    }
+
 
     @Override
     public BaseVO createQuoteSlip(BaseVO baseVO) {

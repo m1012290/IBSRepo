@@ -260,7 +260,7 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 			FacesContext fc = FacesContext.getCurrentInstance();
 			Map map=fc.getExternalContext().getSessionMap();
 			EditCustEnqDetailsMB editCustEnqDetailsMB=(EditCustEnqDetailsMB) map.get("editCustEnqDetailsMB");
-			if(!Utils.isEmpty(editCustEnqDetailsMB.getInsuredDetails().getId())){
+			if(!Utils.isEmpty(editCustEnqDetailsMB.getQuoteSlipId())){
 				this.renderCustomUWComponent = true;
 				this.insuredDetails.setId(editCustEnqDetailsMB.getInsuredDetails().getId());
 

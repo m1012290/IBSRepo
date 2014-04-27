@@ -547,7 +547,11 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
                 (EnquiryVO) ServiceTaskExecutor.INSTANCE.executeSvc("customerEnquirySvc",
                     "getCustomerEnquiry", this.enquiryVO);
             setReferralFlag();
-
+            this.quoteDetailVO.setEnquiryNum(this.enquiryVO.getEnquiryNo());
+            PolicyVO policyVO  =  (PolicyVO)ServiceTaskExecutor.INSTANCE.executeSvc("quoteSlipSvc","getQuoteSlipDetails",this.quoteDetailVO);
+            if(!Utils.isEmpty(policyVO)) {
+                this.quoteSlipId = policyVO.getQuoteDetails().entrySet().iterator().next().getValue().getQuoteSlipId();
+            }
             FacesContext.getCurrentInstance().getExternalContext().redirect("editenquiry.xhtml");
         } catch (IOException e) {
             logger.error(e, "Exception [" + e
