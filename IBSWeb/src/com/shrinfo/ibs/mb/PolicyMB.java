@@ -204,12 +204,12 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
             FacesContext.getCurrentInstance()
                     .addMessage(
                         "ERROR_QUOTATION_SAVE",
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error saving policy details, please try again later",
                             "Error saving Policy details."));
             return null;
         }
         FacesContext.getCurrentInstance().addMessage("MESSAGE_SUCCESS",
-            new FacesMessage(FacesMessage.SEVERITY_INFO, "Policy Details Saved ", " successfully"));
+            new FacesMessage(FacesMessage.SEVERITY_INFO, "Policy Details Captured Successfully ", " successfully"));
         return null;
     }
 
