@@ -130,6 +130,7 @@
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.mobileNo}"
 							required="true" label="Mobile Number"  requiredMessage="Please enter the MobileNumber" converterMessage="Alphabets are not allowed , Please Enter the Correct Mobile Number" validatorMessage="MobileNumber should be of 8 digits">
 						<f:convertNumber  integerOnly="true" type="number" for="primMobNum"/>
+						
 						<f:validateLength minimum="8" maximum="8"  for="primMobNum"/>  
 						</p:inputText>
 

@@ -1,5 +1,6 @@
 package com.shrinfo.ibs.docgen;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -28,11 +29,6 @@ public class QuoteSlipPDFGenerator {
 
         try {
         	
-	        URL location = QuoteSlipPDFGenerator.class.getProtectionDomain().getCodeSource().getLocation();
-	        filePath=location.getFile()+"//quoteslipdoc_"+companyName+"_"+new Date().getTime();
-        	System.out.println("filePath="+filePath);
-
-
             String insuredname = insuredDetails.getName();
 
             String prodName = quoteDetails.getProductDetails().getName();
@@ -41,9 +37,10 @@ public class QuoteSlipPDFGenerator {
             java.util.List<ProductUWFieldVO> prodListFields = products.getUwFieldsList();
 
 
-            OutputStream file = new FileOutputStream(new File(filePath));
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
             Document document = new Document();
-            PdfWriter.getInstance(document, file);
+            PdfWriter.getInstance(document, outputStream);
 
             // Inserting Image in PDF
           /*  Image image = Image.getInstance(imagePath);
@@ -68,13 +65,7 @@ public class QuoteSlipPDFGenerator {
             if(contacts.getAddressVO().getCity()!=null){
                 document.add(new Paragraph("  "+contacts.getAddressVO().getCity()));
             } 
-            
-           /* document.add(new Paragraph("  Insurance Comp Name"));
-            
-            document.add(new Paragraph("  14th Sector ,Main Street"));
-            
-            document.add(new Paragraph("  Oman"));
-                        */
+    
             document.add(new Paragraph("_____________________________________________________________________________"));
             
             document.add(new Paragraph("                                                        "+prodName+"                                        "));
@@ -91,13 +82,9 @@ public class QuoteSlipPDFGenerator {
                 document.add(Chunk.NEWLINE); // Something like in HTML :-)
             }
 
-            document.close();
-            
-            file.close();
+           document.close();
 
-            System.out.println("quote slip Pdf created successfully..");
-            
-           SendEmail.sendEmail(filePath,companyName,contacts);
+           SendEmail.sendEmail(outputStream.toByteArray(),companyName,contacts,"quoteslip");
             
 
         } catch (Exception e) {
@@ -108,10 +95,7 @@ public class QuoteSlipPDFGenerator {
             ContactVO contacts, String companyName, String filePath, String imagePath){
     	
         try {
-        	URL location = QuoteSlipPDFGenerator.class.getProtectionDomain().getCodeSource().getLocation();
-   	        filePath=location.getFile()+"//closeslipdoc_"+companyName+"_"+new Date().getTime();
-           	System.out.println("filePath="+filePath);
-
+        	
             String insuredname = insuredDetails.getName();
 
             String prodName = quoteDetails.getProductDetails().getName();
@@ -120,9 +104,9 @@ public class QuoteSlipPDFGenerator {
             java.util.List<ProductUWFieldVO> prodListFields = products.getUwFieldsList();
 
 
-            OutputStream file = new FileOutputStream(new File(filePath));
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             Document document = new Document();
-            PdfWriter.getInstance(document, file);
+            PdfWriter.getInstance(document, outputStream);
 
             // Inserting Image in PDF
           /*  Image image = Image.getInstance(imagePath);
@@ -192,7 +176,10 @@ public class QuoteSlipPDFGenerator {
 
             document.close();
 
-            file.close();
+            
+            
+            SendEmail.sendEmail(outputStream.toByteArray(),companyName,contacts,"closeslip");
+
 
             System.out.println("Pdf created successfully for close slip.....");
 
