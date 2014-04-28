@@ -178,8 +178,8 @@ public class UWDetailsComponent extends UIComponentBase {
 		ProductUWFieldVO productUWFieldVO = (ProductUWFieldVO)inputVO;
 		InputText textBox = new InputText();
 		textBox.setId(Utils.concat(this.prefix,String.valueOf(productUWFieldVO.getFieldOrder())));
-		// textBox.setMaxlength(productUWFieldVO.getFieldLength());
-		textBox.setMaxlength(10);
+		textBox.setMaxlength(productUWFieldVO.getFieldLength());
+		//textBox.setMaxlength(10);
 		//textBox.setRequired(productUWFieldVO.getIsMandatory().equalsIgnoreCase("Y")?true:false);
 		textBox.setRequiredMessage(Utils.concat(productUWFieldVO.getFieldName(), "cannot be blank or empty"));
 		ValueExpression ve = context.getApplication().getExpressionFactory().createValueExpression(context.getELContext(), "#{quoteSlipMB.quoteDetailVO.productDetails.uwFieldsList["+productUWFieldVO.getFieldOrder()+"].response}", String.class);
