@@ -34,6 +34,9 @@
         <property name="sourceOfData" type="string">
             <column name="SOURCE_OF_DATA" length="25" />
         </property>
+        <property name="fieldValueType" type="string">
+            <column name="FIELD_VALUE_TYPE" length="25" />
+        </property>
         <property name="recCreUserId" type="java.lang.Long">
             <column name="REC_CRE_USER_ID" precision="22" scale="0" />
         </property>

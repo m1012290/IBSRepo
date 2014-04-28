@@ -12,6 +12,7 @@ import javax.faces.context.FacesContext;
 
 import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
+import com.shrinfo.ibs.util.AppConstants;
 import com.shrinfo.ibs.util.MasterDataRetrievalUtil;
 import com.shrinfo.ibs.vo.app.EnquiryType;
 import com.shrinfo.ibs.vo.business.ProductUWFieldVO;
@@ -29,6 +30,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private Map<String,String> salutations=new HashMap<String, String>();
 	private Map<String,EnquiryType>  enquiryTypes= new HashMap<String, EnquiryType>();
 	private Map<String, String> products = new HashMap<String, String>();
+	private Map<String, String> uwFieldValueTypes = new HashMap<String, String>();
 	
 	private Map<String, String> usersList = new HashMap<String, String>();
 	private String referralDesc = new String();
@@ -138,6 +140,18 @@ public abstract class BaseManagedBean implements Serializable {
     }
 
 
+    
+    public Map<String, String> getUwFieldValueTypes() {
+        return uwFieldValueTypes;
+    }
+
+
+    
+    public void setUwFieldValueTypes(Map<String, String> uwFieldValueTypes) {
+        this.uwFieldValueTypes = uwFieldValueTypes;
+    }
+
+
     //public constructor
 	public BaseManagedBean(){
 		titles.put("Business Executive ", "Business Executive");
@@ -162,6 +176,10 @@ public abstract class BaseManagedBean implements Serializable {
 		
 		products = MasterDataRetrievalUtil.getProductDetails();
 		usersList = MasterDataRetrievalUtil.getAvailableUsers();
+		uwFieldValueTypes.put(AppConstants.UW_FIELD_VALUE_TYPE_NUMERIC, AppConstants.UW_FIELD_VALUE_TYPE_NUMERIC);
+		uwFieldValueTypes.put(AppConstants.UW_FIELD_VALUE_TYPE_CHARACTERS, AppConstants.UW_FIELD_VALUE_TYPE_CHARACTERS);
+		uwFieldValueTypes.put(AppConstants.UW_FIELD_VALUE_TYPE_ALPHANUMERIC, AppConstants.UW_FIELD_VALUE_TYPE_ALPHANUMERIC);
+		uwFieldValueTypes.put(AppConstants.UW_FIELD_VALUE_TYPE_DATE, AppConstants.UW_FIELD_VALUE_TYPE_DATE);
 	}
 	
 	//to be implemented by each of the child beans to reinitialize the state of declared instance fields

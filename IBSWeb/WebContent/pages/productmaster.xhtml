@@ -46,8 +46,14 @@
 	            		<f:selectItem itemLabel="----Select Category---" itemValue="" />  
 	            		<f:selectItem itemLabel="Textbox" itemValue="textbox"/>
 	            		<f:selectItem itemLabel="Datepicker" itemValue="datepicker"/>
-	        		</p:selectOneMenu> 
-                    <h:outputLabel for="fieldtype" value="Field Length" />
+	        		</p:selectOneMenu>
+	        		<h:outputLabel for="fieldvaluetype" value="Field Value Type" />
+                    <p:selectOneMenu id="fieldvaluetype" value="#{productMB.productUWDetails.fieldValueType}">
+						<f:selectItem itemLabel="---Select Field Value Type---" itemValue="" />
+						<f:selectItems value="#{productMB.uwFieldValueTypes}" />
+	        		</p:selectOneMenu>
+	        		
+                    <h:outputLabel for="fieldlength" value="Field Length" />
                     <p:inputText value="#{productMB.productUWDetails.fieldLength}"/>
                     </p:panelGrid>
                     <f:facet name="footer">

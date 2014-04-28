@@ -28,6 +28,11 @@ public class AppConstants {
 	public static final String BEAN_NAME_POLICY_PAGE = "policyMB";
 	public static final String BEAN_NAME_LOGIN_PAGE = "loginBean";
 	
-	
+
+	public static final String UW_FIELD_VALUE_TYPE_NUMERIC = "Numeric";
+	public static final String UW_FIELD_VALUE_TYPE_CHARACTERS = "Characters";
+	public static final String UW_FIELD_VALUE_TYPE_ALPHANUMERIC = "AlphaNumeric";
+	public static final String UW_FIELD_VALUE_TYPE_DATE = "Date";
+
 	public static final String APP_PAGES_IN_ORDER = "APP_PAGES_IN_ORDER";
 }

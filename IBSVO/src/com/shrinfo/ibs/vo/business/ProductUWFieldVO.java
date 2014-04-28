@@ -26,6 +26,8 @@ public class ProductUWFieldVO extends BaseVO implements Comparable<ProductUWFiel
 
     private String fieldType;
 
+    private String fieldValueType;
+    
     private String isMandatory;
 
     private int fieldLength;
@@ -84,6 +86,18 @@ public class ProductUWFieldVO extends BaseVO implements Comparable<ProductUWFiel
     public void setFieldType(String fieldType) {
         this.fieldType = fieldType;
     }
+
+    
+    public String getFieldValueType() {
+        return fieldValueType;
+    }
+
+
+    
+    public void setFieldValueType(String fieldValueType) {
+        this.fieldValueType = fieldValueType;
+    }
+
 
     public String getIsMandatory() {
         return isMandatory;

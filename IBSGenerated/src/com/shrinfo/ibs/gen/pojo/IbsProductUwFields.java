@@ -31,6 +31,8 @@ public class IbsProductUwFields implements java.io.Serializable {
 
     private String sourceOfData;
 
+    private String fieldValueType;
+    
     private Long recCreUserId;
 
     private Date recCreDate;
@@ -150,6 +152,18 @@ public class IbsProductUwFields implements java.io.Serializable {
     public void setSourceOfData(String sourceOfData) {
         this.sourceOfData = sourceOfData;
     }
+
+    
+    public String getFieldValueType() {
+        return fieldValueType;
+    }
+
+
+    
+    public void setFieldValueType(String fieldValueType) {
+        this.fieldValueType = fieldValueType;
+    }
+
 
     public Long getRecCreUserId() {
         return this.recCreUserId;
