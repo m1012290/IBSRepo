@@ -18,7 +18,6 @@ import com.shrinfo.ibs.gen.pojo.IbsTask;
 import com.shrinfo.ibs.vo.business.TaskItemsVO;
 import com.shrinfo.ibs.vo.business.TaskVO;
 
-
 public class TaskDaoImpl extends BaseDBDAO implements TaskDao {
 
     @Override
@@ -64,26 +63,67 @@ public class TaskDaoImpl extends BaseDBDAO implements TaskDao {
 
         TaskVO taskVO = new TaskVO();
 
-        if (null == baseVO || !(baseVO instanceof TaskVO)
-            || Utils.isEmpty(((TaskVO) baseVO).getId())) {
+        if (null == baseVO) {
             throw new BusinessException("cmn.unknownError", null,
-                "Invalid task details. Please chack the data passed to fetch details");
+                "Invalid task details. Please check the data passed to fetch details");
         }
 
         IbsTask ibsTask = null;
 
+        if (!Utils.isEmpty(((TaskVO) baseVO).getId())) {
+            ibsTask = getTaskBasedOnId((TaskVO) baseVO);
+        } else if (!Utils.isEmpty(((TaskVO) baseVO).getEnquiry())
+            && !Utils.isEmpty(((TaskVO) baseVO).getEnquiry().getEnquiryNo())) {
+            ibsTask = getTaskBasedOnEnquiryNo((TaskVO) baseVO);
+        } else {
+            throw new BusinessException("cmn.unknownError", null,
+                    "Invalid task details. Please check the data passed to fetch details");
+        }
+
+        if(Utils.isEmpty(ibsTask)) {
+            return null;
+        }
+        MapperUtil.populateTaskVO(taskVO, ibsTask);
+
+        return taskVO;
+    }
+
+    /**
+     * 
+     * @param taskVO
+     * @return
+     */
+    private IbsTask getTaskBasedOnId(TaskVO taskVO) {
         try {
-            ibsTask =
-                (IbsTask) getHibernateTemplate().find(" from IbsTask ibsTask where ibsTask.id = ?",
-                    ((TaskVO) baseVO).getId()).get(0);
+            return (IbsTask) getHibernateTemplate().find(
+                " from IbsTask ibsTask where ibsTask.id = ?", taskVO.getId()).get(0);
         } catch (HibernateException hibernateException) {
             throw new BusinessException("pas.gi.couldNotGetTaskDetails", hibernateException,
                 "Error while fecthing Task details");
         }
+    }
 
-        MapperUtil.populateTaskVO(taskVO, ibsTask);
-
-        return taskVO;
+    /**
+     * 
+     * @param taskVO
+     * @return
+     */
+    private IbsTask getTaskBasedOnEnquiryNo(TaskVO taskVO) {
+        
+        List objList = null;
+        try {
+            objList =  getHibernateTemplate().find(
+                " from IbsTask ibsTask where ibsTask.enquiryNo = ?",
+                taskVO.getEnquiry().getEnquiryNo());
+        } catch (HibernateException hibernateException) {
+            throw new BusinessException("pas.gi.couldNotGetTaskDetails", hibernateException,
+                "Error while fecthing Task details");
+        }
+        if(!Utils.isEmpty(objList)) {
+            return (IbsTask)objList.get(0);
+        }
+        
+        return null;
     }
 
     @Override

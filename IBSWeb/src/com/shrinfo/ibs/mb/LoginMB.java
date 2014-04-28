@@ -100,7 +100,7 @@ public class LoginMB extends BaseManagedBean implements Serializable {
             // logger.error(be, "Exception ["+ be
             // +"] encountered while retrieving available products ");
             // FacesContext.getCurrentInstance().addMessage("ERROR_PRODUCTUW_FIELDS_RETRIEVAL", new
-            FacesContext.getCurrentInstance().addMessage("MESSAGE_FAILURE", new FacesMessage(FacesMessage.SEVERITY_INFO,"Username entered is Incorrect",""));
+            FacesContext.getCurrentInstance().addMessage("MESSAGE_FAILURE", new FacesMessage(FacesMessage.SEVERITY_INFO,"Username or password entered doesn't match with our records, please check the same",""));
              return null;
         } catch (SystemException se) {
             System.out.println("SystemException [" + se + "] encountered");
@@ -121,7 +121,7 @@ public class LoginMB extends BaseManagedBean implements Serializable {
                 return "enquiry";
             }
             else {
-                FacesContext.getCurrentInstance().addMessage("MESSAGE_FAILURE", new FacesMessage(FacesMessage.SEVERITY_INFO,"Password entered is does not match",""));
+                FacesContext.getCurrentInstance().addMessage("MESSAGE_FAILURE", new FacesMessage(FacesMessage.SEVERITY_INFO,"Username or password entered doesn't match with our records, please check the same",""));
                 return null;
             }
         } catch (Exception e) {

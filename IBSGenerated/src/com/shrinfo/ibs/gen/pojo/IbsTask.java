@@ -1,6 +1,6 @@
 package com.shrinfo.ibs.gen.pojo;
 
-// Generated Mar 25, 2014 2:46:55 AM by Hibernate Tools 3.4.0.CR1
+// Generated Apr 28, 2014 3:21:32 AM by Hibernate Tools 3.4.0.CR1
 
 
 import java.sql.Date;
@@ -33,6 +33,10 @@ public class IbsTask implements java.io.Serializable {
 
     private Date recUpdDate;
 
+    private Long taskType;
+
+    private Long taskSectionType;
+
     public IbsTask() {}
 
 
@@ -42,7 +46,7 @@ public class IbsTask implements java.io.Serializable {
 
     public IbsTask(Long id, IbsStatusMaster ibsStatusMaster, Long enquiryNo, String documentId,
             String referralDesc, Long assignorUserId, Long assigneeUserId, Long recCreUserId,
-            Date recCreDate, Long recUpdUserId, Date recUpdDate) {
+            Date recCreDate, Long recUpdUserId, Date recUpdDate, Long taskType, Long taskSectionType) {
         this.id = id;
         this.ibsStatusMaster = ibsStatusMaster;
         this.enquiryNo = enquiryNo;
@@ -54,6 +58,8 @@ public class IbsTask implements java.io.Serializable {
         this.recCreDate = recCreDate;
         this.recUpdUserId = recUpdUserId;
         this.recUpdDate = recUpdDate;
+        this.taskType = taskType;
+        this.taskSectionType = taskSectionType;
     }
 
     public Long getId() {
@@ -142,6 +148,22 @@ public class IbsTask implements java.io.Serializable {
 
     public void setRecUpdDate(Date recUpdDate) {
         this.recUpdDate = recUpdDate;
+    }
+
+    public Long getTaskType() {
+        return this.taskType;
+    }
+
+    public void setTaskType(Long taskType) {
+        this.taskType = taskType;
+    }
+
+    public Long getTaskSectionType() {
+        return this.taskSectionType;
+    }
+
+    public void setTaskSectionType(Long taskSectionType) {
+        this.taskSectionType = taskSectionType;
     }
 
 

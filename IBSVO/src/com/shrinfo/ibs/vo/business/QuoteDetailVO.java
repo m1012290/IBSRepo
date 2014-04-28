@@ -63,6 +63,20 @@ public class QuoteDetailVO extends BaseVO {
     
     private Integer policyTerm;
     
+    private Long enquiryNum;
+    
+
+
+    
+    public Long getEnquiryNum() {
+        return enquiryNum;
+    }
+
+
+    
+    public void setEnquiryNum(Long enquiryNum) {
+        this.enquiryNum = enquiryNum;
+    }
 
 
     public Integer getPolicyTerm() {

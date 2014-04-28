@@ -10,7 +10,9 @@ import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
+import com.shrinfo.ibs.cmn.logger.Logger;
 import com.shrinfo.ibs.cmn.utils.Utils;
+import com.shrinfo.ibs.cmn.vo.UserVO;
 import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
 import com.shrinfo.ibs.util.AppConstants;
 import com.shrinfo.ibs.util.MasterDataRetrievalUtil;
@@ -22,23 +24,26 @@ import com.shrinfo.ibs.vo.business.TaskVO;
  * @author Sunil Kumar
  */
 public abstract class BaseManagedBean implements Serializable {
+    
+    Logger logger = Logger.getLogger(BaseManagedBean.class);
 
 	private static final long serialVersionUID = -4604529567842501787L;
 	private Map<String,String> titles = new HashMap<String, String>();
-	private Map<String,String> custCategories = new HashMap<String, String>(); 
-	private Map<String,String> custClassifications = new HashMap<String, String>(); 
+	private Map<String,String> custCategories = new HashMap<String, String>();
+	private Map<String,String> custClassifications = new HashMap<String, String>();
 	private Map<String,String> salutations=new HashMap<String, String>();
 	private Map<String,EnquiryType>  enquiryTypes= new HashMap<String, EnquiryType>();
 	private Map<String, String> products = new HashMap<String, String>();
 	private Map<String, String> uwFieldValueTypes = new HashMap<String, String>();
-	
+
 	private Map<String, String> usersList = new HashMap<String, String>();
 	private String referralDesc = new String();
 	private String saveFromReferralDialog;
 	private Long assigneeUser;
 	
+
 	public Map<String, String> getTitles() {
-		return titles;
+		return this.titles;
 	}
 
 
@@ -48,7 +53,7 @@ public abstract class BaseManagedBean implements Serializable {
 
 
 	public Map<String, String> getCustCategories() {
-		return custCategories;
+		return this.custCategories;
 	}
 
 
@@ -58,7 +63,7 @@ public abstract class BaseManagedBean implements Serializable {
 
 
 	public Map<String, String> getCustClassifications() {
-		return custClassifications;
+		return this.custClassifications;
 	}
 
 
@@ -68,7 +73,7 @@ public abstract class BaseManagedBean implements Serializable {
 
 
 	public Map<String, String> getSalutations() {
-		return salutations;
+		return this.salutations;
 	}
 
 
@@ -77,7 +82,7 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 	public Map<String, EnquiryType> getEnquiryTypes() {
-		return enquiryTypes;
+		return this.enquiryTypes;
 	}
 
 
@@ -87,7 +92,7 @@ public abstract class BaseManagedBean implements Serializable {
 
 
 	public Map<String, String> getProducts() {
-		return products;
+		return this.products;
 	}
 
 
@@ -95,49 +100,49 @@ public abstract class BaseManagedBean implements Serializable {
 		this.products = products;
 	}
 
-    public String getReferralDesc() {
-        return referralDesc;
-    }
-    
-    public void setReferralDesc(String referralDesc) {
-        this.referralDesc = referralDesc;
-    }
+	public String getReferralDesc() {
+		return this.referralDesc;
+	}
+
+	public void setReferralDesc(String referralDesc) {
+		this.referralDesc = referralDesc;
+	}
 
 
-    
-    public Map<String, String> getUsersList() {
-        return usersList;
-    }
+
+	public Map<String, String> getUsersList() {
+		return this.usersList;
+	}
 
 
-    
-    public void setUsersList(Map<String, String> usersList) {
-        this.usersList = usersList;
-    }
+
+	public void setUsersList(Map<String, String> usersList) {
+		this.usersList = usersList;
+	}
 
 
-    
-    public String getSaveFromReferralDialog() {
-        return saveFromReferralDialog;
-    }
+
+	public String getSaveFromReferralDialog() {
+		return this.saveFromReferralDialog;
+	}
 
 
-    
-    public void setSaveFromReferralDialog(String saveFromReferralDialog) {
-        this.saveFromReferralDialog = saveFromReferralDialog;
-    }
+
+	public void setSaveFromReferralDialog(String saveFromReferralDialog) {
+		this.saveFromReferralDialog = saveFromReferralDialog;
+	}
 
 
-    
-    public Long getAssigneeUser() {
-        return assigneeUser;
-    }
+
+	public Long getAssigneeUser() {
+		return this.assigneeUser;
+	}
 
 
-    
-    public void setAssigneeUser(Long assigneeUser) {
-        this.assigneeUser = assigneeUser;
-    }
+
+	public void setAssigneeUser(Long assigneeUser) {
+		this.assigneeUser = assigneeUser;
+	}
 
 
     
@@ -154,77 +159,146 @@ public abstract class BaseManagedBean implements Serializable {
 
     //public constructor
 	public BaseManagedBean(){
-		titles.put("Business Executive ", "Business Executive");
-		titles.put(" Govt Servant", "Govt Servant");
-		titles.put(" Private Sector", "Private Sector");
-		
-		custCategories.put("Retail", "Retail");
-		custCategories.put("Corporate","Corporate");
-		
-		custClassifications.put("Govt Limited", "Govt Limited");
-		custClassifications.put("Pvt Limited","Pvt Limited");
-		custClassifications.put("Public Limited", "Public Limited");
-		
-		salutations.put("Mr", "Mr");
-		salutations.put("Mrs", "Mrs");
-		salutations.put("M/S", "M/S");
-		
-		enquiryTypes.put("Policy", EnquiryType.POLICY);
-		enquiryTypes.put("Endorsement", EnquiryType.ENDORSEMENT);
-		enquiryTypes.put("Renewal",EnquiryType.RENEWAL);
-		enquiryTypes.put("Claim", EnquiryType.CLAIMS);
-		
-		products = MasterDataRetrievalUtil.getProductDetails();
-		usersList = MasterDataRetrievalUtil.getAvailableUsers();
+		this.titles.put("Business Executive ", "Business Executive");
+		this.titles.put(" Govt Servant", "Govt Servant");
+		this.titles.put(" Private Sector", "Private Sector");
+
+		this.custCategories.put("Retail", "Retail");
+		this.custCategories.put("Corporate","Corporate");
+
+		this.custClassifications.put("Govt Limited", "Govt Limited");
+		this.custClassifications.put("Pvt Limited","Pvt Limited");
+		this.custClassifications.put("Public Limited", "Public Limited");
+
+		this.salutations.put("Mr", "Mr");
+		this.salutations.put("Mrs", "Mrs");
+		this.salutations.put("M/S", "M/S");
+
+		this.enquiryTypes.put("Policy", EnquiryType.POLICY);
+		this.enquiryTypes.put("Endorsement", EnquiryType.ENDORSEMENT);
+		this.enquiryTypes.put("Renewal",EnquiryType.RENEWAL);
+		this.enquiryTypes.put("Claim", EnquiryType.CLAIMS);
+
+		this.products = MasterDataRetrievalUtil.getProductDetails();
+		this.usersList = MasterDataRetrievalUtil.getAvailableUsers();
 		uwFieldValueTypes.put(AppConstants.UW_FIELD_VALUE_TYPE_NUMERIC, AppConstants.UW_FIELD_VALUE_TYPE_NUMERIC);
 		uwFieldValueTypes.put(AppConstants.UW_FIELD_VALUE_TYPE_CHARACTERS, AppConstants.UW_FIELD_VALUE_TYPE_CHARACTERS);
 		uwFieldValueTypes.put(AppConstants.UW_FIELD_VALUE_TYPE_ALPHANUMERIC, AppConstants.UW_FIELD_VALUE_TYPE_ALPHANUMERIC);
 		uwFieldValueTypes.put(AppConstants.UW_FIELD_VALUE_TYPE_DATE, AppConstants.UW_FIELD_VALUE_TYPE_DATE);
 	}
-	
+
 	//to be implemented by each of the child beans to reinitialize the state of declared instance fields
 	protected abstract void reinitializeBeanFields();
-	
+
 	/**
 	 * 
 	 * @param uwFieldVO
 	 * @return
 	 */
 	public String getComponentClientId(ProductUWFieldVO uwFieldVO){
-        String componentClientId = null;
-	    if(uwFieldVO.getFieldType().equalsIgnoreCase("datepicker")){
-            componentClientId = Utils.concat("field_",String.valueOf(uwFieldVO.getFieldOrder()), "_input");
-        }else{
-            componentClientId = Utils.concat("field_",String.valueOf(uwFieldVO.getFieldOrder()));
-        }
-	    return componentClientId;
+		return this.getComponentClientId(uwFieldVO, null);
 	}
-	
+
+	/**
+	 * 
+	 * @param uwFieldVO
+	 * @return
+	 */
+	public String getComponentClientId(ProductUWFieldVO uwFieldVO, String prefix){
+		if(Utils.isEmpty(prefix)) {
+			prefix = new String();
+		}
+		prefix = prefix + "field_";
+		String componentClientId = null;
+		if(uwFieldVO.getFieldType().equalsIgnoreCase("datepicker")){
+			componentClientId = Utils.concat(prefix,String.valueOf(uwFieldVO.getFieldOrder()), "_input");
+		}else{
+			componentClientId = Utils.concat(prefix,String.valueOf(uwFieldVO.getFieldOrder()));
+		}
+		return componentClientId;
+	}
+
 	/**
 	 * @return
 	 */
 	public String saveReferralTask(){
-	    //to be overriden by child beans to perform referral save task
-	    return "enquiry";
+		//to be overriden by child beans to perform referral save task
+		return "enquiry";
+	}
+
+	protected boolean saveReferralTask(TaskVO taskVO){
+		boolean savedSuccessfully = false;
+		if(Utils.isEmpty(taskVO)){
+			return savedSuccessfully;
+		}
+
+		try{
+			ServiceTaskExecutor.INSTANCE.executeSvc("referralTaskSvc", "createTask", taskVO);
+			savedSuccessfully = true;
+		}catch (Exception ex) {
+			FacesContext.getCurrentInstance().addMessage(
+					"ERROR_TASK_SAVE",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							"Error saving referral task details, please try again after sometime"));
+			ex.printStackTrace();
+			return savedSuccessfully;
+		}
+		return savedSuccessfully;
 	}
 	
-	protected boolean saveReferralTask(TaskVO taskVO){
-	    boolean savedSuccessfully = false;
-	    if(Utils.isEmpty(taskVO)){
-	        return savedSuccessfully;
+	public TaskVO checkReferral(TaskVO taskVO) {
+		return checkReferral(taskVO, 3);
+	}
+	
+	/**
+	 * 
+	 * @param taskVO
+	 * @param statusCode
+	 * @return
+	 */
+	public TaskVO checkReferral(TaskVO taskVO, Integer statusCode) {
+	    if(null == statusCode || 3 != statusCode) {
+	        return null;
 	    }
-	    
-	    try{
-	        ServiceTaskExecutor.INSTANCE.executeSvc("referralTaskSvc", "createTask", taskVO);
-	        savedSuccessfully = true;
-	    }catch (Exception ex) {
-                FacesContext.getCurrentInstance().addMessage(
+        TaskVO userTask= null;
+        try{
+            userTask = (TaskVO) ServiceTaskExecutor.INSTANCE.executeSvc("referralTaskSvc", "getTask", taskVO);
+        }catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(
                     "ERROR_TASK_SAVE",
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-                            "Error saving referral task details, please try again after sometime"));
+                            "Error retrieving referral task details, please try again after sometime"));
+            logger.error(ex, "error retreiving task details");
+        }
+        return userTask;
+    }
+	/**
+	 * 
+	 * @param userVO : Logged in user details
+	 * @param taskVO : contains enquiry details
+	 * @param statusCode : status of transaction. if 3, then status=referral
+	 * @return
+	 */
+	public TaskVO checkReferral(UserVO userVO, TaskVO taskVO, Integer statusCode) {
+        if(null == statusCode || 3 != statusCode) {
+            return null;
+        }
+        TaskVO userTask= null;
+        try{
+            userTask = (TaskVO) ServiceTaskExecutor.INSTANCE.executeSvc("referralTaskSvc", "getTask", taskVO);
+        }catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(
+                    "ERROR_TASK_SAVE",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+                            "Error retrieving referral task details, please try again after sometime"));
             ex.printStackTrace();
-            return savedSuccessfully;
-    	}
-	    return savedSuccessfully;
-	}
+        }
+        if(Utils.isEmpty(userTask)) {
+            return null;
+        }
+        if(userTask.getAssigneeUser().getUserId().longValue() != userVO.getUserId().longValue()) {
+            return userTask;
+        }
+        return null;
+    }
 }

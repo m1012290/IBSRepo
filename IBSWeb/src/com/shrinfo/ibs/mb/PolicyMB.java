@@ -29,6 +29,7 @@ import com.shrinfo.ibs.vo.business.InsCompanyVO;
 import com.shrinfo.ibs.vo.business.InsuredVO;
 import com.shrinfo.ibs.vo.business.PolicyVO;
 import com.shrinfo.ibs.vo.business.QuoteDetailVO;
+import com.shrinfo.ibs.vo.business.TaskVO;
 
 @ManagedBean(name = "policyMB")
 @SessionScoped
@@ -49,6 +50,8 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
     private InsuredVO insuredDetails = new InsuredVO();
 
     private UploadedFile file;
+    
+    private Boolean screenFreeze = Boolean.FALSE;
 
     // This is an important method which is overriden from parent managed bean
     // this is an reinitializer block which includes all the instance fields which are bound to form
@@ -57,6 +60,7 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
         this.quoteDetailVO = new QuoteDetailVO();
         this.policyDetails = new PolicyVO();
         this.insuredDetails = new InsuredVO();
+        this.screenFreeze = Boolean.FALSE;
     }
     
     public PolicyMB(){
@@ -108,12 +112,25 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
     public void loadFile(UploadedFile file) {
         this.file = file;
     }
+    
+    
+    public Boolean getScreenFreeze() {
+        return screenFreeze;
+    }
 
+    
+    public void setScreenFreeze(Boolean screenFreeze) {
+        this.screenFreeze = screenFreeze;
+    }
 
     public void calculatePremiumBasedOnPremiumChange(AjaxBehaviorEvent event) {
 
         BigDecimal premium = this.policyDetails.getPremiumDetails().getPremium();
         double premiumDiscount = this.policyDetails.getPremiumDetails().getDiscountPercentage();
+        double premiumLoading = this.policyDetails.getPremiumDetails().getLoadingPercentage();
+        if(0 == premiumDiscount && 0== premiumLoading) {
+            this.policyDetails.getPremiumDetails().setTotalPremium(premium);
+        }
         if (0 != premiumDiscount) {
             BigDecimal premiumDiscountValue =
                 premium.multiply(BigDecimal.valueOf(premiumDiscount)).divide(
@@ -123,7 +140,7 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
                 premium.subtract(premiumDiscountValue));
         }
 
-        double premiumLoading = this.policyDetails.getPremiumDetails().getLoadingPercentage();
+        
         if (0 != premiumLoading) {
             this.policyDetails.getPremiumDetails().setDiscountPercentage(0);
             BigDecimal premiumDiscountValue =
@@ -140,11 +157,15 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
 
         BigDecimal premium = this.policyDetails.getPremiumDetails().getPremium();
         double premiumDiscount = this.policyDetails.getPremiumDetails().getDiscountPercentage();
-        BigDecimal premiumDiscountValue =
-            premium.multiply(BigDecimal.valueOf(premiumDiscount)).divide(BigDecimal.valueOf(100));
-        this.policyDetails.getPremiumDetails().setLoadingPercentage(0);
-        this.policyDetails.getPremiumDetails().setTotalPremium(
-            premium.subtract(premiumDiscountValue));
+        if(0 != premiumDiscount) {
+            BigDecimal premiumDiscountValue =
+                    premium.multiply(BigDecimal.valueOf(premiumDiscount)).divide(BigDecimal.valueOf(100));
+                this.policyDetails.getPremiumDetails().setLoadingPercentage(0);
+                this.policyDetails.getPremiumDetails().setTotalPremium(
+                    premium.subtract(premiumDiscountValue));
+        }
+        
+        this.calculatePremiumBasedOnPremiumChange(event);
 
     }
 
@@ -152,10 +173,13 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
 
         BigDecimal premium = this.policyDetails.getPremiumDetails().getPremium();
         double premiumLoading = this.policyDetails.getPremiumDetails().getLoadingPercentage();
-        this.policyDetails.getPremiumDetails().setDiscountPercentage(0);
-        BigDecimal premiumDiscountValue =
-            premium.multiply(BigDecimal.valueOf(premiumLoading)).divide(BigDecimal.valueOf(100));
-        this.policyDetails.getPremiumDetails().setTotalPremium(premium.add(premiumDiscountValue));
+        if(0 != premiumLoading) {
+            this.policyDetails.getPremiumDetails().setDiscountPercentage(0);
+            BigDecimal premiumDiscountValue =
+                premium.multiply(BigDecimal.valueOf(premiumLoading)).divide(BigDecimal.valueOf(100));
+            this.policyDetails.getPremiumDetails().setTotalPremium(premium.add(premiumDiscountValue));
+        }
+        this.calculatePremiumBasedOnPremiumChange(event);
 
     }
 
@@ -191,12 +215,12 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
             FacesContext.getCurrentInstance()
                     .addMessage(
                         "ERROR_QUOTATION_SAVE",
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error saving policy details, please try again later",
                             "Error saving Policy details."));
             return null;
         }
         FacesContext.getCurrentInstance().addMessage("MESSAGE_SUCCESS",
-            new FacesMessage(FacesMessage.SEVERITY_INFO, "Policy Details Saved ", " successfully"));
+            new FacesMessage(FacesMessage.SEVERITY_INFO, "Policy Details Captured Successfully ", " successfully"));
         return null;
     }
 
@@ -275,6 +299,19 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
 
         if (!Utils.isEmpty(policyVO)) {
             this.policyDetails = policyVO;
+        }
+        
+        // referral
+        FacesContext fc = FacesContext.getCurrentInstance();
+        Map map=fc.getExternalContext().getSessionMap();        
+        // Referral
+        EditCustEnqDetailsMB editCustEnqDetailsMB = (EditCustEnqDetailsMB) map.get("editCustEnqDetailsMB");
+        TaskVO taskVO = new TaskVO();               
+        taskVO.setEnquiry(editCustEnqDetailsMB.getEnquiryVO());
+        LoginMB loginManageBean = (LoginMB) map.get("loginBean");
+        taskVO = this.checkReferral(loginManageBean.getUserDetails(), taskVO, 3);
+        if(!Utils.isEmpty(taskVO)) {
+            this.screenFreeze = Boolean.TRUE;         
         }
 
         return "policy";
