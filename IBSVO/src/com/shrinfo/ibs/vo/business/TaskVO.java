@@ -24,6 +24,10 @@ public class TaskVO extends BaseVO {
 
     private StatusVO statusVO;
 
+    private Integer taskType;
+    
+    private Integer taskSectionType;
+    
     /**
      * @return the id
      */
@@ -129,6 +133,26 @@ public class TaskVO extends BaseVO {
         this.documentId = documentId;
     }
     
+    
+    public Integer getTaskType() {
+        return taskType;
+    }
+
+    
+    public void setTaskType(Integer taskType) {
+        this.taskType = taskType;
+    }
+
+    
+    public Integer getTaskSectionType() {
+        return taskSectionType;
+    }
+
+    
+    public void setTaskSectionType(Integer taskSectionType) {
+        this.taskSectionType = taskSectionType;
+    }
+
     @Override
     public String toString() {
         return "TaskVO: assigneeUser=" + this.assigneeUser + ", assignerUser=" + this.assignerUser

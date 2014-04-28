@@ -521,8 +521,9 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 			}
 
 			// Before performing save operation let's check if there are any referrals
-			if(!Utils.isEmpty(this.getSaveFromReferralDialog()) && "true".equalsIgnoreCase(this.getSaveFromReferralDialog())){
-				TaskVO taskVO = ReferralHelper.checkForReferrals(this.policyDetails, SectionId.QUOTESLIP);
+			//if(!Utils.isEmpty(this.getSaveFromReferralDialog()) && "true".equalsIgnoreCase(this.getSaveFromReferralDialog())){
+			if(Utils.isEmpty(this.getSaveFromReferralDialog())){
+			    TaskVO taskVO = ReferralHelper.checkForReferrals(this.policyDetails, SectionId.QUOTESLIP);
 				if(!Utils.isEmpty(taskVO)){
 					this.setReferralDesc(taskVO.getDesc());
 					RequestContext context = RequestContext.getCurrentInstance();
@@ -563,7 +564,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 		FacesContext.getCurrentInstance()
 		.addMessage(
 				"MESSAGE_SUCCESS",
-				new FacesMessage(FacesMessage.SEVERITY_INFO, "Quote Details Captured ",
+				new FacesMessage(FacesMessage.SEVERITY_INFO, "Quote Details Captured Successfully",
 						" successfully"));
 		return this.loadQuotationsDetail();
 
@@ -756,7 +757,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 		TaskVO taskVO = new TaskVO();
 		taskVO.setDesc(this.getReferralDesc());
 		StatusVO statusVO = new StatusVO();
-		statusVO.setCode(3);//referred status
+		statusVO.setCode(Integer.valueOf(Utils.getSingleValueAppConfig("STATUS_REFERRED")));//referred status
 		statusVO.setDesc("Referred");
 		taskVO.setStatusVO(statusVO);
 		taskVO.setEnquiry(editCustEnqDetailsMB.getEnquiryVO());
@@ -765,6 +766,8 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 		UserVO assigneeUser = new IBSUserVO();
 		assigneeUser.setUserId(this.getAssigneeUser());
 		taskVO.setAssigneeUser(assigneeUser);
+		taskVO.setTaskType(Integer.valueOf(Utils.getSingleValueAppConfig("TASK_TYPE_REFERRAL")));
+		taskVO.setTaskSectionType(Integer.valueOf(Utils.getSingleValueAppConfig("SECTION_ID_CLOSESLIP")));
 		this.saveReferralTask(taskVO);//perform referral save task
 		return super.saveReferralTask();
 	}

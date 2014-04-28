@@ -4,10 +4,12 @@ import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.IvParameterSpec;
+
 import org.springframework.dao.DataAccessException;
 
 /**
@@ -66,6 +68,15 @@ public class EncryptionUtil {
         cipher.init(javax.crypto.Cipher.ENCRYPT_MODE, desKey, iv);
         byte[] encrypted = cipher.doFinal(data.getBytes());
         return (byteToHex(encrypted));
+    }
+    
+    public static void main(String args[]){
+        try {
+            System.out.println(encrypt("rahul"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
     }
 
     /**

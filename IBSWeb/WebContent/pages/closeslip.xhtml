@@ -183,7 +183,7 @@
 
 
 
-					   <p:dialog header="Referral Section" widgetVar="referraldialog">
+				<p:dialog header="Referral Section" widgetVar="referraldialog">
 					<p:panel id="referralsection">	
 						<h:panelGrid columns="4">
 							<h:outputLabel for="name" value="Referred By" />  
@@ -202,8 +202,7 @@
 							<p:inputTextarea  id="referraldesc" value="#{quotationMB.referralDesc}"/>
 							
 						</h:panelGrid>	  				
-						<p:commandButton value="Save" action="#{quotationMB.save}"
-							icon="ui-icon-disk" style="float:right:20px;" />
+						<p:commandButton value="Save" action="#{quotationMB.saveReferralTask}" icon="ui-icon-disk" style="float:right:20px;" />
 	  				</p:panel>
 	  			</p:dialog>
 	  			
