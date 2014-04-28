@@ -35,6 +35,7 @@ import org.primefaces.convert.NumberConverter;
 import com.shrinfo.ibs.cmn.exception.SystemException;
 import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.cmn.vo.BaseVO;
+import com.shrinfo.ibs.util.AppConstants;
 import com.shrinfo.ibs.vo.business.ProductUWFieldVO;
 import com.shrinfo.ibs.vo.business.ProductVO;
 
@@ -55,64 +56,6 @@ public class UWDetailsComponent extends UIComponentBase {
 	private String prefix;
 
 	private String panelGridWidth;
-
-
-    /**
-     * <p>The submittedValue value of this {@link UIInput} component.</p>
-     */
-    private Object submittedValue = null;
-
-
-    /**
-     * <p>Return the submittedValue value of this {@link UIInput} component.
-     * This method should only be used by the <code>decode()</code> and
-     * <code>validate()</code> method of this component, or
-     * its corresponding {@link Renderer}.</p>
-     */
-    public Object getSubmittedValue() {
-
-        return (this.submittedValue);
-
-    }
-
-
-    /**
-     * <p>Set the submittedValue value of this {@link UIInput} component.
-     * This method should only be used by the <code>decode()</code> and
-     * <code>validate()</code> method of this component, or
-     * its corresponding {@link Renderer}.</p>
-     *
-     * @param submittedValue The new submitted value
-     */
-    public void setSubmittedValue(Object submittedValue) {
-
-        this.submittedValue = submittedValue;
-
-    }
-
-	@Override
-	public void decode(FacesContext context) {
-	    this.getChildren().get(0).decode(context);
-	}
-	
-    /**
-     * @throws NullPointerException {@inheritDoc}
-     */
-    public void processDecodes(FacesContext context) {
-
-        if (context == null) {
-            throw new NullPointerException();
-        }
-        super.processDecodes(context);
-        //executeValidate(context);
-    }
-
-    @Override
-    public void processValidators(FacesContext context) {
-        super.processValidators(context);
-    }
-
-
 	
 	@Override
 	public String getFamily() {
@@ -122,24 +65,6 @@ public class UWDetailsComponent extends UIComponentBase {
 	@Override
 	public void encodeEnd(FacesContext context) throws IOException {
 		super.encodeEnd(context);
-		 //add the childs in the order they are required
-        if( Utils.isEmpty(getChildren() )){
-            UIInput input = new UIInput();
-            input.setId("testingffffff");
-            input.setValue("test");
-            input.setRequired(true);
-            input.setRequiredMessage("Test Message");
-            input.setImmediate(true);
-            this.getChildren().add(input);
-        }
-       
-		if(!Utils.isEmpty(this.getChildren())){
-		    this.getChildren().get(0).encodeAll(context);
-		}
-		/*
-        Integer productClass = (Integer)getAttributes().get("value");
-        encodeMarkUp(context, getUWFields(productClass));
-		 */
 		ProductVO productVO = (ProductVO)this.getAttributes().get("value");
 		String tableCols = (String)this.getAttributes().get("tablecols");
 		this.prefix = "field_";
@@ -262,15 +187,6 @@ public class UWDetailsComponent extends UIComponentBase {
 		textBox.setValue(productUWFieldVO.getResponse());
 		//textBox.encodeAll(context);
 		
-		NumberConverter converter = new NumberConverter();
-		converter.setIntegerOnly(true);
-		converter.setType("number");
-		textBox.setRequired(true);
-		textBox.setRequiredMessage("testdasjfdjfh");
-		textBox.setConverterMessage("Alphabets are not allowed , Please Enter the Correct Mobile Number");
-		textBox.setConverter(converter);
-		//textBox.validate(context);
-		textBox.setImmediate(true);
 		return textBox;
 	}
 
@@ -280,34 +196,16 @@ public class UWDetailsComponent extends UIComponentBase {
 		Calendar calendar = new Calendar();
 		calendar.setEffect("slideDown");
 		calendar.setNavigator(true);
-		calendar.setPattern("dd/MM/yyyy");
-		
-		/*
-		 * <p:inputText id="primMobNum"
-                            value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.mobileNo}"
-                            required="true" label="Mobile Number"  requiredMessage="Please enter the MobileNumber" converterMessage="Alphabets are not allowed , Please Enter the Correct Mobile Number" validatorMessage="MobileNumber should be of 8 digits">
-                        <f:convertNumber  integerOnly="true" type="number" for="primMobNum"/>
-                        
-                        <f:validateLength minimum="8" maximum="8"  for="primMobNum"/> 
-		 */
+		calendar.setPattern(Utils.getSingleValueAppConfig(AppConstants.APP_UI_DATE_FORMAT));
+		calendar.setId(Utils.concat(this.prefix,String.valueOf(productUWFieldVO.getFieldOrder())));
+		calendar.setMaxlength(10);
 		if(!Utils.isEmpty(productUWFieldVO.getResponse())){
 			try {
-				calendar.setValue(new SimpleDateFormat("dd/MM/yyyy").parse(productUWFieldVO.getResponse()));
+				calendar.setValue(new SimpleDateFormat(Utils.getSingleValueAppConfig(AppConstants.APP_UI_DATE_FORMAT)).parse(productUWFieldVO.getResponse()));
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		calendar.setId(Utils.concat(this.prefix,String.valueOf(productUWFieldVO.getFieldOrder())));
-		calendar.setRequired(true);
-		calendar.setRequiredMessage("Please enter value for "+productUWFieldVO.getFieldName());
-		calendar.setConverterMessage("Please enter date in dd/MM/yyyy format only for "+productUWFieldVO.getFieldName());
-		//calendar.encodeAll(context);
-		DateTimeConverter converter = new DateTimeConverter();
-		
-		converter.setType("date");
-		converter.setPattern("dd/MM/yyyy");
-		calendar.setConverter(converter);
 		return calendar;
 	}
 }

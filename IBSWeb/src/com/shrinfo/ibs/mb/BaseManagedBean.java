@@ -14,6 +14,7 @@ import com.shrinfo.ibs.cmn.logger.Logger;
 import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.cmn.vo.UserVO;
 import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
+import com.shrinfo.ibs.ui.customcomponent.UWDetailsComponent;
 import com.shrinfo.ibs.util.AppConstants;
 import com.shrinfo.ibs.util.MasterDataRetrievalUtil;
 import com.shrinfo.ibs.vo.app.EnquiryType;
@@ -301,4 +302,25 @@ public abstract class BaseManagedBean implements Serializable {
         }
         return null;
     }
+	
+	
+	public boolean validateUWFieldResponseIsEmpty(ProductUWFieldVO uwFieldVO){
+	    boolean isEmpty = false;
+	    if("Y".equalsIgnoreCase(uwFieldVO.getIsMandatory()) && Utils.isEmpty(uwFieldVO.getResponse())){
+	        isEmpty = true;
+            FacesContext.getCurrentInstance().addMessage(
+                "",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, Utils.concat("Please enter value for ", uwFieldVO.getFieldName()),
+                    Utils.concat("Please enter value for ", uwFieldVO.getFieldName())));
+        }
+	    return isEmpty;
+	}
+	
+	public boolean validateUWFieldIsNumeric(ProductUWFieldVO uwFieldVO){
+	    return Utils.isNumber(uwFieldVO.getResponse());
+	}
+	
+	public boolean validateUWFieldIsDate(ProductUWFieldVO uwFieldVO){
+	    return Utils.isValidDate(uwFieldVO.getResponse());
+	}
 }

@@ -35,4 +35,5 @@ public class AppConstants {
 	public static final String UW_FIELD_VALUE_TYPE_DATE = "Date";
 
 	public static final String APP_PAGES_IN_ORDER = "APP_PAGES_IN_ORDER";
+	public static final String APP_UI_DATE_FORMAT = "APP_UI_DATE_FORMAT";
 }

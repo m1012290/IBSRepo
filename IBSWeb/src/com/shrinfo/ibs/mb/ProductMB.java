@@ -39,6 +39,7 @@ public class ProductMB extends BaseManagedBean implements java.io.Serializable{
         productUWFieldVO.setFieldName(this.productUWDetails.getFieldName());
         productUWFieldVO.setFieldType(this.productUWDetails.getFieldType());
         productUWFieldVO.setFieldLength(this.productUWDetails.getFieldLength());
+        productUWFieldVO.setFieldValueType(this.productUWDetails.getFieldValueType());
         this.productDetails.getUwFieldsList().add(productUWFieldVO);
         return null;
     }

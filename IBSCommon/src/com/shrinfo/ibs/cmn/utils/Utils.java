@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.URL;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
@@ -238,7 +239,20 @@ public class Utils {
         }
         return isNonZeroNumber;
     }
-
+    
+    public static boolean isValidDate(String date){
+        boolean isValidDate = true;
+        String dateFormat = getSingleValueAppConfig("APP_UI_DATE_FORMAT");
+        try{
+            java.text.SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+            sdf.setLenient(false);
+            Date result = sdf.parse(date);
+        }catch(ParseException pe){
+            isValidDate = false;
+        }
+        return isValidDate;
+    }
+   
     /**
      * A convenience method to concatenate multiple strings without the use of the '+' operator.
      * 

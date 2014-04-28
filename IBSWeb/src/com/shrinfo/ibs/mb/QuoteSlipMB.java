@@ -40,7 +40,7 @@ import com.shrinfo.ibs.vo.business.TaskVO;
 @ManagedBean(name="quoteSlipMB")
 @SessionScoped
 public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
-
+	
 	/**
 	 * 
 	 */
@@ -141,10 +141,44 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 
 			if(!Utils.isEmpty(requestMap)){
 				ProductVO productDetails = this.quoteDetailVO.getProductDetails();
+				boolean allUWFieldValid = true;
 				for(ProductUWFieldVO uwField : productDetails.getUwFieldsList()){
 					String response = requestMap.get(this.getComponentClientId(uwField));
 					uwField.setResponse(response);
+					//validate underwriting answers in order to check if answer formats are in 
+					//accordance to values defined in the table
+					if(validateUWFieldResponseIsEmpty(uwField)){
+					    allUWFieldValid = false;
+					    
+					    continue;//continue with next field value is empty though the field is defined as mandatory
+					}
+					
+					if(uwField.getFieldValueType().equalsIgnoreCase(AppConstants.UW_FIELD_VALUE_TYPE_NUMERIC)){
+					    if(!validateUWFieldIsNumeric(uwField)){
+					        allUWFieldValid = false;
+					        FacesContext.getCurrentInstance().addMessage(
+				                "",
+				                new FacesMessage(FacesMessage.SEVERITY_ERROR, Utils.concat("Please enter valid numeric value for ", uwField.getFieldName()),
+				                    Utils.concat("Please enter value for ", uwField.getFieldName())));
+					        continue;//invalid value type entered for the field
+					    }
+					}
+					
+					if(uwField.getFieldValueType().equalsIgnoreCase(AppConstants.UW_FIELD_VALUE_TYPE_DATE)){
+					    if(!validateUWFieldIsDate(uwField)){
+					        allUWFieldValid = false;
+					        FacesContext.getCurrentInstance().addMessage(
+				                "",
+				                new FacesMessage(FacesMessage.SEVERITY_ERROR, Utils.concat("Please enter valid date for ", uwField.getFieldName()),
+				                    Utils.concat("Please enter value for ", uwField.getFieldName())));
+					        continue;//invalid date format for the field
+					    }
+					}
 				}
+				//recheck again if uw fields validations are through
+				if(!allUWFieldValid){
+                    return null;
+                }
 			}
 
 			Map map=fc.getExternalContext().getSessionMap();
@@ -204,7 +238,7 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 		}
 		FacesContext.getCurrentInstance().addMessage("MESSAGE_SUCCESS", new FacesMessage(FacesMessage.SEVERITY_INFO,"Insured Details: Data saved successfully. Quote slip NO:"+this.quoteDetailVO.getQuoteSlipId(),"Data saved successfully. Quote slip NO:"+this.quoteDetailVO.getQuoteSlipId()));
 
-		return null;
+		return "SUCCESS";
 	}
 
 	/**
@@ -214,7 +248,10 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 	public String next(){
 
 		//perform save operation first on click of next button
-		this.save();
+		String response = this.save();
+		if(Utils.isEmpty(response)){//some issue with save hence breaking it here
+		    return null;
+		}
 		//next check if quote slip mb is already available in session if so then invoke retrieveInsuredQuoteDetails method
 		//on the bean
 		QuotationMB quoteMB = (QuotationMB)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(AppConstants.BEAN_NAME_CLOSING_SLIP_PAGE);

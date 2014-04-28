@@ -34,8 +34,8 @@
                 </p:panelGrid>
                 <p:spacer height="30px;"/>
 			</p:panel>
-			<p:panel header="Product Underwriting Details" style="margin-bottom:10px;">
-					<p:panelGrid columns="10">
+			<p:panel header="Product Underwriting Details">
+				<h:panelGrid columns="8">
                     <h:outputLabel for="srlno" value="SRL No" />
 					<p:inputText value="#{productMB.productUWDetails.fieldOrder}"/>
 					<h:outputLabel for="fieldname" value="Field Name" />
@@ -47,21 +47,22 @@
 	            		<f:selectItem itemLabel="Textbox" itemValue="textbox"/>
 	            		<f:selectItem itemLabel="Datepicker" itemValue="datepicker"/>
 	        		</p:selectOneMenu>
+	        		
 	        		<h:outputLabel for="fieldvaluetype" value="Field Value Type" />
                     <p:selectOneMenu id="fieldvaluetype" value="#{productMB.productUWDetails.fieldValueType}">
-						<f:selectItem itemLabel="---Select Field Value Type---" itemValue="" />
+						<f:selectItem itemLabel="----Select Category---" itemValue="" />
 						<f:selectItems value="#{productMB.uwFieldValueTypes}" />
 	        		</p:selectOneMenu>
 	        		
                     <h:outputLabel for="fieldlength" value="Field Length" />
                     <p:inputText value="#{productMB.productUWDetails.fieldLength}"/>
-                    </p:panelGrid>
+                 </h:panelGrid>
                     <f:facet name="footer">
-                        <h:commandButton value="Add Item" action="#{productMB.addAction()}" update="uwdetailstable"/>
+                        <p:commandButton value="Add Item" action="#{productMB.addAction()}" update="uwdetailstable"  ajax="true"/>
                     </f:facet>
 			</p:panel>
         	<p:panel id="uwdetailstable" header="Product Underwriting Details" style="margin-bottom:10px;">
-        		<p:dataTable value="#{productMB.productDetails.uwFieldsList}" var="uwField"  widgetVar="50" style="width: 60px;" editable="false">
+        		<p:dataTable value="#{productMB.productDetails.uwFieldsList}" var="uwField"  style="width:100%; padding:0px;" editable="false">
         			<p:column headerText="SRLNo">  
 		            	<h:outputText value="#{uwField.fieldOrder}" /> 
 		        	</p:column> 
@@ -73,6 +74,9 @@
 		        	</p:column>
 		        	<p:column headerText="FieldLength">  
 		            	<h:outputText value="#{uwField.fieldLength}" />
+		        	</p:column>
+		        	<p:column headerText="FieldValueType">  
+		            	<h:outputText value="#{uwField.fieldValueType}" />
 		        	</p:column>
         		</p:dataTable>
         	</p:panel>

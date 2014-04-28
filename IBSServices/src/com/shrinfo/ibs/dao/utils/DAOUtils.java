@@ -344,6 +344,7 @@ public class DAOUtils {
         if (!Utils.isEmpty(uwFieldVO.getFieldOrder())) {
             field.setSrlNo((long) uwFieldVO.getFieldOrder());
         }
+        field.setFieldValueType(uwFieldVO.getFieldValueType());
         field.setStatus(uwFieldVO.getIsStatusActive());
         return field;
     }

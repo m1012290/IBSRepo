@@ -201,6 +201,7 @@ public class MapperUtil {
         productUWFieldVO.setIsMandatory(fields.getIsMandatory());
         productUWFieldVO.setIsStatusActive(fields.getStatus());
         // productUWFieldVO.setResponse(fields.getFieldName());
+        productUWFieldVO.setFieldValueType(fields.getFieldValueType());
         if (!Utils.isEmpty(fields.getId())) {
             productUWFieldVO.setUwFieldId(fields.getId());
         }

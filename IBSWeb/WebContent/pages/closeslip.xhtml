@@ -55,9 +55,7 @@
 
 				
 				<p:panel header="Quote slip UW details" style="margin-bottom:10px;"> 
-						<custom:uwdetails value="#{quotationMB.quoteDetailVO.productDetails}" tablecols="8" prefix="quoteSlip"/>
-
-
+					<custom:uwdetails value="#{quotationMB.quoteDetailVO.productDetails}" tablecols="8" prefix="quoteSlip"/>
 				</p:panel>
 
 					  
@@ -107,7 +105,7 @@
 	            
                 <custom:uwdetails value="#{quotationMB.quoteDetailVO.productDetails}" tablecols="8" prefix="quoteAdding"/>
 
-                <h:commandButton value="Add Item" action="#{quotationMB.addAction()}" update="quotationList"/>
+                <p:commandButton value="Add Item" action="#{quotationMB.addAction()}" update="quotationList" style="float:right:20px;"/>
 
                 <p:spacer height="30px;"/>
 		</p:panel>

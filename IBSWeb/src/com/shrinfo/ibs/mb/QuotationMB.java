@@ -277,7 +277,11 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 
 
 		QuoteDetailVO temp = this.getQuoteDetailTableData(this.quoteDetailVO);
-		temp.setProductDetails(this.getProductFieldVOTableData(this.quoteDetailVO, "quoteAdding"));
+		ProductVO productVO = this.getProductFieldVOTableData(this.quoteDetailVO, "quoteAdding");
+		if(Utils.isEmpty(productVO)){
+		    return null; //there must be some validation failure of underwriting fields hence breaking it here
+		}
+		temp.setProductDetails(productVO);
 		this.quoteDetailList.add(temp);
 		this.quoteDetailVODataModel = new QuoteDetailVODataModel(this.getQuoteDetailList());
 
@@ -320,7 +324,6 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 
 	private ProductVO getProductFieldVOTableData(QuoteDetailVO quoteDetailVO, String prefix){
 
-
 		// populate UW Field details
 		ProductVO productVO = new ProductVO();
 		productVO.setProductClass(quoteDetailVO.getProductDetails().getProductClass());
@@ -330,18 +333,50 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 		Map<String, String> requestMap = fc.getExternalContext().getRequestParameterMap();
 
 		List<ProductUWFieldVO> uwFieldList = new ArrayList<ProductUWFieldVO>();
+		boolean allUWFieldValid = true;
 		if (!Utils.isEmpty(requestMap)) {
 			String response = null;
 			for (ProductUWFieldVO uwField : quoteDetailVO.getProductDetails()
 					.getUwFieldsList()) {
-				/*response =
-						requestMap.get(Utils.concat(prefix+"_field_", String.valueOf(uwField.getFieldOrder())));*/
 				response = requestMap.get(this.getComponentClientId(uwField, prefix + "_"));
 				uwField.setResponse(response);
+				
+                //validate underwriting answers in order to check if answer formats are in 
+                //accordance to values defined in the table
+                if(validateUWFieldResponseIsEmpty(uwField)){
+                    allUWFieldValid = false;
+                    
+                    continue;//continue with next field value is empty though the field is defined as mandatory
+                }
+                
+                if(uwField.getFieldValueType().equalsIgnoreCase(AppConstants.UW_FIELD_VALUE_TYPE_NUMERIC)){
+                    if(!validateUWFieldIsNumeric(uwField)){
+                        allUWFieldValid = false;
+                        FacesContext.getCurrentInstance().addMessage(
+                            "",
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, Utils.concat("Please enter valid numeric value for ", uwField.getFieldName()),
+                                Utils.concat("Please enter value for ", uwField.getFieldName())));
+                        continue;//invalid value type entered for the field
+                    }
+                }
+                
+                if(uwField.getFieldValueType().equalsIgnoreCase(AppConstants.UW_FIELD_VALUE_TYPE_DATE)){
+                    if(!validateUWFieldIsDate(uwField)){
+                        allUWFieldValid = false;
+                        FacesContext.getCurrentInstance().addMessage(
+                            "",
+                            new FacesMessage(FacesMessage.SEVERITY_ERROR, Utils.concat("Please enter valid date for ", uwField.getFieldName()),
+                                Utils.concat("Please enter value for ", uwField.getFieldName())));
+                        continue;//invalid date format for the field
+                    }
+                }
 				uwFieldList.add(this.getProductUwFieldVOClone(uwField));
 			}
 		}
-
+	    if(!allUWFieldValid){
+            return null;
+        }
+		
 		productVO.setUwFieldsList(uwFieldList);
 
 		return productVO;
@@ -359,7 +394,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 		clone.setResponse(fieldVO.getResponse());
 		clone.setUwFieldId(fieldVO.getUwFieldId());
 		clone.setFieldLength(fieldVO.getFieldLength());
-
+		clone.setFieldValueType(fieldVO.getFieldValueType());
 		return clone;
 
 
@@ -426,6 +461,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 					new HashMap<InsCompanyVO, QuoteDetailVO>();
 
 			this.recommendedFlagcnt = 0;
+			boolean validResponseForUWFields = true;
 			for (Entry<InsCompanyVO, QuoteDetailVO> entry : this.policyDetails.getQuoteDetails()
 					.entrySet()) {
 				QuoteDetailVO quoteDetVO = entry.getValue();
@@ -453,7 +489,12 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 						// status as active
 						quoteDetVO.setStatusCode(1);
 						// populate UW Field details
-						quoteDetVO.setProductDetails(this.getProductFieldVOTableData(quoteDetailVO, "quoteAdded_"+quoteDetailVO.getCompanyCode()));
+						ProductVO productVO = this.getProductFieldVOTableData(quoteDetailVO, "quoteAdded_"+quoteDetailVO.getCompanyCode());
+						if(Utils.isEmpty(productVO)){
+						    validResponseForUWFields = false;
+						    continue; // there must be some validation error on underwriting fields hence proceed with next quote record 
+						}
+						quoteDetVO.setProductDetails(productVO);
 						quoteDetVO.setPolicyTerm(quoteDetailVO.getPolicyTerm());
 
 						addedQuotes.put(entry.getKey(), quoteDetVO);
@@ -461,6 +502,9 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 						break;
 					}
 				}
+			}
+			if(!validResponseForUWFields){
+			    return null;// break here as there are validation errors for Underwriting fields under quote comparison section
 			}
 			Map<InsCompanyVO, QuoteDetailVO> tempMap = new HashMap<InsCompanyVO, QuoteDetailVO>();
 			tempMap.putAll(this.policyDetails.getQuoteDetails());
