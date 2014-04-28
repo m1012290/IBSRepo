@@ -281,7 +281,11 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
         QuotationMB quotation =
             (QuotationMB) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
                     .get("quotationMB");
+        QuoteSlipMB quoteSlipMB =
+                (QuoteSlipMB) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+                        .get("quoteSlipMB");
         this.quoteDetailVO = quotation.getQuoteDetailVOClosed();
+        this.quoteDetailVO.setQuoteSlipDate(quoteSlipMB.getQuoteDetailVO().getQuoteSlipDate());
         this.insuredDetails = quotation.getInsuredDetails();
         if (Utils.isEmpty(this.quoteDetailVO.getQuoteId())) {
             FacesContext.getCurrentInstance().addMessage(

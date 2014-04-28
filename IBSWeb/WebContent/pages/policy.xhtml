@@ -43,8 +43,8 @@
 						            <p:inputText id="quoteSlipVersion" value="#{policyMB.quoteDetailVO.quoteSlipVersion}" readonly="true"  required="false" />  
 						            
 						            <h:outputLabel for="quoteSlipDate" value="Quote Slip Date" />  
-						            <p:inputText id="quoteSlipDate" value="#{policyMB.quoteDetailVO.quoteSlipDate}"  required="false" />  
-						    
+						            <p:calendar id="quoteSlipDate" readonly="true" disabled="true" pattern="dd/MM/yyyy" value="#{policyMB.quoteDetailVO.quoteSlipDate}" required="false"/> 
+						            						    
 						            <h:outputLabel for="policyNum" value="Policy Number" />  
 						            <p:inputText id="policyNum" value="#{policyMB.policyVO.policyNo}" required="true" />  
 						            

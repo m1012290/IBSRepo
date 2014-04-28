@@ -105,7 +105,7 @@
 						            <p:inputText id="quoteSlipVersion" value="#{quoteSlipMB.quoteDetailVO.quoteSlipVersion}" readonly="true" required="false" />  
 						            
 						            <h:outputLabel for="quoteSlipDate" value="Quote Slip Date" />  
-						            <p:calendar value="#{quoteSlipMB.quoteDetailVO.quoteSlipDate}" id="popupCal" />  
+						            <p:calendar readonlyInput="true" pattern="dd/MM/yyyy" value="#{quoteSlipMB.quoteDetailVO.quoteSlipDate}" id="popupCal" />  
 						            	
 
 									<h:outputLabel value="Remarks: *" />
