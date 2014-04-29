@@ -34,10 +34,10 @@
                 </p:panelGrid>
                 <p:spacer height="30px;"/>
 			</p:panel>
-			<p:panel header="Product Underwriting Details">
+			<p:panel id="uwdetailsaddsection" header="Product Underwriting Details">
 				<h:panelGrid columns="8">
                     <h:outputLabel for="srlno" value="SRL No" />
-					<p:inputText value="#{productMB.productUWDetails.fieldOrder}"/>
+					<p:inputText value="#{productMB.fieldSrlNo}"/>
 					<h:outputLabel for="fieldname" value="Field Name" />
                     <p:inputText value="#{productMB.productUWDetails.fieldName}"/>
                     <h:outputLabel for="fieldtype" value="Field Type" />
@@ -55,10 +55,10 @@
 	        		</p:selectOneMenu>
 	        		
                     <h:outputLabel for="fieldlength" value="Field Length" />
-                    <p:inputText value="#{productMB.productUWDetails.fieldLength}"/>
+                    <p:inputText value="#{productMB.fieldLength}"/>
                  </h:panelGrid>
                     <f:facet name="footer">
-                        <p:commandButton value="Add Item" action="#{productMB.addAction()}" update="uwdetailstable"  ajax="true"/>
+                        <p:commandButton value="Add Item" action="#{productMB.addAction()}" update="uwdetailsaddsection,uwdetailstable"  ajax="true"/>
                     </f:facet>
 			</p:panel>
         	<p:panel id="uwdetailstable" header="Product Underwriting Details" style="margin-bottom:10px;">

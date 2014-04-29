@@ -15,9 +15,7 @@
     	<ui:define name="content">
     			
     			<h:form id="form">
-    			
-    			<p:growl id="messages1" showDetail="true"/>
-				
+    							
 				<p:panel id="referalpanel" style="padding:0px; border: none">
     				
     				<p:messages id="messages" autoUpdate="true" closable="true" /> 
@@ -215,7 +213,7 @@
 			<p:commandButton value="Generate CloseSlipDoc" action="#{quotationMB.generatePDFForCloseSlip()}"  style="float:right:20px;" />
 			
 
-			<p:blockUI block="referalpanel" widgetVar="bui" blocked="#{quotationMB.screenFreeze}"> Referral message </p:blockUI>
+			<p:blockUI block="referalpanel" widgetVar="bui" blocked="#{quotationMB.screenFreeze}">Entity is under referral process hence cannot be modified unless approved</p:blockUI>
 
 					   	
 	   		</h:form>

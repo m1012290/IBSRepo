@@ -32,17 +32,43 @@ public class ProductMB extends BaseManagedBean implements java.io.Serializable{
     private ProductUWFieldVO productUWDetails = new ProductUWFieldVO();
     private Map<String,String> insCompanies = new HashMap<String, String>();
     private List<String> selectedInsCompanies = new ArrayList<String>();
+    private Integer fieldSrlNo;
+    private Integer fieldLength;
+    
+    // This is an important method which is overriden from parent managed bean
+    // this is an reinitializer block which includes all the instance fields which are bound to form
+    // this method is necessary as managed beans are defined as sessionscoped beans
+    protected void reinitializeBeanFields() {
+        this.productDetails = new ProductVO();
+        this.productUWDetails = new ProductUWFieldVO();
+        this.insCompanies = new HashMap<String, String>();
+        this.selectedInsCompanies = new ArrayList<String>();
+        this.fieldSrlNo = null;
+        this.fieldLength = null;
+    }
     
     public String addAction(){
         ProductUWFieldVO productUWFieldVO = new ProductUWFieldVO();
-        productUWFieldVO.setFieldOrder(this.productUWDetails.getFieldOrder());
+        //productUWFieldVO.setFieldOrder(this.productUWDetails.getFieldOrder());
+        productUWFieldVO.setFieldOrder(this.fieldSrlNo);
         productUWFieldVO.setFieldName(this.productUWDetails.getFieldName());
         productUWFieldVO.setFieldType(this.productUWDetails.getFieldType());
-        productUWFieldVO.setFieldLength(this.productUWDetails.getFieldLength());
+        //productUWFieldVO.setFieldLength(this.productUWDetails.getFieldLength());
+        productUWFieldVO.setFieldLength(this.fieldLength);
         productUWFieldVO.setFieldValueType(this.productUWDetails.getFieldValueType());
+        if( this.productDetails.getUwFieldsList().contains(productUWFieldVO) ){
+            FacesContext.getCurrentInstance().addMessage("ERROR_PRODUCT_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Underwriting field with same srl no has already been added"));
+            return null;
+        }
         this.productDetails.getUwFieldsList().add(productUWFieldVO);
+        //reinitialize product underwriting details
+        this.productUWDetails = new ProductUWFieldVO();
+        this.fieldLength = null;
+        this.fieldSrlNo = null;
         return null;
     }
+    
+    
     
     public String save(){
         try{
@@ -54,6 +80,10 @@ public class ProductMB extends BaseManagedBean implements java.io.Serializable{
             return null;
         }
         FacesContext.getCurrentInstance().addMessage("ERROR_PRODUCT_SAVE", new FacesMessage(FacesMessage.SEVERITY_INFO,null, "Data Saved Successfully"));
+        FacesContext fc = FacesContext.getCurrentInstance();
+        Map map=fc.getExternalContext().getSessionMap();
+        MenuMB menuMB = new MenuMB();
+        menuMB.redirectToHomePage();
         return null;
     }
     
@@ -98,9 +128,24 @@ public class ProductMB extends BaseManagedBean implements java.io.Serializable{
         this.selectedInsCompanies = selectedInsCompanies;
     }
 
-    @Override
-    protected void reinitializeBeanFields() {
-        // TODO Auto-generated method stub
-        
+    
+    public Integer getFieldSrlNo() {
+        return fieldSrlNo;
     }
+
+    
+    public void setFieldSrlNo(Integer fieldSrlNo) {
+        this.fieldSrlNo = fieldSrlNo;
+    }
+
+    
+    public Integer getFieldLength() {
+        return fieldLength;
+    }
+
+    
+    public void setFieldLength(Integer fieldLength) {
+        this.fieldLength = fieldLength;
+    }
+
 }

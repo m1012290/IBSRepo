@@ -717,9 +717,13 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 	public void setQuoteDetailVODataModel(QuoteDetailVODataModel quoteDetailVODataModel) {
 		this.quoteDetailVODataModel = quoteDetailVODataModel;
 	}
-
+ 
 	public String generatePDFForCloseSlip(){
-
+	    //perform save operation first on click of next button
+        /*
+	    if(Utils.isEmpty(this.save())){
+            return null;
+        }*/
 		try {
 			QuoteSlipPDFGenerator quoteSlipPDFGenerator=new QuoteSlipPDFGenerator();
 			Map<InsCompanyVO, QuoteDetailVO>  mapOfQuoteDets = this.policyDetails.getQuoteDetails();

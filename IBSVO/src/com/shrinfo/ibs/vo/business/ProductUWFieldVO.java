@@ -36,8 +36,7 @@ public class ProductUWFieldVO extends BaseVO implements Comparable<ProductUWFiel
 
     private String response;
 
-
-
+    
     public Long getTableId() {
         return tableId;
     }
@@ -142,5 +141,29 @@ public class ProductUWFieldVO extends BaseVO implements Comparable<ProductUWFiel
         if (this.fieldOrder < arg0.fieldOrder)
             return -1;
         return 0;
+    }
+
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + fieldOrder;
+        return result;
+    }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ProductUWFieldVO other = (ProductUWFieldVO) obj;
+        if (fieldOrder != other.fieldOrder)
+            return false;
+        return true;
     }
 }

@@ -2,6 +2,9 @@
  * 
  */
 package com.shrinfo.ibs.util;
+import java.util.Map;
+
+import javax.faces.context.FacesContext;
 
 
 /**
@@ -27,7 +30,7 @@ public class AppConstants {
 	public static final String BEAN_NAME_CLOSING_SLIP_PAGE = "quotationMB";
 	public static final String BEAN_NAME_POLICY_PAGE = "policyMB";
 	public static final String BEAN_NAME_LOGIN_PAGE = "loginBean";
-	
+	public static final String BEAN_NAME_BREAD_CRUMB = "menuMB";
 
 	public static final String UW_FIELD_VALUE_TYPE_NUMERIC = "Numeric";
 	public static final String UW_FIELD_VALUE_TYPE_CHARACTERS = "Characters";

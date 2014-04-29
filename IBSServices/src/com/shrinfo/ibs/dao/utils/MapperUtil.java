@@ -188,7 +188,7 @@ public class MapperUtil {
             productUWFieldVO = new ProductUWFieldVO();
         }
 
-        if (Utils.isEmpty(fields.getFieldLength())) {
+        if (!Utils.isEmpty(fields.getFieldLength())) {
             productUWFieldVO.setFieldLength(fields.getFieldLength().intValue());
         }
 
