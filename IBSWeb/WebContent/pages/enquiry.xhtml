@@ -51,7 +51,7 @@
 				            <h:outputLabel for="mobileNumberID" value="Mobile Number" />  
 				            <p:inputText id="mobileNumberID" value="#{enquirySearchMB.mobNumber}" 
 				            required="false" label="Mobile Number"  requiredMessage="Please enter the MobileNumber" converterMessage="Alphabets are not allowed , Please Enter the Correct Mobile Number" validatorMessage="MobileNumber should be of 8 digits">
-							<f:convertNumber integerOnly="true" type="number" for="mobileNumberID"/>
+							<f:convertNumber integerOnly="true" type="number" for="mobileNumberID" pattern="###"/>
 							<f:validateLength minimum="8" maximum="8"  for="mobileNumberID"/>  
 							</p:inputText>
 				            
@@ -66,19 +66,19 @@
 				            <h:outputLabel for="enquiryID" value="Enquiry Number" />  
 				            <p:inputText id="enquiryID" value="#{enquirySearchMB.enquiryNumber}"  
 				            required="false" converterMessage="Enquiry Number should be a Number" >
-							<f:convertNumber integerOnly="true" type="number" for="enquiryID"/>
+							<f:convertNumber integerOnly="true" type="number" for="enquiryID" pattern="###"/>
 							</p:inputText> 
 				  
 				            <h:outputLabel for="quoteSlipID" value="QuoteSlip Number" />  
 				            <p:inputText id="quoteSlipID" value="#{enquirySearchMB.quoteSlipNumber}" 
 				            required="false" converterMessage="QuoteSlip Number should be a Number" >
-							<f:convertNumber integerOnly="true" type="number" for="quoteSlipID"/>
+							<f:convertNumber integerOnly="true" type="number" for="quoteSlipID" pattern="###"/>
 							</p:inputText>   
 				            
 				            <h:outputLabel for="policyNumber" value="Policy Id" />
 				            <p:inputText id="policyNumber" value="#{enquirySearchMB.policyNumber}" 
 				           	required="false" converterMessage="Policy Number should be a Number" >
-							<f:convertNumber integerOnly="true" type="number" for="policyNumber"/>
+							<f:convertNumber integerOnly="true" type="number" for="policyNumber" pattern="###"/>
 							</p:inputText>   
 				            
 				        </h:panelGrid> 

@@ -43,21 +43,21 @@
 						            <h:outputLabel for="primMobNum" value="Mobile Number *" />  
 						            <p:inputText id="primMobNum" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.mobileNo}" 
 						            	required="true" label="Mobile Number"  requiredMessage="Please enter the MobileNumber" converterMessage="Alphabets are not allowed , Please Enter the Correct Mobile Number" validatorMessage="MobileNumber should be of 8 digits">
-										<f:convertNumber integerOnly="true" type="number" for="primMobNum"/>
+										<f:convertNumber integerOnly="true" type="number" for="primMobNum" pattern="###"/>
 										<f:validateLength minimum="8" maximum="8"  for="primMobNum"/>  
 									</p:inputText>
 						            
 						            <h:outputLabel for="primLandNum" value="LandLine Number" /> 
 						       		<p:inputText id="primLandNum" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.landlineNo}" 
 						       		required="false" converterMessage="Alphabets are not allowed , Please enter the correct LandLine Number" validatorMessage="LandLine Number should be of 8 digits">
-									<f:convertNumber integerOnly="true" type="number" for="primLandNum"/>
+									<f:convertNumber integerOnly="true" type="number" for="primLandNum" pattern="###"/>
 									<f:validateLength minimum="8" maximum="8"  for="primLandNum"/>  
 									</p:inputText> 
             					
 						            <h:outputLabel for="faxNum" value="Fax Number" />  
 						            <p:inputText id="faxNum" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.faxNo}" 
 						            required="false" converterMessage="Alphabets are not allowed ,Please enter the correct Fax Number" validatorMessage="Fax Number should not be more than 50 characters">
-									<f:convertNumber integerOnly="true" type="number" for="faxNum"/>
+									<f:convertNumber integerOnly="true" type="number" for="faxNum" pattern="###"/>
 									<f:validateLength maximum="25"  for="faxNum"/>  	
 									</p:inputText>
 						            
@@ -86,7 +86,7 @@
 						            <h:outputLabel for="poBox" value="PO Box *" />  
 						            <p:inputText id="poBox" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.addressVO.poBox}" 
 						            required="true"  label="PO Box" requiredMessage="Please enter the PO Box Number" converterMessage="Alphabets are not allowed, Please enter the correct PO Box Number">
-					   				<f:convertNumber integerOnly="true" type="number" for="poBox"/>
+					   				<f:convertNumber integerOnly="true" type="number" for="poBox" pattern="###"/>
 					   				<f:validateLength maximum="10"  for="poBox"/> 
 					   				</p:inputText> 
 						            

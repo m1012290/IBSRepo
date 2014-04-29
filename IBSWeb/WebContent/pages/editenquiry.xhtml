@@ -133,7 +133,7 @@
 						<p:inputText id="primMobNum"
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.mobileNo}"
 							required="true" label="Mobile Number"  requiredMessage="Please enter the MobileNumber" converterMessage="Alphabets are not allowed , Please Enter the Correct Mobile Number" validatorMessage="MobileNumber should be of 8 digits">
-						<f:convertNumber  integerOnly="true" type="number" for="primMobNum"/>
+						<f:convertNumber  integerOnly="true" type="number" for="primMobNum" pattern="###"/>
 						
 						<f:validateLength minimum="8" maximum="8"  for="primMobNum"/>  
 						</p:inputText>
@@ -143,7 +143,7 @@
 						<p:inputText id="primLandNum"
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.landlineNo}"
 							required="false" converterMessage="Alphabets are not allowed , Please enter the correct LandLine Number" validatorMessage="LandLine Number should be of 8 digits">
-						<f:convertNumber integerOnly="true" type="number" for="primLandNum"/>
+						<f:convertNumber integerOnly="true" type="number" for="primLandNum"  pattern="###"/>
 						<f:validateLength minimum="8" maximum="8"  for="primLandNum"/>  
 						</p:inputText>
 						
@@ -153,7 +153,7 @@
 						<p:inputText id="faxNum"
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.faxNo}"
 							required="false" converterMessage="Alphabets are not allowed ,Please enter the correct Fax Number" validatorMessage="fax number should not be more than 25 digits">
-						<f:convertNumber integerOnly="true" type="number" for="faxNum"/>
+						<f:convertNumber integerOnly="true" type="number" for="faxNum"  pattern="###"/>
 						<f:validateLength maximum="25"  for="faxNum"/>  	
 						</p:inputText> 
 
@@ -188,7 +188,7 @@
 						<p:inputText id="poBox"
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.addressVO.poBox}"
 							required="true"  label="PO Box" requiredMessage="Please enter the PO Box Number" converterMessage="Alphabets are not allowed, Please enter the correct PO Box Number" validatorMessage="POBox number should not be more than 10 digits">
-					   <f:convertNumber integerOnly="true" type="number" for="poBox"/>
+					   <f:convertNumber integerOnly="true" type="number" for="poBox"  pattern="###"/>
 					   <f:validateLength maximum="10"  for="poBox"/> 
 					   </p:inputText>
 							
@@ -198,7 +198,7 @@
 						<p:inputText id="locLatitude"
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.addressVO.lattitude}"
 							required="false" converterMessage="Location Latitude should be a Number" validatorMessage="Location Latitude should not be more than 5 digits">
-						<f:convertNumber integerOnly="true" type="number" for="locLatitude"/>
+						<f:convertNumber integerOnly="true" type="number" for="locLatitude"  pattern="###"/>
 						<f:validateLength maximum="5"  for="locLatitude"/> 
 						</p:inputText>
 
@@ -207,7 +207,7 @@
 						<p:inputText id="locLongitude"
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.addressVO.longitude}"
 							required="false" converterMessage="Location Longitude should be a Number" validatorMessage="Location Longitude should not be more than 5 digits">
-						<f:convertNumber integerOnly="true" type="number" for="locLongitude"/>
+						<f:convertNumber integerOnly="true" type="number" for="locLongitude"  pattern="###"/>
 						<f:validateLength maximum="5"  for="locLatitude"/> 
 						</p:inputText>
 
@@ -225,7 +225,7 @@
 						<p:inputText id="altMobNum1"
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.alternateMobileNo1}"
 							required="false" label="Alternate MobileNumber1" converterMessage="Alphabets are not allowed , Please Enter the Correct Alternate MobileNumber1" validatorMessage="Alternate MobileNumber1 should be of 8 digits">
-						<f:convertNumber integerOnly="true" type="number" for="altMobNum1"/>
+						<f:convertNumber integerOnly="true" type="number" for="altMobNum1"  pattern="###"/>
 						<f:validateLength minimum="8" maximum="8"  for="altMobNum1"/>  
 						</p:inputText>
 
@@ -234,7 +234,7 @@
 						<p:inputText id="altLandNum1"
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.alternateLandlineNo1}"
 							required="false" converterMessage="Alphabets are not allowed , Please enter the correct Alternate LandLineNumber1" validatorMessage="Alternate LandLineNumber1 should be of 8 digits">
-						<f:convertNumber integerOnly="true" type="number" for="altLandNum1"/>
+						<f:convertNumber integerOnly="true" type="number" for="altLandNum1" pattern="###"/>
 						<f:validateLength minimum="8" maximum="8"  for="altLandNum1"/>  
 						</p:inputText>
 
@@ -251,7 +251,7 @@
 						<p:inputText id="altMobNum2"
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.alternateMobileNo2}"
 							required="false" label="Alternate MobileNumber2" converterMessage="Alphabets are not allowed , Please Enter the Correct Alternate MobileNumber2" validatorMessage="Alternate MobileNumber2 should be of 8 digits">
-						<f:convertNumber integerOnly="true" type="number" for="altMobNum2"/>
+						<f:convertNumber integerOnly="true" type="number" for="altMobNum2" pattern="###"/>
 						<f:validateLength minimum="8" maximum="8"  for="altMobNum2"/>  
 						</p:inputText>
 
@@ -260,7 +260,7 @@
 						<p:inputText id="altLandNum2"
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.alternateLandLineNo2}"
 							required="false" converterMessage="Alphabets are not allowed , Please enter the correct Alternate LandLineNumber2" validatorMessage="Alternate LandLineNumber2 should be of 8 digits">
-						<f:convertNumber integerOnly="true" type="number" for="altLandNum2"/>
+						<f:convertNumber integerOnly="true" type="number" for="altLandNum2" pattern="###"/>
 						<f:validateLength minimum="8" maximum="8"  for="altLandNum2"/> 
 						</p:inputText> 
 
