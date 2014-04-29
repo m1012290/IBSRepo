@@ -417,5 +417,9 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 
 		return null;
 	}
+	
+	public String back() {
+	    return "editenquiry";
+	}
 
 }

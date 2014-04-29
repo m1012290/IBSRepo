@@ -775,4 +775,8 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 		this.saveReferralTask(taskVO);//perform referral save task
 		return super.saveReferralTask();
 	}
+	
+	public String back() {
+        return "quoteslip";
+    }
 }

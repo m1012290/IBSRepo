@@ -203,11 +203,12 @@
 				<!-- referral related dialog box ends -->										  			
 	  		</p:panel>
 	  		
+	  		<p:commandButton value="Back" action="#{quotationMB.back}" process="@this" style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
 			<p:commandButton value="Save" action="#{quotationMB.save}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" icon="ui-icon-disk"  style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
 
 			<p:commandButton value="Next" action="#{quotationMB.next}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" style="float:right:20px;" />
 
-			<p:commandButton value="Generate&EmailClosingSlip" action="#{quotationMB.generatePDFForCloseSlip()}"  style="float:right:20px;" />
+			<p:commandButton value="Generate and EmailClosingSlip" action="#{quotationMB.generatePDFForCloseSlip()}"  style="float:right:20px;" />
 			
 
 			<p:blockUI block="referalpanel" widgetVar="bui" blocked="#{quotationMB.screenFreeze}">Entity is under referral process hence cannot be modified unless approved</p:blockUI>

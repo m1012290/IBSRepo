@@ -322,4 +322,7 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
 
     }
 
+    public String back() {
+        return "closeslip";
+    }
 }

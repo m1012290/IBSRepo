@@ -174,6 +174,7 @@
 	  			</p:dialog>
 				<!-- referral related dialog box ends -->		
 				</p:panel>
+			<p:commandButton value="Back" action="#{quoteSlipMB.back}" process="@this" style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
 			<p:commandButton value="Save" action="#{quoteSlipMB.save}"  update="messages, panelProductDetails, panelInsured, referralsection" oncomplete="handleSaveResponse(xhr, status, args)" icon="ui-icon-disk"  style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
 			<p:commandButton value="Next" action="#{quoteSlipMB.next}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
 			<p:commandButton value="GenerateAndEmailQuoteSlip" action="#{quoteSlipMB.generatePDFForQuoteSlip()}" update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" style="float:right:20px;" />

@@ -108,6 +108,7 @@
 				</p:panel>
 				</p:panel>
 					   
+					   	<p:commandButton value="Back" action="#{policyMB.back}" process="@this" style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
 						<p:commandButton value="Save" ajax="false" action="#{policyMB.save}"  update="messages,panelPolicy" icon="ui-icon-disk"  style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
 						
 						<p:blockUI block="referalpanel" widgetVar="bui" blocked="#{policyMB.screenFreeze}"> Referral message </p:blockUI>
