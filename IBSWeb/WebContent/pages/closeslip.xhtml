@@ -177,10 +177,7 @@
 						</h:panelGrid>
 					</p:outputPanel>
 				</p:dialog>
-
-
-
-
+				<!-- referral related dialog box begins -->
 				<p:dialog header="Referral Section" widgetVar="referraldialog">
 					<p:panel id="referralsection">	
 						<h:panelGrid columns="4">
@@ -203,14 +200,14 @@
 						<p:commandButton value="Save" action="#{quotationMB.saveReferralTask}" icon="ui-icon-disk" style="float:right:20px;" />
 	  				</p:panel>
 	  			</p:dialog>
-	  			
+				<!-- referral related dialog box ends -->										  			
 	  		</p:panel>
 	  		
 			<p:commandButton value="Save" action="#{quotationMB.save}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" icon="ui-icon-disk"  style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
 
 			<p:commandButton value="Next" action="#{quotationMB.next}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" style="float:right:20px;" />
 
-			<p:commandButton value="Generate CloseSlipDoc" action="#{quotationMB.generatePDFForCloseSlip()}"  style="float:right:20px;" />
+			<p:commandButton value="Generate&EmailClosingSlip" action="#{quotationMB.generatePDFForCloseSlip()}"  style="float:right:20px;" />
 			
 
 			<p:blockUI block="referalpanel" widgetVar="bui" blocked="#{quotationMB.screenFreeze}">Entity is under referral process hence cannot be modified unless approved</p:blockUI>

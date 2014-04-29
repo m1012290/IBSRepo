@@ -21,6 +21,7 @@ import com.shrinfo.ibs.cmn.exception.BusinessException;
 import com.shrinfo.ibs.cmn.exception.SystemException;
 import com.shrinfo.ibs.cmn.logger.Logger;
 import com.shrinfo.ibs.cmn.utils.Utils;
+import com.shrinfo.ibs.cmn.vo.UserVO;
 import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
 import com.shrinfo.ibs.docgen.QuoteSlipPDFGenerator;
 import com.shrinfo.ibs.helper.ReferralHelper;
@@ -28,6 +29,7 @@ import com.shrinfo.ibs.util.AppConstants;
 import com.shrinfo.ibs.util.MasterDataRetrievalUtil;
 import com.shrinfo.ibs.vo.app.SectionId;
 import com.shrinfo.ibs.vo.business.EnquiryVO;
+import com.shrinfo.ibs.vo.business.IBSUserVO;
 import com.shrinfo.ibs.vo.business.InsCompanyVO;
 import com.shrinfo.ibs.vo.business.InsuredVO;
 import com.shrinfo.ibs.vo.business.LookupVO;
@@ -35,6 +37,7 @@ import com.shrinfo.ibs.vo.business.PolicyVO;
 import com.shrinfo.ibs.vo.business.ProductUWFieldVO;
 import com.shrinfo.ibs.vo.business.ProductVO;
 import com.shrinfo.ibs.vo.business.QuoteDetailVO;
+import com.shrinfo.ibs.vo.business.StatusVO;
 import com.shrinfo.ibs.vo.business.TaskVO;
 
 @ManagedBean(name="quoteSlipMB")
@@ -75,6 +78,7 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 		this.insuredDetails=new InsuredVO();
 		this.policyVO = new PolicyVO();
 		this.renderCustomUWComponent = Boolean.FALSE;
+		this.setSaveFromReferralDialog("false");
 		this.screenFreeze = Boolean.FALSE;
 	}
 
@@ -182,7 +186,7 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 			}
 
 			Map map=fc.getExternalContext().getSessionMap();
-			EditCustEnqDetailsMB editCustEnqDetailsMB=(EditCustEnqDetailsMB) map.get("editCustEnqDetailsMB");
+			EditCustEnqDetailsMB editCustEnqDetailsMB=(EditCustEnqDetailsMB) map.get(AppConstants.BEAN_NAME_ENQUIRY_PAGE);
 			EnquiryVO enquiryDetails=editCustEnqDetailsMB.getEnquiryVO();
 			policyVO.setPolicyNo(editCustEnqDetailsMB.getPolicyNum());//added
 			this.insuredDetails.setCustomerDetails(enquiryDetails.getCustomerDetails());
@@ -208,21 +212,23 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 			}
 			policyVO.setQuoteDetails(quoteDetMap);
 			// Before performing save operation let's check if there are any referrals
-			TaskVO taskVO = ReferralHelper.checkForReferrals(policyVO, SectionId.QUOTESLIP);
-			if(!Utils.isEmpty(taskVO)){
-				this.setReferralDesc(taskVO.getDesc());
-				RequestContext context = RequestContext.getCurrentInstance();
-				if( context.isAjaxRequest() ){
-					context.addCallbackParam("referral", Boolean.TRUE);
-					return null;
-				}
-			}
+            //if(!Utils.isEmpty(this.getSaveFromReferralDialog()) && "true".equalsIgnoreCase(this.getSaveFromReferralDialog())){
+            if(Utils.isEmpty(this.getSaveFromReferralDialog())){
+                TaskVO taskVO = ReferralHelper.checkForReferrals(policyVO, SectionId.QUOTESLIP);
+                if(!Utils.isEmpty(taskVO)){
+                    this.setReferralDesc(taskVO.getDesc());
+                    RequestContext context = RequestContext.getCurrentInstance();
+                    if( context.isAjaxRequest() ){
+                        context.addCallbackParam("referral", Boolean.TRUE);
+                        return null;
+                    }
+                }
+            }
 			policyVO=(PolicyVO) ServiceTaskExecutor.INSTANCE.executeSvc("quoteSlipSvc","createQuoteSlip",policyVO);
 			this.policyVO = policyVO;
 			Set<Entry<InsCompanyVO, QuoteDetailVO>> quouEntries = policyVO.getQuoteDetails().entrySet();
 			Iterator<Entry<InsCompanyVO, QuoteDetailVO>> it = quouEntries.iterator();
 			this.quoteDetailVO = it.next().getValue();
-
 		}catch(BusinessException be){
 			logger.error(be, "Exception ["+ be +"] encountered while saving customer/enquiry details");
 			FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Unexpected error encountered", null));
@@ -345,8 +351,42 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 		}
 		return "quoteslip";
 	}
+	@Override
+	public String saveReferralTask() {
+        this.setSaveFromReferralDialog("true");//highlight that save is getting invoked from referral dialog window
+        this.save();//perform save operation first and then save the referral data
+        
+        Map map=FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+        
+        EditCustEnqDetailsMB editCustEnqDetailsMB=(EditCustEnqDetailsMB) map.get(AppConstants.BEAN_NAME_ENQUIRY_PAGE);
+        LoginMB loginMB = (LoginMB)map.get(AppConstants.BEAN_NAME_LOGIN_PAGE);
+        //construct TaskVO to save referral desc
+        TaskVO taskVO = new TaskVO();
+        taskVO.setDesc(this.getReferralDesc());
+        StatusVO statusVO = new StatusVO();
+        statusVO.setCode(Integer.valueOf(Utils.getSingleValueAppConfig("STATUS_REFERRED")));//referred status
+        statusVO.setDesc("Referred");
+        taskVO.setStatusVO(statusVO);
+        taskVO.setEnquiry(editCustEnqDetailsMB.getEnquiryVO());
+        taskVO.setDocumentId(String.valueOf(getQuoteDetailVO().getQuoteSlipId()));
+        taskVO.setAssignerUser(loginMB.getUserDetails());
+        UserVO assigneeUser = new IBSUserVO();
+        assigneeUser.setUserId(this.getAssigneeUser());
+        taskVO.setAssigneeUser(assigneeUser);
+        taskVO.setTaskType(Integer.valueOf(Utils.getSingleValueAppConfig("TASK_TYPE_REFERRAL")));
+        taskVO.setTaskSectionType(Integer.valueOf(Utils.getSingleValueAppConfig("SECTION_ID_QUOTESLIP")));
+        this.saveReferralTask(taskVO);//perform referral save task
+        return super.saveReferralTask();
+	}
+	
+	
 	public String generatePDFForQuoteSlip(){
 
+	    //perform save operation first on click of next button
+        String response = this.save();
+        if(Utils.isEmpty(response)){//some issue with save hence breaking it here
+            return null;
+        }
 		try {
 			QuoteSlipPDFGenerator quoteSlipPDFGenerator=new QuoteSlipPDFGenerator();
 			Map<InsCompanyVO, QuoteDetailVO>  mapOfQuoteDets = this.policyVO.getQuoteDetails();

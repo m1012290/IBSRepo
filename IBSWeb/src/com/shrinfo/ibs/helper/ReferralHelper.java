@@ -48,6 +48,7 @@ public class ReferralHelper {
         IBSUserVO ibsUser = (IBSUserVO) userDetails;
         Iterator<Entry<InsCompanyVO, QuoteDetailVO>> iterator = policyVO.getQuoteDetails().entrySet().iterator();
         for( UserRoleVO userRoleVO : ibsUser.getRoles() ){
+            boolean checkForQuoteSlip = false;
             while(iterator.hasNext()){
                 Entry<InsCompanyVO, QuoteDetailVO> entryObj = iterator.next();
                 for( UserRolePrivilege userRolePrivilege : userRoleVO.getRoleProductPrivileges() ){
@@ -62,6 +63,9 @@ public class ReferralHelper {
                                 break;
                             case QUOTESLIP:
                                 taskVO = quoteSlipScreenReferrals(entryObj.getValue(), userRolePrivilege);
+                                //referral is being checked for quote slip screen hence break away once
+                                //details are tested for one of the company records (replicated across other company records)
+                                checkForQuoteSlip = true;
                                 break;
                             default:
                                 throw new BusinessException("referralhandler.invalidsectionid", null, "Invalid section id passed, please check the same");
@@ -69,6 +73,7 @@ public class ReferralHelper {
                         break;
                     }
                 }
+                if(checkForQuoteSlip) break; //breakaway if true
             }
         }
         if(!Utils.isEmpty(taskVO) && !Utils.isEmpty(policyVO.getEnquiryDetails())){
