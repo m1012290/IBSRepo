@@ -28,14 +28,22 @@
 	                    
 				        <p:column headerText="Enquiry Number">  
 				            <h:outputText value="#{task.enquiry.enquiryNo}" />  
-				        </p:column>  
+				        </p:column> 
+				        
+				        <p:column headerText="Customer name">  
+				            <h:outputText value="#{task.enquiry.customerDetails.name}" />  
+				        </p:column> 
+				        
+				        <p:column headerText="Customer ID">  
+				            <h:outputText value="#{task.enquiry.customerDetails.customerId}" />  
+				        </p:column> 
 				  
 				        <p:column headerText="Referral description">  
 				            <h:outputText value="#{task.desc}" />  
 				        </p:column> 
 				        
 				        <p:column headerText="Assigned by">  
-				            <h:outputText value="#{task.assignerUser.loginName}" />  
+				            <h:outputText value="#{task.assignerUser.userName}" />  
 				        </p:column>
 			        
 	    			</p:dataTable> 

@@ -1,8 +1,15 @@
 package com.shrinfo.ibs.task.svc;
 
 import com.shrinfo.ibs.base.service.BaseService;
+import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.cmn.vo.BaseVO;
+import com.shrinfo.ibs.cmn.vo.UserVO;
+import com.shrinfo.ibs.enquiry.dao.EnquiryDao;
 import com.shrinfo.ibs.task.dao.TaskDao;
+import com.shrinfo.ibs.userdets.dao.UserDetailsDao;
+import com.shrinfo.ibs.vo.business.EnquiryVO;
+import com.shrinfo.ibs.vo.business.TaskItemsVO;
+import com.shrinfo.ibs.vo.business.TaskVO;
 
 /**
  * 
@@ -13,6 +20,10 @@ import com.shrinfo.ibs.task.dao.TaskDao;
 public class ReferralTaskServiceImpl extends BaseService implements ReferralTaskService {
 
     TaskDao taskDao;
+
+    EnquiryDao enquiryDao;
+    
+    UserDetailsDao userDetailsDao; 
 
     @Override
     public Object invokeMethod(String methodName, Object... args) {
@@ -32,7 +43,18 @@ public class ReferralTaskServiceImpl extends BaseService implements ReferralTask
 
     @Override
     public BaseVO getTasks(BaseVO userVO) {
-        return taskDao.getTasks(userVO);
+        TaskItemsVO taskItemsVO = (TaskItemsVO) taskDao.getTasks(userVO);
+        if (!Utils.isEmpty(taskItemsVO) && !Utils.isEmpty(taskItemsVO.getTaskVOs())) {
+            EnquiryVO enquiryVO = null;
+            for (TaskVO task : taskItemsVO.getTaskVOs()) {
+                enquiryVO = new EnquiryVO();
+                enquiryVO.setEnquiryNo(task.getEnquiry().getEnquiryNo());
+                task.setEnquiry((EnquiryVO) enquiryDao.getEnquiryDetail(enquiryVO));
+                
+                task.setAssignerUser((UserVO)userDetailsDao.getUserDetails(task.getAssignerUser()));                
+            }
+        }
+        return taskItemsVO;
     }
 
     @Override
@@ -49,5 +71,16 @@ public class ReferralTaskServiceImpl extends BaseService implements ReferralTask
     public void setTaskDao(TaskDao taskDao) {
         this.taskDao = taskDao;
     }
+
+    
+    public void setEnquiryDao(EnquiryDao enquiryDao) {
+        this.enquiryDao = enquiryDao;
+    }
+
+    
+    public void setUserDetailsDao(UserDetailsDao userDetailsDao) {
+        this.userDetailsDao = userDetailsDao;
+    }   
+    
 
 }
