@@ -61,6 +61,8 @@ public class PolicyVO extends BaseVO {
     private String isQuoteConvertedToPolicy;
 
     private DocumentListVO docListUploaded;
+    
+    private AppFlow appFlow;
 
 
 
@@ -309,7 +311,19 @@ public class PolicyVO extends BaseVO {
     }
 
 
-    public static long getSerialversionuid() {
+    public AppFlow getAppFlow() {
+		return appFlow;
+	}
+
+
+
+	public void setAppFlow(AppFlow appFlow) {
+		this.appFlow = appFlow;
+	}
+
+
+
+	public static long getSerialversionuid() {
         return serialVersionUID;
     }
 

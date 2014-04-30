@@ -8,12 +8,16 @@ import java.sql.Blob;
 import java.sql.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.hibernate.HibernateException;
 import org.hibernate.lob.BlobImpl;
+import org.springframework.orm.hibernate3.HibernateTemplate;
 
+import com.shrinfo.ibs.cmn.exception.BusinessException;
 import com.shrinfo.ibs.cmn.logger.Logger;
 import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.cmn.vo.BaseVO;
@@ -757,6 +761,32 @@ public class DAOUtils {
         ibsDocument.setId(documentVO.getId());
 
         return ibsDocument;
+    }
+    
+    /**
+     * Returns IbsTask object based on the enquiry no passed to this method
+     * @param hibernateTemplate
+     * @param enquiryNo
+     * @return null in case enquiry no is null
+     */
+    public static IbsTask queryTaskTblForEnquiryNo(HibernateTemplate hibernateTemplate, Long enquiryNo){
+        if(Utils.isEmpty(enquiryNo)){
+        	return null;
+        }
+    	
+    	List objList = null;
+        try {
+            objList =  hibernateTemplate.find(
+                " from IbsTask ibsTask where ibsTask.enquiryNo = ?",
+                enquiryNo);
+        } catch (HibernateException hibernateException) {
+            throw new BusinessException("pas.gi.couldNotGetTaskDetails", hibernateException,
+                "Error while fecthing Task details");
+        }
+        if(!Utils.isEmpty(objList)) {
+            return (IbsTask)objList.get(0);
+        }
+    	return null;
     }
 
 }

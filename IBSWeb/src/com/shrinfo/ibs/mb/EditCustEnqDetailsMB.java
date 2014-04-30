@@ -18,6 +18,7 @@ import com.shrinfo.ibs.cmn.logger.Logger;
 import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
 import com.shrinfo.ibs.util.AppConstants;
+import com.shrinfo.ibs.vo.business.AppFlow;
 import com.shrinfo.ibs.vo.business.ContactVO;
 import com.shrinfo.ibs.vo.business.EnquiryVO;
 import com.shrinfo.ibs.vo.business.InsuredVO;
@@ -186,7 +187,7 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
         this.policyVO = new PolicyVO();
         this.insuredDetails = new InsuredVO();
         this.screenFreeze = Boolean.FALSE;
-
+        this.setAppFlow(null);//reinitialize appflow value
     }
 
     public EditCustEnqDetailsMB() {
@@ -552,6 +553,7 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
             if(!Utils.isEmpty(policyVO)) {
                 this.quoteSlipId = policyVO.getQuoteDetails().entrySet().iterator().next().getValue().getQuoteSlipId();
             }
+            this.setAppFlow(AppFlow.REFERRAL_APPROVAL);
             FacesContext.getCurrentInstance().getExternalContext().redirect("editenquiry.xhtml");
         } catch (IOException e) {
             logger.error(e, "Exception [" + e

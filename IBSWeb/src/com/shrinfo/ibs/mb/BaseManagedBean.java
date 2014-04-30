@@ -18,6 +18,7 @@ import com.shrinfo.ibs.ui.customcomponent.UWDetailsComponent;
 import com.shrinfo.ibs.util.AppConstants;
 import com.shrinfo.ibs.util.MasterDataRetrievalUtil;
 import com.shrinfo.ibs.vo.app.EnquiryType;
+import com.shrinfo.ibs.vo.business.AppFlow;
 import com.shrinfo.ibs.vo.business.ProductUWFieldVO;
 import com.shrinfo.ibs.vo.business.TaskVO;
 
@@ -41,7 +42,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private String referralDesc = new String();
 	private String saveFromReferralDialog;
 	private Long assigneeUser;
-	
+	private AppFlow appFlow;
 
 	public Map<String, String> getTitles() {
 		return this.titles;
@@ -158,7 +159,17 @@ public abstract class BaseManagedBean implements Serializable {
     }
 
 
-    //public constructor
+    public AppFlow getAppFlow() {
+		return appFlow;
+	}
+
+
+	public void setAppFlow(AppFlow appFlow) {
+		this.appFlow = appFlow;
+	}
+
+
+	//public constructor
 	public BaseManagedBean(){
 		this.titles.put("Business Executive ", "Business Executive");
 		this.titles.put(" Govt Servant", "Govt Servant");
@@ -284,7 +295,8 @@ public abstract class BaseManagedBean implements Serializable {
         if(null == statusCode || 3 != statusCode) {
             return null;
         }
-        TaskVO userTask= null;
+        
+        /*
         try{
             userTask = (TaskVO) ServiceTaskExecutor.INSTANCE.executeSvc("referralTaskSvc", "getTask", taskVO);
         }catch (Exception ex) {
@@ -293,7 +305,8 @@ public abstract class BaseManagedBean implements Serializable {
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
                             "Error retrieving referral task details, please try again after sometime"));
             ex.printStackTrace();
-        }
+        }*/
+        TaskVO userTask = executeTaskSvcForTaskDetails(taskVO);
         if(Utils.isEmpty(userTask)) {
             return null;
         }
@@ -302,6 +315,21 @@ public abstract class BaseManagedBean implements Serializable {
         }
         return null;
     }
+	
+	public TaskVO executeTaskSvcForTaskDetails(TaskVO taskVO){
+		TaskVO userTask= null;
+        try{
+            userTask = (TaskVO) ServiceTaskExecutor.INSTANCE.executeSvc("referralTaskSvc", "getTask", taskVO);
+        }catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(
+                    "ERROR_TASK_SAVE",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+                            "Error retrieving referral task details, please try again after sometime"));
+            ex.printStackTrace();
+            return null;
+        }
+        return userTask;
+	}
 	
 	
 	public boolean validateUWFieldResponseIsEmpty(ProductUWFieldVO uwFieldVO){

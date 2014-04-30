@@ -28,6 +28,7 @@ import com.shrinfo.ibs.helper.ReferralHelper;
 import com.shrinfo.ibs.util.AppConstants;
 import com.shrinfo.ibs.util.MasterDataRetrievalUtil;
 import com.shrinfo.ibs.vo.app.SectionId;
+import com.shrinfo.ibs.vo.business.AppFlow;
 import com.shrinfo.ibs.vo.business.EnquiryVO;
 import com.shrinfo.ibs.vo.business.IBSUserVO;
 import com.shrinfo.ibs.vo.business.InsCompanyVO;
@@ -80,6 +81,7 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 		this.renderCustomUWComponent = Boolean.FALSE;
 		this.setSaveFromReferralDialog("false");
 		this.screenFreeze = Boolean.FALSE;
+		this.setAppFlow(null);
 	}
 
 	public Map<String, String> getInsCompanies() {
@@ -188,6 +190,21 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 			Map map=fc.getExternalContext().getSessionMap();
 			EditCustEnqDetailsMB editCustEnqDetailsMB=(EditCustEnqDetailsMB) map.get(AppConstants.BEAN_NAME_ENQUIRY_PAGE);
 			EnquiryVO enquiryDetails=editCustEnqDetailsMB.getEnquiryVO();
+			// Before proceeding validate if this is referral approval flow
+			if(!Utils.isEmpty(editCustEnqDetailsMB.getAppFlow())){
+				if(editCustEnqDetailsMB.getAppFlow().equals(AppFlow.REFERRAL_APPROVAL)){
+					/*
+					TaskVO taskVO = new TaskVO();
+					taskVO.setEnquiry(enquiryDetails);
+					TaskVO svcResponse = executeTaskSvcForTaskDetails(taskVO);
+					StatusVO statusVO = new StatusVO();
+					statusVO.setCode(Integer.valueOf(Utils.getSingleValueAppConfig("STATUS_APPROVED")));
+					svcResponse.setStatusVO(statusVO);
+					*/
+					policyVO.setAppFlow(AppFlow.REFERRAL_APPROVAL);
+				}
+			}
+			
 			policyVO.setPolicyNo(editCustEnqDetailsMB.getPolicyNum());//added
 			this.insuredDetails.setCustomerDetails(enquiryDetails.getCustomerDetails());
 			List<String> companiesList=null;
@@ -213,7 +230,7 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 			policyVO.setQuoteDetails(quoteDetMap);
 			// Before performing save operation let's check if there are any referrals
             //if(!Utils.isEmpty(this.getSaveFromReferralDialog()) && "true".equalsIgnoreCase(this.getSaveFromReferralDialog())){
-            if(Utils.isEmpty(this.getSaveFromReferralDialog())){
+            if(Utils.isEmpty(this.getSaveFromReferralDialog()) || "false".equalsIgnoreCase(this.getSaveFromReferralDialog())){
                 TaskVO taskVO = ReferralHelper.checkForReferrals(policyVO, SectionId.QUOTESLIP);
                 if(!Utils.isEmpty(taskVO)){
                     this.setReferralDesc(taskVO.getDesc());
@@ -242,7 +259,8 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 			FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Unexpected error encountered, please try again after sometime"));
 			return null;
 		}
-		FacesContext.getCurrentInstance().addMessage("MESSAGE_SUCCESS", new FacesMessage(FacesMessage.SEVERITY_INFO,"Insured Details: Data saved successfully. Quote slip NO:"+this.quoteDetailVO.getQuoteSlipId(),"Data saved successfully. Quote slip NO:"+this.quoteDetailVO.getQuoteSlipId()));
+		
+		FacesContext.getCurrentInstance().addMessage("MESSAGE_SUCCESS", new FacesMessage(FacesMessage.SEVERITY_INFO,"Insured Details: Data saved successfully. Quote slip No:"+this.quoteDetailVO.getQuoteSlipId(),"Data saved successfully. Quote slip NO:"+this.quoteDetailVO.getQuoteSlipId()));
 
 		return "SUCCESS";
 	}

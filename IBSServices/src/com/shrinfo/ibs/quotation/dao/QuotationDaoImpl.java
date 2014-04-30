@@ -17,6 +17,9 @@ import com.shrinfo.ibs.dao.utils.MapperUtil;
 import com.shrinfo.ibs.gen.pojo.IbsQuoteComparisionDetail;
 import com.shrinfo.ibs.gen.pojo.IbsQuoteComparisionHeader;
 import com.shrinfo.ibs.gen.pojo.IbsStatusMaster;
+import com.shrinfo.ibs.gen.pojo.IbsTask;
+import com.shrinfo.ibs.vo.app.SectionId;
+import com.shrinfo.ibs.vo.business.AppFlow;
 import com.shrinfo.ibs.vo.business.PolicyVO;
 import com.shrinfo.ibs.vo.business.QuoteDetailVO;
 
@@ -120,7 +123,24 @@ public class QuotationDaoImpl extends BaseDBDAO implements QuotationDao {
                 logger.info("This is a quotation create flow.");
             }
             saveOrUpdate(ibsQuoteHeaderToBeSaved);
-
+            //once save is performed check if we are in referral approval then we also need to
+            //update task table records status.
+            PolicyVO inputVO = (PolicyVO)baseVO;
+            if(!Utils.isEmpty(inputVO.getAppFlow())){
+            	if(AppFlow.REFERRAL_APPROVAL.equals(inputVO.getAppFlow())){
+            		//retrieve existing task details
+            		IbsTask ibsTask = DAOUtils.queryTaskTblForEnquiryNo(getHibernateTemplate(), inputVO.getEnquiryDetails().getEnquiryNo());
+            		//check now if we need to be updating task table status through task_section_type
+            		//value saved to task table
+            		if(ibsTask.getTaskSectionType().intValue() == SectionId.CLOSINGSLIP.getSectionId() ){
+            			IbsStatusMaster ibsStatusMaster = ibsTask.getIbsStatusMaster();
+            			ibsStatusMaster.setCode(Long.valueOf(Utils.getSingleValueAppConfig("STATUS_APPROVED")));
+            			ibsTask.setIbsStatusMaster(ibsStatusMaster);
+            			//perform saveorupdate of ibsTask so that we have status as approved within task table
+            			saveOrUpdate(ibsTask);
+            		}
+            	}
+            }
 
         } catch (HibernateException hibernateException) {
             throw new BusinessException("pas.gi.couldNotSaveQuotationDetails", hibernateException,

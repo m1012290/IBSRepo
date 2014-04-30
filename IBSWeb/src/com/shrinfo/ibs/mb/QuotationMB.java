@@ -29,6 +29,7 @@ import com.shrinfo.ibs.helper.ReferralHelper;
 import com.shrinfo.ibs.util.AppConstants;
 import com.shrinfo.ibs.util.MasterDataRetrievalUtil;
 import com.shrinfo.ibs.vo.app.SectionId;
+import com.shrinfo.ibs.vo.business.AppFlow;
 import com.shrinfo.ibs.vo.business.IBSUserVO;
 import com.shrinfo.ibs.vo.business.InsCompanyVO;
 import com.shrinfo.ibs.vo.business.InsuredVO;
@@ -457,9 +458,27 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 		}
 		PolicyVO policyDetails = new PolicyVO();
 		try {
+			// Before proceeding validate if this is referral approval flow
+			FacesContext fc = FacesContext.getCurrentInstance();
+	        Map map=fc.getExternalContext().getSessionMap();		
+	        EditCustEnqDetailsMB editCustEnqDetailsMB = (EditCustEnqDetailsMB) map.get(AppConstants.BEAN_NAME_ENQUIRY_PAGE);
+			if(!Utils.isEmpty(editCustEnqDetailsMB.getAppFlow())){
+				if(editCustEnqDetailsMB.getAppFlow().equals(AppFlow.REFERRAL_APPROVAL)){
+					/*
+					TaskVO taskVO = new TaskVO();
+					taskVO.setEnquiry(enquiryDetails);
+					TaskVO svcResponse = executeTaskSvcForTaskDetails(taskVO);
+					StatusVO statusVO = new StatusVO();
+					statusVO.setCode(Integer.valueOf(Utils.getSingleValueAppConfig("STATUS_APPROVED")));
+					svcResponse.setStatusVO(statusVO);
+					*/
+					this.policyDetails.setAppFlow(AppFlow.REFERRAL_APPROVAL);
+				}
+			}
+			
 			Map<InsCompanyVO, QuoteDetailVO> addedQuotes =
 					new HashMap<InsCompanyVO, QuoteDetailVO>();
-
+				
 			this.recommendedFlagcnt = 0;
 			boolean validResponseForUWFields = true;
 			for (Entry<InsCompanyVO, QuoteDetailVO> entry : this.policyDetails.getQuoteDetails()
@@ -522,7 +541,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 
 			// Before performing save operation let's check if there are any referrals
 			//if(!Utils.isEmpty(this.getSaveFromReferralDialog()) && "true".equalsIgnoreCase(this.getSaveFromReferralDialog())){
-			if(Utils.isEmpty(this.getSaveFromReferralDialog())){
+			if(Utils.isEmpty(this.getSaveFromReferralDialog()) || "false".equalsIgnoreCase(this.getSaveFromReferralDialog())){
 			    TaskVO taskVO = ReferralHelper.checkForReferrals(this.policyDetails, SectionId.CLOSINGSLIP);
 				if(!Utils.isEmpty(taskVO)){
 					this.setReferralDesc(taskVO.getDesc());

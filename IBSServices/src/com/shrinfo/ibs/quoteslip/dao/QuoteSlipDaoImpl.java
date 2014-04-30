@@ -19,6 +19,9 @@ import com.shrinfo.ibs.gen.pojo.IbsQuoteSlipDetail;
 import com.shrinfo.ibs.gen.pojo.IbsQuoteSlipHeader;
 import com.shrinfo.ibs.gen.pojo.IbsQuoteSlipHeaderId;
 import com.shrinfo.ibs.gen.pojo.IbsStatusMaster;
+import com.shrinfo.ibs.gen.pojo.IbsTask;
+import com.shrinfo.ibs.vo.app.SectionId;
+import com.shrinfo.ibs.vo.business.AppFlow;
 import com.shrinfo.ibs.vo.business.PolicyVO;
 import com.shrinfo.ibs.vo.business.QuoteDetailVO;
 
@@ -153,6 +156,25 @@ public class QuoteSlipDaoImpl extends BaseDBDAO implements QuoteSlipDao {
             saveOrUpdate(quoteSlipHeaderToBeSaved);
 
             MapperUtil.populatePolicyVO(policyVO, quoteSlipHeaderToBeSaved);
+            
+            //once save is performed check if we are in referral approval then we also need to
+            //update task table records status. This code is added here in order to keep task table
+            //update as part of transaction so that our data.
+            if(!Utils.isEmpty(policyVO.getAppFlow())){
+            	if(AppFlow.REFERRAL_APPROVAL.equals(policyVO.getAppFlow())){
+            		//retrieve existing task details
+            		IbsTask ibsTask = DAOUtils.queryTaskTblForEnquiryNo(getHibernateTemplate(), policyVO.getEnquiryDetails().getEnquiryNo());
+            		//check now if we need to be updating task table status through task_section_type
+            		//value saved to task table
+            		if(ibsTask.getTaskSectionType().intValue() == SectionId.QUOTESLIP.getSectionId() ){
+            			IbsStatusMaster ibsStatusMaster = ibsTask.getIbsStatusMaster();
+            			ibsStatusMaster.setCode(Long.valueOf(Utils.getSingleValueAppConfig("STATUS_APPROVED")));
+            			ibsTask.setIbsStatusMaster(ibsStatusMaster);
+            			//perform saveorupdate of ibsTask so that we have status as approved within task table
+            			saveOrUpdate(ibsTask);
+            		}
+            	}
+            }
 
         } catch (HibernateException hibernateException) {
             throw new BusinessException("pas.gi.couldNotSaveQuoteSlipDetails", hibernateException,
