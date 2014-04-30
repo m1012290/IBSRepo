@@ -3,12 +3,14 @@
  */
 package com.shrinfo.ibs.mb;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
 import com.shrinfo.ibs.cmn.exception.BusinessException;
@@ -148,10 +150,16 @@ public class LoginMB extends BaseManagedBean implements Serializable {
                 loginManageBean.getUserDetails());
         this.taskDataModel = new TaskItemVODataModel(this.referralTaskItems.getTaskVOs());
     }
+    
+    public void logout() throws IOException {
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        ec.invalidateSession();
+        ec.redirect(ec.getRequestContextPath() + "/faces/pages/login.xhtml");
+    }
 
     @Override
     protected void reinitializeBeanFields() {
         // TODO Auto-generated method stub
-        
+        loadTaskList();
     }
 }
