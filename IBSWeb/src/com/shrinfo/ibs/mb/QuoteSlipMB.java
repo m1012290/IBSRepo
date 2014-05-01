@@ -230,7 +230,7 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 			policyVO.setQuoteDetails(quoteDetMap);
 			// Before performing save operation let's check if there are any referrals
             //if(!Utils.isEmpty(this.getSaveFromReferralDialog()) && "true".equalsIgnoreCase(this.getSaveFromReferralDialog())){
-            if(Utils.isEmpty(this.getSaveFromReferralDialog()) || "false".equalsIgnoreCase(this.getSaveFromReferralDialog())){
+            if((Utils.isEmpty(this.getSaveFromReferralDialog()) || "false".equalsIgnoreCase(this.getSaveFromReferralDialog())) && !AppFlow.REFERRAL_APPROVED.equals(editCustEnqDetailsMB.getAppFlow())){
                 TaskVO taskVO = ReferralHelper.checkForReferrals(policyVO, SectionId.QUOTESLIP);
                 if(!Utils.isEmpty(taskVO)){
                     this.setReferralDesc(taskVO.getDesc());

@@ -208,10 +208,10 @@
 
 			<p:commandButton value="Next" action="#{quotationMB.next}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" style="float:right:20px;" />
 
-			<p:commandButton value="GenerateandEmailClosingSlip" action="#{quotationMB.generatePDFForCloseSlip()}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" style="float:right:20px;" />
+			<p:commandButton value="GenerateandEmailClosingSlip" action="#{quotationMB.generatePDFForCloseSlip()}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" style="float:right:20px;" disabled="#{quotationMB.screenFreeze}"/>
 			
 
-			<p:blockUI block="referalpanel" widgetVar="bui" blocked="#{quotationMB.screenFreeze}">Entity is under referral process hence cannot be modified unless approved</p:blockUI>
+			<p:blockUI block="referalpanel" widgetVar="bui" blocked="#{quotationMB.screenFreeze}"/>
 
 					   	
 	   		</h:form>

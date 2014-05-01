@@ -292,7 +292,8 @@ public abstract class BaseManagedBean implements Serializable {
 	 * @return
 	 */
 	public TaskVO checkReferral(UserVO userVO, TaskVO taskVO, Integer statusCode) {
-        if(null == statusCode || 3 != statusCode) {
+        
+	    if(null == statusCode || 3 != statusCode) {
             return null;
         }
         
@@ -310,9 +311,14 @@ public abstract class BaseManagedBean implements Serializable {
         if(Utils.isEmpty(userTask)) {
             return null;
         }
+        //update AppFlow to REFERRAL_APPROVED in case task record status has changed to STATUS_APPROVED 
+        if(userTask.getStatusVO().getCode().intValue() == Integer.valueOf(Utils.getSingleValueAppConfig("STATUS_APPROVED")).intValue()){
+            this.appFlow = AppFlow.REFERRAL_APPROVED;
+        }
         if(userTask.getAssigneeUser().getUserId().longValue() != userVO.getUserId().longValue()) {
             return userTask;
         }
+
         return null;
     }
 	

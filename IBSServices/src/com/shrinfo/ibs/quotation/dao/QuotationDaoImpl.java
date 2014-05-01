@@ -130,14 +130,15 @@ public class QuotationDaoImpl extends BaseDBDAO implements QuotationDao {
             	if(AppFlow.REFERRAL_APPROVAL.equals(inputVO.getAppFlow())){
             		//retrieve existing task details
             		IbsTask ibsTask = DAOUtils.queryTaskTblForEnquiryNo(getHibernateTemplate(), inputVO.getEnquiryDetails().getEnquiryNo());
+            		getHibernateTemplate().evict(ibsTask);
             		//check now if we need to be updating task table status through task_section_type
             		//value saved to task table
             		if(ibsTask.getTaskSectionType().intValue() == SectionId.CLOSINGSLIP.getSectionId() ){
-            			IbsStatusMaster ibsStatusMaster = ibsTask.getIbsStatusMaster();
-            			ibsStatusMaster.setCode(Long.valueOf(Utils.getSingleValueAppConfig("STATUS_APPROVED")));
-            			ibsTask.setIbsStatusMaster(ibsStatusMaster);
-            			//perform saveorupdate of ibsTask so that we have status as approved within task table
-            			saveOrUpdate(ibsTask);
+            		    IbsStatusMaster ibsStatusMaster = new IbsStatusMaster();
+                        ibsStatusMaster.setCode(Long.valueOf(Utils.getSingleValueAppConfig("STATUS_APPROVED")));
+                        ibsTask.setIbsStatusMaster(ibsStatusMaster);
+                        //perform saveorupdate of ibsTask so that we have status as approved within task table
+                        update(ibsTask);
             		}
             	}
             }

@@ -540,9 +540,9 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 			}
 
 			// Before performing save operation let's check if there are any referrals
-			//if(!Utils.isEmpty(this.getSaveFromReferralDialog()) && "true".equalsIgnoreCase(this.getSaveFromReferralDialog())){
-			if(Utils.isEmpty(this.getSaveFromReferralDialog()) || "false".equalsIgnoreCase(this.getSaveFromReferralDialog())){
-			    TaskVO taskVO = ReferralHelper.checkForReferrals(this.policyDetails, SectionId.CLOSINGSLIP);
+            //if(!Utils.isEmpty(this.getSaveFromReferralDialog()) && "true".equalsIgnoreCase(this.getSaveFromReferralDialog())){
+            if((Utils.isEmpty(this.getSaveFromReferralDialog()) || "false".equalsIgnoreCase(this.getSaveFromReferralDialog())) && !AppFlow.REFERRAL_APPROVED.equals(editCustEnqDetailsMB.getAppFlow())){
+                TaskVO taskVO = ReferralHelper.checkForReferrals(this.policyDetails, SectionId.CLOSINGSLIP);
 				if(!Utils.isEmpty(taskVO)){
 					this.setReferralDesc(taskVO.getDesc());
 					RequestContext context = RequestContext.getCurrentInstance();

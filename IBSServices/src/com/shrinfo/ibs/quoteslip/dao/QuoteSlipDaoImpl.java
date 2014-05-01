@@ -164,14 +164,15 @@ public class QuoteSlipDaoImpl extends BaseDBDAO implements QuoteSlipDao {
             	if(AppFlow.REFERRAL_APPROVAL.equals(policyVO.getAppFlow())){
             		//retrieve existing task details
             		IbsTask ibsTask = DAOUtils.queryTaskTblForEnquiryNo(getHibernateTemplate(), policyVO.getEnquiryDetails().getEnquiryNo());
+            		getHibernateTemplate().evict(ibsTask);
             		//check now if we need to be updating task table status through task_section_type
             		//value saved to task table
             		if(ibsTask.getTaskSectionType().intValue() == SectionId.QUOTESLIP.getSectionId() ){
-            			IbsStatusMaster ibsStatusMaster = ibsTask.getIbsStatusMaster();
+            			IbsStatusMaster ibsStatusMaster = new IbsStatusMaster();
             			ibsStatusMaster.setCode(Long.valueOf(Utils.getSingleValueAppConfig("STATUS_APPROVED")));
             			ibsTask.setIbsStatusMaster(ibsStatusMaster);
             			//perform saveorupdate of ibsTask so that we have status as approved within task table
-            			saveOrUpdate(ibsTask);
+            			update(ibsTask);
             		}
             	}
             }
