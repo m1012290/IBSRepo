@@ -179,10 +179,11 @@
 				</p:dialog>
 				<!-- referral related dialog box begins -->
 				<p:dialog header="Referral Section" widgetVar="referraldialog">
+					<p:messages id="referralmessages" autoUpdate="true" closable="true" />
 					<p:panel id="referralsection">	
 						<h:panelGrid columns="4">
 							<h:outputLabel for="name" value="Referred By" />  
-						    <p:inputText id="referredby" value="#{quotationMB.referralDesc}" readonly="true" required="false" />	 	
+						    <p:inputText id="referredby" value="#{quotationMB.assignerUser}" readonly="true" required="false" />	 	
 
 
 							
@@ -197,7 +198,7 @@
 							<p:inputTextarea  id="referraldesc" value="#{quotationMB.referralDesc}"/>
 							
 						</h:panelGrid>	  				
-						<p:commandButton value="Save" action="#{quotationMB.saveReferralTask}" icon="ui-icon-disk" style="float:right:20px;" />
+						<p:commandButton value="Save" action="#{quotationMB.saveReferralTask}" update="referralmessages" icon="ui-icon-disk" style="float:right:20px;" />
 	  				</p:panel>
 	  			</p:dialog>
 				<!-- referral related dialog box ends -->										  			

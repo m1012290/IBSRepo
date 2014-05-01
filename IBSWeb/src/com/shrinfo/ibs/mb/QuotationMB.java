@@ -768,6 +768,10 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 
 	@Override
 	public String saveReferralTask() {
+	    //validate the referral window fields
+        if(!validateReferralFields()){
+            return null; //return as some field values are invalid on referral window.
+        }
 		this.setSaveFromReferralDialog("true");//highlight that save is getting invoked from referral dialog window
 		this.save();//perform save operation first and then save the referral data
 

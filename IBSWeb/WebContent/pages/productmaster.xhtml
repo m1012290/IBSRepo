@@ -37,7 +37,9 @@
 			<p:panel id="uwdetailsaddsection" header="Product Underwriting Details">
 				<h:panelGrid columns="8">
                     <h:outputLabel for="srlno" value="SRL No*" />
-					<p:inputText value="#{productMB.fieldSrlNo}" required="true" requiredMessage="Please enter srl no for the field"/>
+					<p:inputText id="srlno" value="#{productMB.fieldSrlNo}" required="true" requiredMessage="Please enter srl no for the field" converterMessage="Alphabets are not allowed for Srl No field">
+						<f:convertNumber  integerOnly="true" type="number" for="srlno" pattern="###"/>
+					</p:inputText>
 					<h:outputLabel for="fieldname" value="Field Name*" />
                     <p:inputText value="#{productMB.productUWDetails.fieldName}" required="true" requiredMessage="Please enter name for the field" />
                     <h:outputLabel for="fieldtype" value="Field Type*" />
@@ -55,7 +57,9 @@
 	        		</p:selectOneMenu>
 	        		
                     <h:outputLabel for="fieldlength" value="Field Length" />
-                    <p:inputText value="#{productMB.fieldLength}"/>
+                    <p:inputText id="fieldlength" value="#{productMB.fieldLength}" converterMessage="Alphabets are not allowed for Field Length">
+                    	<f:convertNumber  integerOnly="true" type="number" for="fieldlength" pattern="###"/>
+                    </p:inputText>
                  </h:panelGrid>
                     <f:facet name="footer">
                         <p:commandButton value="Add Item" action="#{productMB.addAction()}" update="uwdetailsaddsection,uwdetailstable"  ajax="true"/>

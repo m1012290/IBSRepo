@@ -41,6 +41,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private Map<String, String> usersList = new HashMap<String, String>();
 	private String referralDesc = new String();
 	private String saveFromReferralDialog;
+	private String assignerUser;
 	private Long assigneeUser;
 	private AppFlow appFlow;
 
@@ -169,7 +170,19 @@ public abstract class BaseManagedBean implements Serializable {
 	}
 
 
-	//public constructor
+	
+    public String getAssignerUser() {
+        return assignerUser;
+    }
+
+
+    
+    public void setAssignerUser(String assignerUser) {
+        this.assignerUser = assignerUser;
+    }
+
+
+    //public constructor
 	public BaseManagedBean(){
 		this.titles.put("Business Executive ", "Business Executive");
 		this.titles.put(" Govt Servant", "Govt Servant");
@@ -360,5 +373,29 @@ public abstract class BaseManagedBean implements Serializable {
 	
 	public boolean validateUWFieldIsDate(ProductUWFieldVO uwFieldVO){
 	    return Utils.isValidDate(uwFieldVO.getResponse());
+	}
+	
+	public boolean validateReferralFields(){
+	    boolean validFields = true;
+	    if(Utils.isEmpty(this.referralDesc)){
+	        validFields = false;
+	        FacesContext.getCurrentInstance().addMessage("REFERRAL_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Referral Desc cannot be blank", null));
+	    }
+	    if(Utils.isEmpty(this.assignerUser)){
+	        validFields = false;
+            FacesContext.getCurrentInstance().addMessage("REFERRAL_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Assigned by cannot be blank", null));
+	    }
+	    if(Utils.isEmpty(this.assigneeUser) || this.assigneeUser == 0l){
+            validFields = false;
+            FacesContext.getCurrentInstance().addMessage("REFERRAL_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Please select a user as assignee", null));
+        }
+	    // Validating if the user is selecting self as assignee user
+	    Map beansMap = FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+	    LoginMB loginMB = (LoginMB) beansMap.get(AppConstants.BEAN_NAME_LOGIN_PAGE);
+	    if( loginMB.getUserDetails().getUserId().longValue() == this.assigneeUser.longValue() ){
+	        validFields = false;
+            FacesContext.getCurrentInstance().addMessage("REFERRAL_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Please don't select yourself as assignee", null));
+	    }
+	    return validFields;
 	}
 }

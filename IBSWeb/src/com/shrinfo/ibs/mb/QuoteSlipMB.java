@@ -319,8 +319,11 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 		// for loading screens
 		try{
 			FacesContext fc = FacesContext.getCurrentInstance();
-			Map map=fc.getExternalContext().getSessionMap();
-			EditCustEnqDetailsMB editCustEnqDetailsMB=(EditCustEnqDetailsMB) map.get("editCustEnqDetailsMB");
+			Map beansMap=fc.getExternalContext().getSessionMap();
+			EditCustEnqDetailsMB editCustEnqDetailsMB=(EditCustEnqDetailsMB) beansMap.get("editCustEnqDetailsMB");
+			LoginMB loginManageBean = (LoginMB) beansMap.get(AppConstants.BEAN_NAME_LOGIN_PAGE);
+			//populate logged in user id to assigner user field which will be used within referral window
+            this.setAssignerUser(loginManageBean.getUserDetails().getUserName());
 			if(!Utils.isEmpty(editCustEnqDetailsMB.getQuoteSlipId())){
 				this.renderCustomUWComponent = true;
 				this.insuredDetails.setId(editCustEnqDetailsMB.getInsuredDetails().getId());
@@ -347,14 +350,13 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 				this.quoteDetailVO = mapOfQuoteDets.get(insCompanyVO);
 				
 				// Referral
-				TaskVO taskVO = new TaskVO();				
+				TaskVO taskVO = new TaskVO();		
 				taskVO.setEnquiry(policyVO.getEnquiryDetails());
-				LoginMB loginManageBean = (LoginMB) map.get("loginBean");
 				taskVO = this.checkReferral(loginManageBean.getUserDetails(), taskVO, 3);
 				if(!Utils.isEmpty(taskVO)) {
-				    this.screenFreeze = Boolean.TRUE;		    
+				    this.screenFreeze = Boolean.TRUE;
 				}
-
+				
 				// Populate insurane companies drop down also based on product class selected
 				LookupVO lookupVO = new LookupVO();
 				lookupVO.setCategory(AppConstants.LOOKUP_CATEGORY_INSCOMPPRODUCTLINK);
@@ -371,6 +373,10 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 	}
 	@Override
 	public String saveReferralTask() {
+	    //validate the referral window fields
+	    if(!validateReferralFields()){
+	        return null; //return as some field values are invalid on referral window.
+	    }
         this.setSaveFromReferralDialog("true");//highlight that save is getting invoked from referral dialog window
         this.save();//perform save operation first and then save the referral data
         
