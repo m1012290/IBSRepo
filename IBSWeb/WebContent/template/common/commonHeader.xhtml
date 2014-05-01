@@ -29,17 +29,11 @@
 				</f:facet>
 				
 				<f:facet name="options">
-					<h:link value="logout" outcome="login.xhtml" icon="ui-icon-extlink"/>
-					<p:commandButton type="button" value="Logout" icon="ui-icon-extlink" />					
+					<p:commandButton actionListener="#{loginBean.logout()}" value="Logout" icon="ui-icon-extlink" />					
 				</f:facet>
 				</p:menubar>
-				<p:breadCrumb>
-					<p:menuitem value="Home" ajax="false" action="#{menuMB.redirectToHomePage}" />
-					<p:menuitem value="Enquiry Details" url="editenquiry.xhtml" />
-					<p:menuitem value="Quote Slip Details" url="quoteslip.xhtml" />
-					<p:menuitem value="Closing Slip Details" url="closeslip.xhtml" />
-					<p:menuitem value="Policy Details" url="policy.xhtml" />
-					<p:menuitem value="Product Master" url="productmaster.xhtml" />
+				<p:breadCrumb 
+					model="#{menuMB.simpleMenuModel}">
 				</p:breadCrumb>
 	    	</h:form>
 	    </ui:composition>

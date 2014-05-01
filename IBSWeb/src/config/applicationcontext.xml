@@ -266,6 +266,8 @@
 	</bean>
 	<bean id="referralTaskSvcBean" class="com.shrinfo.ibs.task.svc.ReferralTaskServiceImpl">
 		<property name="taskDao" ref="referralTaskSvcDAOBean" />
+		<property name="enquiryDao" ref="enquirySvcDAOBean" />
+		<property name="userDetailsDao" ref="loginDetsSvcDAOBean" />
 	</bean>
 	<bean id="referralTaskSvcDAOBean" class="com.shrinfo.ibs.task.dao.TaskDaoImpl">
 		<property name="hibernateTemplate" ref="hibernateTemplate" />

@@ -36,8 +36,8 @@ public class TaskDaoImpl extends BaseDBDAO implements TaskDao {
         try {
             ibsTaskObjList =
                 getHibernateTemplate().find(
-                    " from IbsTask ibsTask where ibsTask.assigneeUserId = ?",
-                    ((UserVO) userVO).getUserId());
+                    " from IbsTask ibsTask where ibsTask.assigneeUserId = ? and ibsTask.ibsStatusMaster.code = ?",
+                    ((UserVO) userVO).getUserId(), 3l);
         } catch (HibernateException hibernateException) {
             throw new BusinessException("pas.gi.couldNotGetTaskDetails", hibernateException,
                 "Error while fecthing Task details");
