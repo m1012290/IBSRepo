@@ -216,7 +216,7 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 			//later remove it
 			this.quoteDetailVO.setStatusCode(1);
 			this.quoteDetailVO.setCustomerId(enquiryDetails.getCustomerDetails().getCustomerId());
-
+			//this.quoteDetailVO.setIsQuoteSlipEmailed("N");
 			Iterator<String> compItr=companiesList.iterator();
 			String compCodes;
 			InsCompanyVO insComp;
@@ -417,22 +417,35 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 				//this.selectedInsCompanies.add(insCompanyVO.getCode());
 				insCompanyVO =  (InsCompanyVO)ServiceTaskExecutor.INSTANCE.executeSvc("companySvc","getPolicy",insCompanyVO);
 				quoteSlipPDFGenerator.generatePDF(this.quoteDetailVO, this.insuredDetails, insCompanyVO.getContactAndAddrDetails(),insCompanyVO.getName(), Utils.getSingleValueAppConfig("quoteSlipfilePath")+"_"+new Date().getTime(), Utils.getSingleValueAppConfig("imagePath"));
-
 			}
-
-			FacesContext.getCurrentInstance().addMessage("SUCCESS_EMAIL_MSG", new FacesMessage(FacesMessage.SEVERITY_INFO,"Quoteslipdoc is successfully emailed to the selected insurance companies",null));
-
-			/*Iterator<String> companyItr=selectedInsCompanies.iterator();
-			while(companyItr.hasNext()){
-				String insComp=companyItr.next();
-				quoteSlipPDFGenerator.generatePDF(this.quoteDetailVO, this.insuredDetails, insCompanyVO.getContactAndAddrDetails(),insComp, Utils.getSingleValueAppConfig("quoteSlipfilePath")+"_"+new Date().getTime(), Utils.getSingleValueAppConfig("imagePath"));
-			}*/
-
+			
 		}catch(Exception e){
-			FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Error generating quote details document, see the error log"));
-
-		}
-
+		    FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Error generating quote details document, see the error log"));
+	    }
+    	try{
+    	    //update quote_slip_emailed to be updated within ibs_quote_slip_header
+    	    Set<Entry<InsCompanyVO, QuoteDetailVO>> quouEntries = this.policyVO.getQuoteDetails().entrySet();
+    	    Iterator<Entry<InsCompanyVO, QuoteDetailVO>> it = quouEntries.iterator();
+    	    QuoteDetailVO quoteDetailVO = new QuoteDetailVO();
+    	    quoteDetailVO.setQuoteSlipId(it.next().getValue().getQuoteSlipId());
+    	    quoteDetailVO.setQuoteSlipVersion(1l);
+    	    quoteDetailVO.setIsQuoteSlipEmailed("Y");
+    	    ServiceTaskExecutor.INSTANCE.executeSvc("quoteSlipSvc","updateEmailedQuoteSlipFlag",quoteDetailVO);
+    	    
+    	}catch(BusinessException be){
+            logger.error(be, "Exception ["+ be +"] encountered while updating email flag for quote slip");
+            FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Unexpected error encountered", null));
+            return null;
+        }catch(SystemException se){
+            logger.error(se, "Exception ["+ se +"] encountered while saving customer/enquiry details");
+            FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Unexpected error encountered, please try again after sometime"));
+            return null;
+        }catch(Exception ex){
+            logger.error(ex, "Exception ["+ ex +"] encountered while saving customer/enquiry details");
+            FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Unexpected error encountered, please try again after sometime"));
+            return null;
+        }
+        FacesContext.getCurrentInstance().addMessage("SUCCESS_EMAIL_MSG", new FacesMessage(FacesMessage.SEVERITY_INFO,"Quoteslipdoc is successfully emailed to the selected insurance companies",null));
 		return null;
 	}
 	

@@ -246,4 +246,28 @@ public class QuoteSlipDaoImpl extends BaseDBDAO implements QuoteSlipDao {
 
         return mergedQuoteSlipDetails;
     }
+
+    @Override
+    public BaseVO updateEmailedQuoteSlipFlag(BaseVO baseVO) {
+        if (null == baseVO) {
+            throw new BusinessException("cmn.unknownError", null, "Input cannot be null for updateEmailedQuoteSlipFlag service");
+        }
+        if (!(baseVO instanceof QuoteDetailVO)) {
+            throw new BusinessException("cmn.unknownError", null, "Input to be of QuoteDetailVO type for updateEmailedQuoteSlipFlag service");
+        }
+        try{
+            //retrieve save quote slip header details
+            IbsQuoteSlipHeader ibsQuoteSlipHeader = getQuoteSlipById(baseVO);
+            getHibernateTemplate().evict(ibsQuoteSlipHeader);
+            ibsQuoteSlipHeader.setQuoteSlipEmailed("Y");
+            update(ibsQuoteSlipHeader);
+        }catch (HibernateException hibernateException) {
+           throw new BusinessException("pas.gi.couldNotSaveQuoteSlipDetails", hibernateException,
+                    "Error while saving Quote Slip data");
+        }catch (Exception exception) {
+            throw new SystemException("pas.gi.couldNotSaveQuoteSlipDetails", exception,
+                    "Error while saving Quote Slip data");
+        }
+        return baseVO;
+    }
 }

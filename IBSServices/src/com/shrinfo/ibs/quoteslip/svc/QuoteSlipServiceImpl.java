@@ -35,6 +35,9 @@ public class QuoteSlipServiceImpl extends BaseService implements QuoteSlipServic
         if ("emailQuoteSlip".equals(methodName)) {
             // returnValue = emailQuoteSlip( (BaseVO) args[ 0 ], args );
         }
+        if("updateEmailedQuoteSlipFlag".equals(methodName)){
+            returnValue = updateEmailedQuoteSlipFlag((BaseVO) args[0]);
+        }
 
         return returnValue;
     }
@@ -92,6 +95,11 @@ public class QuoteSlipServiceImpl extends BaseService implements QuoteSlipServic
         quoteSlipPDFGenerator.generatePDF(quoteDetails, insuredDetails, contacts, companyName,
             filePath, imagePath);*/
         return null;
+    }
+    
+    @Override
+    public BaseVO updateEmailedQuoteSlipFlag(BaseVO baseVO) {
+        return quoteSlipDao.updateEmailedQuoteSlipFlag(baseVO);
     }
 
 

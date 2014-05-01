@@ -235,7 +235,11 @@ public abstract class BaseManagedBean implements Serializable {
 	 */
 	public String saveReferralTask(){
 		//to be overriden by child beans to perform referral save task
-		return "enquiry";
+	    //perform redirection to home page by invoking redirectToHomePage on menuMB. This will take care of performing reinitialization
+	    //task on all the beans in session
+	    MenuMB menuMB = new MenuMB();
+	    menuMB.redirectToHomePage();
+	    return null;
 	}
 
 	protected boolean saveReferralTask(TaskVO taskVO){

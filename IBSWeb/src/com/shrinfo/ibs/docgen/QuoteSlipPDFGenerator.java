@@ -25,7 +25,7 @@ import com.shrinfo.ibs.vo.business.QuoteDetailVO;
 public class QuoteSlipPDFGenerator {
 
     public void generatePDF(QuoteDetailVO quoteDetails, InsuredVO insuredDetails,
-            ContactVO contacts, String companyName, String filePath, String imagePath) {
+            ContactVO contacts, String companyName, String filePath, String imagePath) throws Exception {
 
         try {
         	
@@ -89,10 +89,11 @@ public class QuoteSlipPDFGenerator {
 
         } catch (Exception e) {
             e.printStackTrace();
+            throw e;
         }
     }
     public void generatePDFForCloseSlip(QuoteDetailVO quoteDetails, InsuredVO insuredDetails,
-            ContactVO contacts, String companyName, String filePath, String imagePath){
+            ContactVO contacts, String companyName, String filePath, String imagePath) throws Exception{
     	
         try {
         	
@@ -185,9 +186,8 @@ public class QuoteSlipPDFGenerator {
 
         } catch (Exception e) {
             e.printStackTrace();
+            throw e;
         }
-    	
-    	
     	
     }
 }
