@@ -128,7 +128,7 @@ public class ReferralHelper {
                 referralDesc.append("Your role doesn't allow you to email closing slip for this product").append("||");
             }
         }
-        if(Utils.isEmpty(userRolePrivilege.getMaxSiLimit()) && !Utils.isEmpty(quoteDetailVO.getSumInsured())){
+        if(!Utils.isEmpty(userRolePrivilege.getMaxSiLimit()) && !Utils.isEmpty(quoteDetailVO.getSumInsured())){
             if( userRolePrivilege.getMaxSiLimit().compareTo(quoteDetailVO.getSumInsured()) == -1) {
                 referralDesc.append("Your role has a limit of "+userRolePrivilege.getMaxSiLimit()+ "on maximum sum insured for this product").append("||");
             }
