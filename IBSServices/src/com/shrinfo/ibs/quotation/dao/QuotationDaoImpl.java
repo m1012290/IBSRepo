@@ -127,20 +127,21 @@ public class QuotationDaoImpl extends BaseDBDAO implements QuotationDao {
             //update task table records status.
             PolicyVO inputVO = (PolicyVO)baseVO;
             if(!Utils.isEmpty(inputVO.getAppFlow())){
-            	if(AppFlow.REFERRAL_APPROVAL.equals(inputVO.getAppFlow())){
-            		//retrieve existing task details
-            		IbsTask ibsTask = DAOUtils.queryTaskTblForEnquiryNo(getHibernateTemplate(), inputVO.getEnquiryDetails().getEnquiryNo());
-            		getHibernateTemplate().evict(ibsTask);
-            		//check now if we need to be updating task table status through task_section_type
-            		//value saved to task table
-            		if(ibsTask.getTaskSectionType().intValue() == SectionId.CLOSINGSLIP.getSectionId() ){
-            		    IbsStatusMaster ibsStatusMaster = new IbsStatusMaster();
+                if(AppFlow.REFERRAL_APPROVAL.equals(inputVO.getAppFlow())){
+                    //retrieve existing task details
+                    IbsTask ibsTask = DAOUtils.queryTaskTblForEnquiryNo(getHibernateTemplate(), inputVO.getEnquiryDetails().getEnquiryNo(), 
+                        Long.valueOf(Utils.getSingleValueAppConfig("TASK_TYPE_REFERRAL")), Long.valueOf(Utils.getSingleValueAppConfig("SECTION_ID_CLOSESLIP")));
+                    getHibernateTemplate().evict(ibsTask);
+                    //check now if we need to be updating task table status through task_section_type
+                    //value saved to task table
+                    if(ibsTask.getTaskSectionType().intValue() == SectionId.CLOSINGSLIP.getSectionId() ){
+                        IbsStatusMaster ibsStatusMaster = new IbsStatusMaster();
                         ibsStatusMaster.setCode(Long.valueOf(Utils.getSingleValueAppConfig("STATUS_APPROVED")));
                         ibsTask.setIbsStatusMaster(ibsStatusMaster);
                         //perform saveorupdate of ibsTask so that we have status as approved within task table
                         update(ibsTask);
-            		}
-            	}
+                    }
+                }
             }
 
         } catch (HibernateException hibernateException) {

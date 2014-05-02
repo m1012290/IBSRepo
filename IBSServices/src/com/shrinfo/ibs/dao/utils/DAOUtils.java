@@ -771,15 +771,15 @@ public class DAOUtils {
      * @param enquiryNo
      * @return null in case enquiry no is null
      */
-    public static IbsTask queryTaskTblForEnquiryNo(HibernateTemplate hibernateTemplate, Long enquiryNo){
+    public static IbsTask queryTaskTblForEnquiryNo(HibernateTemplate hibernateTemplate, Long enquiryNo, Long taskType, Long sectionType){
         if(Utils.isEmpty(enquiryNo)){
-        	return null;
+            return null;
         }
-    	
-    	List objList = null;
+        
+        List objList = null;
         try {
             objList =  hibernateTemplate.find(
-                " from IbsTask ibsTask where ibsTask.enquiryNo = ?",
+                " from IbsTask ibsTask where ibsTask.enquiryNo = ? ORDER BY ibsTask.id DESC",
                 enquiryNo);
         } catch (HibernateException hibernateException) {
             throw new BusinessException("pas.gi.couldNotGetTaskDetails", hibernateException,
@@ -788,7 +788,7 @@ public class DAOUtils {
         if(!Utils.isEmpty(objList)) {
             return (IbsTask)objList.get(0);
         }
-    	return null;
+        return null;
     }
 
 }

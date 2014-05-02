@@ -161,20 +161,21 @@ public class QuoteSlipDaoImpl extends BaseDBDAO implements QuoteSlipDao {
             //update task table records status. This code is added here in order to keep task table
             //update as part of transaction so that our data.
             if(!Utils.isEmpty(policyVO.getAppFlow())){
-            	if(AppFlow.REFERRAL_APPROVAL.equals(policyVO.getAppFlow())){
-            		//retrieve existing task details
-            		IbsTask ibsTask = DAOUtils.queryTaskTblForEnquiryNo(getHibernateTemplate(), policyVO.getEnquiryDetails().getEnquiryNo());
-            		getHibernateTemplate().evict(ibsTask);
-            		//check now if we need to be updating task table status through task_section_type
-            		//value saved to task table
-            		if(ibsTask.getTaskSectionType().intValue() == SectionId.QUOTESLIP.getSectionId() ){
-            			IbsStatusMaster ibsStatusMaster = new IbsStatusMaster();
-            			ibsStatusMaster.setCode(Long.valueOf(Utils.getSingleValueAppConfig("STATUS_APPROVED")));
-            			ibsTask.setIbsStatusMaster(ibsStatusMaster);
-            			//perform saveorupdate of ibsTask so that we have status as approved within task table
-            			update(ibsTask);
-            		}
-            	}
+                if(AppFlow.REFERRAL_APPROVAL.equals(policyVO.getAppFlow())){
+                    //retrieve existing task details
+                    IbsTask ibsTask = DAOUtils.queryTaskTblForEnquiryNo(getHibernateTemplate(), policyVO.getEnquiryDetails().getEnquiryNo(),
+                        Long.valueOf(Utils.getSingleValueAppConfig("TASK_TYPE_REFERRAL")), Long.valueOf(Utils.getSingleValueAppConfig("SECTION_ID_QUOTESLIP")));
+                    getHibernateTemplate().evict(ibsTask);
+                    //check now if we need to be updating task table status through task_section_type
+                    //value saved to task table
+                    if(ibsTask.getTaskSectionType().intValue() == SectionId.QUOTESLIP.getSectionId() ){
+                        IbsStatusMaster ibsStatusMaster = new IbsStatusMaster();
+                        ibsStatusMaster.setCode(Long.valueOf(Utils.getSingleValueAppConfig("STATUS_APPROVED")));
+                        ibsTask.setIbsStatusMaster(ibsStatusMaster);
+                        //perform saveorupdate of ibsTask so that we have status as approved within task table
+                        update(ibsTask);
+                    }
+                }
             }
 
         } catch (HibernateException hibernateException) {

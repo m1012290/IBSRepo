@@ -16,6 +16,7 @@ import com.shrinfo.ibs.cmn.exception.BusinessException;
 import com.shrinfo.ibs.cmn.exception.SystemException;
 import com.shrinfo.ibs.cmn.logger.Logger;
 import com.shrinfo.ibs.cmn.utils.Utils;
+import com.shrinfo.ibs.cmn.vo.UserVO;
 import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
 import com.shrinfo.ibs.util.AppConstants;
 import com.shrinfo.ibs.vo.business.AppFlow;
@@ -188,6 +189,8 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
         this.insuredDetails = new InsuredVO();
         this.screenFreeze = Boolean.FALSE;
         this.setAppFlow(null);//reinitialize appflow value
+        this.setEditApproved(Boolean.FALSE);
+        this.setNavigationDisbled(Boolean.FALSE);
     }
 
     public EditCustEnqDetailsMB() {
@@ -623,16 +626,43 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
     }
     
     private void setReferralFlag() {
-        
+        int enquirySectionCode = Integer.valueOf(Utils.getSingleValueAppConfig("SECTION_ID_EDITENQUIRY"));
+
         FacesContext fc = FacesContext.getCurrentInstance();
         Map map=fc.getExternalContext().getSessionMap();
         // Referral
-        TaskVO taskVO = new TaskVO();               
-        taskVO.setEnquiry(this.enquiryVO);
+        this.setTaskVO(new TaskVO());               
+
+        this.getTaskVO().setEnquiry(this.enquiryVO);
+        this.getTaskVO().setTaskSectionType(enquirySectionCode);
+        this.getTaskVO().setTaskType(Integer.valueOf(Utils.getSingleValueAppConfig("TASK_TYPE_REFERRAL")));
         LoginMB loginManageBean = (LoginMB) map.get("loginBean");
-        taskVO = this.checkReferral(loginManageBean.getUserDetails(), taskVO, 3);
-        if(!Utils.isEmpty(taskVO)) {
-            this.screenFreeze = Boolean.TRUE;         
+        UserVO loggedInUser = loginManageBean.getUserDetails();
+        this.setTaskVO(this.checkReferral(this.getTaskVO()));
+        
+
+        if(!Utils.isEmpty(this.getTaskVO())) {
+            // Screen will be freezed if there is a pending referral not assigned to logged-in user . 
+            // This referral may be for current screen or the next screens. 
+            if (enquirySectionCode <= this.getTaskVO().getTaskSectionType() && 3 == this.getTaskVO().getStatusVO().getCode()
+                && loggedInUser.getUserId().longValue() != this.getTaskVO().getAssigneeUser().getUserId()) {
+                this.screenFreeze = Boolean.TRUE;
+            }
+            // Screen will be freezed if there is a approved referral not assigned to logged-in user for current screen. 
+            if (enquirySectionCode == this.getTaskVO().getTaskSectionType()
+                && loggedInUser.getUserId().longValue() != this.getTaskVO().getAssigneeUser().getUserId()) {
+                this.screenFreeze = Boolean.TRUE;                        
+            }
+            // navigation will be disabled only if referral is pending for the current screen and is not assigned to logged in user
+            if(3 == this.getTaskVO().getStatusVO().getCode() && enquirySectionCode == this.getTaskVO().getTaskSectionType()
+               && loggedInUser.getUserId().longValue() != this.getTaskVO().getAssigneeUser().getUserId()) {
+                this.setNavigationDisbled(Boolean.TRUE);
+            }
+            // Edit button will be visible only if current screen task is approved since screen will be freezed.
+            if(3 != this.getTaskVO().getStatusVO().getCode() && enquirySectionCode == this.getTaskVO().getTaskSectionType()
+               && loggedInUser.getUserId().longValue() != this.getTaskVO().getAssigneeUser().getUserId()) {
+                this.setEditVisible(Boolean.TRUE);
+            }        
         }
     }
 
