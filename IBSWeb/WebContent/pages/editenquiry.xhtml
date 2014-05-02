@@ -347,7 +347,7 @@
 					update="messages, panelCustomer, panelEnquiry"  validateClient="true" icon="ui-icon-disk"
 					style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;						
 				
-				<p:commandButton id="nextbtn" value="Next" ajax="false" action="#{editCustEnqDetailsMB.next}" style="float:right:20px;" />
+				<p:commandButton id="nextbtn" value="Next" action="#{editCustEnqDetailsMB.next}" style="float:right:20px;" />
 							
 				<p:blockUI block="referalpanel" widgetVar="bui" blocked="#{editCustEnqDetailsMB.screenFreeze}"/>
 				<p:blockUI block="referalpanel" trigger="savebtn">

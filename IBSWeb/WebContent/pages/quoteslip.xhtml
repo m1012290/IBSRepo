@@ -176,13 +176,27 @@
 				<!-- referral related dialog box ends -->		
 				</p:panel>
 			<p:commandButton value="Back" action="#{quoteSlipMB.back}" process="@this" style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
-			<p:commandButton value="Save" action="#{quoteSlipMB.save}"  update="messages, panelProductDetails, panelInsured, referralsection" oncomplete="handleSaveResponse(xhr, status, args)" icon="ui-icon-disk"  style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
-			<p:commandButton value="Next" action="#{quoteSlipMB.next}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
-			<p:commandButton value="GenerateAndEmailQuoteSlip" action="#{quoteSlipMB.generatePDFForQuoteSlip()}" update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" style="float:right:20px;" disabled="#{quoteSlipMB.screenFreeze}"/>
+			<p:commandButton id="quoteslipsavebtn" value="Save" action="#{quoteSlipMB.save}"  update="messages, panelProductDetails, panelInsured, referralsection" oncomplete="handleSaveResponse(xhr, status, args)" icon="ui-icon-disk"  style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
+			<p:commandButton id="quoteslipnextbtn" value="Next" action="#{quoteSlipMB.next}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
+			<p:commandButton id="generatequoteslipbtn" value="GenerateAndEmailQuoteSlip" action="#{quoteSlipMB.generatePDFForQuoteSlip()}" update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" style="float:right:20px;" disabled="#{quoteSlipMB.screenFreeze}"/>
 			
 			
 			<p:blockUI block="referalpanel" widgetVar="bui" blocked="#{quoteSlipMB.screenFreeze}"/> 
-
+			<p:blockUI block="referalpanel" trigger="quoteslipsavebtn">
+				LOADING<br />  
+      			<p:graphicImage value="../images/ajax-loader.gif"/>
+  			</p:blockUI>
+			
+			<p:blockUI block="referalpanel" trigger="quoteslipnextbtn">
+				LOADING<br />  
+      			<p:graphicImage value="../images/ajax-loader.gif"/>
+  			</p:blockUI>
+			
+			<p:blockUI block="referalpanel" trigger="generatequoteslipbtn">
+				LOADING<br />  
+      			<p:graphicImage value="../images/ajax-loader.gif"/>
+  			</p:blockUI>
+			
 					</h:form>
     		</ui:define>
     	</ui:composition>
