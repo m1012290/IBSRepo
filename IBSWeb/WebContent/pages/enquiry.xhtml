@@ -98,7 +98,7 @@
 
 			 
 			 
-			 <p:dataTable id ="searchDataTableID" var="esb" value="#{enquirySearchMB.searchItemVODataModel}" paginator="true" rows="5"  
+			 <p:dataTable id ="searchDataTableID" var="esb"  resizableColumns="true"   value="#{enquirySearchMB.searchItemVODataModel}" paginator="true" rows="5"  
                  selection="#{enquirySearchMB.searchItem}" selectionMode="single">
                  
                    <p:ajax event="rowSelect" listener="#{editCustEnqDetailsMB.onRowSelect}"/> 
@@ -124,7 +124,7 @@
 		        </p:column> 
 		        
 		        <p:column headerText="QuoteSlipNumber">  
-		            <h:outputText value="#{esb.quotationNum}" />  
+		            <h:outputText value="#{esb.quotationNum}" />
 		        </p:column>  
 		  
 		        <p:column headerText="PolicyNumber">  

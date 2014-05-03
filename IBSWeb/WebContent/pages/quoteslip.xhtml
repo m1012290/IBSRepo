@@ -154,7 +154,7 @@
 								</h:panelGrid>
 								</p:panel>
 			 <!-- referral related dialog box begins -->					
-			 <p:dialog header="Referral Section" widgetVar="referraldialog">
+			 <p:dialog header="Referral Section" widgetVar="referraldialog" onHide="PF('blockuiid').hide();">
 					<p:messages id="referralmessages" autoUpdate="true" closable="true" />
 					<p:panel id="referralsection">	
 						<h:panelGrid columns="4">
@@ -196,6 +196,8 @@
 				LOADING<br />  
       			<p:graphicImage value="../images/ajax-loader.gif"/>
   			</p:blockUI>
+			
+			<p:blockUI block="referalpanel" widgetVar="blockuiid"/>
 			
 					</h:form>
     		</ui:define>
