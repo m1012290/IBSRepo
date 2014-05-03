@@ -367,13 +367,13 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
                 
                 int quoteSlipSectionCode = Integer.valueOf(Utils.getSingleValueAppConfig("SECTION_ID_QUOTESLIP"));
                 // Referral
-                this.setTaskVO(new TaskVO());       
-
-                this.getTaskVO().setEnquiry(policyVO.getEnquiryDetails());
-                this.getTaskVO().setTaskSectionType(quoteSlipSectionCode);
-                this.getTaskVO().setTaskType(Integer.valueOf(Utils.getSingleValueAppConfig("TASK_TYPE_REFERRAL")));
-                this.setTaskVO(this.checkReferral(this.getTaskVO()));
                 UserVO loggedInUser = loginManageBean.getUserDetails();
+                
+                // Check if there is a pending referral for any of the section/transaction for this enquiry number.
+                this.setTaskVO(new TaskVO());
+                this.getTaskVO().setEnquiry(policyVO.getEnquiryDetails());
+                this.setTaskVO(this.checkReferral(this.getTaskVO()));
+               
                 this.setNavigationDisbled(Boolean.FALSE);
                 this.screenFreeze = Boolean.FALSE;
                 this.setEditVisible(Boolean.FALSE);
@@ -385,12 +385,26 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
                     if (quoteSlipSectionCode <= this.getTaskVO().getTaskSectionType() && 3 == this.getTaskVO().getStatusVO().getCode()
                         && loggedInUser.getUserId().longValue() != this.getTaskVO().getAssigneeUser().getUserId()) {
                         this.screenFreeze = Boolean.TRUE;
+                    }                    
+                    if(3 == this.getTaskVO().getStatusVO().getCode() && quoteSlipSectionCode == this.getTaskVO().getTaskSectionType()) {
+                        this.setAppFlow(AppFlow.REFERRAL_APPROVAL);
+                    }                    
+                    if(3 != this.getTaskVO().getStatusVO().getCode() && quoteSlipSectionCode == this.getTaskVO().getTaskSectionType()) {
+                        this.setAppFlow(AppFlow.REFERRAL_APPROVED);
                     }
+                }
+             
+                // Check if there is a pending/Approval referral for current section/transaction for this enquiry number.
+                this.setTaskVO(new TaskVO());
+                this.getTaskVO().setEnquiry(policyVO.getEnquiryDetails());
+                this.getTaskVO().setTaskSectionType(quoteSlipSectionCode);
+                this.getTaskVO().setTaskType(Integer.valueOf(Utils.getSingleValueAppConfig("TASK_TYPE_REFERRAL")));
+                this.setTaskVO(this.checkReferral(this.getTaskVO()));
+                
+                if(!Utils.isEmpty(this.getTaskVO()) /*&& 2 == this.getTaskVO().getTaskSectionType()*/) {                    
                     // Screen will be freezed if there is a approved referral not assigned to logged-in user for current screen. 
                     if (quoteSlipSectionCode == this.getTaskVO().getTaskSectionType()
                         && loggedInUser.getUserId().longValue() != this.getTaskVO().getAssigneeUser().getUserId()) {
-
-
                         this.screenFreeze = Boolean.TRUE;                        
                     }
                     // navigation will be disabled only if referral is pending for the current screen and is not assigned to logged in user
@@ -402,15 +416,7 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
                     if(3 != this.getTaskVO().getStatusVO().getCode() && quoteSlipSectionCode == this.getTaskVO().getTaskSectionType()
                        && loggedInUser.getUserId().longValue() != this.getTaskVO().getAssigneeUser().getUserId()) {
                         this.setEditVisible(Boolean.TRUE);
-                    }
-                    
-                    if(3 == this.getTaskVO().getStatusVO().getCode() && quoteSlipSectionCode == this.getTaskVO().getTaskSectionType()) {
-                        this.setAppFlow(AppFlow.REFERRAL_APPROVAL);
-                    }
-                    
-                    if(3 != this.getTaskVO().getStatusVO().getCode() && quoteSlipSectionCode == this.getTaskVO().getTaskSectionType()) {
-                        this.setAppFlow(AppFlow.REFERRAL_APPROVED);
-                    }
+                    }                    
                 }
 
                 

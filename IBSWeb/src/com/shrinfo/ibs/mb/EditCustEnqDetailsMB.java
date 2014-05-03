@@ -631,15 +631,14 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
         FacesContext fc = FacesContext.getCurrentInstance();
         Map map=fc.getExternalContext().getSessionMap();
         // Referral
-        this.setTaskVO(new TaskVO());               
-
-        this.getTaskVO().setEnquiry(this.enquiryVO);
-        this.getTaskVO().setTaskSectionType(enquirySectionCode);
-        this.getTaskVO().setTaskType(Integer.valueOf(Utils.getSingleValueAppConfig("TASK_TYPE_REFERRAL")));
+        
         LoginMB loginManageBean = (LoginMB) map.get("loginBean");
         UserVO loggedInUser = loginManageBean.getUserDetails();
-        this.setTaskVO(this.checkReferral(this.getTaskVO()));
         
+        // Check if there is a pending referral for any of the section/transaction for this enquiry number.
+        this.setTaskVO(new TaskVO());
+        this.getTaskVO().setEnquiry(this.enquiryVO);
+        this.setTaskVO(this.checkReferral(this.getTaskVO()));
 
         if(!Utils.isEmpty(this.getTaskVO())) {
             // Screen will be freezed if there is a pending referral not assigned to logged-in user . 
@@ -647,7 +646,16 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
             if (enquirySectionCode <= this.getTaskVO().getTaskSectionType() && 3 == this.getTaskVO().getStatusVO().getCode()
                 && loggedInUser.getUserId().longValue() != this.getTaskVO().getAssigneeUser().getUserId()) {
                 this.screenFreeze = Boolean.TRUE;
-            }
+            }                
+        }
+        
+        // Check if there is a pending/Approval referral for current section/transaction for this enquiry number.
+        this.setTaskVO(new TaskVO());
+        this.getTaskVO().setEnquiry(this.enquiryVO);
+        this.getTaskVO().setTaskSectionType(enquirySectionCode);
+        this.getTaskVO().setTaskType(Integer.valueOf(Utils.getSingleValueAppConfig("TASK_TYPE_REFERRAL")));
+        this.setTaskVO(this.checkReferral(this.getTaskVO()));        
+        if(!Utils.isEmpty(this.getTaskVO())) {
             // Screen will be freezed if there is a approved referral not assigned to logged-in user for current screen. 
             if (enquirySectionCode == this.getTaskVO().getTaskSectionType()
                 && loggedInUser.getUserId().longValue() != this.getTaskVO().getAssigneeUser().getUserId()) {

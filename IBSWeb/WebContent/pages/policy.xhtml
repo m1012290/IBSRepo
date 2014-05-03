@@ -109,7 +109,8 @@
 				</p:panel>
 					   
 					   	<p:commandButton value="Back" action="#{policyMB.back}" process="@this" style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
-						<p:commandButton id="savebtn" value="Save" action="#{policyMB.save}"  update="messages,panelPolicy" icon="ui-icon-disk"  style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
+						<p:commandButton id="savebtn" value="Save" action="#{policyMB.save}"  update="messages,panelPolicy" icon="ui-icon-disk"  style="float:right:20px;" disabled="#{policyMB.navigationDisbled}"/>&nbsp;&nbsp;&nbsp;&nbsp;
+						<p:commandButton value="Edit" action="#{policyMB.makeTransactionEditable}" onclick="PF('bui').hide()" style="float:right:20px;" rendered="#{policyMB.editVisible}"/>&nbsp;&nbsp;&nbsp;&nbsp;
 						
 						<p:blockUI block="referalpanel" widgetVar="bui" blocked="#{policyMB.screenFreeze}"> Referral message </p:blockUI>
 						<p:blockUI block="referalpanel" trigger="savebtn">

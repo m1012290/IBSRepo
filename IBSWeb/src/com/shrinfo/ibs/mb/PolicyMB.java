@@ -22,7 +22,10 @@ import org.primefaces.model.UploadedFile;
 
 import com.shrinfo.ibs.cmn.logger.Logger;
 import com.shrinfo.ibs.cmn.utils.Utils;
+import com.shrinfo.ibs.cmn.vo.UserVO;
 import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
+import com.shrinfo.ibs.util.AppConstants;
+import com.shrinfo.ibs.vo.business.AppFlow;
 import com.shrinfo.ibs.vo.business.DocumentListVO;
 import com.shrinfo.ibs.vo.business.DocumentVO;
 import com.shrinfo.ibs.vo.business.InsCompanyVO;
@@ -278,12 +281,11 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
 
     public String loadQuotationDetails() {
 
-        QuotationMB quotation =
-            (QuotationMB) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
-                    .get("quotationMB");
-        QuoteSlipMB quoteSlipMB =
-                (QuoteSlipMB) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
-                        .get("quoteSlipMB");
+        FacesContext fc = FacesContext.getCurrentInstance();
+        Map map=fc.getExternalContext().getSessionMap();
+        
+        QuotationMB quotation = (QuotationMB) map.get("quotationMB");
+        QuoteSlipMB quoteSlipMB = (QuoteSlipMB) map.get("quoteSlipMB");
         this.quoteDetailVO = quotation.getQuoteDetailVOClosed();
         this.quoteDetailVO.setQuoteSlipDate(quoteSlipMB.getQuoteDetailVO().getQuoteSlipDate());
         this.insuredDetails = quotation.getInsuredDetails();
@@ -304,18 +306,62 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
         if (!Utils.isEmpty(policyVO)) {
             this.policyDetails = policyVO;
         }
-        
-        // referral
-        FacesContext fc = FacesContext.getCurrentInstance();
-        Map map=fc.getExternalContext().getSessionMap();        
+              
         // Referral
+        int policySectioncode = Integer.valueOf(Utils.getSingleValueAppConfig("SECTION_ID_POLICY"));
         EditCustEnqDetailsMB editCustEnqDetailsMB = (EditCustEnqDetailsMB) map.get("editCustEnqDetailsMB");
-        TaskVO taskVO = new TaskVO();               
-        taskVO.setEnquiry(editCustEnqDetailsMB.getEnquiryVO());
-        LoginMB loginManageBean = (LoginMB) map.get("loginBean");
-        taskVO = this.checkReferral(loginManageBean.getUserDetails(), taskVO, 3);
-        if(!Utils.isEmpty(taskVO)) {
-            this.screenFreeze = Boolean.TRUE;         
+        LoginMB loginManageBean = (LoginMB) map.get(AppConstants.BEAN_NAME_LOGIN_PAGE);
+        this.setAssignerUser(loginManageBean.getUserDetails().getUserName());
+        UserVO loggedInUser = loginManageBean.getUserDetails();
+        
+        // Check if there is a pending referral for any of the section/transaction for this enquiry number.
+        this.setTaskVO(new TaskVO());
+        this.getTaskVO().setEnquiry(editCustEnqDetailsMB.getEnquiryVO());
+        this.setTaskVO(this.checkReferral(this.getTaskVO()));        
+        
+        this.setNavigationDisbled(Boolean.FALSE);
+        this.screenFreeze = Boolean.FALSE;
+        this.setEditVisible(Boolean.FALSE);
+        this.setAppFlow(null);
+        
+        if(!Utils.isEmpty(this.getTaskVO()) /*&& 2 == this.getTaskVO().getTaskSectionType()*/) {
+            // Screen will be freezed if there is a pending referral not assigned to logged-in user . 
+            // This referral may be for current screen or the next screens. 
+            if (policySectioncode <= this.getTaskVO().getTaskSectionType() && 3 == this.getTaskVO().getStatusVO().getCode()
+                && loggedInUser.getUserId().longValue() != this.getTaskVO().getAssigneeUser().getUserId()) {
+                this.screenFreeze = Boolean.TRUE;
+            }
+            if(3 == this.getTaskVO().getStatusVO().getCode() && policySectioncode == this.getTaskVO().getTaskSectionType()) {
+                this.setAppFlow(AppFlow.REFERRAL_APPROVAL);
+            }
+            
+            if(3 != this.getTaskVO().getStatusVO().getCode() && policySectioncode == this.getTaskVO().getTaskSectionType()) {
+                this.setAppFlow(AppFlow.REFERRAL_APPROVED);
+            }
+        }
+        
+        // Check if there is a pending/Approval referral for current section/transaction for this enquiry number.
+        this.setTaskVO(new TaskVO());
+        this.getTaskVO().setEnquiry(editCustEnqDetailsMB.getEnquiryVO());
+        this.getTaskVO().setTaskSectionType(policySectioncode);
+        this.getTaskVO().setTaskType(Integer.valueOf(Utils.getSingleValueAppConfig("TASK_TYPE_REFERRAL")));
+        this.setTaskVO(this.checkReferral(this.getTaskVO()));
+        if(!Utils.isEmpty(this.getTaskVO())) {
+            // Screen will be freezed if there is a approved referral not assigned to logged-in user for current screen. 
+            if (policySectioncode == this.getTaskVO().getTaskSectionType()
+                && loggedInUser.getUserId().longValue() != this.getTaskVO().getAssigneeUser().getUserId()) {
+                this.screenFreeze = Boolean.TRUE;                        
+            }
+            // navigation will be disabled only if referral is pending for the current screen and is not assigned to logged in user
+            if(3 == this.getTaskVO().getStatusVO().getCode() && policySectioncode == this.getTaskVO().getTaskSectionType()
+               && loggedInUser.getUserId().longValue() != this.getTaskVO().getAssigneeUser().getUserId()) {
+                this.setNavigationDisbled(Boolean.TRUE);
+            }
+            // Edit button will be visible only if current screen task is approved since screen will be freezed.
+            if(3 != this.getTaskVO().getStatusVO().getCode() && policySectioncode == this.getTaskVO().getTaskSectionType()
+               && loggedInUser.getUserId().longValue() != this.getTaskVO().getAssigneeUser().getUserId()) {
+                this.setEditVisible(Boolean.TRUE);
+            }
         }
 
         return "policy";

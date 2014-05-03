@@ -661,17 +661,18 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
         
         FacesContext fc = FacesContext.getCurrentInstance();
         Map map=fc.getExternalContext().getSessionMap();        
-     // Referral
+        
+        // Referral
         EditCustEnqDetailsMB editCustEnqDetailsMB = (EditCustEnqDetailsMB) map.get("editCustEnqDetailsMB");
         LoginMB loginManageBean = (LoginMB) map.get(AppConstants.BEAN_NAME_LOGIN_PAGE);
         this.setAssignerUser(loginManageBean.getUserDetails().getUserName());
-        this.setTaskVO(new TaskVO());       
-
-        this.getTaskVO().setEnquiry(editCustEnqDetailsMB.getEnquiryVO());
-        this.getTaskVO().setTaskSectionType(closeSlipSectionCode);
-        this.getTaskVO().setTaskType(Integer.valueOf(Utils.getSingleValueAppConfig("TASK_TYPE_REFERRAL")));
-        this.setTaskVO(this.checkReferral(this.getTaskVO()));
         UserVO loggedInUser = loginManageBean.getUserDetails();
+        
+        // Check if there is a pending referral for any of the section/transaction for this enquiry number.
+        this.setTaskVO(new TaskVO());
+        this.getTaskVO().setEnquiry(editCustEnqDetailsMB.getEnquiryVO());
+        this.setTaskVO(this.checkReferral(this.getTaskVO()));        
+        
         this.setNavigationDisbled(Boolean.FALSE);
         this.screenFreeze = Boolean.FALSE;
         this.setEditVisible(Boolean.FALSE);
@@ -682,11 +683,24 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
             // This referral may be for current screen or the next screens. 
             if (closeSlipSectionCode <= this.getTaskVO().getTaskSectionType() && 3 == this.getTaskVO().getStatusVO().getCode()
                 && loggedInUser.getUserId().longValue() != this.getTaskVO().getAssigneeUser().getUserId()) {
-
-
-
                 this.screenFreeze = Boolean.TRUE;
             }
+            if(3 == this.getTaskVO().getStatusVO().getCode() && closeSlipSectionCode == this.getTaskVO().getTaskSectionType()) {
+                this.setAppFlow(AppFlow.REFERRAL_APPROVAL);
+            }
+            
+            if(3 != this.getTaskVO().getStatusVO().getCode() && closeSlipSectionCode == this.getTaskVO().getTaskSectionType()) {
+                this.setAppFlow(AppFlow.REFERRAL_APPROVED);
+            }
+        }
+        
+        // Check if there is a pending/Approval referral for current section/transaction for this enquiry number.
+        this.setTaskVO(new TaskVO());
+        this.getTaskVO().setEnquiry(editCustEnqDetailsMB.getEnquiryVO());
+        this.getTaskVO().setTaskSectionType(closeSlipSectionCode);
+        this.getTaskVO().setTaskType(Integer.valueOf(Utils.getSingleValueAppConfig("TASK_TYPE_REFERRAL")));
+        this.setTaskVO(this.checkReferral(this.getTaskVO()));
+        if(!Utils.isEmpty(this.getTaskVO())) {
             // Screen will be freezed if there is a approved referral not assigned to logged-in user for current screen. 
             if (closeSlipSectionCode == this.getTaskVO().getTaskSectionType()
                 && loggedInUser.getUserId().longValue() != this.getTaskVO().getAssigneeUser().getUserId()) {
@@ -701,13 +715,6 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
             if(3 != this.getTaskVO().getStatusVO().getCode() && closeSlipSectionCode == this.getTaskVO().getTaskSectionType()
                && loggedInUser.getUserId().longValue() != this.getTaskVO().getAssigneeUser().getUserId()) {
                 this.setEditVisible(Boolean.TRUE);
-            }
-            if(3 == this.getTaskVO().getStatusVO().getCode() && closeSlipSectionCode == this.getTaskVO().getTaskSectionType()) {
-                this.setAppFlow(AppFlow.REFERRAL_APPROVAL);
-            }
-            
-            if(3 != this.getTaskVO().getStatusVO().getCode() && closeSlipSectionCode == this.getTaskVO().getTaskSectionType()) {
-                this.setAppFlow(AppFlow.REFERRAL_APPROVED);
             }
         }
 
