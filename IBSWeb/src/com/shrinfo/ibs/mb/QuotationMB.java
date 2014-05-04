@@ -61,38 +61,38 @@ import com.shrinfo.ibs.vo.business.TaskVO;
 @SessionScoped
 public class QuotationMB extends BaseManagedBean implements java.io.Serializable {
 
-	// private ProductVO productVO = new ProductVO();
-	private List<String> selectedInsCompanies = new ArrayList<String>();
+    // private ProductVO productVO = new ProductVO();
+    private List<String> selectedInsCompanies = new ArrayList<String>();
 
-	private Map<String, String> insCompanies = new HashMap<String, String>();
+    private Map<String, String> insCompanies = new HashMap<String, String>();
 
-	private QuoteDetailVO quoteDetailVO = new QuoteDetailVO();
+    private QuoteDetailVO quoteDetailVO = new QuoteDetailVO();
 
-	private List<ProductUWFieldVO> slipUwList = new ArrayList<ProductUWFieldVO>();
+    private List<ProductUWFieldVO> slipUwList = new ArrayList<ProductUWFieldVO>();
 
-	private QuoteDetailVO selectedQuoteDetailVO = new QuoteDetailVO();
+    private QuoteDetailVO selectedQuoteDetailVO = new QuoteDetailVO();
 
-	private ProductVO quoteProductDetails = new ProductVO();
+    private ProductVO quoteProductDetails = new ProductVO();
 
-	private QuoteDetailVO quoteDetailVOClosed = new QuoteDetailVO();
+    private QuoteDetailVO quoteDetailVOClosed = new QuoteDetailVO();
 
-	private InsuredVO insuredDetails = new InsuredVO();
+    private InsuredVO insuredDetails = new InsuredVO();
 
-	private List<QuoteDetailVO> quoteDetailList = new ArrayList<QuoteDetailVO>();
+    private List<QuoteDetailVO> quoteDetailList = new ArrayList<QuoteDetailVO>();
 
-	private PolicyVO policyDetails = new PolicyVO();
+    private PolicyVO policyDetails = new PolicyVO();
 
-	private QuoteDetailVODataModel quoteDetailVODataModel;
+    private QuoteDetailVODataModel quoteDetailVODataModel;
 
-	private QuoteDetailVO quoteDetSelection = new QuoteDetailVO();
+    private QuoteDetailVO quoteDetSelection = new QuoteDetailVO();
 
-	private List<QuoteDetailVO> quoteDetailListClosed = new ArrayList<QuoteDetailVO>();
+    private List<QuoteDetailVO> quoteDetailListClosed = new ArrayList<QuoteDetailVO>();
 
-	private int recommendedFlagcnt = 0;
-	
-	private Boolean screenFreeze = Boolean.FALSE;
-	
-		
+    private int recommendedFlagcnt = 0;
+    
+    private Boolean screenFreeze = Boolean.FALSE;
+    
+        
     public Boolean getScreenFreeze() {
         return screenFreeze;
     }
@@ -101,258 +101,261 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
         this.screenFreeze = screenFreeze;
     }
     public QuotationMB(){
-		super();
-		//invoke loadQuotationsDetail method to retrieve quotation details in case of existing
-		//quote
-		this.loadQuotationsDetail();
-	}
-	//This is an important method which is overriden from parent managed bean
-	// this is an reinitializer block which includes all the instance fields which are bound to form
-	// this method is necessary as managed beans are defined as sessionscoped beans
-	@Override
-	protected void reinitializeBeanFields(){
-		this.selectedInsCompanies = new ArrayList<String>();
-		this.insCompanies = new HashMap<String, String>();
-		this.quoteDetailVO = new QuoteDetailVO();
-		this.selectedQuoteDetailVO = new QuoteDetailVO();
-		this.quoteProductDetails = new ProductVO();
-		this.quoteDetailVOClosed = new QuoteDetailVO();
-		this.insuredDetails = new InsuredVO();
-		this.quoteDetailList = new ArrayList<QuoteDetailVO>();
-		this.policyDetails = new PolicyVO();
+        super();
+        //invoke loadQuotationsDetail method to retrieve quotation details in case of existing
+        //quote
+        this.loadQuotationsDetail();
+    }
+    //This is an important method which is overriden from parent managed bean
+    // this is an reinitializer block which includes all the instance fields which are bound to form
+    // this method is necessary as managed beans are defined as sessionscoped beans
+    @Override
+    protected void reinitializeBeanFields(){
+        this.selectedInsCompanies = new ArrayList<String>();
+        this.insCompanies = new HashMap<String, String>();
+        this.quoteDetailVO = new QuoteDetailVO();
+        this.selectedQuoteDetailVO = new QuoteDetailVO();
+        this.quoteProductDetails = new ProductVO();
+        this.quoteDetailVOClosed = new QuoteDetailVO();
+        this.insuredDetails = new InsuredVO();
+        this.quoteDetailList = new ArrayList<QuoteDetailVO>();
+        this.policyDetails = new PolicyVO();
 
-		this.quoteDetailVODataModel = null;
-		this.quoteDetSelection = new QuoteDetailVO();
-		this.quoteDetailListClosed = new ArrayList<QuoteDetailVO>();
-		this.setSaveFromReferralDialog("false");
-		this.screenFreeze = Boolean.FALSE;
-	}
+        this.quoteDetailVODataModel = null;
+        this.quoteDetSelection = new QuoteDetailVO();
+        this.quoteDetailListClosed = new ArrayList<QuoteDetailVO>();
+        this.setSaveFromReferralDialog("false");
+        this.screenFreeze = Boolean.FALSE;
+        this.setEditApproved(Boolean.FALSE);
+        this.setNavigationDisbled(Boolean.FALSE);
+        this.setAppFlow(null);
+    }
 
-	/**
-	 * @return the quoteDetSelection
-	 */
-	public QuoteDetailVO getQuoteDetSelection() {
-		return this.quoteDetSelection;
-	}
-
-
-	/**
-	 * @param quoteDetSelection the quoteDetSelection to set
-	 */
-	public void setQuoteDetSelection(QuoteDetailVO quoteDetSelection) {
-		this.quoteDetSelection = quoteDetSelection;
-	}
-	public PolicyVO getPolicyDetails() {
-		return this.policyDetails;
-	}
-
-	public void setPolicyDetails(PolicyVO policyDetails) {
-		this.policyDetails = policyDetails;
-	}
-
-	public Map<String, String> getInsCompanies() {
-		return this.insCompanies;
-	}
-
-	public void setInsCompanies(Map<String, String> insCompanies) {
-		this.insCompanies = insCompanies;
-	}
-
-	public List<String> getSelectedInsCompanies() {
-		return this.selectedInsCompanies;
-	}
-
-	public void setSelectedInsCompanies(List<String> selectedInsCompanies) {
-		this.selectedInsCompanies = selectedInsCompanies;
-	}
-
-	public QuoteDetailVO getQuoteDetailVO() {
-		return this.quoteDetailVO;
-	}
-
-	public void setQuoteDetailVO(QuoteDetailVO quoteDetailVO) {
-		this.quoteDetailVO = quoteDetailVO;
-	}
+    /**
+     * @return the quoteDetSelection
+     */
+    public QuoteDetailVO getQuoteDetSelection() {
+        return this.quoteDetSelection;
+    }
 
 
+    /**
+     * @param quoteDetSelection the quoteDetSelection to set
+     */
+    public void setQuoteDetSelection(QuoteDetailVO quoteDetSelection) {
+        this.quoteDetSelection = quoteDetSelection;
+    }
+    public PolicyVO getPolicyDetails() {
+        return this.policyDetails;
+    }
 
-	public QuoteDetailVO getSelectedQuoteDetailVO() {
-		return this.selectedQuoteDetailVO;
-	}
+    public void setPolicyDetails(PolicyVO policyDetails) {
+        this.policyDetails = policyDetails;
+    }
 
+    public Map<String, String> getInsCompanies() {
+        return this.insCompanies;
+    }
 
-	public void setSelectedQuoteDetailVO(QuoteDetailVO selectedQuoteDetailVO) {
-		this.selectedQuoteDetailVO = selectedQuoteDetailVO;
-	}
+    public void setInsCompanies(Map<String, String> insCompanies) {
+        this.insCompanies = insCompanies;
+    }
 
+    public List<String> getSelectedInsCompanies() {
+        return this.selectedInsCompanies;
+    }
 
-	public ProductVO getQuoteProductDetails() {
-		return this.quoteProductDetails;
-	}
+    public void setSelectedInsCompanies(List<String> selectedInsCompanies) {
+        this.selectedInsCompanies = selectedInsCompanies;
+    }
 
+    public QuoteDetailVO getQuoteDetailVO() {
+        return this.quoteDetailVO;
+    }
 
-	public void setQuoteProductDetails(ProductVO quoteProductDetails) {
-		this.quoteProductDetails = quoteProductDetails;
-	}
-
-	public QuoteDetailVO getQuoteDetailVOClosed() {
-		return this.quoteDetailVOClosed;
-	}
-
-
-	public void setQuoteDetailVOClosed(QuoteDetailVO quoteDetailVOClosed) {
-		this.quoteDetailVOClosed = quoteDetailVOClosed;
-	}
-
-	public InsuredVO getInsuredDetails() {
-		return this.insuredDetails;
-	}
-
-	public void setInsuredDetails(InsuredVO insuredDetails) {
-		this.insuredDetails = insuredDetails;
-	}
-
-	public List<QuoteDetailVO> getQuoteDetailList() {
-		return this.quoteDetailList;
-	}
-
-	public void setQuoteDetailList(List<QuoteDetailVO> quoteDetailList) {
-		this.quoteDetailList = quoteDetailList;
-	}
-
-	/**
-	 * This adds a new quote into UI table. Here data which is edited in
-	 * the table itself will not be captured.
+    public void setQuoteDetailVO(QuoteDetailVO quoteDetailVO) {
+        this.quoteDetailVO = quoteDetailVO;
+    }
 
 
-	 * 
-	 * @return
-	 */
-	public String addAction() {
-		if(this.quoteDetailList.contains(this.quoteDetailVO)){
-			FacesContext.getCurrentInstance().addMessage(
-					"ERROR_QUOTATION_SAVE",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Selected company record is already added",
-							"Selected company record is already added"));
-			return null;
-		}
 
-		/**
-		 * Validation for quotation details being added
-		 */
-		boolean fieldsValid = true;
-		if(Utils.isEmpty(this.quoteDetailVO.getCompanyCode())) {
-			fieldsValid = false;
-			FacesContext.getCurrentInstance().addMessage(
-					"ERROR_QUOTATION_SAVE",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please choose company name",
-							"Please choose company name"));
-		}
-		if(Utils.isEmpty(this.quoteDetailVO.getQuoteNo())) {
-			fieldsValid = false;
-			FacesContext.getCurrentInstance().addMessage(
-					"ERROR_QUOTATION_SAVE",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter valid quotation number",
-							"Please enter valid quotation number"));
-		}
-		if(!Utils.isNonZeroNumber(this.quoteDetailVO.getQuoteSlipPrmDetails().getPremium().toString())) {
-			fieldsValid = false;
-			FacesContext.getCurrentInstance().addMessage(
-					"ERROR_QUOTATION_SAVE",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter valid quoted premium amount",
-							"Please enter valid quoted premium amount"));
-		}
-		if(!Utils.isNonZeroNumber(this.quoteDetailVO.getSumInsured().toString())) {
-			fieldsValid = false;
-			FacesContext.getCurrentInstance().addMessage(
-					"ERROR_QUOTATION_SAVE",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter valid sum insured",
-							"Please enter valid sum insured"));
-		}
-		if(!Utils.isNonZeroNumber(this.quoteDetailVO.getPolicyTerm().toString())) {
-			fieldsValid = false;
-			FacesContext.getCurrentInstance().addMessage(
-					"ERROR_QUOTATION_SAVE",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter valid Policy term",
-							"Please enter valid Policy term"));
-		}
-		if(Utils.isEmpty(this.quoteDetailVO.getQuoteSlipPrmDetails().getCoverDescription())) {
-			fieldsValid = false;
-			FacesContext.getCurrentInstance().addMessage(
-					"ERROR_QUOTATION_SAVE",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter valid cover description",
-							"Please enter valid cover description"));
-		}
-		if(!fieldsValid) {
-			return null;
-		}
+    public QuoteDetailVO getSelectedQuoteDetailVO() {
+        return this.selectedQuoteDetailVO;
+    }
 
 
-		QuoteDetailVO temp = this.getQuoteDetailTableData(this.quoteDetailVO);
-		ProductVO productVO = this.getProductFieldVOTableData(this.quoteDetailVO, "quoteAdding");
-		if(Utils.isEmpty(productVO)){
-		    return null; //there must be some validation failure of underwriting fields hence breaking it here
-		}
-		temp.setProductDetails(productVO);
-		this.quoteDetailList.add(temp);
-		this.quoteDetailVODataModel = new QuoteDetailVODataModel(this.getQuoteDetailList());
-
-		this.quoteDetailVO.getProductDetails().setUwFieldsList(this.slipUwList);
-		return null;
-	}
-
-	/**
-	 * Constructs a new quote detail object containing data present in UI quotation table only
-	 * 
-	 * @param quoteDetailVO
-	 * @return
-	 */
-	private QuoteDetailVO getQuoteDetailTableData(QuoteDetailVO quoteDetailVO) {
-		QuoteDetailVO detailVO = new QuoteDetailVO();
-		detailVO.setQuoteNo(quoteDetailVO.getQuoteNo());
-		detailVO.setCompanyCode(quoteDetailVO.getCompanyCode());
-		detailVO.setQuoteSlipPrmDetails(quoteDetailVO.getQuoteSlipPrmDetails());
-		detailVO.setSumInsured(quoteDetailVO.getSumInsured());
-		detailVO.setPolicyTerm(quoteDetailVO.getPolicyTerm());
-		detailVO.setRecommendationSummary(quoteDetailVO.getRecommendationSummary());
-		detailVO.setIsQuoteRecommended(quoteDetailVO.getIsQuoteRecommended());
-		PremiumVO premiumVO = new PremiumVO();
-		premiumVO.setPremium(quoteDetailVO.getQuoteSlipPrmDetails().getPremium());
-		premiumVO.setCoverDescription(quoteDetailVO.getQuoteSlipPrmDetails().getCoverDescription());
-		detailVO.setQuoteSlipPrmDetails(premiumVO);
-
-		ProductVO productVO = new ProductVO();
-		productVO.setProductClass(quoteDetailVO.getProductDetails().getProductClass());
-		List<ProductUWFieldVO> uwFieldList = new ArrayList<ProductUWFieldVO>();
-		for(ProductUWFieldVO uwField : quoteDetailVO.getProductDetails().getUwFieldsList()){
-			uwFieldList.add(this.getProductUwFieldVOClone(uwField));
-		}
-
-		productVO.setUwFieldsList(uwFieldList);
-		detailVO.setProductDetails(productVO);
-
-		return detailVO;
-	}
-
-	private ProductVO getProductFieldVOTableData(QuoteDetailVO quoteDetailVO, String prefix){
-
-		// populate UW Field details
-		ProductVO productVO = new ProductVO();
-		productVO.setProductClass(quoteDetailVO.getProductDetails().getProductClass());
+    public void setSelectedQuoteDetailVO(QuoteDetailVO selectedQuoteDetailVO) {
+        this.selectedQuoteDetailVO = selectedQuoteDetailVO;
+    }
 
 
-		FacesContext fc = FacesContext.getCurrentInstance();
-		Map<String, String> requestMap = fc.getExternalContext().getRequestParameterMap();
+    public ProductVO getQuoteProductDetails() {
+        return this.quoteProductDetails;
+    }
 
-		List<ProductUWFieldVO> uwFieldList = new ArrayList<ProductUWFieldVO>();
-		boolean allUWFieldValid = true;
-		if (!Utils.isEmpty(requestMap)) {
-			String response = null;
-			for (ProductUWFieldVO uwField : quoteDetailVO.getProductDetails()
-					.getUwFieldsList()) {
-				response = requestMap.get(this.getComponentClientId(uwField, prefix + "_"));
-				uwField.setResponse(response);
-				
+
+    public void setQuoteProductDetails(ProductVO quoteProductDetails) {
+        this.quoteProductDetails = quoteProductDetails;
+    }
+
+    public QuoteDetailVO getQuoteDetailVOClosed() {
+        return this.quoteDetailVOClosed;
+    }
+
+
+    public void setQuoteDetailVOClosed(QuoteDetailVO quoteDetailVOClosed) {
+        this.quoteDetailVOClosed = quoteDetailVOClosed;
+    }
+
+    public InsuredVO getInsuredDetails() {
+        return this.insuredDetails;
+    }
+
+    public void setInsuredDetails(InsuredVO insuredDetails) {
+        this.insuredDetails = insuredDetails;
+    }
+
+    public List<QuoteDetailVO> getQuoteDetailList() {
+        return this.quoteDetailList;
+    }
+
+    public void setQuoteDetailList(List<QuoteDetailVO> quoteDetailList) {
+        this.quoteDetailList = quoteDetailList;
+    }
+
+    /**
+     * This adds a new quote into UI table. Here data which is edited in
+     * the table itself will not be captured.
+
+
+     * 
+     * @return
+     */
+    public String addAction() {
+        if(this.quoteDetailList.contains(this.quoteDetailVO)){
+            FacesContext.getCurrentInstance().addMessage(
+                    "ERROR_QUOTATION_SAVE",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Selected company record is already added",
+                            "Selected company record is already added"));
+            return null;
+        }
+
+        /**
+         * Validation for quotation details being added
+         */
+        boolean fieldsValid = true;
+        if(Utils.isEmpty(this.quoteDetailVO.getCompanyCode())) {
+            fieldsValid = false;
+            FacesContext.getCurrentInstance().addMessage(
+                    "ERROR_QUOTATION_SAVE",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please choose company name",
+                            "Please choose company name"));
+        }
+        if(Utils.isEmpty(this.quoteDetailVO.getQuoteNo())) {
+            fieldsValid = false;
+            FacesContext.getCurrentInstance().addMessage(
+                    "ERROR_QUOTATION_SAVE",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter valid quotation number",
+                            "Please enter valid quotation number"));
+        }
+        if(!Utils.isNonZeroNumber(this.quoteDetailVO.getQuoteSlipPrmDetails().getPremium().toString())) {
+            fieldsValid = false;
+            FacesContext.getCurrentInstance().addMessage(
+                    "ERROR_QUOTATION_SAVE",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter valid quoted premium amount",
+                            "Please enter valid quoted premium amount"));
+        }
+        if(!Utils.isNonZeroNumber(this.quoteDetailVO.getSumInsured().toString())) {
+            fieldsValid = false;
+            FacesContext.getCurrentInstance().addMessage(
+                    "ERROR_QUOTATION_SAVE",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter valid sum insured",
+                            "Please enter valid sum insured"));
+        }
+        if(!Utils.isNonZeroNumber(this.quoteDetailVO.getPolicyTerm().toString())) {
+            fieldsValid = false;
+            FacesContext.getCurrentInstance().addMessage(
+                    "ERROR_QUOTATION_SAVE",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter valid Policy term",
+                            "Please enter valid Policy term"));
+        }
+        if(Utils.isEmpty(this.quoteDetailVO.getQuoteSlipPrmDetails().getCoverDescription())) {
+            fieldsValid = false;
+            FacesContext.getCurrentInstance().addMessage(
+                    "ERROR_QUOTATION_SAVE",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter valid cover description",
+                            "Please enter valid cover description"));
+        }
+        if(!fieldsValid) {
+            return null;
+        }
+
+
+        QuoteDetailVO temp = this.getQuoteDetailTableData(this.quoteDetailVO);
+        ProductVO productVO = this.getProductFieldVOTableData(this.quoteDetailVO, "quoteAdding");
+        if(Utils.isEmpty(productVO)){
+            return null; //there must be some validation failure of underwriting fields hence breaking it here
+        }
+        temp.setProductDetails(productVO);
+        this.quoteDetailList.add(temp);
+        this.quoteDetailVODataModel = new QuoteDetailVODataModel(this.getQuoteDetailList());
+
+        this.quoteDetailVO.getProductDetails().setUwFieldsList(this.slipUwList);
+        return null;
+    }
+
+    /**
+     * Constructs a new quote detail object containing data present in UI quotation table only
+     * 
+     * @param quoteDetailVO
+     * @return
+     */
+    private QuoteDetailVO getQuoteDetailTableData(QuoteDetailVO quoteDetailVO) {
+        QuoteDetailVO detailVO = new QuoteDetailVO();
+        detailVO.setQuoteNo(quoteDetailVO.getQuoteNo());
+        detailVO.setCompanyCode(quoteDetailVO.getCompanyCode());
+        detailVO.setQuoteSlipPrmDetails(quoteDetailVO.getQuoteSlipPrmDetails());
+        detailVO.setSumInsured(quoteDetailVO.getSumInsured());
+        detailVO.setPolicyTerm(quoteDetailVO.getPolicyTerm());
+        detailVO.setRecommendationSummary(quoteDetailVO.getRecommendationSummary());
+        detailVO.setIsQuoteRecommended(quoteDetailVO.getIsQuoteRecommended());
+        PremiumVO premiumVO = new PremiumVO();
+        premiumVO.setPremium(quoteDetailVO.getQuoteSlipPrmDetails().getPremium());
+        premiumVO.setCoverDescription(quoteDetailVO.getQuoteSlipPrmDetails().getCoverDescription());
+        detailVO.setQuoteSlipPrmDetails(premiumVO);
+
+        ProductVO productVO = new ProductVO();
+        productVO.setProductClass(quoteDetailVO.getProductDetails().getProductClass());
+        List<ProductUWFieldVO> uwFieldList = new ArrayList<ProductUWFieldVO>();
+        for(ProductUWFieldVO uwField : quoteDetailVO.getProductDetails().getUwFieldsList()){
+            uwFieldList.add(this.getProductUwFieldVOClone(uwField));
+        }
+
+        productVO.setUwFieldsList(uwFieldList);
+        detailVO.setProductDetails(productVO);
+
+        return detailVO;
+    }
+
+    private ProductVO getProductFieldVOTableData(QuoteDetailVO quoteDetailVO, String prefix){
+
+        // populate UW Field details
+        ProductVO productVO = new ProductVO();
+        productVO.setProductClass(quoteDetailVO.getProductDetails().getProductClass());
+
+
+        FacesContext fc = FacesContext.getCurrentInstance();
+        Map<String, String> requestMap = fc.getExternalContext().getRequestParameterMap();
+
+        List<ProductUWFieldVO> uwFieldList = new ArrayList<ProductUWFieldVO>();
+        boolean allUWFieldValid = true;
+        if (!Utils.isEmpty(requestMap)) {
+            String response = null;
+            for (ProductUWFieldVO uwField : quoteDetailVO.getProductDetails()
+                    .getUwFieldsList()) {
+                response = requestMap.get(this.getComponentClientId(uwField, prefix + "_"));
+                uwField.setResponse(response);
+                
                 //validate underwriting answers in order to check if answer formats are in 
                 //accordance to values defined in the table
                 if(validateUWFieldResponseIsEmpty(uwField)){
@@ -382,431 +385,496 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
                         continue;//invalid date format for the field
                     }
                 }
-				uwFieldList.add(this.getProductUwFieldVOClone(uwField));
-			}
-		}
-	    if(!allUWFieldValid){
+                uwFieldList.add(this.getProductUwFieldVOClone(uwField));
+            }
+        }
+        if(!allUWFieldValid){
             return null;
         }
-		
-		productVO.setUwFieldsList(uwFieldList);
+        
+        productVO.setUwFieldsList(uwFieldList);
 
-		return productVO;
-	}
+        return productVO;
+    }
 
-	private ProductUWFieldVO getProductUwFieldVOClone(ProductUWFieldVO fieldVO){
-		ProductUWFieldVO clone = new ProductUWFieldVO();
-		clone.setFieldName(fieldVO.getFieldName());
-		clone.setFieldOrder(fieldVO.getFieldOrder());
-		clone.setFieldType(fieldVO.getFieldType());
-		clone.setFieldValue(fieldVO.getFieldValue());
-		clone.setIsMandatory(fieldVO.getIsMandatory());
-		clone.setIsStatusActive(fieldVO.getIsStatusActive());
-		clone.setProductClass(fieldVO.getProductClass());
-		clone.setResponse(fieldVO.getResponse());
-		clone.setUwFieldId(fieldVO.getUwFieldId());
-		clone.setFieldLength(fieldVO.getFieldLength());
-		clone.setFieldValueType(fieldVO.getFieldValueType());
-		return clone;
-
-
-
-	}
+    private ProductUWFieldVO getProductUwFieldVOClone(ProductUWFieldVO fieldVO){
+        ProductUWFieldVO clone = new ProductUWFieldVO();
+        clone.setFieldName(fieldVO.getFieldName());
+        clone.setFieldOrder(fieldVO.getFieldOrder());
+        clone.setFieldType(fieldVO.getFieldType());
+        clone.setFieldValue(fieldVO.getFieldValue());
+        clone.setIsMandatory(fieldVO.getIsMandatory());
+        clone.setIsStatusActive(fieldVO.getIsStatusActive());
+        clone.setProductClass(fieldVO.getProductClass());
+        clone.setResponse(fieldVO.getResponse());
+        clone.setUwFieldId(fieldVO.getUwFieldId());
+        clone.setFieldLength(fieldVO.getFieldLength());
+        clone.setFieldValueType(fieldVO.getFieldValueType());
+        return clone;
 
 
 
-	/**
-	 * This is to take care of saving latest edited data from the table
-	 * 
-	 * @param event
-	 */
-	public void onEdit(RowEditEvent event) {
-		FacesMessage msg = new FacesMessage("Item Edited");
-		FacesContext.getCurrentInstance().addMessage(null, msg);
-	}
+    }
 
-	/**
-	 * 
-	 * @param event
-	 */
-	public void onCancel(RowEditEvent event) {
-		FacesMessage msg = new FacesMessage("Item Cancelled");
-		FacesContext.getCurrentInstance().addMessage(null, msg);
-		this.quoteDetailList.remove(event.getObject());
-	}
 
-	public void handleClose(CloseEvent event) {
-		// Panel Component is retrieved from closeevent which was fired when a grid
-		// is being removed i.e. one of the quote details pertaining to a company
-		// is removed...
-		String companyCode = (String) event.getComponent().getAttributes().get("header");
-		QuoteDetailVO tempQuoteDetailVO = new QuoteDetailVO();
-		tempQuoteDetailVO.setCompanyCode(companyCode);
-		this.quoteDetailList.remove(tempQuoteDetailVO);
-		this.quoteDetailListClosed = new ArrayList<QuoteDetailVO>();
-		for (QuoteDetailVO detailVO : this.quoteDetailList) {
-			QuoteDetailVO temp = this.getQuoteDetailTableData(detailVO);
-			this.quoteDetailListClosed.add(temp);
-		}
 
-		/*
-		 * Iterator<QuoteDetailVO> it = this.quoteDetailList.iterator(); while (it.hasNext()) { if
-		 * (it.next().getCompanyCode().endsWith(companyCode)) { it.remove(); break; } }
-		 */
-	}
+    /**
+     * This is to take care of saving latest edited data from the table
+     * 
+     * @param event
+     */
+    public void onEdit(RowEditEvent event) {
+        FacesMessage msg = new FacesMessage("Item Edited");
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
 
-	public String save() {
-		if (!Utils.isEmpty(this.quoteDetailListClosed)) {
-			this.quoteDetailList = this.quoteDetailListClosed;
-		}
-		// At least one quote detail data should be added to save quote details
-		if (Utils.isEmpty(this.quoteDetailList)) {
-			FacesContext.getCurrentInstance().addMessage(
-					"ERROR_QUOTATION_SAVE",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Quote Details save: At least one quote should be added",
-							" At least one quote should be added"));
-			return null;
-		}
-		PolicyVO policyDetails = new PolicyVO();
-		try {
-			// Before proceeding validate if this is referral approval flow
-			FacesContext fc = FacesContext.getCurrentInstance();
-	        Map map=fc.getExternalContext().getSessionMap();		
-	        EditCustEnqDetailsMB editCustEnqDetailsMB = (EditCustEnqDetailsMB) map.get(AppConstants.BEAN_NAME_ENQUIRY_PAGE);
-			if(!Utils.isEmpty(editCustEnqDetailsMB.getAppFlow())){
-				if(editCustEnqDetailsMB.getAppFlow().equals(AppFlow.REFERRAL_APPROVAL)){
-					/*
-					TaskVO taskVO = new TaskVO();
-					taskVO.setEnquiry(enquiryDetails);
-					TaskVO svcResponse = executeTaskSvcForTaskDetails(taskVO);
-					StatusVO statusVO = new StatusVO();
-					statusVO.setCode(Integer.valueOf(Utils.getSingleValueAppConfig("STATUS_APPROVED")));
-					svcResponse.setStatusVO(statusVO);
-					*/
-					this.policyDetails.setAppFlow(AppFlow.REFERRAL_APPROVAL);
-				}
-			}
-			
-			Map<InsCompanyVO, QuoteDetailVO> addedQuotes =
-					new HashMap<InsCompanyVO, QuoteDetailVO>();
-				
-			this.recommendedFlagcnt = 0;
-			boolean validResponseForUWFields = true;
-			for (Entry<InsCompanyVO, QuoteDetailVO> entry : this.policyDetails.getQuoteDetails()
-					.entrySet()) {
-				QuoteDetailVO quoteDetVO = entry.getValue();
+    /**
+     * 
+     * @param event
+     */
+    public void onCancel(RowEditEvent event) {
+        FacesMessage msg = new FacesMessage("Item Cancelled");
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+        this.quoteDetailList.remove(event.getObject());
+    }
 
-				for (QuoteDetailVO quoteDetailVO : this.quoteDetailList) {
-
-					if (entry.getKey().getCode().equals(quoteDetailVO.getCompanyCode())) {
-						if (quoteDetailVO.getIsQuoteRecommended()) {
-							this.recommendedFlagcnt++;
-						}
-						quoteDetVO.setCompanyCode(quoteDetailVO.getCompanyCode());
-						quoteDetVO.setQuoteNo(quoteDetailVO.getQuoteNo());
-						quoteDetVO.setIsQuoteRecommended(quoteDetailVO.getIsQuoteRecommended());
-						quoteDetVO.setRecommendationSummary(quoteDetailVO
-								.getRecommendationSummary());
-						quoteDetVO.getQuoteSlipPrmDetails().setCoverDescription(
-								quoteDetailVO.getQuoteSlipPrmDetails().getCoverDescription());
-						quoteDetVO.setSumInsured(quoteDetailVO.getSumInsured());
-						quoteDetVO.setQuoteDate(quoteDetailVO.getQuoteDate());
-						PremiumVO premiumVO = new PremiumVO();
-						premiumVO.setPremium(quoteDetailVO.getQuoteSlipPrmDetails().getPremium());
-						premiumVO.setCoverDescription(quoteDetailVO.getQuoteSlipPrmDetails()
-								.getCoverDescription());
-						quoteDetVO.setQuoteSlipPrmDetails(premiumVO);
-						// status as active
-						quoteDetVO.setStatusCode(1);
-						// populate UW Field details
-						ProductVO productVO = this.getProductFieldVOTableData(quoteDetailVO, "quoteAdded_"+quoteDetailVO.getCompanyCode());
-						if(Utils.isEmpty(productVO)){
-						    validResponseForUWFields = false;
-						    continue; // there must be some validation error on underwriting fields hence proceed with next quote record 
-						}
-						quoteDetVO.setProductDetails(productVO);
-						quoteDetVO.setPolicyTerm(quoteDetailVO.getPolicyTerm());
-
-						addedQuotes.put(entry.getKey(), quoteDetVO);
-
-						break;
-					}
-				}
-			}
-			if(!validResponseForUWFields){
-			    return null;// break here as there are validation errors for Underwriting fields under quote comparison section
-			}
-			Map<InsCompanyVO, QuoteDetailVO> tempMap = new HashMap<InsCompanyVO, QuoteDetailVO>();
-			tempMap.putAll(this.policyDetails.getQuoteDetails());
-
-			this.policyDetails.setQuoteDetails(addedQuotes);
-
-			if (1 < this.recommendedFlagcnt) {
-				FacesContext.getCurrentInstance().addMessage(
-						"ERROR_QUOTATION_SAVE",
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please select only one quotation to recommend/close",
-								"Please select only one quotation to recommend"));
-				return null;
-
-			}
-
-			// Before performing save operation let's check if there are any referrals
-			//if(!Utils.isEmpty(this.getSaveFromReferralDialog()) && "true".equalsIgnoreCase(this.getSaveFromReferralDialog())){
-			if(Utils.isEmpty(this.getSaveFromReferralDialog()) || "false".equalsIgnoreCase(this.getSaveFromReferralDialog())){
-			    TaskVO taskVO = ReferralHelper.checkForReferrals(this.policyDetails, SectionId.CLOSINGSLIP);
-				if(!Utils.isEmpty(taskVO)){
-					this.setReferralDesc(taskVO.getDesc());
-					RequestContext context = RequestContext.getCurrentInstance();
-					if( context.isAjaxRequest() ){
-						context.addCallbackParam("referral", Boolean.TRUE);
-						return null;
-					}
-				}
-			}
-
-			policyDetails =
-					(PolicyVO) ServiceTaskExecutor.INSTANCE.executeSvc("quotationSvc",
-							"createQuotation", this.policyDetails);
-
-			this.policyDetails.setQuoteDetails(tempMap);
-			String tempCompCode = null;
-			for (Entry<InsCompanyVO, QuoteDetailVO> entry : policyDetails.getQuoteDetails()
-					.entrySet()) {
-				this.policyDetails.getQuoteDetails().put(entry.getKey(), entry.getValue());
-				if(entry.getValue().getIsQuoteRecommended()){
-					// temp =
-
-					this.quoteDetailVOClosed = entry.getValue();
-					tempCompCode = entry.getKey().getCode();
-					this.quoteDetailVOClosed.setCompanyCode(tempCompCode);
-				}
-
-			}
-
-		} catch (Exception ex) {
-			FacesContext.getCurrentInstance().addMessage(
-					"ERROR_QUOTATION_SAVE",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-							"Error saving quote details, please try again after sometime"));
-			ex.printStackTrace();
-			return null;
-		}
-		FacesContext.getCurrentInstance()
-		.addMessage(
-				"MESSAGE_SUCCESS",
-				new FacesMessage(FacesMessage.SEVERITY_INFO, "Quote Details Captured Successfully",
-						" successfully"));
-		return this.loadQuotationsDetail();
-
-	}
-
-	public String next() {
-		//perform save operation first on click of next button
-		if(Utils.isEmpty(this.save())){
-			return null;
-		}
-
-		if (0 == this.recommendedFlagcnt) {
-			FacesContext.getCurrentInstance().addMessage(
-					"ERROR_QUOTATION_SAVE",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please recommend a quotation before proceeding to policy screen",
-							"Please recommend a quotation before proceeding to policy screen"));
-			return null;
-
-		}
-		//next check if quote slip mb is already available in session if so then invoke retrieveInsuredQuoteDetails method
-		//on the bean
-		PolicyMB policyMB = (PolicyMB)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(AppConstants.BEAN_NAME_POLICY_PAGE);
-		if(!Utils.isEmpty(policyMB)){
-			policyMB.loadQuotationDetails();
-		}
-
-		return "policy";
-	}
-
-	/**
-	 * 
-	 * @param event
-	 * @return
-	 */
-	public String retrieveProductUWFields(javax.faces.event.AjaxBehaviorEvent event) {
-		ProductVO productVO = new ProductVO();
-		productVO.setProductClass(this.quoteDetailVO.getProductDetails().getProductClass());
-		// Product UW Fields retrieval through service call
-		ProductVO svcResponseVO = MasterDataRetrievalUtil.getProductUWDetails(productVO);
-		this.quoteDetailVO.setProductDetails(svcResponseVO);
-
-		LookupVO lookupVO = new LookupVO();
-		lookupVO.setCategory(AppConstants.LOOKUP_CATEGORY_INSCOMPPRODUCTLINK);
-		lookupVO.setLevel1(String.valueOf(this.quoteDetailVO.getProductDetails().getProductClass()));
-		LookupVO responseVO = MasterDataRetrievalUtil.getInsCompanies(lookupVO);
-		this.insCompanies = responseVO.getCodeDescMap();
-
-		return null;
-	}
-
-	/**
-	 * This method will load quotation details while loading closing slip screen
-	 * @return
-	 */
-	public String loadQuotationsDetail() {
-
-		this.loadQuoteSlipDetails();
-		this.loadQuotations();
-		
-		FacesContext fc = FacesContext.getCurrentInstance();
-        Map map=fc.getExternalContext().getSessionMap();		
-		// Referral
-        EditCustEnqDetailsMB editCustEnqDetailsMB = (EditCustEnqDetailsMB) map.get("editCustEnqDetailsMB");
-        TaskVO taskVO = new TaskVO();               
-        taskVO.setEnquiry(editCustEnqDetailsMB.getEnquiryVO());
-        LoginMB loginManageBean = (LoginMB) map.get("loginBean");
-        taskVO = this.checkReferral(loginManageBean.getUserDetails(), taskVO, 3);
-        if(!Utils.isEmpty(taskVO)) {
-            this.screenFreeze = Boolean.TRUE;         
+    public void handleClose(CloseEvent event) {
+        // Panel Component is retrieved from closeevent which was fired when a grid
+        // is being removed i.e. one of the quote details pertaining to a company
+        // is removed...
+        String companyCode = (String) event.getComponent().getAttributes().get("header");
+        QuoteDetailVO tempQuoteDetailVO = new QuoteDetailVO();
+        tempQuoteDetailVO.setCompanyCode(companyCode);
+        this.quoteDetailList.remove(tempQuoteDetailVO);
+        this.quoteDetailListClosed = new ArrayList<QuoteDetailVO>();
+        for (QuoteDetailVO detailVO : this.quoteDetailList) {
+            QuoteDetailVO temp = this.getQuoteDetailTableData(detailVO);
+            this.quoteDetailListClosed.add(temp);
         }
 
-		return "closeslip";
-	}
-
-
-	public String loadQuoteSlipDetails() {
-		QuoteSlipMB quoteSlipMB =
-				(QuoteSlipMB) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
-				.get("quoteSlipMB");
-		this.policyDetails = quoteSlipMB.getPolicyVO();
-		this.insuredDetails = this.policyDetails.getInsuredDetails();
-		this.quoteDetailVO = quoteSlipMB.getQuoteDetailVO();
-		List<ProductUWFieldVO> uwFieldList = new ArrayList<ProductUWFieldVO>();
-		for(ProductUWFieldVO uwField : this.quoteDetailVO.getProductDetails().getUwFieldsList()){
-			uwFieldList.add(this.getProductUwFieldVOClone(uwField));
-		}
-		this.slipUwList = uwFieldList;
-
-		LookupVO lookupVO = new LookupVO();
-		lookupVO.setCategory(AppConstants.LOOKUP_CATEGORY_INSCOMPPRODUCTLINK);
-		lookupVO.setLevel1(String.valueOf(this.quoteDetailVO.getProductDetails().getProductClass()));
-		LookupVO responseVO = MasterDataRetrievalUtil.getInsCompanies(lookupVO);
-		this.insCompanies = responseVO.getCodeDescMap();
-
-
-		Map<InsCompanyVO, QuoteDetailVO> mapOfQuoteDets = this.policyDetails.getQuoteDetails();
-
-		if (!Utils.isEmpty(mapOfQuoteDets)) {
-			Set<InsCompanyVO> setOfInsCompanies = mapOfQuoteDets.keySet();
-			Iterator<InsCompanyVO> iterator = setOfInsCompanies.iterator();
-			InsCompanyVO insCompanyVO = null;
-			while (iterator.hasNext()) {
-				insCompanyVO = iterator.next();
-				this.selectedInsCompanies.add(insCompanyVO.getCode()); // Added by Hafeezur
-			}
-		}
-
-
-		// Getting the Company names in the drop down
-
-
-		return "closeslip";
-	}
-
-	public void loadQuotations() {
-
-		PolicyVO policyVO =
-				(PolicyVO) ServiceTaskExecutor.INSTANCE.executeSvc("quotationSvc", "getQuotation",
-						this.quoteDetailVO);
-
-		if (Utils.isEmpty(policyVO)) {
-			return;
-		}
-		List<QuoteDetailVO> quoteDetails = new ArrayList<QuoteDetailVO>();
-		for (Entry<InsCompanyVO, QuoteDetailVO> entry : policyVO.getQuoteDetails().entrySet()) {
-			quoteDetails.add(entry.getValue());
-			this.policyDetails.getQuoteDetails().put(entry.getKey(), entry.getValue());
-			if(entry.getValue().getIsQuoteRecommended()){
-				this.quoteDetailVOClosed = entry.getValue();
-				this.quoteDetailVOClosed.setCompanyCode(entry.getKey().getCode());
-			}
-
-		}
-		this.quoteDetailList = quoteDetails;
-		this.quoteDetailVODataModel = new QuoteDetailVODataModel(this.quoteDetailList);
-
-	}
-
-	/**
-	 * @return the quoteDetailVODataModel
-	 */
-	public QuoteDetailVODataModel getQuoteDetailVODataModel() {
-		return this.quoteDetailVODataModel;
-	}
-
-
-	/**
-	 * @param quoteDetailVODataModel the quoteDetailVODataModel to set
-	 */
-	public void setQuoteDetailVODataModel(QuoteDetailVODataModel quoteDetailVODataModel) {
-		this.quoteDetailVODataModel = quoteDetailVODataModel;
-	}
- 
-	public String generatePDFForCloseSlip(){
-	    //perform save operation first on click of next button
         /*
-	    if(Utils.isEmpty(this.save())){
+         * Iterator<QuoteDetailVO> it = this.quoteDetailList.iterator(); while (it.hasNext()) { if
+         * (it.next().getCompanyCode().endsWith(companyCode)) { it.remove(); break; } }
+         */
+    }
+
+    public String save() {
+        if (!Utils.isEmpty(this.quoteDetailListClosed)) {
+            this.quoteDetailList = this.quoteDetailListClosed;
+        }
+        // At least one quote detail data should be added to save quote details
+        if (Utils.isEmpty(this.quoteDetailList)) {
+            FacesContext.getCurrentInstance().addMessage(
+                    "ERROR_QUOTATION_SAVE",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Quote Details save: At least one quote should be added",
+                            " At least one quote should be added"));
+            return null;
+        }
+        PolicyVO policyDetails = new PolicyVO();
+        try {
+            // Before proceeding validate if this is referral approval flow
+            FacesContext fc = FacesContext.getCurrentInstance();
+            Map map=fc.getExternalContext().getSessionMap();        
+            EditCustEnqDetailsMB editCustEnqDetailsMB = (EditCustEnqDetailsMB) map.get(AppConstants.BEAN_NAME_ENQUIRY_PAGE);
+            if(!Utils.isEmpty(editCustEnqDetailsMB.getAppFlow())){
+                if(editCustEnqDetailsMB.getAppFlow().equals(AppFlow.REFERRAL_APPROVAL)){
+                    /*
+                    TaskVO taskVO = new TaskVO();
+                    taskVO.setEnquiry(enquiryDetails);
+                    TaskVO svcResponse = executeTaskSvcForTaskDetails(taskVO);
+                    StatusVO statusVO = new StatusVO();
+                    statusVO.setCode(Integer.valueOf(Utils.getSingleValueAppConfig("STATUS_APPROVED")));
+                    svcResponse.setStatusVO(statusVO);
+                    */
+                    this.policyDetails.setAppFlow(AppFlow.REFERRAL_APPROVAL);
+                }
+            }
+            
+            Map<InsCompanyVO, QuoteDetailVO> addedQuotes =
+                    new HashMap<InsCompanyVO, QuoteDetailVO>();
+                
+            this.recommendedFlagcnt = 0;
+            boolean validResponseForUWFields = true;
+            for (Entry<InsCompanyVO, QuoteDetailVO> entry : this.policyDetails.getQuoteDetails()
+                    .entrySet()) {
+                QuoteDetailVO quoteDetVO = entry.getValue();
+
+                for (QuoteDetailVO quoteDetailVO : this.quoteDetailList) {
+
+                    if (entry.getKey().getCode().equals(quoteDetailVO.getCompanyCode())) {
+                        if (quoteDetailVO.getIsQuoteRecommended()) {
+                            this.recommendedFlagcnt++;
+                        }
+                        quoteDetVO.setCompanyCode(quoteDetailVO.getCompanyCode());
+                        quoteDetVO.setQuoteNo(quoteDetailVO.getQuoteNo());
+                        quoteDetVO.setIsQuoteRecommended(quoteDetailVO.getIsQuoteRecommended());
+                        quoteDetVO.setRecommendationSummary(quoteDetailVO
+                                .getRecommendationSummary());
+                        quoteDetVO.getQuoteSlipPrmDetails().setCoverDescription(
+                                quoteDetailVO.getQuoteSlipPrmDetails().getCoverDescription());
+                        quoteDetVO.setSumInsured(quoteDetailVO.getSumInsured());
+                        quoteDetVO.setQuoteDate(quoteDetailVO.getQuoteDate());
+                        PremiumVO premiumVO = new PremiumVO();
+                        premiumVO.setPremium(quoteDetailVO.getQuoteSlipPrmDetails().getPremium());
+                        premiumVO.setCoverDescription(quoteDetailVO.getQuoteSlipPrmDetails()
+                                .getCoverDescription());
+                        quoteDetVO.setQuoteSlipPrmDetails(premiumVO);
+                        // status as active
+                        quoteDetVO.setStatusCode(1);
+                        // populate UW Field details
+                        ProductVO productVO = this.getProductFieldVOTableData(quoteDetailVO, "quoteAdded_"+quoteDetailVO.getCompanyCode());
+                        if(Utils.isEmpty(productVO)){
+                            validResponseForUWFields = false;
+                            continue; // there must be some validation error on underwriting fields hence proceed with next quote record 
+                        }
+                        quoteDetVO.setProductDetails(productVO);
+                        quoteDetVO.setPolicyTerm(quoteDetailVO.getPolicyTerm());
+
+                        // Based on the flow set the status flag.
+                        if(!Utils.isEmpty(editCustEnqDetailsMB.getAppFlow())){
+                            if(editCustEnqDetailsMB.getAppFlow().equals(AppFlow.REFERRAL_APPROVAL)){
+                                quoteDetVO.setStatusCode(4);
+                            } else if(AppFlow.REFERRAL_APPROVED.equals(editCustEnqDetailsMB.getAppFlow())) {
+                                // task is already approved. Hence set the status to active.
+                                quoteDetVO.setStatusCode(1);
+                            } else if(!Utils.isEmpty(this.getSaveFromReferralDialog()) && "true".endsWith(this.getSaveFromReferralDialog())) {
+                                quoteDetVO.setStatusCode(3);
+                            }
+                        }
+                        addedQuotes.put(entry.getKey(), quoteDetVO);
+
+                        break;
+                    }
+                }
+            }
+            if(!validResponseForUWFields){
+                return null;// break here as there are validation errors for Underwriting fields under quote comparison section
+            }
+            Map<InsCompanyVO, QuoteDetailVO> tempMap = new HashMap<InsCompanyVO, QuoteDetailVO>();
+            tempMap.putAll(this.policyDetails.getQuoteDetails());
+
+            this.policyDetails.setQuoteDetails(addedQuotes);
+
+            if (1 < this.recommendedFlagcnt) {
+                FacesContext.getCurrentInstance().addMessage(
+                        "ERROR_QUOTATION_SAVE",
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please select only one quotation to recommend/close",
+                                "Please select only one quotation to recommend"));
+                return null;
+
+            }
+
+            // Before performing save operation let's check if there are any referrals
+            //if(!Utils.isEmpty(this.getSaveFromReferralDialog()) && "true".equalsIgnoreCase(this.getSaveFromReferralDialog())){
+            if((Utils.isEmpty(this.getSaveFromReferralDialog()) || "false".equalsIgnoreCase(this.getSaveFromReferralDialog())) 
+                    && (!AppFlow.REFERRAL_APPROVED.equals(this.getAppFlow()) || this.getEditApproved())){
+                TaskVO taskVO = ReferralHelper.checkForReferrals(this.policyDetails, SectionId.CLOSINGSLIP);
+                if(!Utils.isEmpty(taskVO)){
+                    this.setReferralDesc(taskVO.getDesc());
+                    RequestContext context = RequestContext.getCurrentInstance();
+                    if( context.isAjaxRequest() ){
+                        context.addCallbackParam("referral", Boolean.TRUE);
+                        return null;
+                    }
+                }
+            }
+
+            policyDetails =
+                    (PolicyVO) ServiceTaskExecutor.INSTANCE.executeSvc("quotationSvc",
+                            "createQuotation", this.policyDetails);
+
+            this.policyDetails.setQuoteDetails(tempMap);
+            String tempCompCode = null;
+            for (Entry<InsCompanyVO, QuoteDetailVO> entry : policyDetails.getQuoteDetails()
+                    .entrySet()) {
+                this.policyDetails.getQuoteDetails().put(entry.getKey(), entry.getValue());
+                if(entry.getValue().getIsQuoteRecommended()){
+                    // temp =
+
+                    this.quoteDetailVOClosed = entry.getValue();
+                    tempCompCode = entry.getKey().getCode();
+                    this.quoteDetailVOClosed.setCompanyCode(tempCompCode);
+                }
+
+            }
+
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(
+                    "ERROR_QUOTATION_SAVE",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+                            "Error saving quote details, please try again after sometime"));
+            ex.printStackTrace();
+            return null;
+        }
+        FacesContext.getCurrentInstance()
+        .addMessage(
+                "MESSAGE_SUCCESS",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Quote Details Captured Successfully",
+                        " successfully"));
+        return this.loadQuotationsDetail();
+
+    }
+
+    public String next() {
+        //perform save operation first on click of next button
+        if(Utils.isEmpty(this.save())){
+            return null;
+        }
+
+        if (0 == this.recommendedFlagcnt) {
+            FacesContext.getCurrentInstance().addMessage(
+                    "ERROR_QUOTATION_SAVE",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please recommend a quotation before proceeding to policy screen",
+                            "Please recommend a quotation before proceeding to policy screen"));
+            return null;
+
+        }
+        //next check if quote slip mb is already available in session if so then invoke retrieveInsuredQuoteDetails method
+        //on the bean
+        PolicyMB policyMB = (PolicyMB)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(AppConstants.BEAN_NAME_POLICY_PAGE);
+        if(!Utils.isEmpty(policyMB)){
+            policyMB.loadQuotationDetails();
+        }
+
+        return "policy";
+    }
+
+    /**
+     * 
+     * @param event
+     * @return
+     */
+    public String retrieveProductUWFields(javax.faces.event.AjaxBehaviorEvent event) {
+        ProductVO productVO = new ProductVO();
+        productVO.setProductClass(this.quoteDetailVO.getProductDetails().getProductClass());
+        // Product UW Fields retrieval through service call
+        ProductVO svcResponseVO = MasterDataRetrievalUtil.getProductUWDetails(productVO);
+        this.quoteDetailVO.setProductDetails(svcResponseVO);
+
+        LookupVO lookupVO = new LookupVO();
+        lookupVO.setCategory(AppConstants.LOOKUP_CATEGORY_INSCOMPPRODUCTLINK);
+        lookupVO.setLevel1(String.valueOf(this.quoteDetailVO.getProductDetails().getProductClass()));
+        LookupVO responseVO = MasterDataRetrievalUtil.getInsCompanies(lookupVO);
+        this.insCompanies = responseVO.getCodeDescMap();
+
+        return null;
+    }
+
+    /**
+     * This method will load quotation details while loading closing slip screen
+     * @return
+     */
+    public String loadQuotationsDetail() {
+
+        int closeSlipSectionCode = Integer.valueOf(Utils.getSingleValueAppConfig("SECTION_ID_CLOSESLIP"));
+        this.loadQuoteSlipDetails();
+        this.loadQuotations();
+        
+        FacesContext fc = FacesContext.getCurrentInstance();
+        Map map=fc.getExternalContext().getSessionMap();        
+        
+        // Referral
+        EditCustEnqDetailsMB editCustEnqDetailsMB = (EditCustEnqDetailsMB) map.get("editCustEnqDetailsMB");
+        LoginMB loginManageBean = (LoginMB) map.get(AppConstants.BEAN_NAME_LOGIN_PAGE);
+        this.setAssignerUser(loginManageBean.getUserDetails().getUserName());
+        UserVO loggedInUser = loginManageBean.getUserDetails();
+        
+        // Check if there is a pending referral for any of the section/transaction for this enquiry number.
+        this.setTaskVO(new TaskVO());
+        this.getTaskVO().setEnquiry(editCustEnqDetailsMB.getEnquiryVO());
+        this.setTaskVO(this.checkReferral(this.getTaskVO()));        
+        
+        this.setNavigationDisbled(Boolean.FALSE);
+        this.screenFreeze = Boolean.FALSE;
+        this.setEditVisible(Boolean.FALSE);
+        this.setAppFlow(null);
+        
+        if(!Utils.isEmpty(this.getTaskVO()) /*&& 2 == this.getTaskVO().getTaskSectionType()*/) {
+            // Screen will be freezed if there is a pending referral not assigned to logged-in user . 
+            // This referral may be for current screen or the next screens. 
+            if (closeSlipSectionCode <= this.getTaskVO().getTaskSectionType() && 3 == this.getTaskVO().getStatusVO().getCode()
+                && loggedInUser.getUserId().longValue() != this.getTaskVO().getAssigneeUser().getUserId()) {
+                this.screenFreeze = Boolean.TRUE;
+            }
+            if(3 == this.getTaskVO().getStatusVO().getCode() && closeSlipSectionCode == this.getTaskVO().getTaskSectionType()) {
+                this.setAppFlow(AppFlow.REFERRAL_APPROVAL);
+            }
+            
+            if(3 != this.getTaskVO().getStatusVO().getCode() && closeSlipSectionCode == this.getTaskVO().getTaskSectionType()) {
+                this.setAppFlow(AppFlow.REFERRAL_APPROVED);
+            }
+        }
+        
+        // Check if there is a pending/Approval referral for current section/transaction for this enquiry number.
+        this.setTaskVO(new TaskVO());
+        this.getTaskVO().setEnquiry(editCustEnqDetailsMB.getEnquiryVO());
+        this.getTaskVO().setTaskSectionType(closeSlipSectionCode);
+        this.getTaskVO().setTaskType(Integer.valueOf(Utils.getSingleValueAppConfig("TASK_TYPE_REFERRAL")));
+        this.setTaskVO(this.checkReferral(this.getTaskVO()));
+        if(!Utils.isEmpty(this.getTaskVO())) {
+            // Screen will be freezed if there is a approved referral not assigned to logged-in user for current screen. 
+            if (closeSlipSectionCode == this.getTaskVO().getTaskSectionType()
+                && loggedInUser.getUserId().longValue() != this.getTaskVO().getAssigneeUser().getUserId()) {
+                this.screenFreeze = Boolean.TRUE;                        
+            }
+            // navigation will be disabled only if referral is pending for the current screen and is not assigned to logged in user
+            if(3 == this.getTaskVO().getStatusVO().getCode() && closeSlipSectionCode == this.getTaskVO().getTaskSectionType()
+               && loggedInUser.getUserId().longValue() != this.getTaskVO().getAssigneeUser().getUserId()) {
+                this.setNavigationDisbled(Boolean.TRUE);
+            }
+            // Edit button will be visible only if current screen task is approved since screen will be freezed.
+            if(3 != this.getTaskVO().getStatusVO().getCode() && closeSlipSectionCode == this.getTaskVO().getTaskSectionType()
+               && loggedInUser.getUserId().longValue() != this.getTaskVO().getAssigneeUser().getUserId()) {
+                this.setEditVisible(Boolean.TRUE);
+            }
+        }
+
+        return "closeslip";
+    }
+
+
+    public String loadQuoteSlipDetails() {
+        QuoteSlipMB quoteSlipMB =
+                (QuoteSlipMB) FacesContext.getCurrentInstance().getExternalContext().getSessionMap()
+                .get("quoteSlipMB");
+        this.policyDetails = quoteSlipMB.getPolicyVO();
+        this.insuredDetails = this.policyDetails.getInsuredDetails();
+        this.quoteDetailVO = quoteSlipMB.getQuoteDetailVO();
+        List<ProductUWFieldVO> uwFieldList = new ArrayList<ProductUWFieldVO>();
+        for(ProductUWFieldVO uwField : this.quoteDetailVO.getProductDetails().getUwFieldsList()){
+            uwFieldList.add(this.getProductUwFieldVOClone(uwField));
+        }
+        this.slipUwList = uwFieldList;
+
+        LookupVO lookupVO = new LookupVO();
+        lookupVO.setCategory(AppConstants.LOOKUP_CATEGORY_INSCOMPPRODUCTLINK);
+        lookupVO.setLevel1(String.valueOf(this.quoteDetailVO.getProductDetails().getProductClass()));
+        LookupVO responseVO = MasterDataRetrievalUtil.getInsCompanies(lookupVO);
+        this.insCompanies = responseVO.getCodeDescMap();
+
+
+        Map<InsCompanyVO, QuoteDetailVO> mapOfQuoteDets = this.policyDetails.getQuoteDetails();
+
+        if (!Utils.isEmpty(mapOfQuoteDets)) {
+            Set<InsCompanyVO> setOfInsCompanies = mapOfQuoteDets.keySet();
+            Iterator<InsCompanyVO> iterator = setOfInsCompanies.iterator();
+            InsCompanyVO insCompanyVO = null;
+            while (iterator.hasNext()) {
+                insCompanyVO = iterator.next();
+                this.selectedInsCompanies.add(insCompanyVO.getCode()); // Added by Hafeezur
+            }
+        }
+
+
+        // Getting the Company names in the drop down
+
+
+        return "closeslip";
+    }
+
+    public void loadQuotations() {
+
+        PolicyVO policyVO =
+                (PolicyVO) ServiceTaskExecutor.INSTANCE.executeSvc("quotationSvc", "getQuotation",
+                        this.quoteDetailVO);
+
+        if (Utils.isEmpty(policyVO)) {
+            return;
+        }
+        List<QuoteDetailVO> quoteDetails = new ArrayList<QuoteDetailVO>();
+        for (Entry<InsCompanyVO, QuoteDetailVO> entry : policyVO.getQuoteDetails().entrySet()) {
+            quoteDetails.add(entry.getValue());
+            this.policyDetails.getQuoteDetails().put(entry.getKey(), entry.getValue());
+            if(entry.getValue().getIsQuoteRecommended()){
+                this.quoteDetailVOClosed = entry.getValue();
+                this.quoteDetailVOClosed.setCompanyCode(entry.getKey().getCode());
+            }
+
+        }
+        this.quoteDetailList = quoteDetails;
+        this.quoteDetailVODataModel = new QuoteDetailVODataModel(this.quoteDetailList);
+
+    }
+
+    /**
+     * @return the quoteDetailVODataModel
+     */
+    public QuoteDetailVODataModel getQuoteDetailVODataModel() {
+        return this.quoteDetailVODataModel;
+    }
+
+
+    /**
+     * @param quoteDetailVODataModel the quoteDetailVODataModel to set
+     */
+    public void setQuoteDetailVODataModel(QuoteDetailVODataModel quoteDetailVODataModel) {
+        this.quoteDetailVODataModel = quoteDetailVODataModel;
+    }
+ 
+    public String generatePDFForCloseSlip(){
+        //perform save operation first on click of next button
+        /*
+        if(Utils.isEmpty(this.save())){
             return null;
         }*/
-		try {
-			QuoteSlipPDFGenerator quoteSlipPDFGenerator=new QuoteSlipPDFGenerator();
-			Map<InsCompanyVO, QuoteDetailVO>  mapOfQuoteDets = this.policyDetails.getQuoteDetails();
+        try {
+            QuoteSlipPDFGenerator quoteSlipPDFGenerator=new QuoteSlipPDFGenerator();
+            Map<InsCompanyVO, QuoteDetailVO>  mapOfQuoteDets = this.policyDetails.getQuoteDetails();
 
-			Set<InsCompanyVO> setOfInsCompanies = mapOfQuoteDets.keySet();
-			Iterator<InsCompanyVO> iterator = setOfInsCompanies.iterator();
-			InsCompanyVO insCompanyVO = null;
-			while(iterator.hasNext()){
+            Set<InsCompanyVO> setOfInsCompanies = mapOfQuoteDets.keySet();
+            Iterator<InsCompanyVO> iterator = setOfInsCompanies.iterator();
+            InsCompanyVO insCompanyVO = null;
+            while(iterator.hasNext()){
 
-				insCompanyVO = iterator.next();
-				insCompanyVO =  (InsCompanyVO)ServiceTaskExecutor.INSTANCE.executeSvc("companySvc","getPolicy",insCompanyVO);
-				quoteSlipPDFGenerator.generatePDFForCloseSlip(this.quoteDetailVO, this.insuredDetails, insCompanyVO.getContactAndAddrDetails(),insCompanyVO.getName(), Utils.getSingleValueAppConfig("quoteSlipfilePath")+"_"+new Date().getTime(), Utils.getSingleValueAppConfig("imagePath"));
+                insCompanyVO = iterator.next();
+                insCompanyVO =  (InsCompanyVO)ServiceTaskExecutor.INSTANCE.executeSvc("companySvc","getPolicy",insCompanyVO);
+                quoteSlipPDFGenerator.generatePDFForCloseSlip(this.quoteDetailVO, this.insuredDetails, insCompanyVO.getContactAndAddrDetails(),insCompanyVO.getName(), Utils.getSingleValueAppConfig("quoteSlipfilePath")+"_"+new Date().getTime(), Utils.getSingleValueAppConfig("imagePath"));
 
 
-			}
-			FacesContext.getCurrentInstance().addMessage("SUCCESS_EMAIL_MSG", new FacesMessage(FacesMessage.SEVERITY_INFO,"Closingslip is successfully  emailed",null));
+            }
+            FacesContext.getCurrentInstance().addMessage("SUCCESS_EMAIL_MSG", new FacesMessage(FacesMessage.SEVERITY_INFO,"Closingslip is successfully  emailed",null));
 
-		}catch(Exception e){
-			FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Error generating quote details document, see the error log"));
-		}
-		return null;
-	}
+        }catch(Exception e){
+            FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Error generating quote details document, see the error log"));
+        }
+        return null;
+    }
 
-	@Override
-	public String saveReferralTask() {
-		this.setSaveFromReferralDialog("true");//highlight that save is getting invoked from referral dialog window
-		this.save();//perform save operation first and then save the referral data
+    @Override
+    public String saveReferralTask() {
+        //validate the referral window fields
+        if(!validateReferralFields()){
+            return null; //return as some field values are invalid on referral window.
+        }
+        this.setSaveFromReferralDialog("true");//highlight that save is getting invoked from referral dialog window
+        this.save();//perform save operation first and then save the referral data
 
-		Map map=FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+        Map map=FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
 
-		EditCustEnqDetailsMB editCustEnqDetailsMB=(EditCustEnqDetailsMB) map.get(AppConstants.BEAN_NAME_ENQUIRY_PAGE);
-		QuoteSlipMB quoteSlipMB = (QuoteSlipMB) map.get(AppConstants.BEAN_NAME_QUOTE_SLIP_PAGE);
-		LoginMB loginMB = (LoginMB)map.get(AppConstants.BEAN_NAME_LOGIN_PAGE);
-		//construct TaskVO to save referral desc
-		TaskVO taskVO = new TaskVO();
-		taskVO.setDesc(this.getReferralDesc());
-		StatusVO statusVO = new StatusVO();
-		statusVO.setCode(Integer.valueOf(Utils.getSingleValueAppConfig("STATUS_REFERRED")));//referred status
-		statusVO.setDesc("Referred");
-		taskVO.setStatusVO(statusVO);
-		taskVO.setEnquiry(editCustEnqDetailsMB.getEnquiryVO());
-		taskVO.setDocumentId(String.valueOf(quoteSlipMB.getQuoteDetailVO().getQuoteSlipId()));
-		taskVO.setAssignerUser(loginMB.getUserDetails());
-		UserVO assigneeUser = new IBSUserVO();
-		assigneeUser.setUserId(this.getAssigneeUser());
-		taskVO.setAssigneeUser(assigneeUser);
-		taskVO.setTaskType(Integer.valueOf(Utils.getSingleValueAppConfig("TASK_TYPE_REFERRAL")));
-		taskVO.setTaskSectionType(Integer.valueOf(Utils.getSingleValueAppConfig("SECTION_ID_CLOSESLIP")));
-		this.saveReferralTask(taskVO);//perform referral save task
-		return super.saveReferralTask();
-	}
-	
-	public String back() {
+        EditCustEnqDetailsMB editCustEnqDetailsMB=(EditCustEnqDetailsMB) map.get(AppConstants.BEAN_NAME_ENQUIRY_PAGE);
+        QuoteSlipMB quoteSlipMB = (QuoteSlipMB) map.get(AppConstants.BEAN_NAME_QUOTE_SLIP_PAGE);
+        LoginMB loginMB = (LoginMB)map.get(AppConstants.BEAN_NAME_LOGIN_PAGE);
+        //construct TaskVO to save referral desc
+        TaskVO taskVO = new TaskVO();
+        taskVO.setDesc(this.getReferralDesc());
+        StatusVO statusVO = new StatusVO();
+        statusVO.setCode(Integer.valueOf(Utils.getSingleValueAppConfig("STATUS_REFERRED")));//referred status
+        statusVO.setDesc("Referred");
+        taskVO.setStatusVO(statusVO);
+        taskVO.setEnquiry(editCustEnqDetailsMB.getEnquiryVO());
+        taskVO.setDocumentId(String.valueOf(quoteSlipMB.getQuoteDetailVO().getQuoteSlipId()));
+        taskVO.setAssignerUser(loginMB.getUserDetails());
+        UserVO assigneeUser = new IBSUserVO();
+        assigneeUser.setUserId(this.getAssigneeUser());
+        taskVO.setAssigneeUser(assigneeUser);
+        taskVO.setTaskType(Integer.valueOf(Utils.getSingleValueAppConfig("TASK_TYPE_REFERRAL")));
+        taskVO.setTaskSectionType(Integer.valueOf(Utils.getSingleValueAppConfig("SECTION_ID_CLOSESLIP")));
+        this.saveReferralTask(taskVO);//perform referral save task
+        return super.saveReferralTask();
+    }
+    
+    public String back() {
+        this.setEditApproved(Boolean.FALSE);
         return "quoteslip";
     }
 	public String printDoc() throws IOException, DocumentException{

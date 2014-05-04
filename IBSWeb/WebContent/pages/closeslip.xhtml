@@ -179,10 +179,11 @@
 				</p:dialog>
 				<!-- referral related dialog box begins -->
 				<p:dialog header="Referral Section" widgetVar="referraldialog">
+					<p:messages id="referralmessages" autoUpdate="true" closable="true" />
 					<p:panel id="referralsection">	
 						<h:panelGrid columns="4">
 							<h:outputLabel for="name" value="Referred By" />  
-						    <p:inputText id="referredby" value="#{quotationMB.referralDesc}" readonly="true" required="false" />	 	
+						    <p:inputText id="referredby" value="#{quotationMB.assignerUser}" readonly="true" required="false" />	 	
 
 
 							
@@ -197,7 +198,7 @@
 							<p:inputTextarea  id="referraldesc" value="#{quotationMB.referralDesc}"/>
 							
 						</h:panelGrid>	  				
-						<p:commandButton value="Save" action="#{quotationMB.saveReferralTask}" icon="ui-icon-disk" style="float:right:20px;" />
+						<p:commandButton value="Save" action="#{quotationMB.saveReferralTask}" update="referralmessages" icon="ui-icon-disk" style="float:right:20px;" />
 	  				</p:panel>
 	  			</p:dialog>
 				<!-- referral related dialog box ends -->										  			
@@ -223,21 +224,33 @@
     		</p:dialog>   
   	  		
 	  		<p:commandButton value="Back" action="#{quotationMB.back}" process="@this" style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
-			<p:commandButton value="Save" action="#{quotationMB.save}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" icon="ui-icon-disk"  style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
+			<p:commandButton id="closeslipsavebtn" value="Save" action="#{quotationMB.save}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" icon="ui-icon-disk"  style="float:right:20px;" disabled="#{quotationMB.navigationDisbled}"/>&nbsp;&nbsp;&nbsp;&nbsp;
 
-			<p:commandButton value="Next" action="#{quotationMB.next}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
+			<p:commandButton id="closeslipnextbtn" value="Next" action="#{quotationMB.next}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" style="float:right:20px;" disabled="#{quotationMB.navigationDisbled}"/>
 
-			<p:commandButton value="GenerateandEmailClosingSlip" action="#{quotationMB.generatePDFForCloseSlip()}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
-			
+			<p:commandButton id="generatecloseslipbtn" value="GenerateandEmailClosingSlip" action="#{quotationMB.generatePDFForCloseSlip()}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" style="float:right:20px;" disabled="#{quotationMB.navigationDisbled}"/>			
 			<p:commandButton id="dynamicDialogButton" value="PrintCloseSlip" onclick="PF('dlg').show();" type="button" icon="ui-icon-extlink"/>
-
-			<p:blockUI block="referalpanel" widgetVar="bui" blocked="#{quotationMB.screenFreeze}">Entity is under referral process hence cannot be modified unless approved</p:blockUI>
-
-					   	
+			<p:commandButton value="Edit" action="#{quotationMB.makeTransactionEditable}" onclick="PF('bui').hide()" style="float:right:20px;" rendered="#{quotationMB.editVisible}"/>&nbsp;&nbsp;&nbsp;&nbsp;
+		    
+			<p:blockUI block="referalpanel" widgetVar="bui" blocked="#{quotationMB.screenFreeze}"/>
+			<p:blockUI block="referalpanel" trigger="closeslipsavebtn">
+				LOADING<br />  
+      			<p:graphicImage value="../images/ajax-loader.gif"/>
+  			</p:blockUI>
+			
+			<p:blockUI block="referalpanel" trigger="closeslipnextbtn">
+				LOADING<br />  
+      			<p:graphicImage value="../images/ajax-loader.gif"/>
+  			</p:blockUI>
+			
+			<p:blockUI block="referalpanel" trigger="generatecloseslipbtn"> 
+				LOADING<br />  
+      			<p:graphicImage value="../images/ajax-loader.gif"/>
+  			</p:blockUI>
+			<p:blockUI block="referalpanel" widgetVar="blockuiid"/>
 	   		</h:form>
     		</ui:define>
-    		</ui:composition>
-    	
+    		</ui:composition>    	
     	
     </h:body>
 
