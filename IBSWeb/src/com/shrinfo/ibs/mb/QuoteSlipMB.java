@@ -1,5 +1,9 @@
 package com.shrinfo.ibs.mb;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,9 +18,17 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 
 import org.primefaces.context.RequestContext;
 
+import com.itextpdf.text.Chunk;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfAction;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.shrinfo.ibs.cmn.exception.BusinessException;
 import com.shrinfo.ibs.cmn.exception.SystemException;
 import com.shrinfo.ibs.cmn.logger.Logger;
@@ -439,5 +451,90 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 	public String back() {
 	    return "editenquiry";
 	}
+	public void printDoc() {
+		
+		try {
 
+			 FacesContext faces = FacesContext.getCurrentInstance();
+			 HttpServletResponse response = (HttpServletResponse) faces.getExternalContext().getResponse();
+			 
+			 String insuredname = this.insuredDetails.getName();
+	
+	        String prodName = this.quoteDetailVO.getProductDetails().getName();
+	
+	        ProductVO products = this.quoteDetailVO.getProductDetails();
+	        java.util.List<ProductUWFieldVO> prodListFields = products.getUwFieldsList();
+	
+	
+	        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+	
+	        Document document = new Document();
+	        PdfAction action = new PdfAction(PdfAction.PRINTDIALOG);
+	        PdfWriter.getInstance(document, outputStream).setOpenAction(action);;
+	         
+	        java.util.Iterator<ProductUWFieldVO> itr1 = prodListFields.iterator();
+	
+	        document.open();// PDF document opened........
+	
+	        document.add(Chunk.NEWLINE); // Something like in HTML :-)
+	
+	       // document.add(new Paragraph("Document Generated On - " + new Date().toString()));
+	        
+	        document.add(new Paragraph("To"));
+	        
+	          
+	        InsCompanyVO inscompanyVO=new InsCompanyVO();
+	        inscompanyVO.setCode(this.quoteDetailVO.getCompanyCode());
+	        
+	        inscompanyVO =  (InsCompanyVO)ServiceTaskExecutor.INSTANCE.executeSvc("companySvc","getPolicy",inscompanyVO);
+	
+	        document.add(new Paragraph("  "+inscompanyVO.getName()));
+	        
+	        if(inscompanyVO.getContactAndAddrDetails().getAddressVO().getAddress()!=null){
+	            document.add(new Paragraph("  "+inscompanyVO.getContactAndAddrDetails().getAddressVO().getAddress()));
+	        } 
+	        if(inscompanyVO.getContactAndAddrDetails().getAddressVO().getCity()!=null){
+	            document.add(new Paragraph("  "+inscompanyVO.getContactAndAddrDetails().getAddressVO().getCity()));
+	        } 
+	
+	        document.add(new Paragraph("_____________________________________________________________________________"));
+	        
+	        document.add(new Paragraph("                                                        "+prodName+"                                        "));
+	        
+	        document.add(new Paragraph("_____________________________________________________________________________"));
+	        
+	        document.add(new Paragraph("Insured Name:             "+insuredname));
+	        
+	        document.add(Chunk.NEWLINE); // Something like in HTML :-)
+	        
+	        while (itr1.hasNext()) {
+	            ProductUWFieldVO prodFields = itr1.next();
+	            document.add(new Paragraph(prodFields.getFieldName()+":                    "+prodFields.getResponse()));
+	            document.add(Chunk.NEWLINE); // Something like in HTML :-)
+	        }
+	
+	       document.close();
+	       byte[] outputBytes = outputStream.toByteArray();
+			response.setHeader("Pragma", "no-cache");  
+			response.setHeader("Cache-control", "private");  
+			response.setDateHeader("Expires", 0); 
+			response.setContentType("application/pdf");  
+			//response.setHeader("Content-Disposition", "attachment; filename=\"test.pdf\"");  
+			  
+			if (outputBytes != null) {  
+			    response.setContentLength(outputBytes.length);  
+			    ServletOutputStream out = response.getOutputStream();  
+			    out.write(outputBytes);
+			    
+			    out.flush();  
+			    out.close();  
+			   
+			} 
+			faces.getResponseComplete();
+		}
+		catch(Exception e){
+			FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Error while printng quote slip document, see the error log"));
+		}
+	  
+	}
 }
