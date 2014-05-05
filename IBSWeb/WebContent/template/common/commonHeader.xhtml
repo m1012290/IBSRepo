@@ -24,8 +24,8 @@
 			<!--<h2>Insurance Brokerage Solution</h2>  -->
 			
 			<h:form id="headerform"> 
-				<p:menubar>
-				   
+				<p:menubar model="#{menuMB.mainMenuModel}">
+							   
 				<f:facet name="options">
 					<p:outputLabel style="margin-right:30px;">Welcome : #{loginBean.userDetails.userName}</p:outputLabel>
 				</f:facet>

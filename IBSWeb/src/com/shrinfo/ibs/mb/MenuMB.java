@@ -4,6 +4,8 @@
 package com.shrinfo.ibs.mb;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -13,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
+import org.primefaces.model.menu.DefaultSubMenu;
 import org.primefaces.model.menu.MenuModel;
 
 import com.shrinfo.ibs.cmn.utils.Utils;
@@ -26,6 +29,11 @@ import com.shrinfo.ibs.util.AppConstants;
 @ManagedBean(name="menuMB")
 @RequestScoped
 public class MenuMB {
+    
+    //For main menu
+    private MenuModel mainMenuModel;
+    
+    // For breadcrumb
     private MenuModel simpleMenuModel;
     public MenuMB(){
         //default constructor
@@ -35,7 +43,22 @@ public class MenuMB {
         simpleMenuModel.addElement(getItem("Quote Slip Details", null, 3, "quoteslip.xhtml"));
         simpleMenuModel.addElement(getItem("Closing Slip Details", null, 4, "closeslip.xhtml"));
         simpleMenuModel.addElement(getItem("Policy Details", null, 5, "policy.xhtml"));
-        simpleMenuModel.addElement(getItem("Product Master", null, 6, "productmaster.xhtml"));
+        //simpleMenuModel.addElement(getItem("Product Master", null, 6, "productmaster.xhtml"));
+        
+        
+        mainMenuModel = new DefaultMenuModel();
+        // Add masters menu items
+        DefaultSubMenu submenuMaster = new DefaultSubMenu("Masters entry");        
+        List<DefaultMenuItem> productMenuList = new ArrayList<DefaultMenuItem>();
+        productMenuList.add(getItem("Product Master", null, 1, "productmaster.xhtml"));        
+        for(DefaultMenuItem item : productMenuList) {
+            submenuMaster.addElement(item);
+        }        
+        mainMenuModel.addElement(submenuMaster);
+        
+        // Add claims menu item
+        mainMenuModel.addElement(getItem("Claims Entry", null, 2, "claims.xhtml"));
+        
     }   
     
     
@@ -47,6 +70,17 @@ public class MenuMB {
         this.simpleMenuModel = simpleMenuModel;
     }
     
+    
+    public MenuModel getMainMenuModel() {
+        return mainMenuModel;
+    }
+
+    
+    public void setMainMenuModel(MenuModel mainMenuModel) {
+        this.mainMenuModel = mainMenuModel;
+    }
+
+
     public DefaultMenuItem getItem(String value, String cmd, int id, String url){
         DefaultMenuItem menuItem = new DefaultMenuItem();
         menuItem.setValue(value);
