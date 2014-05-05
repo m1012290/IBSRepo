@@ -30,7 +30,11 @@
 		<div style="position:relative; text-align:right; margin-top:-60px; padding-right:50px; float:right;">
 			<p:commandButton id="loginButton" styleClass="loginButtonCls" value="Login" action="#{loginBean.submit}"  style="height: 30px; font-size: 20px;"  />
 			<p:commandButton type="reset" id="clearform" value="Clear" styleClass="clearformCls" style="height: 30px; font-size: 20px"/>
-			</div>
+		</div>
+		<p:blockUI block="panel" trigger="loginButton">
+        	LOADING<br />  
+        <p:graphicImage value="../images/ajax-loader.gif"/>  
+    	</p:blockUI>  
 		</h:form>
     </h:body>
 </html>

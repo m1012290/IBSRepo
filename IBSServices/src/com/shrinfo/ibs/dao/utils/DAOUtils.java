@@ -730,6 +730,8 @@ public class DAOUtils {
         } else {
             logger.warn("Enquiry details can not be null in task. Please check data");
         }
+        ibsTask.setTaskType(Long.valueOf(taskVO.getTaskType().longValue()));
+        ibsTask.setTaskSectionType(Long.valueOf(taskVO.getTaskSectionType().longValue()));
         ibsTask.setIbsStatusMaster(constructIbsStatusMaster(taskVO.getStatusVO()));
         ibsTask.setId(taskVO.getId());
 
@@ -769,15 +771,15 @@ public class DAOUtils {
      * @param enquiryNo
      * @return null in case enquiry no is null
      */
-    public static IbsTask queryTaskTblForEnquiryNo(HibernateTemplate hibernateTemplate, Long enquiryNo){
+    public static IbsTask queryTaskTblForEnquiryNo(HibernateTemplate hibernateTemplate, Long enquiryNo, Long taskType, Long sectionType){
         if(Utils.isEmpty(enquiryNo)){
-        	return null;
+            return null;
         }
-    	
-    	List objList = null;
+        
+        List objList = null;
         try {
             objList =  hibernateTemplate.find(
-                " from IbsTask ibsTask where ibsTask.enquiryNo = ?",
+                " from IbsTask ibsTask where ibsTask.enquiryNo = ? ORDER BY ibsTask.id DESC",
                 enquiryNo);
         } catch (HibernateException hibernateException) {
             throw new BusinessException("pas.gi.couldNotGetTaskDetails", hibernateException,
@@ -786,7 +788,7 @@ public class DAOUtils {
         if(!Utils.isEmpty(objList)) {
             return (IbsTask)objList.get(0);
         }
-    	return null;
+        return null;
     }
 
 }

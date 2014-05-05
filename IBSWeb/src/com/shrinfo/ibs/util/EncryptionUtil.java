@@ -72,7 +72,7 @@ public class EncryptionUtil {
     
     public static void main(String args[]){
         try {
-            System.out.println(encrypt("rahul"));
+            System.out.println(encrypt("testuser1"));
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -13,6 +13,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
+import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
 import com.shrinfo.ibs.util.AppConstants;
 import com.shrinfo.ibs.util.MasterDataRetrievalUtil;
@@ -57,7 +58,17 @@ public class ProductMB extends BaseManagedBean implements java.io.Serializable{
         productUWFieldVO.setFieldLength(this.fieldLength);
         productUWFieldVO.setFieldValueType(this.productUWDetails.getFieldValueType());
         if( this.productDetails.getUwFieldsList().contains(productUWFieldVO) ){
-            FacesContext.getCurrentInstance().addMessage("ERROR_PRODUCT_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Underwriting field with same srl no has already been added"));
+            FacesContext.getCurrentInstance().addMessage("ERROR_PRODUCT_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Underwriting field with same srl no has already been added", "Underwriting field with same srl no has already been added"));
+            return null;
+        }
+        
+        if(Utils.isEmpty(this.fieldLength) && this.productUWDetails.getFieldType().equalsIgnoreCase("textbox")){
+            FacesContext.getCurrentInstance().addMessage("ERROR_PRODUCT_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Underwriting field is of type textbox hence fieldlength cannot be empty", "Underwriting field is of type textbox hence fieldlength cannot be empty"));
+            return null;
+        }
+        
+        if(this.fieldLength == 0 && this.productUWDetails.getFieldType().equalsIgnoreCase("textbox")){
+            FacesContext.getCurrentInstance().addMessage("ERROR_PRODUCT_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Underwriting field is of type textbox hence fieldlength cannot be 0", "Underwriting field is of type textbox hence fieldlength cannot be 0"));
             return null;
         }
         this.productDetails.getUwFieldsList().add(productUWFieldVO);

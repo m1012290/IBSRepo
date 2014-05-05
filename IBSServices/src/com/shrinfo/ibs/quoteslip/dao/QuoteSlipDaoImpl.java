@@ -161,19 +161,21 @@ public class QuoteSlipDaoImpl extends BaseDBDAO implements QuoteSlipDao {
             //update task table records status. This code is added here in order to keep task table
             //update as part of transaction so that our data.
             if(!Utils.isEmpty(policyVO.getAppFlow())){
-            	if(AppFlow.REFERRAL_APPROVAL.equals(policyVO.getAppFlow())){
-            		//retrieve existing task details
-            		IbsTask ibsTask = DAOUtils.queryTaskTblForEnquiryNo(getHibernateTemplate(), policyVO.getEnquiryDetails().getEnquiryNo());
-            		//check now if we need to be updating task table status through task_section_type
-            		//value saved to task table
-            		if(ibsTask.getTaskSectionType().intValue() == SectionId.QUOTESLIP.getSectionId() ){
-            			IbsStatusMaster ibsStatusMaster = ibsTask.getIbsStatusMaster();
-            			ibsStatusMaster.setCode(Long.valueOf(Utils.getSingleValueAppConfig("STATUS_APPROVED")));
-            			ibsTask.setIbsStatusMaster(ibsStatusMaster);
-            			//perform saveorupdate of ibsTask so that we have status as approved within task table
-            			saveOrUpdate(ibsTask);
-            		}
-            	}
+                if(AppFlow.REFERRAL_APPROVAL.equals(policyVO.getAppFlow())){
+                    //retrieve existing task details
+                    IbsTask ibsTask = DAOUtils.queryTaskTblForEnquiryNo(getHibernateTemplate(), policyVO.getEnquiryDetails().getEnquiryNo(),
+                        Long.valueOf(Utils.getSingleValueAppConfig("TASK_TYPE_REFERRAL")), Long.valueOf(Utils.getSingleValueAppConfig("SECTION_ID_QUOTESLIP")));
+                    getHibernateTemplate().evict(ibsTask);
+                    //check now if we need to be updating task table status through task_section_type
+                    //value saved to task table
+                    if(ibsTask.getTaskSectionType().intValue() == SectionId.QUOTESLIP.getSectionId() ){
+                        IbsStatusMaster ibsStatusMaster = new IbsStatusMaster();
+                        ibsStatusMaster.setCode(Long.valueOf(Utils.getSingleValueAppConfig("STATUS_APPROVED")));
+                        ibsTask.setIbsStatusMaster(ibsStatusMaster);
+                        //perform saveorupdate of ibsTask so that we have status as approved within task table
+                        update(ibsTask);
+                    }
+                }
             }
 
         } catch (HibernateException hibernateException) {
@@ -244,5 +246,29 @@ public class QuoteSlipDaoImpl extends BaseDBDAO implements QuoteSlipDao {
         }
 
         return mergedQuoteSlipDetails;
+    }
+
+    @Override
+    public BaseVO updateEmailedQuoteSlipFlag(BaseVO baseVO) {
+        if (null == baseVO) {
+            throw new BusinessException("cmn.unknownError", null, "Input cannot be null for updateEmailedQuoteSlipFlag service");
+        }
+        if (!(baseVO instanceof QuoteDetailVO)) {
+            throw new BusinessException("cmn.unknownError", null, "Input to be of QuoteDetailVO type for updateEmailedQuoteSlipFlag service");
+        }
+        try{
+            //retrieve save quote slip header details
+            IbsQuoteSlipHeader ibsQuoteSlipHeader = getQuoteSlipById(baseVO);
+            getHibernateTemplate().evict(ibsQuoteSlipHeader);
+            ibsQuoteSlipHeader.setQuoteSlipEmailed("Y");
+            update(ibsQuoteSlipHeader);
+        }catch (HibernateException hibernateException) {
+           throw new BusinessException("pas.gi.couldNotSaveQuoteSlipDetails", hibernateException,
+                    "Error while saving Quote Slip data");
+        }catch (Exception exception) {
+            throw new SystemException("pas.gi.couldNotSaveQuoteSlipDetails", exception,
+                    "Error while saving Quote Slip data");
+        }
+        return baseVO;
     }
 }

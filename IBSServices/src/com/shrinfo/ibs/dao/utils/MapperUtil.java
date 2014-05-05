@@ -464,7 +464,7 @@ public class MapperUtil {
             // details table
             populateQuotationDetailVO(quoteDetailVO, ibsInsCmpnyQuoteDetailsEntry.getValue());
             if (Utils.isEmpty(quoteDetailVO.getStatusCode())
-                || (1 != quoteDetailVO.getStatusCode())) {
+                || (5 == quoteDetailVO.getStatusCode())) {
                 quoteDetailVO = null;
                 continue;
             }
@@ -807,6 +807,12 @@ public class MapperUtil {
         StatusVO statusVO = new StatusVO();
         populateStatusVO(statusVO, ibsTask.getIbsStatusMaster());
         taskVO.setStatusVO(statusVO);
+        if(!Utils.isEmpty(ibsTask.getTaskType())) {
+            taskVO.setTaskType(ibsTask.getTaskType().intValue());
+        }
+        if(!Utils.isEmpty(ibsTask.getTaskSectionType())) {
+            taskVO.setTaskSectionType(ibsTask.getTaskSectionType().intValue());
+        }
     }
 
     private static void populateStatusVO(StatusVO statusVO, IbsStatusMaster ibsStatusMaster) {

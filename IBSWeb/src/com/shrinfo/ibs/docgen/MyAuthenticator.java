@@ -11,7 +11,7 @@ public  class MyAuthenticator extends Authenticator {
 
     public PasswordAuthentication getPasswordAuthentication() {
     	String username="";
-    String password="" ;
+    	String password="" ;
     	try{
          username = Utils.getSingleValueAppConfig("SMTPUSERNAME");
          password = Utils.getSingleValueAppConfig("SMTPPASSWORD");

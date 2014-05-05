@@ -15,9 +15,8 @@
 			<h:form>	
 				<p:messages id="messages" autoUpdate="true"
 					closable="true" />
-					
 				<p:panel id="referalpanel" style="padding:0px; border: none">
-					
+				 
 				<p:panel id="panelCustomer" header="Customer Details"
 					style="margin-bottom:10px;">
 
@@ -344,14 +343,21 @@
 				
 				</p:panel>
 				
-				<p:commandButton value="Save" action="#{editCustEnqDetailsMB.save}"
+				<p:commandButton id="savebtn" value="Save" action="#{editCustEnqDetailsMB.save}"
 					update="messages, panelCustomer, panelEnquiry"  validateClient="true" icon="ui-icon-disk"
 					style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;						
 				
-				<p:commandButton value="Next" ajax="false" action="#{editCustEnqDetailsMB.next}" style="float:right:20px;" />
+				<p:commandButton id="nextbtn" value="Next" action="#{editCustEnqDetailsMB.next}" style="float:right:20px;" />
 							
-				<p:blockUI block="referalpanel" widgetVar="bui" blocked="#{editCustEnqDetailsMB.screenFreeze}"> Referral message </p:blockUI> 
-				
+				<p:blockUI block="referalpanel" widgetVar="bui" blocked="#{editCustEnqDetailsMB.screenFreeze}"/>
+				<p:blockUI block="referalpanel" trigger="savebtn">
+					LOADING<br />  
+      				<p:graphicImage value="../images/ajax-loader.gif"/>
+  				</p:blockUI>
+  				<p:blockUI block="referalpanel" trigger="nextbtn">
+					LOADING<br />  
+      				<p:graphicImage value="../images/ajax-loader.gif"/>
+  				</p:blockUI>
 			</h:form>
 		</ui:define>
 	</ui:composition>

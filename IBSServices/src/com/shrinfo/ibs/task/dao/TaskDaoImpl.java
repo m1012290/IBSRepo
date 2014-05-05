@@ -73,11 +73,16 @@ public class TaskDaoImpl extends BaseDBDAO implements TaskDao {
         if (!Utils.isEmpty(((TaskVO) baseVO).getId())) {
             ibsTask = getTaskBasedOnId((TaskVO) baseVO);
         } else if (!Utils.isEmpty(((TaskVO) baseVO).getEnquiry())
+            && !Utils.isEmpty(((TaskVO) baseVO).getEnquiry().getEnquiryNo())
+            && !Utils.isEmpty(((TaskVO) baseVO).getTaskType())
+            && !Utils.isEmpty(((TaskVO) baseVO).getTaskSectionType())) {
+            ibsTask = getTaskBasedOnEnquiryNoAndTypeAndSection((TaskVO) baseVO);
+        } else if (!Utils.isEmpty(((TaskVO) baseVO).getEnquiry())
             && !Utils.isEmpty(((TaskVO) baseVO).getEnquiry().getEnquiryNo())) {
             ibsTask = getTaskBasedOnEnquiryNo((TaskVO) baseVO);
         } else {
             throw new BusinessException("cmn.unknownError", null,
-                    "Invalid task details. Please check the data passed to fetch details");
+                "Invalid task details. Please check the data passed to fetch details");
         }
 
         if(Utils.isEmpty(ibsTask)) {
@@ -113,8 +118,32 @@ public class TaskDaoImpl extends BaseDBDAO implements TaskDao {
         List objList = null;
         try {
             objList =  getHibernateTemplate().find(
-                " from IbsTask ibsTask where ibsTask.enquiryNo = ?",
+                " from IbsTask ibsTask where ibsTask.enquiryNo = ? ORDER BY ibsTask.id DESC",
                 taskVO.getEnquiry().getEnquiryNo());
+        } catch (HibernateException hibernateException) {
+            throw new BusinessException("pas.gi.couldNotGetTaskDetails", hibernateException,
+                "Error while fecthing Task details");
+        }
+        if(!Utils.isEmpty(objList)) {
+            return (IbsTask)objList.get(0);
+        }
+        
+        return null;
+    }
+    
+    /**
+     * 
+     * @param taskVO
+     * @return
+     */
+    private IbsTask getTaskBasedOnEnquiryNoAndTypeAndSection(TaskVO taskVO) {
+        
+        List objList = null;
+        try {
+            objList =  getHibernateTemplate().find(
+                " from IbsTask ibsTask where ibsTask.enquiryNo = ? and ibsTask.taskType = ? and "
+                + "ibsTask.taskSectionType = ? ORDER BY ibsTask.id DESC",
+                taskVO.getEnquiry().getEnquiryNo(), taskVO.getTaskType().longValue() ,taskVO.getTaskSectionType().longValue());
         } catch (HibernateException hibernateException) {
             throw new BusinessException("pas.gi.couldNotGetTaskDetails", hibernateException,
                 "Error while fecthing Task details");

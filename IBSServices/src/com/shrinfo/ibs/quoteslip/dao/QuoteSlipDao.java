@@ -8,5 +8,7 @@ public interface QuoteSlipDao {
     public BaseVO getQuoteSlipDetails(BaseVO baseVO);
 
     public BaseVO createQuoteSlip(BaseVO baseVO);
+    
+    public BaseVO updateEmailedQuoteSlipFlag(BaseVO baseVO);
 
 }

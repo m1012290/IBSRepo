@@ -40,7 +40,7 @@
 				  
 				        <p:column headerText="Referral description">  
 				            <h:outputText value="#{task.desc}" />  
-				        </p:column> 
+				        </p:column>
 				        
 				        <p:column headerText="Assigned by">  
 				            <h:outputText value="#{task.assignerUser.userName}" />  
@@ -92,14 +92,14 @@
 				        </h:panelGrid> 
 				    </p:panel>  
 				    
-			 		<p:commandButton value="Search" action="#{enquirySearchMB.submit}"  ajax="true"  update="panel,searchDataTableID" style="margin-right:20px;" /> 
+			 		<p:commandButton id="searchbtn" value="Search" action="#{enquirySearchMB.submit}"  ajax="true"  update="panel,searchDataTableID" style="margin-right:20px;" /> 
 			 
-			 		<p:commandButton value="New Enquiry" action="#{enquirySearchMB.newEnquiry}" style="margin-right:20px;" />  <br></br><br></br>
-			 	
+			 		<p:commandButton id="newenquirybtn" value="New Enquiry" action="#{enquirySearchMB.newEnquiry}" style="margin-right:20px;" />  <br></br><br></br>
+
 			 
 			 
-			 <p:dataTable id ="searchDataTableID" var="esb" value="#{enquirySearchMB.searchItemVODataModel}" paginator="true" rows="5"  
-                 selection="#{enquirySearchMB.searchItem}" selectionMode="single">  
+			 <p:dataTable id ="searchDataTableID" var="esb"  resizableColumns="true"   value="#{enquirySearchMB.searchItemVODataModel}" paginator="true" rows="5"  
+                 selection="#{enquirySearchMB.searchItem}" selectionMode="single">
                  
                    <p:ajax event="rowSelect" listener="#{editCustEnqDetailsMB.onRowSelect}"/> 
                     
@@ -124,7 +124,7 @@
 		        </p:column> 
 		        
 		        <p:column headerText="QuoteSlipNumber">  
-		            <h:outputText value="#{esb.quotationNum}" />  
+		            <h:outputText value="#{esb.quotationNum}" />
 		        </p:column>  
 		  
 		        <p:column headerText="PolicyNumber">  
@@ -132,6 +132,10 @@
 		        </p:column>  
 		        
     		</p:dataTable> 
+	 		<p:blockUI block="searchDataTableID" trigger="searchDataTableID">
+				LOADING<br />  
+      			<p:graphicImage value="../images/ajax-loader.gif"/>
+  			</p:blockUI>
 			 </h:form>  
     		</ui:define>
     				
