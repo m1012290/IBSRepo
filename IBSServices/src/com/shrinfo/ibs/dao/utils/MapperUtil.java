@@ -732,6 +732,8 @@ public class MapperUtil {
         }
         policyVO.setQuoteDetails(insCmpnyPolicyDetails);
 
+        policyVO.setPolicyEffectiveDate(ibsUwTransactionHeader.getPolicyStartDate());
+        policyVO.setPolicyExpiryDate(ibsUwTransactionHeader.getPolicyExpiryDate());
     }
 
     /**

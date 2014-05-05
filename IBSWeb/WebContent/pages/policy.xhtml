@@ -75,6 +75,12 @@
             						<h:outputLabel for="totalPremium" value="Total Premium" />  
             						<p:inputText id="totalPremium" value="#{policyMB.policyVO.premiumDetails.totalPremium}"  readonly="true"/>
             						
+            						<h:outputLabel for="policyEffectiveDate" value="Policy Effective Date" />  
+            						<p:calendar id="policyEffectiveDate" value="#{policyMB.policyVO.policyEffectiveDate}" pattern="dd/MM/yyyy" readonlyInput="true" required="true"/>
+            						
+            						<h:outputLabel for="policyExpiryDate" value="Policy Expiry Date" />  
+            						<p:calendar id="policyExpiryDate" value="#{policyMB.policyVO.policyExpiryDate}" pattern="dd/MM/yyyy" readonlyInput="true" required="true"/>
+            						
 			       				</h:panelGrid>
 					   </p:panel>
 					   
