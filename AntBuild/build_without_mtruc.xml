@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="IBSFullBuild"  basedir=".">
-<property name="appserver.home" value="I:\Sunil\jboss-as-7.1.1.Final\jboss-as-7.1.1.Final"/>
+<property name="appserver.home" value="C:\jboss-as-7.1.1.Final\jboss-as-7.1.1.Final"/>
 	<property name="build-root" value="."/>
 	<property name="src-root" value=".."/>
 
