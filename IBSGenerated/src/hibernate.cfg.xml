@@ -37,6 +37,7 @@
         <mapping resource="com/shrinfo/ibs/gen/pojo/IbsInsuredMaster.hbm.xml" />
         <mapping resource="com/shrinfo/ibs/gen/pojo/IbsProductUwFields.hbm.xml" />
         <mapping resource="com/shrinfo/ibs/gen/pojo/IbsUwTransactionDetail.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsClaims.hbm.xml" />
         <mapping resource="com/shrinfo/ibs/gen/pojo/IbsInsuranceCompany.hbm.xml" />
         <mapping resource="com/shrinfo/ibs/gen/pojo/IbsQuoteComparisionHeader.hbm.xml" />
     </session-factory>

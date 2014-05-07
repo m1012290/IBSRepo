@@ -36,28 +36,30 @@ public class PolicyDaoImpl extends BaseDBDAO implements PolicyDao {
         PolicyVO policyVO = new PolicyVO();
 
         IbsUwTransactionHeader ibsUwTransactionHeader = null;
-        
-        if(!Utils.isEmpty(((PolicyVO)baseVO).getPolicyId())) {
+
+        if (!Utils.isEmpty(((PolicyVO) baseVO).getPolicyId())) {
             ibsUwTransactionHeader = getPolicyBasedOnPolicyId(baseVO);
         } else if (!Utils.isEmpty(((PolicyVO) baseVO).getQuoteId())) {
             ibsUwTransactionHeader = getPolicyBasedOnQuotaton(baseVO);
+        } else if (!Utils.isEmpty(((PolicyVO) baseVO).getPolicyNo())) {
+            ibsUwTransactionHeader = getPolicyBasedOnPolicyNumber(baseVO);
         }
-        
-        if(Utils.isEmpty(ibsUwTransactionHeader)) {
+
+        if (Utils.isEmpty(ibsUwTransactionHeader)) {
             return null;
         }
-       
+
         MapperUtil.populatePolicyVO(policyVO, ibsUwTransactionHeader);
         return policyVO;
     }
-    
+
     private IbsUwTransactionHeader getPolicyBasedOnPolicyId(BaseVO baseVO) {
-        
+
         try {
-                 return (IbsUwTransactionHeader) getHibernateTemplate().find(
-                    " from IbsUwTransactionHeader ibsUwTransactionHeader "
-                        + "where ibsUwTransactionHeader.id.id = ?",
-                    ((PolicyVO) baseVO).getPolicyId()).get(0);
+            return (IbsUwTransactionHeader) getHibernateTemplate().find(
+                " from IbsUwTransactionHeader ibsUwTransactionHeader "
+                    + "where ibsUwTransactionHeader.id.id = ?", ((PolicyVO) baseVO).getPolicyId())
+                    .get(0);
 
         } catch (HibernateException hibernateException) {
             logger.error(hibernateException, "Error while policy search based on quote ID:"
@@ -65,9 +67,9 @@ public class PolicyDaoImpl extends BaseDBDAO implements PolicyDao {
             throw new BusinessException("pas.gi.couldNotGetPolicyDetails", hibernateException,
                 "Error while policy search based on quote ID:" + ((PolicyVO) baseVO).getQuoteId());
         }
-        
+
     }
-    
+
     private IbsUwTransactionHeader getPolicyBasedOnQuotaton(BaseVO baseVO) {
         List headerList = null;
 
@@ -91,6 +93,32 @@ public class PolicyDaoImpl extends BaseDBDAO implements PolicyDao {
                 + ((PolicyVO) baseVO).getQuoteId());
             throw new BusinessException("pas.gi.couldNotGetPolicyDetails", hibernateException,
                 "Error while policy search based on quote ID:" + ((PolicyVO) baseVO).getQuoteId());
+        }
+    }
+
+    private IbsUwTransactionHeader getPolicyBasedOnPolicyNumber(BaseVO baseVO) {
+        List headerList = null;
+        try {
+            headerList =
+                getHibernateTemplate().findByNamedParam(
+                    " from IbsUwTransactionHeader ibsUwTransactionHeader "
+                        + "where ibsUwTransactionHeader.policyNo =:policyNo", "policyNo",
+                    ((PolicyVO) baseVO).getPolicyNo());
+
+            if (Utils.isEmpty(headerList)) {
+                logger.info("No policy data found for Policy Number :"
+                    + ((PolicyVO) baseVO).getPolicyNo());
+                return null;
+            }
+
+            return (IbsUwTransactionHeader) headerList.get(0);
+
+        } catch (HibernateException hibernateException) {
+            logger.error(hibernateException, "Error while policy search based on policy Number:"
+                + ((PolicyVO) baseVO).getQuoteId());
+            throw new BusinessException("pas.gi.couldNotGetPolicyDetails", hibernateException,
+                "Error while policy search based on policy number:"
+                    + ((PolicyVO) baseVO).getPolicyNo());
         }
     }
 

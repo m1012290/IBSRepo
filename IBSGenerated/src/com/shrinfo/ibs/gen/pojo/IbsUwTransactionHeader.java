@@ -1,6 +1,6 @@
 package com.shrinfo.ibs.gen.pojo;
 
-// Generated Mar 25, 2014 2:46:55 AM by Hibernate Tools 3.4.0.CR1
+// Generated May 8, 2014 1:51:01 AM by Hibernate Tools 3.4.0.CR1
 
 
 import java.sql.Date;
@@ -47,6 +47,8 @@ public class IbsUwTransactionHeader implements java.io.Serializable {
 
     private String policyNo;
 
+    private Set<IbsClaims> ibsClaimses = new HashSet<IbsClaims>(0);
+
     private Set<IbsUwTransactionDetail> ibsUwTransactionDetails =
         new HashSet<IbsUwTransactionDetail>(0);
 
@@ -63,7 +65,7 @@ public class IbsUwTransactionHeader implements java.io.Serializable {
             IbsQuoteSlipHeader ibsQuoteSlipHeader, IbsProductMaster ibsProductMaster,
             Long enquiryNo, String subClass, Long customerId, Long insuredId, String insuredName,
             Date policyStartDate, Date policyExpiryDate, Long recCreUserId, Date recCreDate,
-            Long recUpdUserId, Date recUpdDate, String policyNo,
+            Long recUpdUserId, Date recUpdDate, String policyNo, Set<IbsClaims> ibsClaimses,
             Set<IbsUwTransactionDetail> ibsUwTransactionDetails) {
         this.id = id;
         this.ibsStatusMaster = ibsStatusMaster;
@@ -82,6 +84,7 @@ public class IbsUwTransactionHeader implements java.io.Serializable {
         this.recUpdUserId = recUpdUserId;
         this.recUpdDate = recUpdDate;
         this.policyNo = policyNo;
+        this.ibsClaimses = ibsClaimses;
         this.ibsUwTransactionDetails = ibsUwTransactionDetails;
     }
 
@@ -219,6 +222,14 @@ public class IbsUwTransactionHeader implements java.io.Serializable {
 
     public void setPolicyNo(String policyNo) {
         this.policyNo = policyNo;
+    }
+
+    public Set<IbsClaims> getIbsClaimses() {
+        return this.ibsClaimses;
+    }
+
+    public void setIbsClaimses(Set<IbsClaims> ibsClaimses) {
+        this.ibsClaimses = ibsClaimses;
     }
 
     public Set<IbsUwTransactionDetail> getIbsUwTransactionDetails() {

@@ -1,6 +1,6 @@
 package com.shrinfo.ibs.gen.pojo;
 
-// Generated Mar 25, 2014 2:46:55 AM by Hibernate Tools 3.4.0.CR1
+// Generated May 8, 2014 1:51:01 AM by Hibernate Tools 3.4.0.CR1
 
 
 import java.sql.Date;
@@ -41,6 +41,8 @@ public class IbsCustomer implements java.io.Serializable {
 
     private Long status;
 
+    private Set<IbsClaims> ibsClaimses = new HashSet<IbsClaims>(0);
+
     private Set<IbsCustomerEnquiry> ibsCustomerEnquiries = new HashSet<IbsCustomerEnquiry>(0);
 
     private Set<IbsInsuredMaster> ibsInsuredMasters = new HashSet<IbsInsuredMaster>(0);
@@ -55,8 +57,8 @@ public class IbsCustomer implements java.io.Serializable {
     public IbsCustomer(Long id, IbsContact ibsContact, String salutation, String name,
             String category, String custGroup, String classification, String source,
             String salesExecutive, Long recCreUserId, Date recCreDate, Long recUpdUserId,
-            Date recUpdDate, Long status, Set<IbsCustomerEnquiry> ibsCustomerEnquiries,
-            Set<IbsInsuredMaster> ibsInsuredMasters) {
+            Date recUpdDate, Long status, Set<IbsClaims> ibsClaimses,
+            Set<IbsCustomerEnquiry> ibsCustomerEnquiries, Set<IbsInsuredMaster> ibsInsuredMasters) {
         this.id = id;
         this.ibsContact = ibsContact;
         this.salutation = salutation;
@@ -71,6 +73,7 @@ public class IbsCustomer implements java.io.Serializable {
         this.recUpdUserId = recUpdUserId;
         this.recUpdDate = recUpdDate;
         this.status = status;
+        this.ibsClaimses = ibsClaimses;
         this.ibsCustomerEnquiries = ibsCustomerEnquiries;
         this.ibsInsuredMasters = ibsInsuredMasters;
     }
@@ -185,6 +188,14 @@ public class IbsCustomer implements java.io.Serializable {
 
     public void setStatus(Long status) {
         this.status = status;
+    }
+
+    public Set<IbsClaims> getIbsClaimses() {
+        return this.ibsClaimses;
+    }
+
+    public void setIbsClaimses(Set<IbsClaims> ibsClaimses) {
+        this.ibsClaimses = ibsClaimses;
     }
 
     public Set<IbsCustomerEnquiry> getIbsCustomerEnquiries() {

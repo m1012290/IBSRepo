@@ -21,6 +21,7 @@ import com.shrinfo.ibs.cmn.exception.BusinessException;
 import com.shrinfo.ibs.cmn.logger.Logger;
 import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.cmn.vo.BaseVO;
+import com.shrinfo.ibs.gen.pojo.IbsClaims;
 import com.shrinfo.ibs.gen.pojo.IbsCompany;
 import com.shrinfo.ibs.gen.pojo.IbsCompanyBranch;
 import com.shrinfo.ibs.gen.pojo.IbsContact;
@@ -43,6 +44,7 @@ import com.shrinfo.ibs.gen.pojo.IbsUwTransactionDetail;
 import com.shrinfo.ibs.gen.pojo.IbsUwTransactionHeader;
 import com.shrinfo.ibs.gen.pojo.IbsUwTransactionHeaderId;
 import com.shrinfo.ibs.vo.app.RecordType;
+import com.shrinfo.ibs.vo.business.ClaimsVO;
 import com.shrinfo.ibs.vo.business.ContactVO;
 import com.shrinfo.ibs.vo.business.CustomerVO;
 import com.shrinfo.ibs.vo.business.DocumentVO;
@@ -789,6 +791,44 @@ public class DAOUtils {
             return (IbsTask)objList.get(0);
         }
         return null;
+    }
+
+    /**
+     * 
+     * @param claimsVO
+     * @return
+     */
+    public static IbsClaims constructIbsClaims(ClaimsVO claimsVO) {
+        IbsClaims ibsClaims = new IbsClaims(); 
+        if(!Utils.isEmpty(claimsVO.getId())) {
+            ibsClaims.setId(claimsVO.getId());
+        }
+        if(!Utils.isEmpty(claimsVO.getCustomerDetails())) {
+            ibsClaims.setIbsCustomer(constructIbsCustomer(claimsVO.getCustomerDetails()));
+        }
+        if(!Utils.isEmpty(claimsVO.getInsuredDetails())) {
+            ibsClaims.setIbsInsuredMaster(constructIbsInsuredMaster(claimsVO.getInsuredDetails()));
+        }
+        if(!Utils.isEmpty(claimsVO.getPolicyDetails()) && !Utils.isEmpty(claimsVO.getPolicyDetails().getPolicyId())) {
+            IbsUwTransactionHeader ibsUwTransactionHeader = new IbsUwTransactionHeader();
+            IbsUwTransactionHeaderId ibsUwTransactionHeaderId = new IbsUwTransactionHeaderId();
+            ibsUwTransactionHeaderId.setId(claimsVO.getPolicyDetails().getPolicyId());
+            if(!Utils.isEmpty(claimsVO.getPolicyDetails().getPolicyVersion())) {
+                ibsUwTransactionHeaderId.setPolicyVersion(claimsVO.getPolicyDetails().getPolicyVersion().longValue());
+            } else {
+                ibsUwTransactionHeaderId.setPolicyVersion(1l);
+            }            
+            ibsUwTransactionHeader.setId(ibsUwTransactionHeaderId);
+            ibsClaims.setIbsUwTransactionHeader(ibsUwTransactionHeader);
+        }
+        if(!Utils.isEmpty(claimsVO.getLossAmountEstimate())) {
+            ibsClaims.setLossAmount(claimsVO.getLossAmountEstimate());
+        }
+        
+        ibsClaims.setLossDate(constructSqlDate(claimsVO.getLossDateTime()));        
+        ibsClaims.setLossDescription(claimsVO.getLossDescription());
+        
+        return ibsClaims;
     }
 
 }

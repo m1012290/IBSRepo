@@ -12,137 +12,65 @@
     	
     	<ui:composition template="/template/common/commonLayout.xhtml">
     	
-    	
-    	
-    		<ui:define name="content">
+    		<ui:define name="content">    			
     			
-    			
-    			<h:form id="form">    				
-    				<p:messages id="messages" autoUpdate="true" closable="true" />
-    				<h2>Policy Search</h2>
-    			 
-				    <p:panel id="panel" header="Search" style="margin-bottom:10px;">  
-				          
-				        <h:panelGrid columns="6" style="width:100%;">  
-				            <h:outputLabel for="customerID" value="Customer Name" />  
-				            <p:inputText id="customerID" value="#{claimsMB.custName}" required="false" />  
-				  
-				            <h:outputLabel for="mobileNumberID" value="Mobile Number" />  
-				            <p:inputText id="mobileNumberID" value="#{claimsMB.mobNumber}" 
-				            required="false" label="Mobile Number"  requiredMessage="Please enter the MobileNumber" converterMessage="Alphabets are not allowed , Please Enter the Correct Mobile Number" validatorMessage="MobileNumber should be of 8 digits">
-							<f:convertNumber integerOnly="true" type="number" for="mobileNumberID" pattern="###"/>
-							<f:validateLength minimum="8" maximum="8"  for="mobileNumberID"/>  
-							</p:inputText>
-				            
-				            <h:outputLabel for="emailID" value="EmailID" />  
-				            <p:inputText id="emailID" value="#{claimsMB.emailID}" required="false" >
-							<f:validator validatorId="custom.stringValidator" /> 
-					   		</p:inputText> 
-				            
-				            <p:outputLabel for="insuredID" value="Insured Name" />  
-				            <p:inputText id="insuredID"  value="#{claimsMB.insuredName}" required="false" /> 
-				            
-				            <h:outputLabel for="enquiryID" value="Enquiry Number" />  
-				            <p:inputText id="enquiryID" value="#{claimsMB.enquiryNumber}"  
-				            required="false" converterMessage="Enquiry Number should be a Number" >
-							<f:convertNumber integerOnly="true" type="number" for="enquiryID" pattern="###"/>
-							</p:inputText> 
-				  
-				            <h:outputLabel for="quoteSlipID" value="QuoteSlip Number" />  
-				            <p:inputText id="quoteSlipID" value="#{claimsMB.quoteSlipNumber}" 
-				            required="false" converterMessage="QuoteSlip Number should be a Number" >
-							<f:convertNumber integerOnly="true" type="number" for="quoteSlipID" pattern="###"/>
-							</p:inputText>   
-				            
-				            <h:outputLabel for="policyNumber" value="Policy Id" />
-				            <p:inputText id="policyNumber" value="#{claimsMB.policyNumber}" 
-				           	required="false" converterMessage="Policy Number should be a Number" >
-							<f:convertNumber integerOnly="true" type="number" for="policyNumber" pattern="###"/>
-							</p:inputText>   
-				            
-				        </h:panelGrid> 
-				    </p:panel>  
+    		<h:form id="form">    				
+   				<p:messages id="messages" autoUpdate="true" closable="true" />
+   				<h2>Policy Search</h2>
+   			 
+			    <p:panel id="panel" header="Search" style="margin-bottom:10px;">  
+			          
+			        <h:panelGrid columns="6" style="width:100%;">
+			            
+			            <p:outputLabel for="policyNumber" value="Policy Number" />  
+			            <p:inputText id="policyNumber"  value="#{claimsMB.policyNo}" /> 				            
+			            
+			        </h:panelGrid> 
+			    </p:panel>  
 				    
-			 		<p:commandButton id="searchbtn" value="Search" action="#{claimsMB.submit()}"  ajax="true"  update="panel,searchDataTableID" style="margin-right:20px;" /> 
-			 			 
+			 	<p:commandButton id="searchbtn" value="Search" action="#{claimsMB.policySearch()}"  ajax="true"  update="panelPolicy" style="margin-right:20px;" /> 
+			 			 		 
 			 
-			 <p:dataTable id ="searchDataTableID" var="esb"  resizableColumns="true"   value="#{claimsMB.searchItemVODataModel}" paginator="true" rows="5"  
-                 selection="#{claimsMB.searchItem}" selectionMode="single">
-                 
-                   <p:ajax event="rowSelect" update=":form:panelPolicy" listener="#{claimsMB.onRowSelect}" /> 
-                    
-		        <p:column headerText="CustomerName">  
-		            <h:outputText value="#{esb.customerName}" />  
-		        </p:column>  
-		  
-		        <p:column headerText="MobileNumber">  
-		            <h:outputText value="#{esb.customerMob}" />  
-		        </p:column> 
-		        
-		        <p:column headerText="EmailID">  
-		            <h:outputText value="#{esb.customerEmail}" />  
-		        </p:column> 
-		  
-		        <p:column headerText="InsuredName">  
-		            <h:outputText value="#{esb.insuredName}" />  
-		        </p:column>  
-		  
-		        <p:column headerText="EnquiryNumber">  
-		            <h:outputText value="#{esb.enquiryNum}" />  
-		        </p:column> 
-		        
-		        <p:column headerText="QuoteSlipNumber">  
-		            <h:outputText value="#{esb.quotationNum}" />
-		        </p:column>  
-		  
-		        <p:column headerText="PolicyNumber">  
-		            <h:outputText value="#{esb.policyNum}" />  
-		        </p:column>  
-		        
-    		</p:dataTable> 
     		
-    		<p:panel id="panelPolicy" header="Policy Details" style="margin-bottom:10px;"> 
-       			 <h:panelGrid id="panelGridPolicy" columns="2">	
-            						
-  						<h:outputLabel for="totalPremium" value="Total Premium" />  
-  						<p:inputText id="totalPremium" value="#{claimsMB.policyVO.premiumDetails.totalPremium}"  readonly="true"/>
-  						
-  						<h:outputLabel for="policyEffectiveDate" value="Policy Effective Date" />  
-  						<p:calendar id="policyEffectiveDate" value="#{claimsMB.policyVO.policyEffectiveDate}" pattern="dd/MM/yyyy" readonly="true"/>
-  						
-  						<h:outputLabel for="policyExpiryDate" value="Policy Expiry Date" />  
-  						<p:calendar id="policyExpiryDate" value="#{claimsMB.policyVO.policyExpiryDate}" pattern="dd/MM/yyyy" readonly="true"/>
-        						
-      			</h:panelGrid>
-			</p:panel>
-    		<p:blockUI block="panelPolicy" widgetVar="blockPolicy" blocked="true"/>    		
+	    		<p:panel id="panelPolicy" header="Policy Details" style="margin-bottom:10px;"> 
+	       			 <h:panelGrid id="panelGridPolicy" columns="6">
+	            						
+	  						<h:outputLabel for="totalPremium" value="Total Premium" />  
+	  						<p:inputText id="totalPremium" value="#{claimsMB.policyVO.premiumDetails.totalPremium}"  disabled="true"/>
+	  						
+	  						<h:outputLabel for="policyEffectiveDate" value="Policy Effective Date" />  
+	  						<p:calendar id="policyEffectiveDate" value="#{claimsMB.policyVO.policyEffectiveDate}" pattern="dd/MM/yyyy" disabled="true"/>
+	  						
+	  						<h:outputLabel for="policyExpiryDate" value="Policy Expiry Date" />  
+	  						<p:calendar id="policyExpiryDate" value="#{claimsMB.policyVO.policyExpiryDate}" pattern="dd/MM/yyyy" disabled="true"/>
+	        						
+	      			</h:panelGrid>
+				</p:panel>  		
     		
-    		<p:panel id="panelClaims" header="Claims Details" style="margin-bottom:10px;"> 
-       			 <h:panelGrid columns="2">
-       			             						
-   						<h:outputLabel for="causeReason" value="Cause Reason" />  
-   						<p:inputText id="causeReason" value="#{claimsMB.policyVO.coverDescription}" />
-   						
-   						<h:outputLabel for="causeDate" value="Caused On" />  
-   						<p:calendar id="causeDate" value="#{claimsMB.policyVO.policyEffectiveDate}" pattern="dd/MM/yyyy" />
-   						
-   						<h:outputLabel for="caimAmount" value="Claim Amount" />  
-   						<p:inputText id="caimAmount" value="#{claimsMB.policyVO.premiumDetails.totalPremium}" />
-   						
-   						<h:outputLabel for="description" value="Short description of cause" /> 
-   						<p:inputTextarea rows="6" cols="50" value="#{claimsMB.policyVO.coverDescription}"  
-   						requiredMessage="Please enter the Remarks" validatorMessage="Entered Remarks is short, 
-   						Please enter the remarks in detail within 200 characters"> 
-   						</p:inputTextarea>
-   						
-        						
-      			</h:panelGrid>
-			</p:panel>
+	    		<p:panel id="panelClaims" header="Claims Details" style="margin-bottom:10px;"> 
+	       			 <h:panelGrid columns="4">
+	   						
+	   						<h:outputLabel for="lossDate" value="Loss Date" />  
+	   						<p:calendar id="lossDate" value="#{claimsMB.claimsVO.lossDateTime}" pattern="dd/MM/yyyy HH:mm" readonlyInput="true" />
+	   						
+	   						<h:outputLabel for="lossAmount" value="Loss Amount estimate" />  
+	   						<p:inputText id="lossAmount" value="#{claimsMB.claimsVO.lossAmountEstimate}" />
+	   						
+	   						<h:outputLabel for="lossDescription" value="Loss description" /> 
+	   						<p:inputTextarea rows="6" cols="50" value="#{claimsMB.claimsVO.lossDescription}"> 
+	   						</p:inputTextarea>	   						
+	        						
+	      			</h:panelGrid>
+				</p:panel>
+				
+				<p:commandButton id="claimsbackbtn" value="Back" action="#{claimsMB.back()}" process="@this" style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
+				
+				<p:commandButton id="claimssavebtn" value="Save" action="#{claimsMB.submit()}" style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
     		
-	 		<p:blockUI block="searchDataTableID" trigger="searchDataTableID">
-				LOADING<br />  
-      			<p:graphicImage value="../images/ajax-loader.gif"/>
-  			</p:blockUI>
+		 		<p:blockUI block="panelPolicy,panelClaims" trigger="claimssavebtn">
+					LOADING<br />  
+	      			<p:graphicImage value="../images/ajax-loader.gif"/>
+	  			</p:blockUI>
 			 </h:form>  
     		</ui:define>
     				

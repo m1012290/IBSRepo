@@ -40,5 +40,11 @@
         <property name="recUpdDate" type="java.sql.Date">
             <column name="REC_UPD_DATE" />
         </property>
+         <set name="ibsClaimses" table="IBS_CLAIMS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="INSURED_ID" precision="25" scale="0" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsClaims" />
+        </set>
     </class>
 </hibernate-mapping>

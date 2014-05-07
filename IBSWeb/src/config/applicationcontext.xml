@@ -68,6 +68,7 @@
         <value>com/shrinfo/ibs/gen/pojo/IbsQuoteComparisionHeader.hbm.xml</value>
 		<value>com/shrinfo/ibs/gen/pojo/IbsUwTransactionHeader.hbm.xml</value>
 		<value>com/shrinfo/ibs/gen/pojo/IbsUwTransactionDetail.hbm.xml</value>
+		<value>com/shrinfo/ibs/gen/pojo/IbsClaims.hbm.xml</value>
 		</list>
 		</property>
 		
@@ -280,6 +281,16 @@
 		<property name="companyDao" ref="companySvcDAOBean" />
 	</bean>
 	<bean id="companySvcDAOBean" class="com.shrinfo.ibs.company.dao.CompanyDaoImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+	
+	<bean id="claimsSvc" parent="baseProxyBean">
+		<property name="target" ref="claimsSvcBean" />
+	</bean>
+	<bean id="claimsSvcBean" class="com.shrinfo.ibs.claims.svc.ClaimsServiceImpl">
+		<property name="claimsDao" ref="claimsSvcDAOBean" />
+	</bean>
+	<bean id="claimsSvcDAOBean" class="com.shrinfo.ibs.claims.dao.ClaimsDaoImpl">
 		<property name="hibernateTemplate" ref="hibernateTemplate" />
 	</bean>
 

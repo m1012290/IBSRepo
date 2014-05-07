@@ -61,6 +61,13 @@
         <property name="policyNo" type="string">
             <column name="POLICY_NO" length="20" not-null="true" />
         </property>
+        <set name="ibsClaimses" table="IBS_CLAIMS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="POLICY_ID" precision="25" scale="0" />
+                <column name="POLICY_VERSION" precision="20" scale="3" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsClaims" />
+        </set>
         <set name="ibsUwTransactionDetails" cascade="save-update" table="IBS_UW_TRANSACTION_DETAIL" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="POLICY_ID" precision="22" scale="0" />
