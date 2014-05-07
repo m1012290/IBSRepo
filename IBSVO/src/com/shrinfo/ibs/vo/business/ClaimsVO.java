@@ -1,7 +1,7 @@
 package com.shrinfo.ibs.vo.business;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
+import java.util.Date;
 
 import com.shrinfo.ibs.cmn.vo.BaseVO;
 
@@ -21,7 +21,7 @@ public class ClaimsVO extends BaseVO {
 
     private InsuredVO insuredDetails;
 
-    private Timestamp lossDateTime;
+    private Date lossDateTime;
 
     private BigDecimal lossAmountEstimate;
 
@@ -68,13 +68,13 @@ public class ClaimsVO extends BaseVO {
         this.insuredDetails = insuredDetails;
     }
 
-
-    public Timestamp getLossDateTime() {
+    
+    public Date getLossDateTime() {
         return lossDateTime;
     }
 
-
-    public void setLossDateTime(Timestamp lossDateTime) {
+    
+    public void setLossDateTime(Date lossDateTime) {
         this.lossDateTime = lossDateTime;
     }
 
