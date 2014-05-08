@@ -111,10 +111,29 @@ public class ClaimsMB extends BaseManagedBean implements Serializable {
     public String submit() {
 
         try {
+            if (Utils.isEmpty(this.policyVO) || Utils.isEmpty(this.policyVO.getPolicyNo())
+                || Utils.isEmpty(this.policyVO.getPremiumDetails().getTotalPremium())
+                || Utils.isEmpty(this.policyVO.getPolicyEffectiveDate())
+                || Utils.isEmpty(this.policyVO.getPolicyExpiryDate())) {
+                FacesContext.getCurrentInstance().addMessage(
+                    "ERROR_CLAIMS_SAVE",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please select a valid policy",
+                        null));
+                return null;
+            }
+            if (Utils.isEmpty(this.claimsVO.getLossAmountEstimate())
+                || Utils.isEmpty(this.claimsVO.getLossDateTime())
+                || Utils.isEmpty(this.claimsVO.getLossDescription())) {
+                FacesContext.getCurrentInstance().addMessage(
+                    "ERROR_CLAIMS_SAVE",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "Loss date, Loss Amount, Loss description are mandatory", null));
+                return null;
+            }
             this.claimsVO.setPolicyDetails(this.policyVO);
             this.claimsVO =
-                    (ClaimsVO) ServiceTaskExecutor.INSTANCE.executeSvc("claimsSvc", "saveClaim",
-                        this.claimsVO);
+                (ClaimsVO) ServiceTaskExecutor.INSTANCE.executeSvc("claimsSvc", "saveClaim",
+                    this.claimsVO);
 
         } catch (BusinessException be) {
             logger.error(be, "Exception [" + be + "] encountered retreiving policy details");

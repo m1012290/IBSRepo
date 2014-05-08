@@ -189,6 +189,14 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
     public String save() {
         PolicyVO policyDetailsOP = null;
         try {
+            if(this.getPolicyVO().getPolicyEffectiveDate().getTime() >= this.getPolicyVO().getPolicyExpiryDate().getTime()) {
+                FacesContext.getCurrentInstance()
+                .addMessage(
+                    "ERROR_POLICY_SAVE",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Policy Expiry date should be greater than Effective date",
+                        "Error saving Policy details."));
+                return null;
+            }
 
             Map<InsCompanyVO, QuoteDetailVO> quoteDetailsMap =
                 new HashMap<InsCompanyVO, QuoteDetailVO>();
@@ -213,17 +221,17 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
             policyDetailsOP =
                 (PolicyVO) ServiceTaskExecutor.INSTANCE.executeSvc("policySvc", "createPolicy",
                     this.policyDetails);
+            FacesContext.getCurrentInstance().addMessage("MESSAGE_SUCCESS",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Policy Details Captured Successfully ", " successfully"));
         } catch (Exception ex) {
             logger.error(ex, "Error saving Policy details");
             FacesContext.getCurrentInstance()
                     .addMessage(
-                        "ERROR_QUOTATION_SAVE",
+                        "ERROR_POLICY_SAVE",
                         new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error saving policy details, please try again later",
                             "Error saving Policy details."));
-            return null;
         }
-        FacesContext.getCurrentInstance().addMessage("MESSAGE_SUCCESS",
-            new FacesMessage(FacesMessage.SEVERITY_INFO, "Policy Details Captured Successfully ", " successfully"));
+        
         return null;
     }
 
