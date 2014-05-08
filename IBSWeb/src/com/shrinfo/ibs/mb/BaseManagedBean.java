@@ -5,7 +5,11 @@ package com.shrinfo.ibs.mb;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -470,5 +474,28 @@ public abstract class BaseManagedBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage("REFERRAL_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Please don't select yourself as assignee", null));
         }
         return validFields;
+    }
+    
+    /**
+     * 
+     * @param insuranceCompaniesMap
+     * @param selectedCompanyCodes
+     * @return
+     */
+    public Map<String, String> getSelectedInsCompaniesMapFromList(Map<String, String> insuranceCompaniesMap, List<String> selectedCompanyCodes){
+        Map<String, String> selectedInsCompaniesMap = new HashMap<String, String>();
+        if(!Utils.isEmpty(insuranceCompaniesMap) && !Utils.isEmpty(selectedCompanyCodes)){
+	    	Set<Entry<String,String>> entrySet = insuranceCompaniesMap.entrySet();
+	        Iterator<Entry<String, String>> iterator = entrySet.iterator();
+	        while(iterator.hasNext()){
+	        	Entry<String,String> entryObj = iterator.next();
+	        	for(String selectedCompanyCode : selectedCompanyCodes){
+	        		if(selectedCompanyCode.equals(entryObj.getValue())){
+	        			selectedInsCompaniesMap.put(entryObj.getKey(), selectedCompanyCode);
+	        		}
+	        	}
+	        }
+        }
+        return selectedInsCompaniesMap;
     }
 }

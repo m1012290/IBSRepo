@@ -1,9 +1,6 @@
 package com.shrinfo.ibs.mb;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,7 +22,6 @@ import org.primefaces.context.RequestContext;
 
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfAction;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -79,6 +75,7 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
     private PolicyVO policyVO = new PolicyVO();
     private Boolean renderCustomUWComponent = Boolean.FALSE;
     private Boolean screenFreeze = Boolean.FALSE;
+    private Map<String,String> selectedInsCompaniesMap = new HashMap<String, String>();
 
     //This is an important method which is overriden from parent managed bean
     // this is an reinitializer block which includes all the instance fields which are bound to form
@@ -87,6 +84,7 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
     protected void reinitializeBeanFields(){
         this.selectedInsCompanies = new ArrayList<String>();
         this.insCompanies = new HashMap<String, String>();
+        this.selectedInsCompaniesMap = new HashMap<String, String>();
         this.quoteDetailVO = new QuoteDetailVO();
         this.insuredDetails=new InsuredVO();
         this.policyVO = new PolicyVO();
@@ -151,7 +149,16 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
         this.screenFreeze = screenFreeze;
     }
 
-    public String save(){
+    public Map<String, String> getSelectedInsCompaniesMap() {
+		return selectedInsCompaniesMap;
+	}
+
+	public void setSelectedInsCompaniesMap(
+			Map<String, String> selectedInsCompaniesMap) {
+		this.selectedInsCompaniesMap = selectedInsCompaniesMap;
+	}
+
+	public String save(){
         PolicyVO policyVO=new PolicyVO();
 
         try {
@@ -207,14 +214,6 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
             // Before proceeding validate if this is referral approval flow
             if(!Utils.isEmpty(editCustEnqDetailsMB.getAppFlow())){
                 if(editCustEnqDetailsMB.getAppFlow().equals(AppFlow.REFERRAL_APPROVAL)){
-                    /*
-                    TaskVO taskVO = new TaskVO();
-                    taskVO.setEnquiry(enquiryDetails);
-                    TaskVO svcResponse = executeTaskSvcForTaskDetails(taskVO);
-                    StatusVO statusVO = new StatusVO();
-                    statusVO.setCode(Integer.valueOf(Utils.getSingleValueAppConfig("STATUS_APPROVED")));
-                    svcResponse.setStatusVO(statusVO);
-                    */
                     policyVO.setAppFlow(AppFlow.REFERRAL_APPROVAL);
                 }
             }
@@ -246,7 +245,8 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
                     this.quoteDetailVO.setStatusCode(3);
                 }
             }
-            
+            //selected insurance companies map out of selected companies list
+            this.selectedInsCompaniesMap = this.getSelectedInsCompaniesMapFromList(this.insCompanies, this.selectedInsCompanies);
             while(compItr.hasNext()){
                 compCodes=compItr.next();
                 insComp=new InsCompanyVO();
@@ -262,9 +262,9 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
                 TaskVO taskVO = ReferralHelper.checkForReferrals(policyVO, SectionId.QUOTESLIP);
                 if(!Utils.isEmpty(taskVO)){
                     this.setReferralDesc(taskVO.getDesc());
-                    RequestContext context = RequestContext.getCurrentInstance();
-                    if( context.isAjaxRequest() ){
-                        context.addCallbackParam("referral", Boolean.TRUE);
+                    RequestContext requestContext = RequestContext.getCurrentInstance();
+                    if( requestContext.isAjaxRequest() ){
+                    	requestContext.addCallbackParam("referral", Boolean.TRUE);
                         return null;
                     }
                 }
@@ -280,11 +280,11 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
             return null;
         }catch(SystemException se){
             logger.error(se, "Exception ["+ se +"] encountered while saving customer/enquiry details");
-            FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Unexpected error encountered, please try again after sometime"));
+            FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Unexpected error encountered, please try again after sometime", null));
             return null;
         }catch(Exception ex){
             logger.error(ex, "Exception ["+ ex +"] encountered while saving customer/enquiry details");
-            FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Unexpected error encountered, please try again after sometime"));
+            FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Unexpected error encountered, please try again after sometime", null));
             return null;
         }
         
@@ -438,6 +438,7 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
                 lookupVO.setLevel1(String.valueOf(this.quoteDetailVO.getProductDetails().getUwFieldsList().get(0).getProductClass()));
                 LookupVO responseVO = MasterDataRetrievalUtil.getInsCompanies(lookupVO);
                 this.insCompanies = responseVO.getCodeDescMap();
+                this.selectedInsCompaniesMap = this.getSelectedInsCompaniesMapFromList(this.insCompanies, this.selectedInsCompanies);
                 this.policyVO = policyVO;
 
             }

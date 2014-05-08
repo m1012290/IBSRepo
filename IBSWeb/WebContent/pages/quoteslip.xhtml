@@ -178,27 +178,27 @@
 			 
   
    			 <p:dialog id="dialog" header="PrintQuoteSlip" widgetVar="dlg">  
-  
+  				<p:panel id="printdocsection">
 	      		  <h:panelGrid columns="2" cellpadding="2">  
 	      			<h:outputLabel value=" Please Select the Company Name " />
 	      			<h:outputLabel value=" and Click on the Print link" />
-		           <p:selectOneMenu value="#{quoteSlipMB.quoteDetailVO.companyCode}">
+		           <p:selectOneMenu value="#{quoteSlipMB.quoteDetailVO.companyCode}" >
 	                            <f:selectItem itemLabel="---Select Company Name---" itemValue="" />
-	            				<f:selectItems value="#{quoteSlipMB.insCompanies}"/>
+	            				<f:selectItems value="#{quoteSlipMB.selectedInsCompaniesMap}"/>
 	               </p:selectOneMenu>
 	               
 	               	 <h:commandLink   value=" Print" target="_blank"  action="#{quoteSlipMB.printDoc}">
 	                  </h:commandLink>
 		      
 	       		  </h:panelGrid>  
-          
+          		</p:panel>
     		</p:dialog> 
 
 
 			<p:commandButton value="Back" action="#{quoteSlipMB.back}" process="@this" style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
-			<p:commandButton id="quoteslipsavebtn" value="Save" action="#{quoteSlipMB.save}"  update="messages, panelProductDetails, panelInsured, referralsection" oncomplete="handleSaveResponse(xhr, status, args)" icon="ui-icon-disk"  style="float:right:20px;" disabled="#{quoteSlipMB.navigationDisbled}" />&nbsp;&nbsp;&nbsp;&nbsp;
+			<p:commandButton id="quoteslipsavebtn" value="Save" action="#{quoteSlipMB.save}"  update="messages, panelProductDetails, panelInsured, referralsection, printdocsection" oncomplete="handleSaveResponse(xhr, status, args)" icon="ui-icon-disk"  style="float:right:20px;" disabled="#{quoteSlipMB.navigationDisbled}" />&nbsp;&nbsp;&nbsp;&nbsp;
 			<p:commandButton id="quoteslipnextbtn" value="Next" action="#{quoteSlipMB.next}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" style="float:right:20px;" disabled="#{quoteSlipMB.navigationDisbled}" />&nbsp;&nbsp;&nbsp;&nbsp;
-			<p:commandButton id="generatequoteslipbtn" value="GenerateAndEmailQuoteSlip" action="#{quoteSlipMB.generatePDFForQuoteSlip()}" update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" style="float:right:20px;" disabled="#{quoteSlipMB.navigationDisbled}" />
+			<p:commandButton id="generatequoteslipbtn" value="GenerateAndEmailQuoteSlip" action="#{quoteSlipMB.generatePDFForQuoteSlip()}" update="messages,referralsection, printdocsection" oncomplete="handleSaveResponse(xhr, status, args)" style="float:right:20px;" disabled="#{quoteSlipMB.navigationDisbled}" />
 			<p:commandButton id="dynamicDialogButton" value="PrintQuoteSlip" onclick="PF('dlg').show();" type="button"  icon="ui-icon-extlink"/> 
 			<p:commandButton value="Edit" action="#{quoteSlipMB.makeTransactionEditable}" onclick="PF('bui').hide()" style="float:right:20px;" rendered="#{quoteSlipMB.editVisible}"/>&nbsp;&nbsp;&nbsp;&nbsp;
 			

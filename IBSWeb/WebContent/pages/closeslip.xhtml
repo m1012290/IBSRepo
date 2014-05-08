@@ -62,10 +62,10 @@
                <p:panelGrid styleClass="closeSlipTable" columns="6" style="width:100%; padding:0px;">
 
                     <h:outputLabel for="compName" value="CompanyName" />
-					<p:selectOneMenu value="#{quotationMB.quoteDetailVO.companyCode}">
+					<p:selectOneMenu value="#{quotationMB.companyCodeForQuote}" >
                             <f:selectItem itemLabel="---Select Company Name---" itemValue="" />
-            				<f:selectItems value="#{quotationMB.insCompanies}"/>
-                   `</p:selectOneMenu>                     
+            				<f:selectItems value="#{quotationMB.selectedInsCompaniesMap}"/>
+                   `</p:selectOneMenu>
                    	<h:outputLabel for="quoteNum" value="Quotation Number" />
                     <p:inputText value="#{quotationMB.quoteDetailVO.quoteNo}" required="false" >
 				   </p:inputText>
@@ -207,28 +207,28 @@
 	  		 
   
    			 <p:dialog id="dialog" header="PrintCloseSlip" widgetVar="dlg">  
-  
+  				<p:panel id="printdocsection">
 	      		  <h:panelGrid columns="2" cellpadding="2">  
 					<h:outputLabel value=" Please Select the Company Name" />
 	      			<h:outputLabel value="and Click on the Print link" />
 	      			<p:selectOneMenu value="#{quotationMB.quoteDetailVO.companyCode}">
 	                            <f:selectItem itemLabel="---Select Company Name---" itemValue="" />
-	            				<f:selectItems value="#{quotationMB.insCompanies}"/>
+	            				<f:selectItems value="#{quotationMB.selectedInsCompaniesMap}"/>
 	               </p:selectOneMenu> 
 	               
 	               	  <h:commandLink   value="Print" target="_blank"  action="#{quotationMB.printDoc}">
 	                  </h:commandLink>
 		      
 	       		  </h:panelGrid>  
-          
+          		</p:panel>
     		</p:dialog>   
   	  		
 	  		<p:commandButton value="Back" action="#{quotationMB.back}" process="@this" style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
-			<p:commandButton id="closeslipsavebtn" value="Save" action="#{quotationMB.save}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" icon="ui-icon-disk"  style="float:right:20px;" disabled="#{quotationMB.navigationDisbled}"/>&nbsp;&nbsp;&nbsp;&nbsp;
+			<p:commandButton id="closeslipsavebtn" value="Save" action="#{quotationMB.save}"  update="messages,referralsection,printdocsection" oncomplete="handleSaveResponse(xhr, status, args)" icon="ui-icon-disk"  style="float:right:20px;" disabled="#{quotationMB.navigationDisbled}"/>&nbsp;&nbsp;&nbsp;&nbsp;
 
 			<p:commandButton id="closeslipnextbtn" value="Next" action="#{quotationMB.next}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" style="float:right:20px;" disabled="#{quotationMB.navigationDisbled}"/>
 
-			<p:commandButton id="generatecloseslipbtn" value="GenerateandEmailClosingSlip" action="#{quotationMB.generatePDFForCloseSlip()}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" style="float:right:20px;" disabled="#{quotationMB.navigationDisbled}"/>			
+			<p:commandButton id="generatecloseslipbtn" value="GenerateandEmailClosingSlip" action="#{quotationMB.generatePDFForCloseSlip()}"  update="messages,referralsection, printdocsection" oncomplete="handleSaveResponse(xhr, status, args)" style="float:right:20px;" disabled="#{quotationMB.navigationDisbled}"/>			
 			<p:commandButton id="dynamicDialogButton" value="PrintCloseSlip" onclick="PF('dlg').show();" type="button" icon="ui-icon-extlink"/>
 			<p:commandButton value="Edit" action="#{quotationMB.makeTransactionEditable}" onclick="PF('bui').hide()" style="float:right:20px;" rendered="#{quotationMB.editVisible}"/>&nbsp;&nbsp;&nbsp;&nbsp;
 		    

@@ -5,7 +5,6 @@ package com.shrinfo.ibs.mb;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -92,6 +91,9 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
     
     private Boolean screenFreeze = Boolean.FALSE;
     
+    private String companyCodeForQuote;
+    
+    private Map<String,String> selectedInsCompaniesMap = new HashMap<String, String>();
         
     public Boolean getScreenFreeze() {
         return screenFreeze;
@@ -223,7 +225,24 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
         this.quoteDetailList = quoteDetailList;
     }
 
-    /**
+    public String getCompanyCodeForQuote() {
+		return companyCodeForQuote;
+	}
+
+	public void setCompanyCodeForQuote(String companyCodeForQuote) {
+		this.companyCodeForQuote = companyCodeForQuote;
+	}
+
+	public Map<String, String> getSelectedInsCompaniesMap() {
+		return selectedInsCompaniesMap;
+	}
+
+	public void setSelectedInsCompaniesMap(
+			Map<String, String> selectedInsCompaniesMap) {
+		this.selectedInsCompaniesMap = selectedInsCompaniesMap;
+	}
+
+	/**
      * This adds a new quote into UI table. Here data which is edited in
      * the table itself will not be captured.
 
@@ -239,7 +258,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
                             "Selected company record is already added"));
             return null;
         }
-
+        this.quoteDetailVO.setCompanyCode(this.companyCodeForQuote);
         /**
          * Validation for quotation details being added
          */
@@ -606,6 +625,9 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
             ex.printStackTrace();
             return null;
         }
+        //this will be used within print dialog box
+        //this.selectedInsCompaniesMap = this.getSelectedInsCompaniesMapFromList(this.insCompanies, this.selectedInsCompanies);
+        
         FacesContext.getCurrentInstance()
         .addMessage(
                 "MESSAGE_SUCCESS",
@@ -764,11 +786,8 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
                 this.selectedInsCompanies.add(insCompanyVO.getCode()); // Added by Hafeezur
             }
         }
-
-
-        // Getting the Company names in the drop down
-
-
+        //this will be used within print dialog box
+        this.selectedInsCompaniesMap = this.getSelectedInsCompaniesMapFromList(this.insCompanies, this.selectedInsCompanies);
         return "closeslip";
     }
 
