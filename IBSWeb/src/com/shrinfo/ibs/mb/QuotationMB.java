@@ -5,6 +5,7 @@ package com.shrinfo.ibs.mb;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -28,8 +29,10 @@ import org.primefaces.event.RowEditEvent;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfAction;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.cmn.vo.UserVO;
@@ -91,9 +94,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
     
     private Boolean screenFreeze = Boolean.FALSE;
     
-    private String companyCodeForQuote;
     
-    private Map<String,String> selectedInsCompaniesMap = new HashMap<String, String>();
         
     public Boolean getScreenFreeze() {
         return screenFreeze;
@@ -225,24 +226,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
         this.quoteDetailList = quoteDetailList;
     }
 
-    public String getCompanyCodeForQuote() {
-		return companyCodeForQuote;
-	}
-
-	public void setCompanyCodeForQuote(String companyCodeForQuote) {
-		this.companyCodeForQuote = companyCodeForQuote;
-	}
-
-	public Map<String, String> getSelectedInsCompaniesMap() {
-		return selectedInsCompaniesMap;
-	}
-
-	public void setSelectedInsCompaniesMap(
-			Map<String, String> selectedInsCompaniesMap) {
-		this.selectedInsCompaniesMap = selectedInsCompaniesMap;
-	}
-
-	/**
+    /**
      * This adds a new quote into UI table. Here data which is edited in
      * the table itself will not be captured.
 
@@ -258,7 +242,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
                             "Selected company record is already added"));
             return null;
         }
-        this.quoteDetailVO.setCompanyCode(this.companyCodeForQuote);
+
         /**
          * Validation for quotation details being added
          */
@@ -361,7 +345,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
         // populate UW Field details
         ProductVO productVO = new ProductVO();
         productVO.setProductClass(quoteDetailVO.getProductDetails().getProductClass());
-
+        productVO.setName(quoteDetailVO.getProductDetails().getName());
 
         FacesContext fc = FacesContext.getCurrentInstance();
         Map<String, String> requestMap = fc.getExternalContext().getRequestParameterMap();
@@ -625,9 +609,6 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
             ex.printStackTrace();
             return null;
         }
-        //this will be used within print dialog box
-        //this.selectedInsCompaniesMap = this.getSelectedInsCompaniesMapFromList(this.insCompanies, this.selectedInsCompanies);
-        
         FacesContext.getCurrentInstance()
         .addMessage(
                 "MESSAGE_SUCCESS",
@@ -786,8 +767,11 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
                 this.selectedInsCompanies.add(insCompanyVO.getCode()); // Added by Hafeezur
             }
         }
-        //this will be used within print dialog box
-        this.selectedInsCompaniesMap = this.getSelectedInsCompaniesMapFromList(this.insCompanies, this.selectedInsCompanies);
+
+
+        // Getting the Company names in the drop down
+
+
         return "closeslip";
     }
 
@@ -838,19 +822,71 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
         }*/
         try {
             QuoteSlipPDFGenerator quoteSlipPDFGenerator=new QuoteSlipPDFGenerator();
-            Map<InsCompanyVO, QuoteDetailVO>  mapOfQuoteDets = this.policyDetails.getQuoteDetails();
+            
+            for (Entry<InsCompanyVO, QuoteDetailVO> entry : this.policyDetails.getQuoteDetails()
+                    .entrySet()) {
+                QuoteDetailVO quoteDetVO = entry.getValue();
+                InsCompanyVO insCompanyVO=new InsCompanyVO();
 
+
+                for (QuoteDetailVO quoteDetailVO : this.quoteDetailList) {
+
+                    if (entry.getKey().getCode().equals(quoteDetailVO.getCompanyCode())) {
+                        if (quoteDetailVO.getIsQuoteRecommended()) {
+                            this.recommendedFlagcnt++;
+                            quoteDetVO.setCompanyCode(quoteDetailVO.getCompanyCode());
+                            quoteDetVO.setQuoteNo(quoteDetailVO.getQuoteNo());
+                            quoteDetVO.setIsQuoteRecommended(quoteDetailVO.getIsQuoteRecommended());
+                            quoteDetVO.setRecommendationSummary(quoteDetailVO
+                                    .getRecommendationSummary());
+                            quoteDetVO.getQuoteSlipPrmDetails().setCoverDescription(
+                                    quoteDetailVO.getQuoteSlipPrmDetails().getCoverDescription());
+                            quoteDetVO.setSumInsured(quoteDetailVO.getSumInsured());
+                            quoteDetVO.setQuoteDate(quoteDetailVO.getQuoteDate());
+                            PremiumVO premiumVO = new PremiumVO();
+                            premiumVO.setPremium(quoteDetailVO.getQuoteSlipPrmDetails().getPremium());
+                            premiumVO.setCoverDescription(quoteDetailVO.getQuoteSlipPrmDetails()
+                                    .getCoverDescription());
+                            quoteDetVO.setQuoteSlipPrmDetails(premiumVO);
+                            // status as active
+                            quoteDetVO.setStatusCode(1);
+                            
+                            // populate UW Field details
+                            ProductVO productVO = this.getProductFieldVOTableData(quoteDetailVO, "quoteAdded_"+quoteDetailVO.getCompanyCode());
+                            productVO.setName(this.quoteDetailVO.getProductDetails().getName());
+                            if(Utils.isEmpty(productVO)){
+                                //validResponseForUWFields = false;
+                                continue; // there must be some validation error on underwriting fields hence proceed with next quote record 
+                            }
+                            quoteDetVO.setProductDetails(productVO);
+                            quoteDetVO.setPolicyTerm(quoteDetailVO.getPolicyTerm());
+                            
+                            insCompanyVO.setCode(quoteDetailVO.getCompanyCode());
+                            insCompanyVO =  (InsCompanyVO)ServiceTaskExecutor.INSTANCE.executeSvc("companySvc","getPolicy",insCompanyVO);
+
+                            quoteSlipPDFGenerator.generatePDFForCloseSlip(quoteDetVO, this.insuredDetails, insCompanyVO.getContactAndAddrDetails(),insCompanyVO.getName(), Utils.getSingleValueAppConfig("quoteSlipfilePath")+"_"+new Date().getTime(), Utils.getSingleValueAppConfig("imagePath"));
+                        }
+                        
+                 
+                    }
+
+                }
+
+            }
+           /* Map<InsCompanyVO, QuoteDetailVO>  mapOfQuoteDets = this.policyDetails.getQuoteDetails();
+            
             Set<InsCompanyVO> setOfInsCompanies = mapOfQuoteDets.keySet();
             Iterator<InsCompanyVO> iterator = setOfInsCompanies.iterator();
             InsCompanyVO insCompanyVO = null;
             while(iterator.hasNext()){
 
                 insCompanyVO = iterator.next();
+                QuoteDetailVO qdVO=mapOfQuoteDets.get(insCompanyVO);
                 insCompanyVO =  (InsCompanyVO)ServiceTaskExecutor.INSTANCE.executeSvc("companySvc","getPolicy",insCompanyVO);
-                quoteSlipPDFGenerator.generatePDFForCloseSlip(this.quoteDetailVO, this.insuredDetails, insCompanyVO.getContactAndAddrDetails(),insCompanyVO.getName(), Utils.getSingleValueAppConfig("quoteSlipfilePath")+"_"+new Date().getTime(), Utils.getSingleValueAppConfig("imagePath"));
+                quoteSlipPDFGenerator.generatePDFForCloseSlip(qdVO, this.insuredDetails, insCompanyVO.getContactAndAddrDetails(),insCompanyVO.getName(), Utils.getSingleValueAppConfig("quoteSlipfilePath")+"_"+new Date().getTime(), Utils.getSingleValueAppConfig("imagePath"));
 
 
-            }
+            }*/
             FacesContext.getCurrentInstance().addMessage("SUCCESS_EMAIL_MSG", new FacesMessage(FacesMessage.SEVERITY_INFO,"Closingslip is successfully  emailed",null));
 
         }catch(Exception e){
@@ -896,112 +932,198 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
         this.setEditApproved(Boolean.FALSE);
         return "quoteslip";
     }
-	public String printDoc() throws IOException, DocumentException{
+    public String printDoc() throws IOException, DocumentException{
 
-		 FacesContext faces = FacesContext.getCurrentInstance();
-		 HttpServletResponse response = (HttpServletResponse) faces.getExternalContext().getResponse();
-		 
-		 String insuredname = insuredDetails.getName();
+         FacesContext faces = FacesContext.getCurrentInstance();
+         HttpServletResponse response = (HttpServletResponse) faces.getExternalContext().getResponse();
+         
+        Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 20,
+                  Font.BOLD);
+        Font prodFont = new Font(Font.FontFamily.TIMES_ROMAN, 16,
+              Font.BOLD);
+        Font insFont = new Font(Font.FontFamily.COURIER, 26,
+                  Font.BOLD);
+        Font lnFont = new Font(Font.FontFamily.COURIER, 24,
+              Font.BOLD);
+        
+         
+         String insuredname = insuredDetails.getName();
          QuoteDetailVO quoteDetails=this.quoteDetailVO;
          String prodName = quoteDetails.getProductDetails().getName();
 
          ProductVO products = quoteDetails.getProductDetails();
          java.util.List<ProductUWFieldVO> prodListFields = products.getUwFieldsList();
+         
+         
+         for (Entry<InsCompanyVO, QuoteDetailVO> entry : this.policyDetails.getQuoteDetails()
+                 .entrySet()) {
+             QuoteDetailVO quoteDetVO = entry.getValue();
+             InsCompanyVO insCompanyVO=new InsCompanyVO();
 
 
-         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-         Document document = new Document();
-	     PdfAction action = new PdfAction(PdfAction.PRINTDIALOG);
-	     PdfWriter.getInstance(document, outputStream).setOpenAction(action);
+             for (QuoteDetailVO quoteDetailVO : this.quoteDetailList) {
 
-         // Inserting Image in PDF
-       /*  Image image = Image.getInstance(imagePath);
-         image.scaleAbsolute(120f, 60f);// image width,height
-*/            
-         java.util.Iterator<ProductUWFieldVO> itr1 = prodListFields.iterator();
+                 if (entry.getKey().getCode().equals(quoteDetailVO.getCompanyCode())) {
+                     if (quoteDetailVO.getIsQuoteRecommended()) {
+                         this.recommendedFlagcnt++;
+                         quoteDetVO.setCompanyCode(quoteDetailVO.getCompanyCode());
+                         quoteDetVO.setQuoteNo(quoteDetailVO.getQuoteNo());
+                         quoteDetVO.setIsQuoteRecommended(quoteDetailVO.getIsQuoteRecommended());
+                         quoteDetVO.setRecommendationSummary(quoteDetailVO
+                                 .getRecommendationSummary());
+                         quoteDetVO.getQuoteSlipPrmDetails().setCoverDescription(
+                                 quoteDetailVO.getQuoteSlipPrmDetails().getCoverDescription());
+                         quoteDetVO.setSumInsured(quoteDetailVO.getSumInsured());
+                         quoteDetVO.setQuoteDate(quoteDetailVO.getQuoteDate());
+                         PremiumVO premiumVO = new PremiumVO();
+                         premiumVO.setPremium(quoteDetailVO.getQuoteSlipPrmDetails().getPremium());
+                         premiumVO.setCoverDescription(quoteDetailVO.getQuoteSlipPrmDetails()
+                                 .getCoverDescription());
+                         quoteDetVO.setQuoteSlipPrmDetails(premiumVO);
+                         // status as active
+                         quoteDetVO.setStatusCode(1);
+                         
+                         // populate UW Field details
+                         ProductVO productVO = this.getProductFieldVOTableData(quoteDetailVO, "quoteAdded_"+quoteDetailVO.getCompanyCode());
+                         productVO.setName(this.quoteDetailVO.getProductDetails().getName());
+                         if(Utils.isEmpty(productVO)){
+                             //validResponseForUWFields = false;
+                             continue; // there must be some validation error on underwriting fields hence proceed with next quote record 
+                         }
+                         quoteDetVO.setProductDetails(productVO);
+                         quoteDetVO.setPolicyTerm(quoteDetailVO.getPolicyTerm());
+                         
+                       
+                         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                         Document document = new Document();
+                         PdfAction action = new PdfAction(PdfAction.PRINTDIALOG);
+                         PdfWriter.getInstance(document, outputStream).setOpenAction(action);
 
-         // Now Insert Every Thing Into PDF Document
-         document.open();// PDF document opened........
+                         // Inserting Image in PDF
+                       /*  Image image = Image.getInstance(imagePath);
+                         image.scaleAbsolute(120f, 60f);// image width,height
+                */            
+                         java.util.Iterator<ProductUWFieldVO> itr1 = prodListFields.iterator();
 
-         document.add(Chunk.NEWLINE); // Something like in HTML :-)
+                         // Now Insert Every Thing Into PDF Document
+                         document.open();// PDF document opened........
 
-        // document.add(new Paragraph("Document Generated On - " + new Date().toString()));
-         
-         document.add(new Paragraph("To"));
-         
-         InsCompanyVO inscompanyVO=new InsCompanyVO();
-	        inscompanyVO.setCode(this.quoteDetailVO.getCompanyCode());
-	        
-	        inscompanyVO =  (InsCompanyVO)ServiceTaskExecutor.INSTANCE.executeSvc("companySvc","getPolicy",inscompanyVO);
-	
-	        document.add(new Paragraph("  "+inscompanyVO.getName()));
-	        
-	        if(inscompanyVO.getContactAndAddrDetails().getAddressVO().getAddress()!=null){
-	            document.add(new Paragraph("  "+inscompanyVO.getContactAndAddrDetails().getAddressVO().getAddress()));
-	        } 
-	        if(inscompanyVO.getContactAndAddrDetails().getAddressVO().getCity()!=null){
-	            document.add(new Paragraph("  "+inscompanyVO.getContactAndAddrDetails().getAddressVO().getCity()));
-	        } 
-         
-         document.add(new Paragraph("_____________________________________________________________________________"));
-         
-         document.add(new Paragraph("                                                        "+prodName+"                                        "));
-         
-         document.add(new Paragraph("_____________________________________________________________________________"));
-         
-         document.add(new Paragraph("Insured Name:             "+insuredname));
-         
-         document.add(Chunk.NEWLINE); // Something like in HTML :-)
-         
-         document.add(new Paragraph("Quotation Number:             "+quoteDetails.getQuoteNo()));
-         
-         document.add(Chunk.NEWLINE); // Something like in HTML :-)
-         
-         document.add(new Paragraph("Quoted Premium:             "+quoteDetails.getQuoteSlipPrmDetails().getPremium()));
-         
-         document.add(Chunk.NEWLINE); // Something like in HTML :-)
+                         document.add(new Paragraph("         XYZ INSURANCE  ",insFont));
+                         
+                         document.add(new Paragraph("===================================",lnFont));
 
-         document.add(new Paragraph("Sum  Insured:             "+quoteDetails.getSumInsured()));
-         
-         document.add(Chunk.NEWLINE); // Something like in HTML :-)
-         
-         document.add(new Paragraph("Policy Term:             "+quoteDetails.getPolicyTerm()));
-         
-         document.add(Chunk.NEWLINE); // Something like in HTML :-)
-         
-         document.add(new Paragraph("Cover Description:             "+quoteDetails.getQuoteSlipDescription()));
-         
-         document.add(Chunk.NEWLINE); // Something like in HTML :-)
-         
-         document.add(new Paragraph("Recommendation Summary:             "+quoteDetails.getRecommendationSummary()));
-         
-         document.add(Chunk.NEWLINE); // Something like in HTML :-)
+                                 
+                            InsCompanyVO inscompanyVO=new InsCompanyVO();
+                            inscompanyVO.setCode(this.quoteDetailVO.getCompanyCode());
+                            
+                            inscompanyVO =  (InsCompanyVO)ServiceTaskExecutor.INSTANCE.executeSvc("companySvc","getPolicy",inscompanyVO);
+                    
+                            document.add(new Paragraph(inscompanyVO.getName(),catFont));
+                            
+                            if(inscompanyVO.getContactAndAddrDetails().getAddressVO().getAddress()!=null){
+                                document.add(new Paragraph("  "+inscompanyVO.getContactAndAddrDetails().getAddressVO().getAddress()));
+                            } 
+                            if(inscompanyVO.getContactAndAddrDetails().getAddressVO().getCity()!=null){
+                                document.add(new Paragraph("  "+inscompanyVO.getContactAndAddrDetails().getAddressVO().getCity()));
+                            } 
+                         
+                            document.add(new Paragraph("-----------------------------------------------------------------------------------------------------------------------------"));
+                            
+                            document.add(new Paragraph("                                                        "+prodName+"                                        ",prodFont));
+                            
+                            document.add(new Paragraph("-----------------------------------------------------------------------------------------------------------------------------"));
+                            
+                            document.add(Chunk.NEWLINE); 
+                         
+                            PdfPTable table = new PdfPTable(2);
+                            table.addCell(new Paragraph("Insured Name"));
+                            if(insuredname!=null)
+                            table.addCell(new Paragraph(insuredname));
+                            else
+                            table.addCell("");
+
+                          
+                            table.addCell(new Paragraph("Quotation Number"));
+                            if(quoteDetailVO.getQuoteNo()!=null)
+                            table.addCell(new Paragraph(quoteDetailVO.getQuoteNo()));
+                            else
+                            table.addCell("");
+                            
+                            
+                            table.addCell(new Paragraph("Quoted Premium"));
+                            if(quoteDetailVO.getQuoteSlipPrmDetails().getPremium()!=null || quoteDetailVO.getQuoteSlipPrmDetails().getPremium()!=new BigDecimal(0))
+                            table.addCell(new Paragraph(String.valueOf(quoteDetailVO.getQuoteSlipPrmDetails().getPremium())));
+                            else
+                            table.addCell("");
+                            
+                            
+                            table.addCell(new Paragraph("Sum  Insured"));
+                            if(quoteDetailVO.getSumInsured()!=null || quoteDetailVO.getSumInsured()!=new BigDecimal(0))
+                            table.addCell(new Paragraph(String.valueOf(quoteDetailVO.getSumInsured())));
+                            else
+                            table.addCell("");
+                            
+                            table.addCell(new Paragraph("Policy Term"));
+                            if(quoteDetailVO.getPolicyTerm()!=null || quoteDetailVO.getPolicyTerm()!=0)
+                            table.addCell(new Paragraph(String.valueOf(quoteDetailVO.getPolicyTerm())));
+                            else
+                            table.addCell("");
+                            
+                            table.addCell(new Paragraph("Cover Description"));
+                            if(quoteDetailVO.getQuoteSlipPrmDetails().getCoverDescription()!=null)
+                            table.addCell(new Paragraph(quoteDetailVO.getQuoteSlipPrmDetails().getCoverDescription()));
+                            else
+                            table.addCell("");
+                            
+                            table.addCell(new Paragraph("Recommendation Summary"));
+                            if(quoteDetailVO.getRecommendationSummary()!=null)
+                            table.addCell(new Paragraph(quoteDetailVO.getRecommendationSummary()));
+                            else
+                            table.addCell("");
+                            
+                            
+                            while (itr1.hasNext()) {
+                                ProductUWFieldVO prodFields = itr1.next();
+                                table.addCell(new Paragraph(prodFields.getFieldName()));
+                                if(prodFields.getResponse()!=null)
+                                table.addCell(new Paragraph(prodFields.getResponse()));
+                                else
+                                table.addCell("");  
+                            }
+                            
+                            document.add(table);
+
+                            document.close();
+                            
+                            
+                            byte[] outputBytes = outputStream.toByteArray();
+                            response.setHeader("Pragma", "no-cache");  
+                            response.setHeader("Cache-control", "private");  
+                            response.setDateHeader("Expires", 0); 
+                            response.setContentType("application/pdf");  
+                            //response.setHeader("Content-Disposition", "attachment; filename=\"test.pdf\"");  
+                              
+                            if (outputBytes != null) {  
+                                response.setContentLength(outputBytes.length);  
+                                ServletOutputStream out = response.getOutputStream();  
+                                out.write(outputBytes);
+                                
+                                out.flush();  
+                                out.close();  
+                            }  
 
 
-         
-         while (itr1.hasNext()) {
-             ProductUWFieldVO prodFields = itr1.next();
-             document.add(new Paragraph(prodFields.getFieldName()+":                    "+prodFields.getFieldValue()));
-             document.add(Chunk.NEWLINE); // Something like in HTML :-)
+                     }
+                     
+              
+                 }
+
+             }
+
          }
 
-         document.close();
 
-        byte[] outputBytes = outputStream.toByteArray();
-		response.setHeader("Pragma", "no-cache");  
-		response.setHeader("Cache-control", "private");  
-		response.setDateHeader("Expires", 0); 
-		response.setContentType("application/pdf");  
-		//response.setHeader("Content-Disposition", "attachment; filename=\"test.pdf\"");  
-		  
-		if (outputBytes != null) {  
-		    response.setContentLength(outputBytes.length);  
-		    ServletOutputStream out = response.getOutputStream();  
-		    out.write(outputBytes);
-		    
-		    out.flush();  
-		    out.close();  
-		}  
-		return "page1";
-	}
+
+        return "page1";
+    }
 }

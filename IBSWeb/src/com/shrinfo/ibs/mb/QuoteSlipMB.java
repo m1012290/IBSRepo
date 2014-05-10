@@ -22,8 +22,9 @@ import org.primefaces.context.RequestContext;
 
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
+import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfAction;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.shrinfo.ibs.cmn.exception.BusinessException;
 import com.shrinfo.ibs.cmn.exception.SystemException;
@@ -75,7 +76,6 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
     private PolicyVO policyVO = new PolicyVO();
     private Boolean renderCustomUWComponent = Boolean.FALSE;
     private Boolean screenFreeze = Boolean.FALSE;
-    private Map<String,String> selectedInsCompaniesMap = new HashMap<String, String>();
 
     //This is an important method which is overriden from parent managed bean
     // this is an reinitializer block which includes all the instance fields which are bound to form
@@ -84,7 +84,6 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
     protected void reinitializeBeanFields(){
         this.selectedInsCompanies = new ArrayList<String>();
         this.insCompanies = new HashMap<String, String>();
-        this.selectedInsCompaniesMap = new HashMap<String, String>();
         this.quoteDetailVO = new QuoteDetailVO();
         this.insuredDetails=new InsuredVO();
         this.policyVO = new PolicyVO();
@@ -149,16 +148,7 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
         this.screenFreeze = screenFreeze;
     }
 
-    public Map<String, String> getSelectedInsCompaniesMap() {
-		return selectedInsCompaniesMap;
-	}
-
-	public void setSelectedInsCompaniesMap(
-			Map<String, String> selectedInsCompaniesMap) {
-		this.selectedInsCompaniesMap = selectedInsCompaniesMap;
-	}
-
-	public String save(){
+    public String save(){
         PolicyVO policyVO=new PolicyVO();
 
         try {
@@ -214,6 +204,14 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
             // Before proceeding validate if this is referral approval flow
             if(!Utils.isEmpty(editCustEnqDetailsMB.getAppFlow())){
                 if(editCustEnqDetailsMB.getAppFlow().equals(AppFlow.REFERRAL_APPROVAL)){
+                    /*
+                    TaskVO taskVO = new TaskVO();
+                    taskVO.setEnquiry(enquiryDetails);
+                    TaskVO svcResponse = executeTaskSvcForTaskDetails(taskVO);
+                    StatusVO statusVO = new StatusVO();
+                    statusVO.setCode(Integer.valueOf(Utils.getSingleValueAppConfig("STATUS_APPROVED")));
+                    svcResponse.setStatusVO(statusVO);
+                    */
                     policyVO.setAppFlow(AppFlow.REFERRAL_APPROVAL);
                 }
             }
@@ -245,8 +243,9 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
                     this.quoteDetailVO.setStatusCode(3);
                 }
             }
-            //selected insurance companies map out of selected companies list
-            this.selectedInsCompaniesMap = this.getSelectedInsCompaniesMapFromList(this.insCompanies, this.selectedInsCompanies);
+            
+
+
             while(compItr.hasNext()){
                 compCodes=compItr.next();
                 insComp=new InsCompanyVO();
@@ -262,9 +261,9 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
                 TaskVO taskVO = ReferralHelper.checkForReferrals(policyVO, SectionId.QUOTESLIP);
                 if(!Utils.isEmpty(taskVO)){
                     this.setReferralDesc(taskVO.getDesc());
-                    RequestContext requestContext = RequestContext.getCurrentInstance();
-                    if( requestContext.isAjaxRequest() ){
-                    	requestContext.addCallbackParam("referral", Boolean.TRUE);
+                    RequestContext context = RequestContext.getCurrentInstance();
+                    if( context.isAjaxRequest() ){
+                        context.addCallbackParam("referral", Boolean.TRUE);
                         return null;
                     }
                 }
@@ -280,11 +279,11 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
             return null;
         }catch(SystemException se){
             logger.error(se, "Exception ["+ se +"] encountered while saving customer/enquiry details");
-            FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Unexpected error encountered, please try again after sometime", null));
+            FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Unexpected error encountered, please try again after sometime"));
             return null;
         }catch(Exception ex){
             logger.error(ex, "Exception ["+ ex +"] encountered while saving customer/enquiry details");
-            FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Unexpected error encountered, please try again after sometime", null));
+            FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Unexpected error encountered, please try again after sometime"));
             return null;
         }
         
@@ -438,7 +437,6 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
                 lookupVO.setLevel1(String.valueOf(this.quoteDetailVO.getProductDetails().getUwFieldsList().get(0).getProductClass()));
                 LookupVO responseVO = MasterDataRetrievalUtil.getInsCompanies(lookupVO);
                 this.insCompanies = responseVO.getCodeDescMap();
-                this.selectedInsCompaniesMap = this.getSelectedInsCompaniesMapFromList(this.insCompanies, this.selectedInsCompanies);
                 this.policyVO = policyVO;
 
             }
@@ -531,94 +529,128 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
         return null;
     }
     
-	public String back() {
-	    this.setEditApproved(Boolean.FALSE);
-	    return "editenquiry";
-	}
-	public void printDoc() {
-		
-		try {
+    public String back() {
+        this.setEditApproved(Boolean.FALSE);
+        return "editenquiry";
+    }
+    public void printDoc() {
+        
+        try {
 
-			 FacesContext faces = FacesContext.getCurrentInstance();
-			 HttpServletResponse response = (HttpServletResponse) faces.getExternalContext().getResponse();
-			 
-			 String insuredname = this.insuredDetails.getName();
-	
-	        String prodName = this.quoteDetailVO.getProductDetails().getName();
-	
-	        ProductVO products = this.quoteDetailVO.getProductDetails();
-	        java.util.List<ProductUWFieldVO> prodListFields = products.getUwFieldsList();
-	
-	
-	        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-	
-	        Document document = new Document();
-	        PdfAction action = new PdfAction(PdfAction.PRINTDIALOG);
-	        PdfWriter.getInstance(document, outputStream).setOpenAction(action);;
-	         
-	        java.util.Iterator<ProductUWFieldVO> itr1 = prodListFields.iterator();
-	
-	        document.open();// PDF document opened........
-	
-	        document.add(Chunk.NEWLINE); // Something like in HTML :-)
-	
-	       // document.add(new Paragraph("Document Generated On - " + new Date().toString()));
-	        
-	        document.add(new Paragraph("To"));
-	        
-	          
-	        InsCompanyVO inscompanyVO=new InsCompanyVO();
-	        inscompanyVO.setCode(this.quoteDetailVO.getCompanyCode());
-	        
-	        inscompanyVO =  (InsCompanyVO)ServiceTaskExecutor.INSTANCE.executeSvc("companySvc","getPolicy",inscompanyVO);
-	
-	        document.add(new Paragraph("  "+inscompanyVO.getName()));
-	        
-	        if(inscompanyVO.getContactAndAddrDetails().getAddressVO().getAddress()!=null){
-	            document.add(new Paragraph("  "+inscompanyVO.getContactAndAddrDetails().getAddressVO().getAddress()));
-	        } 
-	        if(inscompanyVO.getContactAndAddrDetails().getAddressVO().getCity()!=null){
-	            document.add(new Paragraph("  "+inscompanyVO.getContactAndAddrDetails().getAddressVO().getCity()));
-	        } 
-	
-	        document.add(new Paragraph("_____________________________________________________________________________"));
-	        
-	        document.add(new Paragraph("                                                        "+prodName+"                                        "));
-	        
-	        document.add(new Paragraph("_____________________________________________________________________________"));
-	        
-	        document.add(new Paragraph("Insured Name:             "+insuredname));
-	        
-	        document.add(Chunk.NEWLINE); // Something like in HTML :-)
-	        
-	        while (itr1.hasNext()) {
-	            ProductUWFieldVO prodFields = itr1.next();
-	            document.add(new Paragraph(prodFields.getFieldName()+":                    "+prodFields.getResponse()));
-	            document.add(Chunk.NEWLINE); // Something like in HTML :-)
-	        }
-	
-	       document.close();
-	       byte[] outputBytes = outputStream.toByteArray();
-			response.setHeader("Pragma", "no-cache");  
-			response.setHeader("Cache-control", "private");  
-			response.setDateHeader("Expires", 0); 
-			response.setContentType("application/pdf");  
-			//response.setHeader("Content-Disposition", "attachment; filename=\"test.pdf\"");  
-			  
-			if (outputBytes != null) {  
-			    response.setContentLength(outputBytes.length);  
-			    ServletOutputStream out = response.getOutputStream();  
-			    out.write(outputBytes);
-			    
-			    out.flush();  
-			    out.close();  
-			   
-			} 
-			faces.getResponseComplete();
-		}
-		catch(Exception e){
-			FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Error while printng quote slip document, see the error log"));
-		}
-	  
-	}
+             FacesContext faces = FacesContext.getCurrentInstance();
+             HttpServletResponse response = (HttpServletResponse) faces.getExternalContext().getResponse();
+             
+            Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 20,
+                  Font.BOLD);
+            Font prodFont = new Font(Font.FontFamily.TIMES_ROMAN, 16,
+                      Font.BOLD);
+            Font insFont = new Font(Font.FontFamily.COURIER, 26,
+                      Font.BOLD);
+            Font lnFont = new Font(Font.FontFamily.COURIER, 24,
+                      Font.BOLD);
+        
+        
+           String insuredname = insuredDetails.getName();
+
+           String prodName = quoteDetailVO.getProductDetails().getName();
+
+           ProductVO products = quoteDetailVO.getProductDetails();
+           java.util.List<ProductUWFieldVO> prodListFields = products.getUwFieldsList();
+
+
+           ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+           Document document = new Document();
+           PdfWriter.getInstance(document, outputStream);
+
+         // Inserting Image in PDF
+           /*Image image = Image.getInstance("insimage.jpg");
+           image.scaleAbsolute(120f, 60f);// image width,height            
+*/            java.util.Iterator<ProductUWFieldVO> itr1 = prodListFields.iterator();
+
+           // Now Insert Every Thing Into PDF Document
+           document.open();// PDF document opened........
+           
+           document.add(new Paragraph("         XYZ INSURANCE  ",insFont));
+           
+           document.add(new Paragraph("===================================",lnFont));
+                      
+           
+           InsCompanyVO inscompanyVO=new InsCompanyVO();
+            inscompanyVO.setCode(this.quoteDetailVO.getCompanyCode());
+            
+            inscompanyVO =  (InsCompanyVO)ServiceTaskExecutor.INSTANCE.executeSvc("companySvc","getPolicy",inscompanyVO);
+    
+            document.add(new Paragraph("  "+inscompanyVO.getName(),catFont));
+            
+            if(inscompanyVO.getContactAndAddrDetails().getAddressVO().getAddress()!=null){
+                document.add(new Paragraph("    "+inscompanyVO.getContactAndAddrDetails().getAddressVO().getAddress()));
+            } 
+            if(inscompanyVO.getContactAndAddrDetails().getAddressVO().getCity()!=null){
+                document.add(new Paragraph("    "+inscompanyVO.getContactAndAddrDetails().getAddressVO().getCity()));
+            } 
+         
+           document.add(new Paragraph("-----------------------------------------------------------------------------------------------------------------------------"));
+           
+           document.add(new Paragraph("                                                        "+prodName+"                                        ",prodFont));
+           
+           document.add(new Paragraph("-----------------------------------------------------------------------------------------------------------------------------"));
+           
+           document.add(Chunk.NEWLINE); 
+           
+           PdfPTable table = new PdfPTable(2);
+           table.addCell(new Paragraph("Insured Name"));
+           table.addCell(new Paragraph(insuredname));
+           table.addCell(new Paragraph("Quote Slip No"));
+           if(quoteDetailVO.getQuoteSlipId()!=null){
+               table.addCell(new Paragraph(String.valueOf(quoteDetailVO.getQuoteSlipId())));
+           }
+           else {
+               table.addCell(new Paragraph(""));
+           }
+           table.addCell(new Paragraph("Quote Slip Date"));
+           if(quoteDetailVO.getQuoteSlipDate()!=null){
+               table.addCell(new Paragraph(quoteDetailVO.getQuoteSlipDate().toString()));
+
+           }
+           else {
+               table.addCell(new Paragraph(""));
+           }            
+           
+           while (itr1.hasNext()) {
+               ProductUWFieldVO prodFields = itr1.next();
+               table.addCell(new Paragraph(prodFields.getFieldName()));  
+               if(prodFields.getResponse()!=null){
+                table.addCell(new Paragraph(prodFields.getResponse()));
+               }
+               else {
+                   table.addCell(new Paragraph(" "));
+               }
+           }
+          document.add(table);
+          document.close();
+          
+           byte[] outputBytes = outputStream.toByteArray();
+            response.setHeader("Pragma", "no-cache");  
+            response.setHeader("Cache-control", "private");  
+            response.setDateHeader("Expires", 0); 
+            response.setContentType("application/pdf");  
+            //response.setHeader("Content-Disposition", "attachment; filename=\"test.pdf\"");  
+              
+            if (outputBytes != null) {  
+                response.setContentLength(outputBytes.length);  
+                ServletOutputStream out = response.getOutputStream();  
+                out.write(outputBytes);
+                
+                out.flush();  
+                out.close();  
+               
+            } 
+            faces.getResponseComplete();
+        }
+        catch(Exception e){
+            FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Error while printng quote slip document, see the error log"));
+        }
+      
+    }
 }

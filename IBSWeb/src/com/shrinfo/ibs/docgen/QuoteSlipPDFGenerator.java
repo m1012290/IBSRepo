@@ -1,21 +1,14 @@
 package com.shrinfo.ibs.docgen;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.net.URL;
-
-
-import java.util.Date;
-
-import javax.faces.context.FacesContext;
+import java.math.BigDecimal;
 
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
+import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.shrinfo.ibs.mb.QuotationMB;
 import com.shrinfo.ibs.vo.business.ContactVO;
 import com.shrinfo.ibs.vo.business.InsuredVO;
 import com.shrinfo.ibs.vo.business.ProductUWFieldVO;
@@ -28,7 +21,16 @@ public class QuoteSlipPDFGenerator {
             ContactVO contacts, String companyName, String filePath, String imagePath) throws Exception {
 
         try {
-        	
+            Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 20,
+                      Font.BOLD);
+            Font prodFont = new Font(Font.FontFamily.TIMES_ROMAN, 16,
+                  Font.BOLD);
+            Font insFont = new Font(Font.FontFamily.COURIER, 26,
+                      Font.BOLD);
+            Font lnFont = new Font(Font.FontFamily.COURIER, 24,
+                  Font.BOLD);
+            
+            
             String insuredname = insuredDetails.getName();
 
             String prodName = quoteDetails.getProductDetails().getName();
@@ -42,47 +44,68 @@ public class QuoteSlipPDFGenerator {
             Document document = new Document();
             PdfWriter.getInstance(document, outputStream);
 
-            // Inserting Image in PDF
-          /*  Image image = Image.getInstance(imagePath);
-            image.scaleAbsolute(120f, 60f);// image width,height
-*/            
-            java.util.Iterator<ProductUWFieldVO> itr1 = prodListFields.iterator();
+          // Inserting Image in PDF
+            /*Image image = Image.getInstance("insimage.jpg");
+            image.scaleAbsolute(120f, 60f);// image width,height            
+*/            java.util.Iterator<ProductUWFieldVO> itr1 = prodListFields.iterator();
 
             // Now Insert Every Thing Into PDF Document
             document.open();// PDF document opened........
-
-            document.add(Chunk.NEWLINE); // Something like in HTML :-)
-
-           // document.add(new Paragraph("Document Generated On - " + new Date().toString()));
             
-            document.add(new Paragraph("To"));
+            document.add(new Paragraph("         XYZ INSURANCE  ",insFont));
             
-            document.add(new Paragraph("  "+companyName));
+            document.add(new Paragraph("===================================",lnFont));
+                       
+            
+            document.add(new Paragraph(companyName,catFont));
             
             if(contacts.getAddressVO().getAddress()!=null){
-                document.add(new Paragraph("  "+contacts.getAddressVO().getAddress()));
+                document.add(new Paragraph("   "+contacts.getAddressVO().getAddress()));
             } 
             if(contacts.getAddressVO().getCity()!=null){
-                document.add(new Paragraph("  "+contacts.getAddressVO().getCity()));
+                document.add(new Paragraph("   "+contacts.getAddressVO().getCity()));
             } 
-    
-            document.add(new Paragraph("_____________________________________________________________________________"));
+          
+            document.add(new Paragraph("-----------------------------------------------------------------------------------------------------------------------------"));
             
-            document.add(new Paragraph("                                                        "+prodName+"                                        "));
+            document.add(new Paragraph("                                                        "+prodName+"                                        ",prodFont));
             
-            document.add(new Paragraph("_____________________________________________________________________________"));
+            document.add(new Paragraph("-----------------------------------------------------------------------------------------------------------------------------"));
             
-            document.add(new Paragraph("Insured Name:             "+insuredname));
+            document.add(Chunk.NEWLINE); 
             
-            document.add(Chunk.NEWLINE); // Something like in HTML :-)
+            PdfPTable table = new PdfPTable(2);
+            table.addCell(new Paragraph("Insured Name"));
+            table.addCell(new Paragraph(insuredname));
+            table.addCell(new Paragraph("Quote Slip No"));
+            if(quoteDetails.getQuoteSlipId()!=null){
+                table.addCell(new Paragraph(String.valueOf(quoteDetails.getQuoteSlipId())));
+            }
+            else {
+                table.addCell(new Paragraph(""));
+            }
+            table.addCell(new Paragraph("Quote Slip Date"));
+            if(quoteDetails.getQuoteSlipDate()!=null){
+                table.addCell(new Paragraph(quoteDetails.getQuoteSlipDate().toString()));
+
+            }
+            else {
+                table.addCell(new Paragraph(""));
+            }            
             
             while (itr1.hasNext()) {
                 ProductUWFieldVO prodFields = itr1.next();
-                document.add(new Paragraph(prodFields.getFieldName()+":                    "+prodFields.getResponse()));
-                document.add(Chunk.NEWLINE); // Something like in HTML :-)
+                table.addCell(new Paragraph(prodFields.getFieldName()));  
+                if(prodFields.getResponse()!=null){
+                    table.addCell(new Paragraph(prodFields.getResponse()));
+                }
+                else {
+                    table.addCell(new Paragraph(" "));
+                }
             }
-
+           document.add(table);
            document.close();
+          
 
            SendEmail.sendEmail(outputStream.toByteArray(),companyName,contacts,"quoteslip");
             
@@ -94,9 +117,19 @@ public class QuoteSlipPDFGenerator {
     }
     public void generatePDFForCloseSlip(QuoteDetailVO quoteDetails, InsuredVO insuredDetails,
             ContactVO contacts, String companyName, String filePath, String imagePath) throws Exception{
-    	
+        
         try {
-        	
+            
+            Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 20,
+                  Font.BOLD);
+            Font prodFont = new Font(Font.FontFamily.TIMES_ROMAN, 16,
+                  Font.BOLD);
+            Font insFont = new Font(Font.FontFamily.COURIER, 26,
+                  Font.BOLD);
+            Font lnFont = new Font(Font.FontFamily.COURIER, 24,
+                  Font.BOLD);
+            
+            
             String insuredname = insuredDetails.getName();
 
             String prodName = quoteDetails.getProductDetails().getName();
@@ -117,14 +150,12 @@ public class QuoteSlipPDFGenerator {
 
             // Now Insert Every Thing Into PDF Document
             document.open();// PDF document opened........
-
-            document.add(Chunk.NEWLINE); // Something like in HTML :-)
-
-           // document.add(new Paragraph("Document Generated On - " + new Date().toString()));
             
-            document.add(new Paragraph("To"));
+            document.add(new Paragraph("         XYZ INSURANCE  ",insFont));
             
-            document.add(new Paragraph("  "+companyName));
+            document.add(new Paragraph("===================================",lnFont));
+ 
+            document.add(new Paragraph(companyName,catFont));     
             
             if(contacts.getAddressVO().getAddress()!=null){
                 document.add(new Paragraph("  "+contacts.getAddressVO().getAddress()));
@@ -133,47 +164,71 @@ public class QuoteSlipPDFGenerator {
                 document.add(new Paragraph("  "+contacts.getAddressVO().getCity()));
             } 
             
-            document.add(new Paragraph("_____________________________________________________________________________"));
+            document.add(new Paragraph("-----------------------------------------------------------------------------------------------------------------------------"));
             
-            document.add(new Paragraph("                                                        "+prodName+"                                        "));
+            document.add(new Paragraph("                                                        "+prodName+"                                        ",prodFont));
             
-            document.add(new Paragraph("_____________________________________________________________________________"));
+            document.add(new Paragraph("-----------------------------------------------------------------------------------------------------------------------------"));
             
-            document.add(new Paragraph("Insured Name:             "+insuredname));
+            document.add(Chunk.NEWLINE); 
             
-            document.add(Chunk.NEWLINE); // Something like in HTML :-)
-            
-            document.add(new Paragraph("Quotation Number:             "+quoteDetails.getQuoteNo()));
-            
-            document.add(Chunk.NEWLINE); // Something like in HTML :-)
-            
-            document.add(new Paragraph("Quoted Premium:             "+quoteDetails.getQuoteSlipPrmDetails().getPremium()));
-            
-            document.add(Chunk.NEWLINE); // Something like in HTML :-)
+            PdfPTable table = new PdfPTable(2);
+            table.addCell(new Paragraph("Insured Name"));
+            if(insuredname!=null)
+            table.addCell(new Paragraph(insuredname));
+            else
+            table.addCell("");
 
-            document.add(new Paragraph("Sum  Insured:             "+quoteDetails.getSumInsured()));
+          
+            table.addCell(new Paragraph("Quotation Number"));
+            if(quoteDetails.getQuoteNo()!=null)
+            table.addCell(new Paragraph(quoteDetails.getQuoteNo()));
+            else
+            table.addCell("");
             
-            document.add(Chunk.NEWLINE); // Something like in HTML :-)
             
-            document.add(new Paragraph("Policy Term:             "+quoteDetails.getPolicyTerm()));
+            table.addCell(new Paragraph("Quoted Premium"));
+            if(quoteDetails.getQuoteSlipPrmDetails().getPremium()!=null || quoteDetails.getQuoteSlipPrmDetails().getPremium()!=new BigDecimal(0))
+            table.addCell(new Paragraph(String.valueOf(quoteDetails.getQuoteSlipPrmDetails().getPremium())));
+            else
+            table.addCell("");
             
-            document.add(Chunk.NEWLINE); // Something like in HTML :-)
             
-            document.add(new Paragraph("Cover Description:             "+quoteDetails.getQuoteSlipDescription()));
+            table.addCell(new Paragraph("Sum  Insured"));
+            if(quoteDetails.getSumInsured()!=null || quoteDetails.getSumInsured()!=new BigDecimal(0))
+            table.addCell(new Paragraph(String.valueOf(quoteDetails.getSumInsured())));
+            else
+            table.addCell("");
             
-            document.add(Chunk.NEWLINE); // Something like in HTML :-)
+            table.addCell(new Paragraph("Policy Term"));
+            if(quoteDetails.getPolicyTerm()!=null || quoteDetails.getPolicyTerm()!=0)
+            table.addCell(new Paragraph(String.valueOf(quoteDetails.getPolicyTerm())));
+            else
+            table.addCell("");
             
-            document.add(new Paragraph("Recommendation Summary:             "+quoteDetails.getRecommendationSummary()));
+            table.addCell(new Paragraph("Cover Description"));
+            if(quoteDetails.getQuoteSlipPrmDetails().getCoverDescription()!=null)
+            table.addCell(new Paragraph(quoteDetails.getQuoteSlipPrmDetails().getCoverDescription()));
+            else
+            table.addCell("");
             
-            document.add(Chunk.NEWLINE); // Something like in HTML :-)
-
-
+            table.addCell(new Paragraph("Recommendation Summary"));
+            if(quoteDetails.getRecommendationSummary()!=null)
+            table.addCell(new Paragraph(quoteDetails.getRecommendationSummary()));
+            else
+            table.addCell("");
+            
             
             while (itr1.hasNext()) {
                 ProductUWFieldVO prodFields = itr1.next();
-                document.add(new Paragraph(prodFields.getFieldName()+":                    "+prodFields.getFieldValue()));
-                document.add(Chunk.NEWLINE); // Something like in HTML :-)
+                table.addCell(new Paragraph(prodFields.getFieldName()));
+                if(prodFields.getResponse()!=null)
+                table.addCell(new Paragraph(prodFields.getResponse()));
+                else
+                table.addCell("");  
             }
+            
+            document.add(table);
 
             document.close();
 
@@ -188,6 +243,6 @@ public class QuoteSlipPDFGenerator {
             e.printStackTrace();
             throw e;
         }
-    	
+        
     }
 }
