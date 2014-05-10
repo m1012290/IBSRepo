@@ -94,7 +94,9 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
     
     private Boolean screenFreeze = Boolean.FALSE;
     
+	private String companyCodeForQuote;
     
+    private Map<String,String> selectedInsCompaniesMap = new HashMap<String, String>();
         
     public Boolean getScreenFreeze() {
         return screenFreeze;
@@ -226,7 +228,24 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
         this.quoteDetailList = quoteDetailList;
     }
 
-    /**
+    public String getCompanyCodeForQuote() {
+		return companyCodeForQuote;
+	}
+
+	public void setCompanyCodeForQuote(String companyCodeForQuote) {
+		this.companyCodeForQuote = companyCodeForQuote;
+	}
+
+	public Map<String, String> getSelectedInsCompaniesMap() {
+		return selectedInsCompaniesMap;
+	}
+
+	public void setSelectedInsCompaniesMap(
+			Map<String, String> selectedInsCompaniesMap) {
+		this.selectedInsCompaniesMap = selectedInsCompaniesMap;
+	}
+
+	/**
      * This adds a new quote into UI table. Here data which is edited in
      * the table itself will not be captured.
 
@@ -242,6 +261,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
                             "Selected company record is already added"));
             return null;
         }
+		this.quoteDetailVO.setCompanyCode(this.companyCodeForQuote);
 
         /**
          * Validation for quotation details being added
@@ -345,6 +365,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
         // populate UW Field details
         ProductVO productVO = new ProductVO();
         productVO.setProductClass(quoteDetailVO.getProductDetails().getProductClass());
+
         productVO.setName(quoteDetailVO.getProductDetails().getName());
 
         FacesContext fc = FacesContext.getCurrentInstance();
@@ -609,6 +630,9 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
             ex.printStackTrace();
             return null;
         }
+
+
+
         FacesContext.getCurrentInstance()
         .addMessage(
                 "MESSAGE_SUCCESS",
@@ -767,11 +791,8 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
                 this.selectedInsCompanies.add(insCompanyVO.getCode()); // Added by Hafeezur
             }
         }
-
-
-        // Getting the Company names in the drop down
-
-
+		//this will be used within print dialog box
+        this.selectedInsCompaniesMap = this.getSelectedInsCompaniesMapFromList(this.insCompanies, this.selectedInsCompanies);
         return "closeslip";
     }
 
@@ -886,6 +907,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
                 quoteSlipPDFGenerator.generatePDFForCloseSlip(qdVO, this.insuredDetails, insCompanyVO.getContactAndAddrDetails(),insCompanyVO.getName(), Utils.getSingleValueAppConfig("quoteSlipfilePath")+"_"+new Date().getTime(), Utils.getSingleValueAppConfig("imagePath"));
 
 
+
             }*/
             FacesContext.getCurrentInstance().addMessage("SUCCESS_EMAIL_MSG", new FacesMessage(FacesMessage.SEVERITY_INFO,"Closingslip is successfully  emailed",null));
 
@@ -932,10 +954,10 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
         this.setEditApproved(Boolean.FALSE);
         return "quoteslip";
     }
+    
     public String printDoc() throws IOException, DocumentException{
-
-         FacesContext faces = FacesContext.getCurrentInstance();
-         HttpServletResponse response = (HttpServletResponse) faces.getExternalContext().getResponse();
+       FacesContext faces = FacesContext.getCurrentInstance();
+       HttpServletResponse response = (HttpServletResponse) faces.getExternalContext().getResponse();
          
         Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 20,
                   Font.BOLD);
@@ -954,15 +976,11 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
          ProductVO products = quoteDetails.getProductDetails();
          java.util.List<ProductUWFieldVO> prodListFields = products.getUwFieldsList();
          
-         
          for (Entry<InsCompanyVO, QuoteDetailVO> entry : this.policyDetails.getQuoteDetails()
                  .entrySet()) {
              QuoteDetailVO quoteDetVO = entry.getValue();
              InsCompanyVO insCompanyVO=new InsCompanyVO();
-
-
              for (QuoteDetailVO quoteDetailVO : this.quoteDetailList) {
-
                  if (entry.getKey().getCode().equals(quoteDetailVO.getCompanyCode())) {
                      if (quoteDetailVO.getIsQuoteRecommended()) {
                          this.recommendedFlagcnt++;
@@ -999,18 +1017,26 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
                          PdfAction action = new PdfAction(PdfAction.PRINTDIALOG);
                          PdfWriter.getInstance(document, outputStream).setOpenAction(action);
 
+
+
                          // Inserting Image in PDF
                        /*  Image image = Image.getInstance(imagePath);
                          image.scaleAbsolute(120f, 60f);// image width,height
                 */            
                          java.util.Iterator<ProductUWFieldVO> itr1 = prodListFields.iterator();
 
+
                          // Now Insert Every Thing Into PDF Document
                          document.open();// PDF document opened........
 
-                         document.add(new Paragraph("         XYZ INSURANCE  ",insFont));
+
+
+                         document.add(new Paragraph("         XYZ INSURANCE BROKERS  ",insFont));
                          
                          document.add(new Paragraph("===================================",lnFont));
+
+
+
 
                                  
                             InsCompanyVO inscompanyVO=new InsCompanyVO();
@@ -1041,6 +1067,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
                             table.addCell(new Paragraph(insuredname));
                             else
                             table.addCell("");
+
 
                           
                             table.addCell(new Paragraph("Quotation Number"));
@@ -1092,10 +1119,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
                             }
                             
                             document.add(table);
-
                             document.close();
-                            
-                            
                             byte[] outputBytes = outputStream.toByteArray();
                             response.setHeader("Pragma", "no-cache");  
                             response.setHeader("Cache-control", "private");  
@@ -1110,20 +1134,13 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
                                 
                                 out.flush();  
                                 out.close();  
-                            }  
-
+                            } 
 
                      }
-                     
-              
                  }
-
              }
 
          }
-
-
-
         return "page1";
     }
 }

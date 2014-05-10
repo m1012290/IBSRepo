@@ -8,29 +8,34 @@
       >    	
       <h:head>
      	<link href="../css/commoncss.css" type="text/css" rel="stylesheet" /> 
-      	<p:graphicImage value="../images/Integral_72Res_RGB_Logo.jpg" style="align:right;"/>
+      	<p:graphicImage value="../images/Integral_72Res_RGB_Logo.jpg" style="align:right;display:none;"/>
       </h:head>		
     <h:body style="bgcolor:">
     
    
 		<h:form name="loginform" styleClass="OuterloginBox">
 		<p:messages id="messages" autoUpdate="true" closable="true" />
+			
 		<p:panel aling="center" id="panel" styleClass="loginBox" header="Login Details" style="margin-bottom:10px;">
-			<h:panelGrid columns="2" cellpadding="10" style=" width:100%; margin: 5px 0px 0px 44px;" >
-			<h:outputLabel for="username" value="Username:"  style="height: 50px; font-size: 15px;font-family:arial;"/>
+		<p:graphicImage value="../images/integrallogo.jpg" />
+			<h:panelGrid columns="2" cellpadding="10" style=" width:320px; margin: 5px 0px 0px 5px;" >
+			<h:outputLabel for="username" value="Username:"  style="height: 50px;  font-size: 15px;font-family:arial;"/>
 			<p:inputText  value="#{loginBean.userName}"
-			                id="username" required="true" label="username" requiredMessage="Username is required"/>
+			                id="username" required="true" label="username" style="margin-left:3px;" requiredMessage="Username is required"/>
 			<h:outputLabel for="password" value="Password:" style="height: 50px; font-size: 15px; font-family:arial;"/>
 			<h:inputSecret value="#{loginBean.password}"
-			                id="password" required="true" label="password" requiredMessage="Password is required"/>
+			                id="password" required="true" styleClass="loginPassword" label="password" requiredMessage="Password is required"/>
 
 			
 
 			</h:panelGrid>
+			<p:commandButton id="loginButton" styleClass="loginButtonCls" value="Log in to Integral" action="#{loginBean.submit}"  style="height: 30px;padding:0px 70px;  font-size: 20px;"  />
+			<p:graphicImage value="../images/integraBanner.jpg" style="position:absolute; margin-top:-130px; margin-left:20px;" />
 		</p:panel>
-		<div style="position:relative; text-align:right; margin-top:-60px; padding-right:50px; float:right;">
-			<p:commandButton id="loginButton" styleClass="loginButtonCls" value="Login" action="#{loginBean.submit}"  style="height: 30px; font-size: 20px;"  />
-			<p:commandButton type="reset" id="clearform" value="Clear" styleClass="clearformCls" style="height: 30px; font-size: 20px"/>
+		
+		<div style=" text-align:right; margin-top:-60px; padding-right:50px; float:right; border:">
+			
+			<p:commandButton type="reset" id="clearform" value="Clear" styleClass="clearformCls" style="height: 30px; font-size: 20px; display:none;"/>
 		</div>
 		<p:blockUI block="panel" trigger="loginButton">
         	LOADING<br />  

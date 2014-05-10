@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
 
 import com.shrinfo.ibs.base.dao.BaseDBDAO;
 import com.shrinfo.ibs.cmn.exception.BusinessException;
@@ -121,6 +123,30 @@ public class PolicyDaoImpl extends BaseDBDAO implements PolicyDao {
                     + ((PolicyVO) baseVO).getPolicyNo());
         }
     }
+    
+    private List<IbsUwTransactionHeader> getPoliciesListWithinExpiryDate(PolicyVO policyVO){
+    	List<IbsUwTransactionHeader> ibsUWTranHeaders = null;
+    	Session session = getHibernateTemplate().getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Query query = session.createSQLQuery(constructQueryForPoliciesRetrieval(policyVO));
+        List<Object[]> result = null;
+        try {
+            result = (List<Object[]>) query.list();
+        } catch (HibernateException hibernateException) {
+            throw new BusinessException("pas.gi.couldNotGetCustDetails", hibernateException,
+                "Error while insured search");
+        }
+
+    	return ibsUWTranHeaders;
+    }
+    
+    private String constructQueryForPoliciesRetrieval(PolicyVO policyVO){
+    	StringBuffer queryString = new StringBuffer();
+    	queryString.append("select customer_id, insured_name , policy_no, policy_start_date, policy_expiry_date from ibs_uw_transaction_header where");
+    	queryString.append("policy_expiry_date >= to_date("+policyVO.getPolicyExpiryDate()+", \'dd/MM/yyyy\')");
+    	queryString.append("policy_expiry_date <= to_date("+policyVO.getPolicyExpiryDate()+", \'dd/MM/yyyy\')");
+    	return queryString.toString();
+    }
 
     @Override
     public BaseVO createPolicy(BaseVO baseVO) {
@@ -194,7 +220,15 @@ public class PolicyDaoImpl extends BaseDBDAO implements PolicyDao {
 
     @Override
     public List<BaseVO> getPolicies(BaseVO baseVO) {
-        // TODO Auto-generated method stub
+    	if (null == baseVO) {
+            throw new BusinessException("cmn.unknownError", null, "Policy details cannot be null");
+        }
+        if (!(baseVO instanceof PolicyVO)) {
+            throw new BusinessException("cmn.unknownError", null, "Policy details are invalid");
+        }
+        PolicyVO policyVO = (PolicyVO) baseVO;
+        getPoliciesListWithinExpiryDate(policyVO);
+        
         return null;
     }
 

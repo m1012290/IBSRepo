@@ -15,44 +15,47 @@
     			<p:growl id="messages1" showDetail="true"/>
     				
     		<p:messages id="messages" autoUpdate="true" closable="true" /> 
-    		<p:panel header="Product Details" style="margin-bottom:10px;"> 
-                <p:panelGrid columns="08">
+    		<p:panel header="Product Details" style="margin-bottom:10px; width:100%;"> 
+                <p:panelGrid columns="08" style="width:100%; border:0px !important;">
                     <h:outputLabel for="productname" value="Name* " />
 					<p:inputText value="#{productMB.productDetails.name}" required="true" requiredMessage="Please enter name for the product"/>
 					<h:outputLabel for="shortname" value="Short Name" />
                     <p:inputText value="#{productMB.productDetails.shortName}"/>
                     <h:outputLabel for="productcategory" value="Category*"  /> 
 			        <p:selectOneMenu id="productcategory" value="#{productMB.productDetails.category}" required="true" requiredMessage="Please select category for the product">  
-	            		<f:selectItem itemLabel="----Select Category---" itemValue="" />
+	            		<f:selectItem itemLabel="Select Category" itemValue="" />
 	            			<f:selectItems value="#{productMB.custCategories}" />
 	        		</p:selectOneMenu>
 	        		<h:outputLabel for="insurancecompanies" value="Companies*" />  
         						<p:selectManyMenu id="insurancecompanies" value="#{productMB.productDetails.applicableInsCompanies}" required="true" requiredMessage="Please select atleast one company for the product">
-        							<f:selectItem itemLabel="---Select Companies---" itemValue="" />
+        							<f:selectItem itemLabel="Select Companies" itemValue="" />
         							<f:selectItems value="#{productMB.insCompanies}"/>
         						</p:selectManyMenu>                                        
                 </p:panelGrid>
                 <p:spacer height="30px;"/>
 			</p:panel>
-			<p:panel id="uwdetailsaddsection" header="Product Underwriting Details">
-				<h:panelGrid columns="8">
+			<p:panel id="uwdetailsaddsection"  header="Product Underwriting Details">
+				<h:panelGrid columns="8" style="width:100%; ">
                     <h:outputLabel for="srlno" value="SRL No*" />
+					
 					<p:inputText id="srlno" value="#{productMB.fieldSrlNo}" required="true" requiredMessage="Please enter srl no for the field" converterMessage="Alphabets are not allowed for Srl No field">
 						<f:convertNumber  integerOnly="true" type="number" for="srlno" pattern="###"/>
 					</p:inputText>
+					
 					<h:outputLabel for="fieldname" value="Field Name*" />
-                    <p:inputText value="#{productMB.productUWDetails.fieldName}" required="true" requiredMessage="Please enter name for the field" />
+				    <p:inputText value="#{productMB.productUWDetails.fieldName}" required="true" requiredMessage="Please enter name for the field" />
+                  
                     <h:outputLabel for="fieldtype" value="Field Type*" />
-                    <!-- <p:inputText value="#{productMB.productUWDetails.fieldType}"/> -->
+                   
                     <p:selectOneMenu id="fieldtype" value="#{productMB.productUWDetails.fieldType}" required="true" requiredMessage="Please select field type for the field">  
-	            		<f:selectItem itemLabel="----Select Category---" itemValue="" />  
+	            		<f:selectItem itemLabel="Select Category" itemValue="" />  
 	            		<f:selectItem itemLabel="Textbox" itemValue="textbox"/>
 	            		<f:selectItem itemLabel="Datepicker" itemValue="datepicker"/>
 	        		</p:selectOneMenu>
-	        		
+	        		 
 	        		<h:outputLabel for="fieldvaluetype" value="Field Value Type*" />
                     <p:selectOneMenu id="fieldvaluetype" value="#{productMB.productUWDetails.fieldValueType}" required="true" requiredMessage="Please select field value type for the field">
-						<f:selectItem itemLabel="----Select Category---" itemValue="" />
+						<f:selectItem itemLabel="Select Category" itemValue="" />
 						<f:selectItems value="#{productMB.uwFieldValueTypes}" />
 	        		</p:selectOneMenu>
 	        		
@@ -65,7 +68,8 @@
                         <p:commandButton value="Add Item" action="#{productMB.addAction()}" update="uwdetailsaddsection,uwdetailstable"  ajax="true"/>
                     </f:facet>
 			</p:panel>
-        	<p:panel id="uwdetailstable" header="Product Underwriting Details" style="margin-bottom:10px;">
+			<!-- <p:inputText value="#{productMB.productUWDetails.fieldType}"/> -->
+        	<p:panel id="uwdetailstable" header="Product Underwriting Details" style="margin-bottom:10px;margin-top:10px;">
         		<p:dataTable value="#{productMB.productDetails.uwFieldsList}" var="uwField"  style="width:100%; padding:0px;" editable="false">
         			<p:column headerText="SRLNo">  
 		            	<h:outputText value="#{uwField.fieldOrder}" /> 

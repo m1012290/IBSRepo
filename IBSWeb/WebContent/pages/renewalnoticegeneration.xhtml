@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
+      
+
+    <h:body>
+    	
+    	<ui:composition template="/template/common/commonLayout.xhtml">
+    	
+    		<ui:define name="content">    			
+    			
+    		<h:form id="form">    				
+   				<p:messages id="messages" autoUpdate="true" closable="true" />
+   				<h2>Policy Search</h2>
+   			 
+			    <p:panel id="panel" header="Search" style="margin-bottom:10px;">
+			        <h:panelGrid columns="6" style="width:100%;">
+			            
+			            <p:outputLabel for="policyexpirystartdate" value="Policy Expiry Start Date *" />  
+			            <p:calendar id="policyexpirystartdate"  value="#{renewalMB.searchItemVO.policyExpiryStartDate}" pattern="dd/MM/yyyy"  navigator="true"/>	            
+			            
+			            <p:outputLabel for="policyexpiryenddate" value="Policy Expiry End Date *" />  
+			            <p:calendar id="policyexpiryenddate"  value="#{renewalMB.searchItemVO.policyExpiryEndDate}" pattern="dd/MM/yyyy"  navigator="true"/>   
+			            
+			        </h:panelGrid> 
+			    </p:panel>  
+			 	<p:commandButton id="searchbtn" value="Search" action="#{renewalMB.searchPoliciesWithinExpiryDate()}"  ajax="true"  update="panelPolicy" style="margin-right:20px;" /> 
+			
+	   <p:panel id="panelPolicy" header="Policy Details" style="margin-bottom:10px;"> 
+	   		<p:dataTable id ="searchDataTableID" var="esb"  resizableColumns="true"   value="#{renewalMB.searchVO.searchItems}" paginator="true" rows="5">
+		  		<p:column headerText="">
+		  			<p:selectBooleanCheckbox id="selectedRecord"></p:selectBooleanCheckbox>
+		  		</p:column>
+		  		
+		        <p:column headerText="InsuredName">  
+		            <h:outputText value="#{esb.insuredName}" />  
+		        </p:column>
+		  
+		        <p:column headerText="PolicyNumber">  
+		            <h:outputText value="#{esb.policyNum}" />  
+		        </p:column>
+		        
+		        <p:column headerText="Policy Effective Date">  
+		            <h:outputText value="#{esb.policyEffectiveDate}" />  
+		        </p:column>
+		        
+		        <p:column headerText="Policy Expiry Date">  
+		            <h:outputText value="#{esb.policyExpiryDate}" />
+		        </p:column>
+		        
+    		</p:dataTable>
+	 		 		
+	      </p:panel>  		
+    		
+			<p:commandButton id="generaterenewalnotice" value="Generate Renewal Notice" action="#{renewalMB.generateRenewalNotice}"></p:commandButton>
+			 </h:form>  
+    		</ui:define>
+    				
+    	</ui:composition>
+    	
+    </h:body>
+
+</html>

@@ -1,5 +1,7 @@
 package com.shrinfo.ibs.vo.business;
 
+import java.util.Date;
+
 import com.shrinfo.ibs.cmn.vo.BaseVO;
 
 
@@ -28,7 +30,34 @@ public class SearchItemVO extends BaseVO {
 
     private String policyNum;
 
+    private Date policyExpiryStartDate;
+    
+    private Date policyExpiryEndDate;
+    
+    private Date policyEffectiveDate;
+    
+    private Date policyExpiryDate;
+    
+    public Date getPolicyExpiryStartDate() {
+		return policyExpiryStartDate;
+	}
 
+
+	public void setPolicyExpiryStartDate(Date policyExpiryStartDate) {
+		this.policyExpiryStartDate = policyExpiryStartDate;
+	}
+
+
+	public Date getPolicyExpiryEndDate() {
+		return policyExpiryEndDate;
+	}
+
+
+	public void setPolicyExpiryEndDate(Date policyExpiryEndDate) {
+		this.policyExpiryEndDate = policyExpiryEndDate;
+	}
+
+    
     public String getCustomerName() {
         return customerName;
     }
@@ -119,7 +148,27 @@ public class SearchItemVO extends BaseVO {
     }
 
 
-    public static long getSerialversionuid() {
+    public Date getPolicyEffectiveDate() {
+		return policyEffectiveDate;
+	}
+
+
+	public void setPolicyEffectiveDate(Date policyEffectiveDate) {
+		this.policyEffectiveDate = policyEffectiveDate;
+	}
+
+
+	public Date getPolicyExpiryDate() {
+		return policyExpiryDate;
+	}
+
+
+	public void setPolicyExpiryDate(Date policyExpiryDate) {
+		this.policyExpiryDate = policyExpiryDate;
+	}
+
+
+	public static long getSerialversionuid() {
         return serialVersionUID;
     }
 

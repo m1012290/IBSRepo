@@ -24,7 +24,7 @@ public class PolicyServiceImpl extends BaseService implements PolicyService {
         if ("getPolicy".equals(methodName)) {
             returnValue = getPolicy((BaseVO) args[0]);
         }
-        if ("getPloicies".equals(methodName)) {
+        if ("getPolicies".equals(methodName)) {
             returnValue = getPolicies((BaseVO) args[0]);
         }
         if ("createPolicy".equals(methodName)) {
@@ -40,8 +40,7 @@ public class PolicyServiceImpl extends BaseService implements PolicyService {
 
     @Override
     public List<BaseVO> getPolicies(BaseVO baseVO) {
-        // TODO Auto-generated method stub
-        return null;
+        return policyDao.getPolicies(baseVO);
     }
 
     @Override

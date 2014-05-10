@@ -18,11 +18,11 @@
     				
     				<p:panel id="referalpanel" style="padding:0px; border: none">
     					<p:panel id="panelInsured" header="Insured Details" style="margin-bottom:10px;"> 
-				       			 <h:panelGrid columns="6">  
+				       			 <h:panelGrid columns="8">  
 				       			 
 				       			 	<h:outputLabel for="salutation" value="Salutation" />  
-            						<p:selectOneMenu id="salutation" value="#{quoteSlipMB.insuredDetails.salutation}"  required="true"  label="Salutation" requiredMessage="Please select the Salutation">  
-                						<f:selectItem itemLabel="---Select Salutation---" itemValue="" />  
+            						<p:selectOneMenu id="salutation" value="#{quoteSlipMB.insuredDetails.salutation}" style="width:160px;"  required="true"  label="Salutation" requiredMessage="Please select the Salutation">  
+                						<f:selectItem itemLabel="Select Salutation" itemValue="" />  
                 						<f:selectItems value="#{editCustEnqDetailsMB.salutations}" />  
             						</p:selectOneMenu>  
 				   
@@ -116,27 +116,27 @@
 									</p:inputTextarea>
 																		
 						            <h:outputLabel for="products" value="Products" />  
-            						<p:selectOneMenu id="products" value="#{quoteSlipMB.quoteDetailVO.productDetails.productClass}" required="true" label="Product" requiredMessage="Please select the Product">
+            						<p:selectOneMenu id="products" value="#{quoteSlipMB.quoteDetailVO.productDetails.productClass}" required="true" label="Product" style="width:160px" requiredMessage="Please select the Product">
             							<p:ajax listener="#{quoteSlipMB.retrieveProductUWFields}" update="panelProductDetails, panelUWDetails" />  
-                						<f:selectItem itemLabel="---Select Product---" itemValue="" />
+                						<f:selectItem itemLabel="Select Product" itemValue="" />
                 						<f:selectItems value="#{quoteSlipMB.products}" />  
             						</p:selectOneMenu>
             						
             						<h:outputLabel for="insurancecompanies" value="Companies" />  
-            						<p:selectManyMenu id="insurancecompanies" value="#{quoteSlipMB.selectedInsCompanies}" >
-            							<f:selectItem itemLabel="---Select Companies---" itemValue="" />
+            						<p:selectManyMenu id="insurancecompanies" value="#{quoteSlipMB.selectedInsCompanies}" style="height:140px; width:170px;" >
+            							<f:selectItem itemLabel="Select Companies" itemValue="" />
             							<f:selectItems value="#{quoteSlipMB.insCompanies}"/>
             						</p:selectManyMenu>
 						          </h:panelGrid>
 						 </p:panel>
-						 <p:panel id="panelUWDetails" header="Underwriting Details" style="margin-bottom:10px;">
-						    <h:panelGrid id="uwdetailsgrid" rendered="#{quoteSlipMB.renderCustomUWComponent}">
-						 		<custom:uwdetails value="#{quoteSlipMB.quoteDetailVO.productDetails}" tablecols="2"/>
+						 <p:panel id="panelUWDetails" header="Underwriting Details" style="margin-bottom:10px;width:100%;">
+						    <h:panelGrid style="width:100%;" styleClass="UWdetailsCls" id="uwdetailsgrid"  rendered="#{quoteSlipMB.renderCustomUWComponent}">
+						 		<custom:uwdetails  value="#{quoteSlipMB.quoteDetailVO.productDetails}" tablecols="8"/>
 						 	</h:panelGrid>
 						 </p:panel>
 						            
 						      <p:panel id="panelAudit" header="Audit Details" style="margin-bottom:10px;">
-							     <h:panelGrid columns="6" >
+							     <h:panelGrid columns="6" style=" width:100%;" >
 						            
 						            <h:outputLabel for="recCreatedUsrID" value="Record Created UserID" />  
 						            <p:inputText id="recCreatedUsrID"  value="#{editCustEnqDetailsMB.recCreatedUserID}"  readonly="true" required="false" /> 

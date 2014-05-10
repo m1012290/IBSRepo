@@ -50,15 +50,15 @@
 	    		<p:panel id="panelClaims" header="Claims Details" style="margin-bottom:10px;"> 
 	       			 <h:panelGrid columns="4">
 	   						
-	   						<h:outputLabel for="lossDate" value="Loss Date" />  
+	   						<h:outputLabel for="lossDate" value="Date of Loss" />  
 	   						<p:calendar id="lossDate" value="#{claimsMB.claimsVO.lossDateTime}" pattern="dd/MM/yyyy HH:mm" readonlyInput="true" />
 	   						
-	   						<h:outputLabel for="lossAmount" value="Loss Amount estimate" />  
+	   						<h:outputLabel for="lossAmount" value="Estimated Amount of Loss" />  
 	   						<p:inputText id="lossAmount" value="#{claimsMB.claimsVO.lossAmountEstimate}" />
 	   						
-	   						<h:outputLabel for="lossDescription" value="Loss description" /> 
+	   						<h:outputLabel for="lossDescription" value="Loss Description" /> 
 	   						<p:inputTextarea rows="6" cols="50" value="#{claimsMB.claimsVO.lossDescription}"> 
-	   						</p:inputTextarea>	   						
+	   						</p:inputTextarea>	
 	        						
 	      			</h:panelGrid>
 				</p:panel>
