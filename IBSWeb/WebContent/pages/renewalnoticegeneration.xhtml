@@ -22,10 +22,10 @@
 			        <h:panelGrid columns="6" style="width:100%;">
 			            
 			            <p:outputLabel for="policyexpirystartdate" value="Policy Expiry Start Date *" />  
-			            <p:calendar id="policyexpirystartdate"  value="#{renewalMB.searchItemVO.policyExpiryStartDate}" pattern="dd/MM/yyyy"  navigator="true"/>	            
+			            <p:calendar id="policyexpirystartdate"  value="#{renewalMB.searchItemVO.policyExpiryStartDate}" pattern="dd/MM/yyyy"  navigator="true" readonlyInput="true"/>	            
 			            
 			            <p:outputLabel for="policyexpiryenddate" value="Policy Expiry End Date *" />  
-			            <p:calendar id="policyexpiryenddate"  value="#{renewalMB.searchItemVO.policyExpiryEndDate}" pattern="dd/MM/yyyy"  navigator="true"/>   
+			            <p:calendar id="policyexpiryenddate"  value="#{renewalMB.searchItemVO.policyExpiryEndDate}" pattern="dd/MM/yyyy"  navigator="true" readonlyInput="true"/>   
 			            
 			        </h:panelGrid> 
 			    </p:panel>  

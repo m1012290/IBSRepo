@@ -23,7 +23,7 @@
 					<h:panelGrid columns="6" style="width:100%;">
 
 						<h:outputLabel for="salutation" value="Salutation *"  style="red" styleClass="lableCls" />
-						<p:selectOneMenu id="salutation"
+						<p:selectOneMenu id="salutation" style="width:158px;"
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.salutation}" required="true" label="Salutation" requiredMessage="Please select the Salutation">
 							<f:selectItem itemLabel="---Select Salutation---" itemValue="" />
 							<f:selectItems value="#{editCustEnqDetailsMB.salutations}" />
@@ -284,9 +284,9 @@
 							required="false" />
 
 						<h:outputLabel for="enqType" value="Enquiry Type" />
-						<p:selectOneMenu id="enqType" style="width:158px;"
+						<p:selectOneMenu id="enqType" style="width:160px;"
 							value="#{editCustEnqDetailsMB.enquiryVO.type}" required="true" requiredMessage="Please select the EnquiryType">
-							<f:selectItem itemLabel="---Select Enquiry Type---" itemValue="" />
+							<f:selectItem itemLabel="Select Enquiry Type" itemValue="" />
 							<f:selectItems value="#{editCustEnqDetailsMB.enquiryTypes}" />
 						</p:selectOneMenu>
 

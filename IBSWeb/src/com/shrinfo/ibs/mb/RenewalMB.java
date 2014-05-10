@@ -3,6 +3,8 @@
  */
 package com.shrinfo.ibs.mb;
 
+import java.io.Serializable;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -19,7 +21,7 @@ import com.shrinfo.ibs.vo.business.SearchVO;
  */
 @ManagedBean(name = "renewalMB")
 @SessionScoped
-public class RenewalMB {
+public class RenewalMB extends BaseManagedBean implements Serializable{
 
 	private SearchItemVO searchItemVO = new SearchItemVO();
 	
@@ -67,6 +69,14 @@ public class RenewalMB {
 			allFieldsValid = false;
 		}
 		if(!allFieldsValid){
+			return null;
+		}
+		
+		if(searchItemVO.getPolicyExpiryEndDate().before(searchItemVO.getPolicyExpiryStartDate())){
+			FacesContext.getCurrentInstance().addMessage(
+                    "ERROR_RENEWAL_POLICY_SEARCH",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Policy Expiry End Date cannot be greater than Expiry Start Date",
+                        null));
 			return null;
 		}
 		try{

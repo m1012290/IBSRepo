@@ -27,7 +27,7 @@
 						       		<h:outputLabel for="name" value="Insured Name" />  
 						            <p:inputText id="name" value="#{policyMB.insuredDetails.name}" readonly="true" required="false" />  
 						            
-            						<h:outputLabel for="products" value="Products" />  
+            						<h:outputLabel for="products" value="Product" />  
             						<p:selectOneMenu id="products"  value="#{policyMB.quoteDetailVO.productDetails.productClass}" disabled="true">
                 						<f:selectItem itemLabel="Select Product-" itemValue="" />  
                 						<f:selectItems value="#{quotationMB.products}" />  

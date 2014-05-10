@@ -1,6 +1,13 @@
 package com.shrinfo.ibs.policy.dao;
 
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -21,6 +28,8 @@ import com.shrinfo.ibs.gen.pojo.IbsUwTransactionDetail;
 import com.shrinfo.ibs.gen.pojo.IbsUwTransactionHeader;
 import com.shrinfo.ibs.gen.pojo.IbsUwTransactionHeaderId;
 import com.shrinfo.ibs.vo.business.PolicyVO;
+import com.shrinfo.ibs.vo.business.SearchItemVO;
+import com.shrinfo.ibs.vo.business.SearchVO;
 
 public class PolicyDaoImpl extends BaseDBDAO implements PolicyDao {
 
@@ -124,30 +133,6 @@ public class PolicyDaoImpl extends BaseDBDAO implements PolicyDao {
         }
     }
     
-    private List<IbsUwTransactionHeader> getPoliciesListWithinExpiryDate(PolicyVO policyVO){
-    	List<IbsUwTransactionHeader> ibsUWTranHeaders = null;
-    	Session session = getHibernateTemplate().getSessionFactory().getCurrentSession();
-        session.beginTransaction();
-        Query query = session.createSQLQuery(constructQueryForPoliciesRetrieval(policyVO));
-        List<Object[]> result = null;
-        try {
-            result = (List<Object[]>) query.list();
-        } catch (HibernateException hibernateException) {
-            throw new BusinessException("pas.gi.couldNotGetCustDetails", hibernateException,
-                "Error while insured search");
-        }
-
-    	return ibsUWTranHeaders;
-    }
-    
-    private String constructQueryForPoliciesRetrieval(PolicyVO policyVO){
-    	StringBuffer queryString = new StringBuffer();
-    	queryString.append("select customer_id, insured_name , policy_no, policy_start_date, policy_expiry_date from ibs_uw_transaction_header where");
-    	queryString.append("policy_expiry_date >= to_date("+policyVO.getPolicyExpiryDate()+", \'dd/MM/yyyy\')");
-    	queryString.append("policy_expiry_date <= to_date("+policyVO.getPolicyExpiryDate()+", \'dd/MM/yyyy\')");
-    	return queryString.toString();
-    }
-
     @Override
     public BaseVO createPolicy(BaseVO baseVO) {
         if (null == baseVO) {
@@ -219,17 +204,15 @@ public class PolicyDaoImpl extends BaseDBDAO implements PolicyDao {
     }
 
     @Override
-    public List<BaseVO> getPolicies(BaseVO baseVO) {
+    public SearchVO getPolicies(BaseVO baseVO) {
     	if (null == baseVO) {
-            throw new BusinessException("cmn.unknownError", null, "Policy details cannot be null");
+            throw new BusinessException("cmn.unknownError", null, "Search Details cannot be null");
         }
-        if (!(baseVO instanceof PolicyVO)) {
-            throw new BusinessException("cmn.unknownError", null, "Policy details are invalid");
+        if (!(baseVO instanceof SearchItemVO)) {
+            throw new BusinessException("cmn.unknownError", null, "Search Details are invalid");
         }
-        PolicyVO policyVO = (PolicyVO) baseVO;
-        getPoliciesListWithinExpiryDate(policyVO);
-        
-        return null;
+        SearchItemVO searchItemVO = (SearchItemVO) baseVO;
+        return getPoliciesListWithinExpiryDate(searchItemVO);
     }
 
     private Set<IbsUwTransactionDetail> getPolicyDetailsToBePersisted(
@@ -294,5 +277,48 @@ public class PolicyDaoImpl extends BaseDBDAO implements PolicyDao {
         }
         return mergedPolicyDetails;
     }
+    
+    private SearchVO getPoliciesListWithinExpiryDate(SearchItemVO searchItemVO){
+    	Session session = getHibernateTemplate().getSessionFactory().getCurrentSession();
+        session.beginTransaction();
+        Query query = session.createSQLQuery(constructQueryForPoliciesRetrieval(searchItemVO));
+        List<Object[]> result = null;
+        try {
+            result = (List<Object[]>) query.list();
+        } catch (HibernateException hibernateException) {
+            throw new BusinessException("pas.gi.couldNotGetCustDetails", hibernateException,
+                "Error while insured search");
+        }
+        SearchVO searchVO = new SearchVO();
+        SearchItemVO itemVO = null;
+        List<SearchItemVO> searchResultList = new ArrayList<SearchItemVO>();
+        Iterator<Object[]> it = result.iterator();
+        Object[] object = null;
+        while (it.hasNext()) {
+            object = it.next();
+            itemVO = new SearchItemVO();
+            BigDecimal customerId = (BigDecimal)object[0];
+            itemVO.setCustomerId(customerId.longValue());
+            itemVO.setInsuredName((String)object[1]);
+            itemVO.setPolicyNum((String)object[2]);
+            Timestamp effectiveDate = (Timestamp)object[3];
+            itemVO.setPolicyEffectiveDate((Date)effectiveDate);
+            itemVO.setPolicyExpiryDate((Date)object[4]);
+            searchResultList.add(itemVO);
+        }
+        searchVO.setSearchItems(searchResultList);
+        
+        return searchVO;
+    }
+    
+    private String constructQueryForPoliciesRetrieval(SearchItemVO searchItemVO){
+    	DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    	StringBuffer queryString = new StringBuffer();
+    	queryString.append("select customer_id, insured_name , policy_no, policy_start_date, policy_expiry_date from ibs_uw_transaction_header where ");
+    	queryString.append("policy_expiry_date >= to_date(\'"+sdf.format(searchItemVO.getPolicyExpiryStartDate())+"\', \'dd/MM/yyyy\') and ");
+    	queryString.append("policy_expiry_date <= to_date(\'"+sdf.format(searchItemVO.getPolicyExpiryEndDate())+"\', \'dd/MM/yyyy\')");
+    	return queryString.toString();
+    }
+
 
 }

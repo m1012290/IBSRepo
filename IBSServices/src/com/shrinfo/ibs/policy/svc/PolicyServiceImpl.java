@@ -39,7 +39,7 @@ public class PolicyServiceImpl extends BaseService implements PolicyService {
     }
 
     @Override
-    public List<BaseVO> getPolicies(BaseVO baseVO) {
+    public BaseVO getPolicies(BaseVO baseVO) {
         return policyDao.getPolicies(baseVO);
     }
 
