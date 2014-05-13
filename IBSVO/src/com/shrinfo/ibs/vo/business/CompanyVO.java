@@ -14,6 +14,8 @@ public abstract class CompanyVO extends BaseVO {
     private String code;
 
     private String name;
+    
+    private String shortName;
 
     private ContactVO contactAndAddrDetails;
 
@@ -44,8 +46,20 @@ public abstract class CompanyVO extends BaseVO {
     public void setName(String name) {
         this.name = name;
     }
-
-
+    
+    /**
+     * @return the shortName
+     */
+    public String getShortName() {
+        return shortName;
+    }
+    
+    /**
+     * @param shortName the shortName to set
+     */
+    public void setShortName(String shortName) {
+        this.shortName = shortName;
+    }
 
     public ContactVO getContactAndAddrDetails() {
         return contactAndAddrDetails;

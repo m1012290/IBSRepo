@@ -45,6 +45,7 @@ import com.shrinfo.ibs.gen.pojo.IbsUwTransactionHeader;
 import com.shrinfo.ibs.gen.pojo.IbsUwTransactionHeaderId;
 import com.shrinfo.ibs.vo.app.RecordType;
 import com.shrinfo.ibs.vo.business.ClaimsVO;
+import com.shrinfo.ibs.vo.business.CompanyVO;
 import com.shrinfo.ibs.vo.business.ContactVO;
 import com.shrinfo.ibs.vo.business.CustomerVO;
 import com.shrinfo.ibs.vo.business.DocumentVO;
@@ -92,6 +93,11 @@ public class DAOUtils {
                     ibsContact.getIbsCompanies().add(ibsCompany);
                     break;
                 case INSURANCE_COMPANY:
+                    ibsContact = new IbsContact();
+                    IbsInsuranceCompany ibsInsuranceCompany = constructIbsInsCompany(baseVO);
+                    ibsContact.setIbsInsuranceCompanies(constructSetOfPOJOForRecType(recordType
+                        .getPojoClass()));
+                    ibsContact.getIbsInsuranceCompanies().add(ibsInsuranceCompany);
                     break;
                 case COMPANY_BRANCH:
                     break;
@@ -188,7 +194,17 @@ public class DAOUtils {
     }
 
     private static IbsCompany constructIbsCompany(BaseVO baseVO) {
-        return null;
+        
+        if(Utils.isEmpty(baseVO)) {
+            return null;
+        }
+        CompanyVO companyVO = (CompanyVO) baseVO;
+        IbsCompany ibsCompany = new IbsCompany();
+        ibsCompany.setCode(companyVO.getCode());
+        ibsCompany.setName(companyVO.getName());
+        ibsCompany.setShortname(companyVO.getShortName());
+        ibsCompany.setStatus(companyVO.getIsStatusActive() == "Y"? "1" : "0");
+        return ibsCompany;
     }
 
     private static IbsCompanyBranch constructIbsCompanyBranch(BaseVO baseVO) {
@@ -196,7 +212,20 @@ public class DAOUtils {
     }
 
     private static IbsInsuranceCompany constructIbsInsCompany(BaseVO baseVO) {
-        return null;
+        
+        if(Utils.isEmpty(baseVO)) {
+            return null;
+        }
+        InsCompanyVO companyVO = (InsCompanyVO) baseVO;
+        IbsInsuranceCompany ibsInsCompany = new IbsInsuranceCompany();
+        ibsInsCompany.setCode(companyVO.getCode());
+        ibsInsCompany.setName(companyVO.getName());
+        ibsInsCompany.setShortname(companyVO.getShortName());
+        ibsInsCompany.setStatus(companyVO.getIsStatusActive() == "Y"? "1" : "0");
+        
+        //populate company product details
+        
+        return ibsInsCompany;
     }
 
     private static IbsInsuranceCompanyContact constructIbsInsCompanyContact(BaseVO baseVO) {

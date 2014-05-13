@@ -16,7 +16,7 @@ public class CompanyServiceImpl extends BaseService implements CompanyService {
         if ("getPolicy".equals(methodName)) {
             returnValue = getCompany((BaseVO) args[0]);
         }
-        if ("getPloicies".equals(methodName)) {
+        if ("createCompany".equals(methodName)) {
             returnValue = createCompany((BaseVO) args[0]);
         }
         return returnValue;
