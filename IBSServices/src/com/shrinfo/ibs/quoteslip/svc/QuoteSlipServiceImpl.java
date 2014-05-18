@@ -3,10 +3,14 @@ package com.shrinfo.ibs.quoteslip.svc;
 import java.util.List;
 
 import com.shrinfo.ibs.base.service.BaseService;
+import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.cmn.vo.BaseVO;
+import com.shrinfo.ibs.document.dao.DocumentDao;
 import com.shrinfo.ibs.insured.dao.InsuredDao;
 import com.shrinfo.ibs.quoteslip.dao.QuoteSlipDao;
 import com.shrinfo.ibs.vo.business.ContactVO;
+import com.shrinfo.ibs.vo.business.DocumentListVO;
+import com.shrinfo.ibs.vo.business.DocumentVO;
 import com.shrinfo.ibs.vo.business.InsuredVO;
 import com.shrinfo.ibs.vo.business.PolicyVO;
 import com.shrinfo.ibs.vo.business.QuoteDetailVO;
@@ -18,6 +22,8 @@ public class QuoteSlipServiceImpl extends BaseService implements QuoteSlipServic
     QuoteSlipDao quoteSlipDao;
 
     InsuredDao insuredDao;
+    
+    DocumentDao documentDao;
 
     @Override
     public Object invokeMethod(String methodName, Object... args) {
@@ -61,6 +67,21 @@ public class QuoteSlipServiceImpl extends BaseService implements QuoteSlipServic
             (InsuredVO) insuredDao.createInsuredDetails(policyVO.getInsuredDetails());
         policyVO.setInsuredDetails(insuredVO);
         policyVO = (PolicyVO) quoteSlipDao.createQuoteSlip(baseVO);
+        
+        DocumentListVO documentListVO = policyVO.getDocListUploaded();
+        
+        // populate policy related details in document list.    
+
+        if(!Utils.isEmpty(documentListVO) && !Utils.isEmpty(documentListVO.getDocumentVOs())) {
+            for(DocumentVO document : documentListVO.getDocumentVOs()){
+                document.setDocSlipId(policyVO.getPolicyId());
+                document.setDocSlipVersion(policyVO.getPolicyVersion());
+                document.setDocType("QUOTRSLIPRISK");
+                document.setEnquiry(policyVO.getEnquiryDetails());                
+            }
+            documentListVO = (DocumentListVO) documentDao.saveDocument(documentListVO);
+        }
+        policyVO.setDocListUploaded(documentListVO);
         return policyVO;
     }
 
@@ -83,6 +104,12 @@ public class QuoteSlipServiceImpl extends BaseService implements QuoteSlipServic
 
     public void setInsuredDao(InsuredDao insuredDao) {
         this.insuredDao = insuredDao;
+    }
+
+
+
+    public void setDocumentDao(DocumentDao documentDao) {
+        this.documentDao = documentDao;
     }
 
 

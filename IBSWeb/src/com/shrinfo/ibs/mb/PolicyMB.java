@@ -1,10 +1,5 @@
 package com.shrinfo.ibs.mb;
 
-import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
-import java.io.Flushable;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -23,6 +18,7 @@ import org.primefaces.model.UploadedFile;
 import com.shrinfo.ibs.cmn.logger.Logger;
 import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.cmn.vo.UserVO;
+import com.shrinfo.ibs.dao.utils.IOUtil;
 import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
 import com.shrinfo.ibs.util.AppConstants;
 import com.shrinfo.ibs.vo.business.AppFlow;
@@ -213,8 +209,9 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
             document.setEnquiry(this.policyDetails.getEnquiryDetails());
             // document.setDocSlipId(this.policyDetails.getPolicyId());
             document.setDocType("POLICY");
-            document.setDocument(getFilaDataAsArray(this.file));            
-            
+            if(!Utils.isEmpty(this.file)) {
+                document.setDocument(IOUtil.getFilaDataAsArray(this.file.getInputstream()));
+            }            
             docVOList.add(document);
             documentListVO.setDocumentVOs(docVOList);
             this.policyDetails.setDocListUploaded(documentListVO);
@@ -234,57 +231,7 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
         
         return null;
     }
-
-    /**
-     * 
-     * @throws IOException
-     */
-    public byte[] getFilaDataAsArray(UploadedFile file) throws IOException {
-
-        if (null == file) {
-            return null;
-        }
-        InputStream in = file.getInputstream();
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-
-        int totalRead = 0;
-        if ((null != in) && (null != out)) {
-            int bufferSize = 16;
-            byte[] ba = new byte[1024 * bufferSize];
-            int len = 0;
-
-            while (-1 != (len = in.read(ba))) {
-                out.write(ba, 0, len);
-                totalRead += len;
-            }
-
-            close(in);
-            close(out);
-        }
-        return out.toByteArray();
-
-    }
-
-    public boolean close(Closeable c) {
-        if (null == c) {
-            return true;
-        }
-        try {
-            if (c instanceof Flushable) {
-                ((Flushable) c).flush();
-            }
-        } catch (Exception e) {
-            logger.warn(e, "couldn't close stream");
-        }
-
-        try {
-            c.close();
-        } catch (IOException e) {
-            logger.warn(e, "couldn't close stream");
-            return false;
-        }
-        return true;
-    }
+   
 
 
     public String loadQuotationDetails() {

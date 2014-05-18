@@ -19,6 +19,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.primefaces.context.RequestContext;
+import org.primefaces.model.UploadedFile;
 
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
@@ -31,6 +32,7 @@ import com.shrinfo.ibs.cmn.exception.SystemException;
 import com.shrinfo.ibs.cmn.logger.Logger;
 import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.cmn.vo.UserVO;
+import com.shrinfo.ibs.dao.utils.IOUtil;
 import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
 import com.shrinfo.ibs.docgen.QuoteSlipPDFGenerator;
 import com.shrinfo.ibs.helper.ReferralHelper;
@@ -38,6 +40,8 @@ import com.shrinfo.ibs.util.AppConstants;
 import com.shrinfo.ibs.util.MasterDataRetrievalUtil;
 import com.shrinfo.ibs.vo.app.SectionId;
 import com.shrinfo.ibs.vo.business.AppFlow;
+import com.shrinfo.ibs.vo.business.DocumentListVO;
+import com.shrinfo.ibs.vo.business.DocumentVO;
 import com.shrinfo.ibs.vo.business.EnquiryVO;
 import com.shrinfo.ibs.vo.business.IBSUserVO;
 import com.shrinfo.ibs.vo.business.InsCompanyVO;
@@ -77,6 +81,8 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
     private Boolean renderCustomUWComponent = Boolean.FALSE;
     private Boolean screenFreeze = Boolean.FALSE;
 	private Map<String,String> selectedInsCompaniesMap = new HashMap<String, String>();
+	
+	private UploadedFile riskDataFile;
 
     //This is an important method which is overriden from parent managed bean
     // this is an reinitializer block which includes all the instance fields which are bound to form
@@ -158,6 +164,22 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 			Map<String, String> selectedInsCompaniesMap) {
 		this.selectedInsCompaniesMap = selectedInsCompaniesMap;
 	}
+
+    
+    /**
+     * @return the riskDataFile
+     */
+    public UploadedFile getRiskDataFile() {
+        return riskDataFile;
+    }
+
+    
+    /**
+     * @param riskDataFile the riskDataFile to set
+     */
+    public void setRiskDataFile(UploadedFile riskDataFile) {
+        this.riskDataFile = riskDataFile;
+    }
 
     public String save(){
         PolicyVO policyVO=new PolicyVO();
@@ -273,6 +295,20 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
                     }
                 }
             }
+            // risk data file
+            DocumentListVO documentListVO = new DocumentListVO();
+            List<DocumentVO> docVOList = new ArrayList<DocumentVO>();
+            
+            DocumentVO document = new DocumentVO();
+            document.setEnquiry(enquiryDetails);
+            // document.setDocSlipId(this.policyDetails.getPolicyId());
+            document.setDocType("QUOTRSLIPRISK");
+            if(!Utils.isEmpty(this.riskDataFile)) {
+                document.setDocument(IOUtil.getFilaDataAsArray(this.riskDataFile.getInputstream()));
+            }            
+            docVOList.add(document);
+            documentListVO.setDocumentVOs(docVOList);
+            policyVO.setDocListUploaded(documentListVO);
             policyVO=(PolicyVO) ServiceTaskExecutor.INSTANCE.executeSvc("quoteSlipSvc","createQuoteSlip",policyVO);
             this.policyVO = policyVO;
             Set<Entry<InsCompanyVO, QuoteDetailVO>> quouEntries = policyVO.getQuoteDetails().entrySet();
