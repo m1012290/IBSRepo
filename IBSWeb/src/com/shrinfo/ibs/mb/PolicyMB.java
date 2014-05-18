@@ -50,6 +50,10 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
 
     private UploadedFile file;
     
+    private UploadedFile file2;
+    
+    private UploadedFile file3;
+    
     private Boolean screenFreeze = Boolean.FALSE;
 
     // This is an important method which is overriden from parent managed bean
@@ -108,8 +112,36 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
         this.file = file;
     }
     
-    public void loadFile(UploadedFile file) {
-        this.file = file;
+    
+    /**
+     * @return the file2
+     */
+    public UploadedFile getFile2() {
+        return file2;
+    }
+
+    
+    /**
+     * @param file2 the file2 to set
+     */
+    public void setFile2(UploadedFile file2) {
+        this.file2 = file2;
+    }
+
+    
+    /**
+     * @return the file3
+     */
+    public UploadedFile getFile3() {
+        return file3;
+    }
+
+    
+    /**
+     * @param file3 the file3 to set
+     */
+    public void setFile3(UploadedFile file3) {
+        this.file3 = file3;
     }
     
     
@@ -205,14 +237,31 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
             DocumentListVO documentListVO = new DocumentListVO();
             List<DocumentVO> docVOList = new ArrayList<DocumentVO>();
             
-            DocumentVO document = new DocumentVO();
-            document.setEnquiry(this.policyDetails.getEnquiryDetails());
-            // document.setDocSlipId(this.policyDetails.getPolicyId());
-            document.setDocType("POLICY");
+            //Document upload           
             if(!Utils.isEmpty(this.file)) {
+                DocumentVO document = new DocumentVO();
+                document.setEnquiry(this.policyDetails.getEnquiryDetails());
+                document.setDocType("POLICY");
                 document.setDocument(IOUtil.getFilaDataAsArray(this.file.getInputstream()));
+                docVOList.add(document);
             }            
-            docVOList.add(document);
+            
+            if(!Utils.isEmpty(this.file2)) {
+                DocumentVO document2 = new DocumentVO();
+                document2.setEnquiry(this.policyDetails.getEnquiryDetails());
+                document2.setDocType("POLICY");
+                document2.setDocument(IOUtil.getFilaDataAsArray(this.file2.getInputstream()));
+                docVOList.add(document2);
+            }
+            
+            if(!Utils.isEmpty(this.file3)) {
+                DocumentVO document3 = new DocumentVO();
+                document3.setEnquiry(this.policyDetails.getEnquiryDetails());
+                document3.setDocType("POLICY");
+                document3.setDocument(IOUtil.getFilaDataAsArray(this.file3.getInputstream()));
+                docVOList.add(document3);
+            }
+            
             documentListVO.setDocumentVOs(docVOList);
             this.policyDetails.setDocListUploaded(documentListVO);
             policyDetailsOP =

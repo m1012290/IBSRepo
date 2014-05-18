@@ -299,14 +299,15 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
             DocumentListVO documentListVO = new DocumentListVO();
             List<DocumentVO> docVOList = new ArrayList<DocumentVO>();
             
-            DocumentVO document = new DocumentVO();
-            document.setEnquiry(enquiryDetails);
-            // document.setDocSlipId(this.policyDetails.getPolicyId());
-            document.setDocType("QUOTRSLIPRISK");
+            
             if(!Utils.isEmpty(this.riskDataFile)) {
+                DocumentVO document = new DocumentVO();
+                document.setEnquiry(enquiryDetails);
+                // document.setDocSlipId(this.policyDetails.getPolicyId());
+                document.setDocType("QUOTRSLIPRISK");
                 document.setDocument(IOUtil.getFilaDataAsArray(this.riskDataFile.getInputstream()));
+                docVOList.add(document);
             }            
-            docVOList.add(document);
             documentListVO.setDocumentVOs(docVOList);
             policyVO.setDocListUploaded(documentListVO);
             policyVO=(PolicyVO) ServiceTaskExecutor.INSTANCE.executeSvc("quoteSlipSvc","createQuoteSlip",policyVO);

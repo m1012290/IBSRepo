@@ -196,6 +196,7 @@
 	<bean id="quoteSlipSvcBean" class="com.shrinfo.ibs.quoteslip.svc.QuoteSlipServiceImpl">
 		<property name="quoteSlipDao" ref="quoteSlipDAOBean" />
 		<property name="insuredDao" ref="insuredDAOBean" />
+		<property name="documentDao" ref="documentSvcDAOBean" />
 	</bean>
 	<bean id="quoteSlipDAOBean" class="com.shrinfo.ibs.quoteslip.dao.QuoteSlipDaoImpl">
 		<property name="hibernateTemplate" ref="hibernateTemplate" />
