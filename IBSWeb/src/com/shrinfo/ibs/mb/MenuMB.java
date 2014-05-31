@@ -50,7 +50,8 @@ public class MenuMB {
         // Add masters menu items
         DefaultSubMenu submenuMaster = new DefaultSubMenu("Masters entry");        
         List<DefaultMenuItem> productMenuList = new ArrayList<DefaultMenuItem>();
-        productMenuList.add(getItem("Product Master", null, 1, "productmaster.xhtml"));        
+        productMenuList.add(getItem("Product Master", null, 1, "productmaster.xhtml"));   
+        productMenuList.add(getItem("User Master", null, 1, "usermaster.xhtml")); 
         for(DefaultMenuItem item : productMenuList) {
             submenuMaster.addElement(item);
         }        

@@ -2,9 +2,6 @@
  * 
  */
 package com.shrinfo.ibs.util;
-import java.util.Map;
-
-import javax.faces.context.FacesContext;
 
 
 /**
@@ -15,6 +12,8 @@ public class AppConstants {
 	public static final String LOOKUP_CATEGORY_INSCOMPPRODUCTLINK = "INSCOMPPRODUCTLINK";
 	public static final String LOOKUP_CATEGORY_INSCOMP = "INSURANCECOMPANY";
 	public static final String LOOKUP_CATEGORY_USER = "USER";
+	public static final String LOOKUP_CATEGORY_USER_ROLE = "ROLES";
+	public static final String LOOKUP_CATEGORY_COMPANY_BRANCH = "COMPANYBRANCH";
 
 	public static final String SESSION_ATTRIBUTE_REFERRAL_DATA = "REFERRAL_DATA";
 	
