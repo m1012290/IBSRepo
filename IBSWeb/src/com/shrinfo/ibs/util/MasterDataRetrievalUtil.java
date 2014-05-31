@@ -109,4 +109,64 @@ public class MasterDataRetrievalUtil {
         }
         return svcResponseVO.getCodeDescMap();
     }
+   
+   /**
+    * Returns collection of all the user roles present in the system
+    * @return
+    */
+    public static Map<String, String> getAvailableUserRoles() {
+        LookupVO lookUpVO = new LookupVO();
+        lookUpVO.setCategory(AppConstants.LOOKUP_CATEGORY_USER_ROLE);
+        LookupVO svcResponseVO = null;
+        try {
+            svcResponseVO =
+                (LookupVO) ServiceTaskExecutor.INSTANCE.executeSvc("masterDataLookupSvc",
+                    "getMasterData", lookUpVO);
+        } catch (BusinessException be) {
+            logger.error(be, "Exception [" + be + "] encountered while retrieving user role list ");
+            FacesContext.getCurrentInstance().addMessage(
+                "ERROR_USERROLES_RETRIEVAL",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "User role list couldn't be loaded , please try after sometime", null));
+            return null;
+        } catch (SystemException se) {
+            logger.error(se, "Exception [" + se + "] encountered while retrieving user role list ");
+            FacesContext.getCurrentInstance().addMessage(
+                "ERROR_USERROLES_RETRIEVAL",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+                    "User role list couldn't be loaded , please try after sometime"));
+            return null;
+        }
+        return svcResponseVO.getCodeDescMap();
+    }
+
+    /**
+     * Returns collection containing all the branches of brokerage company
+     * @return
+     */
+    public static Map<String, String> getBranches() {
+        LookupVO lookUpVO = new LookupVO();
+        lookUpVO.setCategory(AppConstants.LOOKUP_CATEGORY_COMPANY_BRANCH);
+        LookupVO svcResponseVO = null;
+        try {
+            svcResponseVO =
+                (LookupVO) ServiceTaskExecutor.INSTANCE.executeSvc("masterDataLookupSvc",
+                    "getMasterData", lookUpVO);
+        } catch (BusinessException be) {
+            logger.error(be, "Exception [" + be + "] encountered while retrieving user role list ");
+            FacesContext.getCurrentInstance().addMessage(
+                "ERROR_USERROLES_RETRIEVAL",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "User role list couldn't be loaded , please try after sometime", null));
+            return null;
+        } catch (SystemException se) {
+            logger.error(se, "Exception [" + se + "] encountered while retrieving user role list ");
+            FacesContext.getCurrentInstance().addMessage(
+                "ERROR_USERROLES_RETRIEVAL",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+                    "User role list couldn't be loaded , please try after sometime"));
+            return null;
+        }
+        return svcResponseVO.getCodeDescMap();
+    }
 }

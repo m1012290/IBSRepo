@@ -51,6 +51,10 @@ public abstract class BaseManagedBean implements Serializable {
     private TaskVO taskVO = new TaskVO();
     private Boolean editVisible;
     private Boolean editApproved = Boolean.FALSE;
+    
+    Map<String, String> roleIdNameMap;
+    
+    Map<String, String> branchCodeNameMap;
 
     public Map<String, String> getTitles() {
         return this.titles;
@@ -240,6 +244,38 @@ public abstract class BaseManagedBean implements Serializable {
         this.setEditApproved(Boolean.TRUE);
     }
 
+    
+    /**
+     * @return the roleIdNameMap
+     */
+    public Map<String, String> getRoleIdNameMap() {
+        return roleIdNameMap;
+    }
+
+    
+    /**
+     * @param roleIdNameMap the roleIdNameMap to set
+     */
+    public void setRoleIdNameMap(Map<String, String> roleIdNameMap) {
+        this.roleIdNameMap = roleIdNameMap;
+    }
+
+    
+    /**
+     * @return the branchCodeNameMap
+     */
+    public Map<String, String> getBranchCodeNameMap() {
+        return branchCodeNameMap;
+    }
+
+    
+    /**
+     * @param branchCodeNameMap the branchCodeNameMap to set
+     */
+    public void setBranchCodeNameMap(Map<String, String> branchCodeNameMap) {
+        this.branchCodeNameMap = branchCodeNameMap;
+    }
+
 
     //public constructor
     public BaseManagedBean(){
@@ -265,6 +301,8 @@ public abstract class BaseManagedBean implements Serializable {
 
         this.products = MasterDataRetrievalUtil.getProductDetails();
         this.usersList = MasterDataRetrievalUtil.getAvailableUsers();
+        this.roleIdNameMap = MasterDataRetrievalUtil.getAvailableUserRoles();
+        this.branchCodeNameMap = MasterDataRetrievalUtil.getBranches();
         uwFieldValueTypes.put(AppConstants.UW_FIELD_VALUE_TYPE_NUMERIC, AppConstants.UW_FIELD_VALUE_TYPE_NUMERIC);
         uwFieldValueTypes.put(AppConstants.UW_FIELD_VALUE_TYPE_CHARACTERS, AppConstants.UW_FIELD_VALUE_TYPE_CHARACTERS);
         uwFieldValueTypes.put(AppConstants.UW_FIELD_VALUE_TYPE_ALPHANUMERIC, AppConstants.UW_FIELD_VALUE_TYPE_ALPHANUMERIC);

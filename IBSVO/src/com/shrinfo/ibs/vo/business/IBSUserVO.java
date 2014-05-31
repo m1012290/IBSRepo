@@ -1,5 +1,6 @@
 package com.shrinfo.ibs.vo.business;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.shrinfo.ibs.cmn.vo.UserVO;
@@ -13,11 +14,11 @@ public class IBSUserVO extends UserVO {
 
     private static final long serialVersionUID = -3203642603434696942L;
 
-    private ContactVO contactDetails;
+    private ContactVO contactDetails = new ContactVO();
 
     private BranchVO branchDetails;
 
-    private List<UserRoleVO> roles;
+    private List<UserRoleVO> roles = new ArrayList<UserRoleVO>();
 
     private String isFreezed;
 
