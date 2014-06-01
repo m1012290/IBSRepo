@@ -17,7 +17,7 @@ public abstract class CompanyVO extends BaseVO {
     
     private String shortName;
 
-    private ContactVO contactAndAddrDetails;
+    private ContactVO contactAndAddrDetails = new ContactVO();
 
     /**
      * @return the code
