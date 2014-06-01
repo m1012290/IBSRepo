@@ -6,7 +6,9 @@
     <class name="com.shrinfo.ibs.gen.pojo.IbsUser" table="IBS_USER" schema="IBSUSER">
         <id name="id" type="java.lang.Long">
             <column name="ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="sequence">
+				<param name="sequence">IBS_USER_SEQ</param>
+			</generator>
         </id>
         <many-to-one name="ibsCompanyBranch" class="com.shrinfo.ibs.gen.pojo.IbsCompanyBranch" lazy="false" fetch="select">
             <column name="BRANCH_CODE" length="10" />
@@ -41,7 +43,7 @@
         <property name="recUpdDate" type="java.sql.Date">
             <column name="REC_UPD_DATE" />
         </property>
-        <set name="ibsUserRoleLinks" table="IBS_USER_ROLE_LINK" inverse="true" lazy="false" fetch="select">
+        <set name="ibsUserRoleLinks" cascade="save-update" table="IBS_USER_ROLE_LINK" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="USER_ID" precision="22" scale="0" />
             </key>

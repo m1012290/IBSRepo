@@ -55,6 +55,8 @@ public abstract class BaseManagedBean implements Serializable {
     Map<String, String> roleIdNameMap;
     
     Map<String, String> branchCodeNameMap;
+    
+    Map<String, String> userStatusMap = new HashMap<String, String>();
 
     public Map<String, String> getTitles() {
         return this.titles;
@@ -276,6 +278,22 @@ public abstract class BaseManagedBean implements Serializable {
         this.branchCodeNameMap = branchCodeNameMap;
     }
 
+    
+    /**
+     * @return the userStatusMap
+     */
+    public Map<String, String> getUserStatusMap() {
+        return userStatusMap;
+    }
+
+    
+    /**
+     * @param userStatusMap the userStatusMap to set
+     */
+    public void setUserStatusMap(Map<String, String> userStatusMap) {
+        this.userStatusMap = userStatusMap;
+    }
+
 
     //public constructor
     public BaseManagedBean(){
@@ -298,6 +316,9 @@ public abstract class BaseManagedBean implements Serializable {
         this.enquiryTypes.put("Endorsement", EnquiryType.ENDORSEMENT);
         this.enquiryTypes.put("Renewal",EnquiryType.RENEWAL);
         this.enquiryTypes.put("Claim", EnquiryType.CLAIMS);
+        
+        this.userStatusMap.put("Active", "1");
+        this.userStatusMap.put("In-Active", "6");
 
         this.products = MasterDataRetrievalUtil.getProductDetails();
         this.usersList = MasterDataRetrievalUtil.getAvailableUsers();
