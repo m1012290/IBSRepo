@@ -11,10 +11,20 @@ body{
 tr.ui-state-hover{
 	/* background:url('../images/gradientBgodd.jpg')repeat-x !important; */
 	color:#fff !important;
+	
 }
  .ui-datatable-even{
   /* background:url('../images/gradientBgeven.jpg')repeat-x !important; */
+ 
  color:#fff !important;
+ background: #a9e4f7; /* Old browsers */
+background: -moz-linear-gradient(left, #a9e4f7 0%, #0fb4e7 0%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, right top, color-stop(0%,#a9e4f7), color-stop(0%,#0fb4e7)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(left, #a9e4f7 0%,#0fb4e7 0%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(left, #a9e4f7 0%,#0fb4e7 0%); /* Opera 11.10+ */
+background: -ms-linear-gradient(left, #a9e4f7 0%,#0fb4e7 0%); /* IE10+ */
+background: linear-gradient(to right, #a9e4f7 0%,#0fb4e7 0%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a9e4f7', endColorstr='#0fb4e7',GradientType=1 ); /* IE6-9 */
  }
 
 .ui-datatable-tablewrapper table td{
@@ -27,7 +37,7 @@ tr.ui-state-hover{
 		text-shadow:none !important;
 		
  /* background:url('../images/gradientBg.jpg')repeat-x !important; */
- 	background: #356aa0; /* Old browsers */
+background: #356aa0; /* Old browsers */
 background: -moz-linear-gradient(left,  #356aa0 0%, #356aa0 100%) !important; /* FF3.6+ */
 background: -webkit-gradient(linear, left top, right top, color-stop(0%,#356aa0), color-stop(100%,#356aa0)) !important; /* Chrome,Safari4+ */
 background: -webkit-linear-gradient(left,  #356aa0 0%,#356aa0 100%) !important; /* Chrome10+,Safari5.1+ */

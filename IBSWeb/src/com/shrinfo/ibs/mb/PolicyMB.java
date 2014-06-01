@@ -13,6 +13,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import org.primefaces.context.RequestContext;
 import org.primefaces.model.UploadedFile;
 
 import com.shrinfo.ibs.cmn.logger.Logger;
@@ -20,14 +21,18 @@ import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.cmn.vo.UserVO;
 import com.shrinfo.ibs.dao.utils.IOUtil;
 import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
+import com.shrinfo.ibs.helper.ReferralHelper;
 import com.shrinfo.ibs.util.AppConstants;
+import com.shrinfo.ibs.vo.app.SectionId;
 import com.shrinfo.ibs.vo.business.AppFlow;
 import com.shrinfo.ibs.vo.business.DocumentListVO;
 import com.shrinfo.ibs.vo.business.DocumentVO;
+import com.shrinfo.ibs.vo.business.IBSUserVO;
 import com.shrinfo.ibs.vo.business.InsCompanyVO;
 import com.shrinfo.ibs.vo.business.InsuredVO;
 import com.shrinfo.ibs.vo.business.PolicyVO;
 import com.shrinfo.ibs.vo.business.QuoteDetailVO;
+import com.shrinfo.ibs.vo.business.StatusVO;
 import com.shrinfo.ibs.vo.business.TaskVO;
 
 @ManagedBean(name = "policyMB")
@@ -64,6 +69,11 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
         this.policyDetails = new PolicyVO();
         this.insuredDetails = new InsuredVO();
         this.screenFreeze = Boolean.FALSE;
+        this.setSaveFromReferralDialog("false");
+        this.screenFreeze = Boolean.FALSE;
+        this.setEditApproved(Boolean.FALSE);
+        this.setNavigationDisbled(Boolean.FALSE);
+        this.setAppFlow(null);
     }
     
     public PolicyMB(){
@@ -225,11 +235,33 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
                         "Error saving Policy details."));
                 return null;
             }
-
+            // Before proceeding validate if this is referral approval flow
+            FacesContext fc = FacesContext.getCurrentInstance();
+            Map map=fc.getExternalContext().getSessionMap();        
+            EditCustEnqDetailsMB editCustEnqDetailsMB = (EditCustEnqDetailsMB) map.get(AppConstants.BEAN_NAME_ENQUIRY_PAGE);
+            if(!Utils.isEmpty(editCustEnqDetailsMB.getAppFlow())){
+                if(editCustEnqDetailsMB.getAppFlow().equals(AppFlow.REFERRAL_APPROVAL)){
+                    this.policyDetails.setAppFlow(AppFlow.REFERRAL_APPROVAL);
+                }
+            }
+            this.policyDetails.getEnquiryDetails().setEnquiryNo(editCustEnqDetailsMB.getEnquiryVO().getEnquiryNo());
+            
             Map<InsCompanyVO, QuoteDetailVO> quoteDetailsMap =
                 new HashMap<InsCompanyVO, QuoteDetailVO>();
             InsCompanyVO insComp = new InsCompanyVO();
             insComp.setCode(this.quoteDetailVO.getCompanyCode());
+            
+            // Based on the flow set the status flag.
+            if(!Utils.isEmpty(editCustEnqDetailsMB.getAppFlow())){
+                if(editCustEnqDetailsMB.getAppFlow().equals(AppFlow.REFERRAL_APPROVAL)){
+                	this.quoteDetailVO.setStatusCode(4);
+                } else if(AppFlow.REFERRAL_APPROVED.equals(editCustEnqDetailsMB.getAppFlow())) {
+                    // task is already approved. Hence set the status to active.
+                	this.quoteDetailVO.setStatusCode(1);
+                } else if(!Utils.isEmpty(this.getSaveFromReferralDialog()) && "true".endsWith(this.getSaveFromReferralDialog())) {
+                	this.quoteDetailVO.setStatusCode(3);
+                }
+            }
             quoteDetailsMap.put(insComp, this.quoteDetailVO);
             this.policyDetails.setQuoteDetails(quoteDetailsMap);
 
@@ -244,7 +276,7 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
                 document.setDocType("POLICY");
                 document.setDocument(IOUtil.getFilaDataAsArray(this.file.getInputstream()));
                 docVOList.add(document);
-            }            
+            }
             
             if(!Utils.isEmpty(this.file2)) {
                 DocumentVO document2 = new DocumentVO();
@@ -264,6 +296,21 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
             
             documentListVO.setDocumentVOs(docVOList);
             this.policyDetails.setDocListUploaded(documentListVO);
+            // Before performing save operation let's check if there are any referrals
+            //if(!Utils.isEmpty(this.getSaveFromReferralDialog()) && "true".equalsIgnoreCase(this.getSaveFromReferralDialog())){
+            if((Utils.isEmpty(this.getSaveFromReferralDialog()) || "false".equalsIgnoreCase(this.getSaveFromReferralDialog())) 
+                    && (!AppFlow.REFERRAL_APPROVED.equals(this.getAppFlow()) || this.getEditApproved())){
+                TaskVO taskVO = ReferralHelper.checkForReferrals(this.policyDetails, SectionId.POLICY);
+                if(!Utils.isEmpty(taskVO)){
+                    this.setReferralDesc(taskVO.getDesc());
+                    RequestContext context = RequestContext.getCurrentInstance();
+                    if( context.isAjaxRequest() ){
+                        context.addCallbackParam("referral", Boolean.TRUE);
+                        return null;
+                    }
+                }
+            }
+            
             policyDetailsOP =
                 (PolicyVO) ServiceTaskExecutor.INSTANCE.executeSvc("policySvc", "createPolicy",
                     this.policyDetails);
@@ -281,6 +328,38 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
         return null;
     }
    
+    @Override
+    public String saveReferralTask() {
+        //validate the referral window fields
+        if(!validateReferralFields()){
+            return null; //return as some field values are invalid on referral window.
+        }
+        this.setSaveFromReferralDialog("true");//highlight that save is getting invoked from referral dialog window
+        this.save();//perform save operation first and then save the referral data
+
+        Map map=FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+
+        EditCustEnqDetailsMB editCustEnqDetailsMB=(EditCustEnqDetailsMB) map.get(AppConstants.BEAN_NAME_ENQUIRY_PAGE);
+        QuoteSlipMB quoteSlipMB = (QuoteSlipMB) map.get(AppConstants.BEAN_NAME_QUOTE_SLIP_PAGE);
+        LoginMB loginMB = (LoginMB)map.get(AppConstants.BEAN_NAME_LOGIN_PAGE);
+        //construct TaskVO to save referral desc
+        TaskVO taskVO = new TaskVO();
+        taskVO.setDesc(this.getReferralDesc());
+        StatusVO statusVO = new StatusVO();
+        statusVO.setCode(Integer.valueOf(Utils.getSingleValueAppConfig("STATUS_REFERRED")));//referred status
+        statusVO.setDesc("Referred");
+        taskVO.setStatusVO(statusVO);
+        taskVO.setEnquiry(editCustEnqDetailsMB.getEnquiryVO());
+        taskVO.setDocumentId(String.valueOf(quoteSlipMB.getQuoteDetailVO().getQuoteSlipId()));
+        taskVO.setAssignerUser(loginMB.getUserDetails());
+        UserVO assigneeUser = new IBSUserVO();
+        assigneeUser.setUserId(this.getAssigneeUser());
+        taskVO.setAssigneeUser(assigneeUser);
+        taskVO.setTaskType(Integer.valueOf(Utils.getSingleValueAppConfig("TASK_TYPE_REFERRAL")));
+        taskVO.setTaskSectionType(Integer.valueOf(Utils.getSingleValueAppConfig("SECTION_ID_POLICY")));
+        this.saveReferralTask(taskVO);//perform referral save task
+        return super.saveReferralTask();
+    }
 
 
     public String loadQuotationDetails() {

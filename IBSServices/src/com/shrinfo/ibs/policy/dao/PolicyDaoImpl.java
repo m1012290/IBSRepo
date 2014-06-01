@@ -24,9 +24,12 @@ import com.shrinfo.ibs.dao.utils.DAOUtils;
 import com.shrinfo.ibs.dao.utils.MapperUtil;
 import com.shrinfo.ibs.dao.utils.NextSequenceValue;
 import com.shrinfo.ibs.gen.pojo.IbsStatusMaster;
+import com.shrinfo.ibs.gen.pojo.IbsTask;
 import com.shrinfo.ibs.gen.pojo.IbsUwTransactionDetail;
 import com.shrinfo.ibs.gen.pojo.IbsUwTransactionHeader;
 import com.shrinfo.ibs.gen.pojo.IbsUwTransactionHeaderId;
+import com.shrinfo.ibs.vo.app.SectionId;
+import com.shrinfo.ibs.vo.business.AppFlow;
 import com.shrinfo.ibs.vo.business.PolicyVO;
 import com.shrinfo.ibs.vo.business.SearchItemVO;
 import com.shrinfo.ibs.vo.business.SearchVO;
@@ -182,6 +185,28 @@ public class PolicyDaoImpl extends BaseDBDAO implements PolicyDao {
             ibsUwTranHeaderToBeSaved.setId(headerId);
 
             saveOrUpdate(ibsUwTranHeaderToBeSaved);
+            
+            //once save is performed check if we are in referral approval then we also need to
+            //update task table records status.
+            PolicyVO inputVO = (PolicyVO)baseVO;
+            if(!Utils.isEmpty(inputVO.getAppFlow())){
+                if(AppFlow.REFERRAL_APPROVAL.equals(inputVO.getAppFlow())){
+                    //retrieve existing task details
+                    IbsTask ibsTask = DAOUtils.queryTaskTblForEnquiryNo(getHibernateTemplate(), inputVO.getEnquiryDetails().getEnquiryNo(), 
+                        Long.valueOf(Utils.getSingleValueAppConfig("TASK_TYPE_REFERRAL")), Long.valueOf(Utils.getSingleValueAppConfig("SECTION_ID_POLICY")));
+                    getHibernateTemplate().evict(ibsTask);
+                    //check now if we need to be updating task table status through task_section_type
+                    //value saved to task table
+                    if(ibsTask.getTaskSectionType().intValue() == SectionId.POLICY.getSectionId() ){
+                        IbsStatusMaster ibsStatusMaster = new IbsStatusMaster();
+                        ibsStatusMaster.setCode(Long.valueOf(Utils.getSingleValueAppConfig("STATUS_APPROVED")));
+                        ibsTask.setIbsStatusMaster(ibsStatusMaster);
+                        //perform saveorupdate of ibsTask so that we have status as approved within task table
+                        update(ibsTask);
+                    }
+                }
+            }
+            
 
             policyVO.setPolicyId(ibsUwTranHeaderToBeSaved.getId().getId());
             policyVO.setPolicyVersion(ibsUwTranHeaderToBeSaved.getId().getPolicyVersion()

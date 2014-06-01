@@ -115,17 +115,41 @@
 								</h:panelGrid>
 				</p:panel>
 				</p:panel>
+				 <!-- referral related dialog box begins -->
+				 <p:dialog header="Referral Section" widgetVar="referraldialog" onHide="PF('blockuiid').hide();">
+						<p:messages id="referralmessages" autoUpdate="true" closable="true" />
+						<p:panel id="referralsection">
+							<h:panelGrid columns="4">
+								<h:outputLabel for="name" value="Referred By" />  
+							    <p:inputText id="referredby" value="#{policyMB.assignerUser}" readonly="true" required="false" />	 	
+								
+								<h:outputLabel value="Refer To" />
+								<p:selectOneMenu id="referredto" value="#{policyMB.assigneeUser}" >
+									<f:selectItem itemLabel="---Select User---" itemValue="" />	
+									<f:selectItems value="#{policyMB.usersList}" />			
+								</p:selectOneMenu>
+								
+								<h:outputLabel value="Referral Description"/>
+								<p:inputTextarea  id="referraldesc" value="#{policyMB.referralDesc}" />
+							</h:panelGrid>	  				
+		  					<p:commandButton value="Save" action="#{policyMB.saveReferralTask}" update="referralmessages" icon="ui-icon-disk" style="float:right:20px;" />
+		  				</p:panel>
+		  		 </p:dialog>
+				 <!-- referral related dialog box ends -->		
+	
+				
 					   
 					   	<p:commandButton value="Back" action="#{policyMB.back}" process="@this" style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
-						<p:commandButton id="savebtn" ajax="false" value="Save" action="#{policyMB.save}"  update="messages,panelPolicy" icon="ui-icon-disk"  style="float:right:20px;" disabled="#{policyMB.navigationDisbled}"/>&nbsp;&nbsp;&nbsp;&nbsp;
+						<p:commandButton id="savebtn" value="Save" action="#{policyMB.save}"  update="messages,panelPolicy,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" icon="ui-icon-disk"  style="float:right:20px;" disabled="#{policyMB.navigationDisbled}"/>&nbsp;&nbsp;&nbsp;&nbsp;
 						<p:commandButton value="Edit" action="#{policyMB.makeTransactionEditable}" onclick="PF('bui').hide()" style="float:right:20px;" rendered="#{policyMB.editVisible}"/>&nbsp;&nbsp;&nbsp;&nbsp;
 						
-						<p:blockUI block="referalpanel" widgetVar="bui" blocked="#{policyMB.screenFreeze}"> Referral message </p:blockUI>
+						<p:blockUI block="referalpanel" widgetVar="bui" blocked="#{policyMB.screenFreeze}"/>
 						<p:blockUI block="referalpanel" trigger="savebtn">
-							LOADING<br />  
-      					<p:graphicImage value="../images/ajax-loader.gif"/>
-  			</p:blockUI>
-								   	
+							LOADING<br />
+      						<p:graphicImage value="../images/ajax-loader.gif"/>
+  						</p:blockUI>
+  						<p:blockUI block="referalpanel" widgetVar="blockuiid"/>
+							   	
 	   		</h:form>
     		</ui:define>
     	</ui:composition>

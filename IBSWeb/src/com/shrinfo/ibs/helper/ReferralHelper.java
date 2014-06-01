@@ -3,6 +3,7 @@
  */
 package com.shrinfo.ibs.helper;
 
+import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
@@ -60,7 +61,8 @@ public class ReferralHelper {
                             case ENQUIRY:
                                 break;
                             case POLICY:
-                                break;
+                            	taskVO = policyScreenReferrals(entryObj.getValue(), policyVO.getPremiumDetails().getPremium(), userRolePrivilege);
+                            	break;
                             case QUOTESLIP:
                                 taskVO = quoteSlipScreenReferrals(entryObj.getValue(), userRolePrivilege);
                                 //referral is being checked for quote slip screen hence break away once
@@ -146,7 +148,42 @@ public class ReferralHelper {
         return taskVO;
     }
     
-    private boolean policyScreenReferrals(PolicyVO policyVO, UserRolePrivilege userRolePrivilege){
-        return false;
+    private static TaskVO policyScreenReferrals(QuoteDetailVO closedQuoteDetailsVO, BigDecimal policyPrm, UserRolePrivilege userRolePrivilege){
+        TaskVO taskVO = null;
+        if(!Utils.isEmpty(userRolePrivilege.getFreeText1())){
+        	try{
+        		Integer prmThresholdPercentage = Integer.parseInt(userRolePrivilege.getFreeText1());
+        		BigDecimal differenceInPrm = policyPrm.subtract(closedQuoteDetailsVO.getQuoteSlipPrmDetails().getPremium());
+        		if( prmThresholdPercentage.intValue() == 0){
+        			//if threshold set is 0 then any difference in premium should result in referral
+        			if(differenceInPrm.compareTo(BigDecimal.ZERO) == 1 || differenceInPrm.compareTo(BigDecimal.ZERO) == -1){
+        				referralDesc.append("Your role doesn't allow to create a policy with difference in closing slip and policy premium greater than 0").append("||");
+        			}
+        		}
+        		else if( prmThresholdPercentage.intValue() == 100){
+        			//if threshold set is 100 then no referral is required
+        		}
+        		else {
+        			// check if there is a difference in policy premium and closing slip premium then check if its within the allowed tolerance threshold
+        			if(differenceInPrm.compareTo(BigDecimal.ZERO) == 1 || differenceInPrm.compareTo(BigDecimal.ZERO) == -1){
+        				BigDecimal thresholdPrm = closedQuoteDetailsVO.getQuoteSlipPrmDetails().getPremium().multiply(new BigDecimal(prmThresholdPercentage)).divide(BigDecimal.valueOf(100));
+        				if(differenceInPrm.abs().compareTo(thresholdPrm) == 1){
+        					//case to trigger referral
+        					referralDesc.append("Your role doesn't allow to create a policy with difference in closing slip and policy premium").append("||");
+        				}
+        			}
+        		}
+        		
+        	}catch(NumberFormatException nfe){
+        		//Not a valid number hence breaking away
+        		System.out.println("NumberFormatException encountered within policyScreenReferrals method ["+ nfe + "]");
+        	}
+        }
+        if(!Utils.isEmpty(referralDesc.toString())){
+            taskVO = new TaskVO();
+            taskVO.setDesc(referralDesc.toString());
+            taskVO.setDocumentId(String.valueOf(closedQuoteDetailsVO.getQuoteSlipId()));
+        }
+    	return taskVO;
     }
 }

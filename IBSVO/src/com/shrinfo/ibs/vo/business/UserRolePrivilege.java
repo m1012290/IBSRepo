@@ -28,6 +28,7 @@ public class UserRolePrivilege extends BaseVO {
     
     private String generateClosingSlip;
     
+    //This is used as value set for premium difference threshold set within the system
     private String freeText1;
 
     private String freeText2;
