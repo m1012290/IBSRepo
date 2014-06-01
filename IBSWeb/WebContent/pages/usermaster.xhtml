@@ -203,9 +203,14 @@
 						</p:selectOneMenu>
 						
 						<h:outputLabel value="Branche*" />
-						<p:selectOneMenu id="branch" value="#{userMB.selectedBranch}" required="true" requiredMessage="Please select a Branch">
+						<p:selectOneMenu id="branch" value="#{userMB.userDetails.branchDetails.code}" required="true" requiredMessage="Please select a Branch">
 							<f:selectItem itemLabel="---Select Branch---" itemValue="" />	
 							<f:selectItems value="#{userMB.branchCodeNameMap}" />					
+						</p:selectOneMenu>
+						
+						<h:outputLabel value="Status*" />
+						<p:selectOneMenu id="status" value="#{userMB.userDetails.isActive}" required="true">
+							<f:selectItems value="#{userMB.userStatusMap}" />					
 						</p:selectOneMenu>
 						   
 				   	</h:panelGrid> 

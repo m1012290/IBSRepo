@@ -6,7 +6,9 @@
     <class name="com.shrinfo.ibs.gen.pojo.IbsUserRoleLink" table="IBS_USER_ROLE_LINK" schema="IBSUSER">
         <id name="id" type="java.lang.Long">
             <column name="ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="sequence">
+				<param name="sequence">IBS_USER_ROLE_LINK_SEQ</param>
+			</generator>
         </id>
         <many-to-one name="ibsUser" class="com.shrinfo.ibs.gen.pojo.IbsUser" fetch="select">
             <column name="USER_ID" precision="22" scale="0" />

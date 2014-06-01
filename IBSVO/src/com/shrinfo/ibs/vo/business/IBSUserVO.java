@@ -16,7 +16,7 @@ public class IBSUserVO extends UserVO {
 
     private ContactVO contactDetails = new ContactVO();
 
-    private BranchVO branchDetails;
+    private BranchVO branchDetails = new BranchVO();
 
     private List<UserRoleVO> roles = new ArrayList<UserRoleVO>();
 

@@ -3,6 +3,9 @@ package com.shrinfo.ibs.userdets.dao;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+
+import org.hibernate.HibernateException;
 
 import com.shrinfo.ibs.base.dao.BaseDBDAO;
 import com.shrinfo.ibs.cmn.exception.BusinessException;
@@ -10,11 +13,14 @@ import com.shrinfo.ibs.cmn.exception.SystemException;
 import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.cmn.vo.BaseVO;
 import com.shrinfo.ibs.cmn.vo.UserVO;
+import com.shrinfo.ibs.dao.utils.DAOUtils;
 import com.shrinfo.ibs.dao.utils.MapperUtil;
+import com.shrinfo.ibs.gen.pojo.IbsContact;
 import com.shrinfo.ibs.gen.pojo.IbsRoles;
 import com.shrinfo.ibs.gen.pojo.IbsRolesProductPrivileges;
 import com.shrinfo.ibs.gen.pojo.IbsUser;
 import com.shrinfo.ibs.gen.pojo.IbsUserRoleLink;
+import com.shrinfo.ibs.vo.app.RecordType;
 import com.shrinfo.ibs.vo.business.AddressVO;
 import com.shrinfo.ibs.vo.business.BranchVO;
 import com.shrinfo.ibs.vo.business.ContactVO;
@@ -166,5 +172,37 @@ public class UserDetailsDaoImpl extends BaseDBDAO implements UserDetailsDao {
             userRolePrivilege.setProduct(productVO);
             userRolePrivileges.add(userRolePrivilege);
         }
+    }
+
+    @Override
+    public BaseVO saveUserDetails(BaseVO baseVO) {
+        if (null == baseVO) {
+            throw new BusinessException("cmn.unknownError", null, "User details cannot be null");
+        }
+
+        if (!(baseVO instanceof IBSUserVO)) {
+            throw new BusinessException("cmn.unknownError", null, "User details are invalid");
+        }
+        IBSUserVO ibsUserVO = (IBSUserVO) baseVO;
+        IbsContact ibsContact = null;
+        try {
+            ibsContact = DAOUtils.constructIbsContactForRecType(ibsUserVO, RecordType.USER);
+            saveOrUpdate(ibsContact);
+
+            IbsUser ibsUser = (IbsUser) ((ibsContact.getIbsUsers().toArray())[0]);
+            ibsUserVO.setUserId(ibsUser.getId());
+            ibsUserVO.getContactDetails().setContactId(ibsContact.getId());
+            
+            Set<IbsUserRoleLink> roleLinks = DAOUtils.constructIbsUserRoleLinks(ibsUserVO);
+            saveOrUpdate(roleLinks.iterator().next());
+
+        } catch (HibernateException hibernateException) {
+            throw new BusinessException("ibs.gi.couldNotSaveUserDetails", hibernateException,
+                "Error while saving User data");
+        } catch (Exception exception) {
+            throw new SystemException("ins.gi.couldNotSaveUserDetails", exception,
+                "Error while saving User data");
+        }
+        return ibsUserVO;
     }
 }

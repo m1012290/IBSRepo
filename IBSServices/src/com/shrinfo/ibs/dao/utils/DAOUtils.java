@@ -38,8 +38,11 @@ import com.shrinfo.ibs.gen.pojo.IbsQuoteComparisionHeader;
 import com.shrinfo.ibs.gen.pojo.IbsQuoteSlipDetail;
 import com.shrinfo.ibs.gen.pojo.IbsQuoteSlipHeader;
 import com.shrinfo.ibs.gen.pojo.IbsQuoteSlipHeaderId;
+import com.shrinfo.ibs.gen.pojo.IbsRoles;
 import com.shrinfo.ibs.gen.pojo.IbsStatusMaster;
 import com.shrinfo.ibs.gen.pojo.IbsTask;
+import com.shrinfo.ibs.gen.pojo.IbsUser;
+import com.shrinfo.ibs.gen.pojo.IbsUserRoleLink;
 import com.shrinfo.ibs.gen.pojo.IbsUwTransactionDetail;
 import com.shrinfo.ibs.gen.pojo.IbsUwTransactionHeader;
 import com.shrinfo.ibs.gen.pojo.IbsUwTransactionHeaderId;
@@ -50,6 +53,7 @@ import com.shrinfo.ibs.vo.business.ContactVO;
 import com.shrinfo.ibs.vo.business.CustomerVO;
 import com.shrinfo.ibs.vo.business.DocumentVO;
 import com.shrinfo.ibs.vo.business.EnquiryVO;
+import com.shrinfo.ibs.vo.business.IBSUserVO;
 import com.shrinfo.ibs.vo.business.InsCompanyVO;
 import com.shrinfo.ibs.vo.business.InsuredVO;
 import com.shrinfo.ibs.vo.business.PolicyVO;
@@ -75,6 +79,11 @@ public class DAOUtils {
 
             switch (recordType) {
                 case USER:
+                    IBSUserVO ibsUserVO = (IBSUserVO) baseVO;
+                    ibsContact = constructIbsContact(ibsUserVO.getContactDetails());
+                    IbsUser ibsUser = constructIbsUser(baseVO);
+                    ibsUser.setIbsContact(ibsContact);
+                    ibsContact.getIbsUsers().add(ibsUser);
                     break;
                 case CUSTOMER:
                     CustomerVO customerVO = (CustomerVO) baseVO;
@@ -126,6 +135,61 @@ public class DAOUtils {
         return ibsContact;
     }
 
+    /**
+     * 
+     * @param baseVO
+     * @return
+     */
+    private static IbsUser constructIbsUser(BaseVO baseVO) {
+        IbsUser ibsUser = new IbsUser();
+        if(Utils.isEmpty(baseVO)) {
+            return null;
+        }
+        IBSUserVO ibsUserVO = (IBSUserVO) baseVO;
+        ibsUser.setDescription(ibsUserVO.getContactDetails().getFirstName() +" "+ibsUserVO.getContactDetails().getLastName());
+        ibsUser.setFreezeFlag(ibsUserVO.getIsFreezed());
+        ibsUser.setLoginName(ibsUserVO.getLoginName());
+        ibsUser.setPassword(ibsUserVO.getPassword());
+        ibsUser.setStatus(ibsUserVO.getIsActive());
+        
+        //ibsUser.setIbsUserRoleLinks(constructIbsUserRoleLinks(ibsUserVO));
+        
+        IbsCompanyBranch branch = new IbsCompanyBranch();
+        branch.setCode(ibsUserVO.getBranchDetails().getCode());        
+        ibsUser.setIbsCompanyBranch(branch);
+        
+        return ibsUser;
+    }
+
+    /**
+     * 
+     * @param ibsUserVO
+     * @return
+     */
+    public static Set<IbsUserRoleLink> constructIbsUserRoleLinks(IBSUserVO ibsUserVO) {
+        Set<IbsUserRoleLink> ibsUserRoleLinks = new HashSet<IbsUserRoleLink>();
+        if(Utils.isEmpty(ibsUserVO)) {
+            return null;
+        }
+        IbsUserRoleLink ibsUserRoleLink = new IbsUserRoleLink();
+        IbsUser ibsUser = new IbsUser();
+        ibsUser.setId(ibsUserVO.getUserId());
+        ibsUserRoleLink.setIbsUser(ibsUser);
+        ibsUserRoleLink.setStatus(ibsUserVO.getIsActive());
+        
+        IbsRoles ibsRoles = new IbsRoles();
+        ibsRoles.setId(ibsUserVO.getRoles().get(0).getId());
+        ibsUserRoleLink.setIbsRoles(ibsRoles);
+        
+        ibsUserRoleLinks.add(ibsUserRoleLink);
+        return ibsUserRoleLinks;
+    }
+
+    /**
+     * 
+     * @param baseVO
+     * @return
+     */
     private static IbsContact constructIbsContact(BaseVO baseVO) {
         IbsContact ibsContact = new IbsContact();
         if (null == baseVO) {
