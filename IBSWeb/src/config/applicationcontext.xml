@@ -294,6 +294,16 @@
 	<bean id="claimsSvcDAOBean" class="com.shrinfo.ibs.claims.dao.ClaimsDaoImpl">
 		<property name="hibernateTemplate" ref="hibernateTemplate" />
 	</bean>
+	
+	<bean id="branchSvc" parent="baseProxyBean">
+		<property name="target" ref="branchSvcBean" />
+	</bean>
+	<bean id="branchSvcBean" class="com.shrinfo.ibs.branchcomp.svc.BranchDetailsSvcImpl">
+		<property name="branchDetailsDao" ref="branchSvcDAOBean" />
+	</bean>
+	<bean id="branchSvcDAOBean" class="com.shrinfo.ibs.branchcomp.dao.BranchDetailsDaoImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
 
 </beans>
 

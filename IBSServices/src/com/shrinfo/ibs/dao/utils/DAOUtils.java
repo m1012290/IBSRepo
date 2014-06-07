@@ -47,6 +47,7 @@ import com.shrinfo.ibs.gen.pojo.IbsUwTransactionDetail;
 import com.shrinfo.ibs.gen.pojo.IbsUwTransactionHeader;
 import com.shrinfo.ibs.gen.pojo.IbsUwTransactionHeaderId;
 import com.shrinfo.ibs.vo.app.RecordType;
+import com.shrinfo.ibs.vo.business.BranchVO;
 import com.shrinfo.ibs.vo.business.ClaimsVO;
 import com.shrinfo.ibs.vo.business.CompanyVO;
 import com.shrinfo.ibs.vo.business.ContactVO;
@@ -109,6 +110,8 @@ public class DAOUtils {
                     ibsContact.getIbsInsuranceCompanies().add(ibsInsuranceCompany);
                     break;
                 case COMPANY_BRANCH:
+                	BranchVO branchVO=(BranchVO)baseVO;
+            		ibsContact = constructIbsContact(branchVO.getInchargeContactAndAddrDets());	
                     break;
                 case PORTFOLIO:
                     break;
