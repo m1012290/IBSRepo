@@ -9,6 +9,8 @@ public class BranchVO extends BaseVO {
     private String code;
 
     private String name;
+    
+    private String shortName;
 
     private String abbrevation;
 
@@ -81,5 +83,13 @@ public class BranchVO extends BaseVO {
     public void setInchargeContactAndAddrDets(ContactVO inchargeContactAndAddrDets) {
         this.inchargeContactAndAddrDets = inchargeContactAndAddrDets;
     }
+
+	public String getShortName() {
+		return shortName;
+	}
+
+	public void setShortName(String shortName) {
+		this.shortName = shortName;
+	}
 
 }

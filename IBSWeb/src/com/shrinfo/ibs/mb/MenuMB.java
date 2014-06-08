@@ -53,6 +53,8 @@ public class MenuMB {
         productMenuList.add(getItem("Product Master", null, 1, "productmaster.xhtml"));   
         productMenuList.add(getItem("User Master", null, 2, "usermaster.xhtml"));
         productMenuList.add(getItem("Insurance Company Master", null, 3, "inscompanymaster.xhtml")); 
+        productMenuList.add(getItem("Branch Master", null, 4, "branchcompanymaster.xhtml"));
+        
         for(DefaultMenuItem item : productMenuList) {
             submenuMaster.addElement(item);
         }        
