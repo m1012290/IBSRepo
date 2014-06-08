@@ -6,6 +6,7 @@ package com.shrinfo.ibs.dao.utils;
 import java.math.BigDecimal;
 import java.sql.Blob;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -28,6 +29,7 @@ import com.shrinfo.ibs.gen.pojo.IbsContact;
 import com.shrinfo.ibs.gen.pojo.IbsCustomer;
 import com.shrinfo.ibs.gen.pojo.IbsCustomerEnquiry;
 import com.shrinfo.ibs.gen.pojo.IbsDocumentTable;
+import com.shrinfo.ibs.gen.pojo.IbsInsuranceCompProdLink;
 import com.shrinfo.ibs.gen.pojo.IbsInsuranceCompany;
 import com.shrinfo.ibs.gen.pojo.IbsInsuranceCompanyContact;
 import com.shrinfo.ibs.gen.pojo.IbsInsuredMaster;
@@ -103,15 +105,18 @@ public class DAOUtils {
                     ibsContact.getIbsCompanies().add(ibsCompany);
                     break;
                 case INSURANCE_COMPANY:
-                    ibsContact = new IbsContact();
+                    InsCompanyVO insCompanyVO = (InsCompanyVO) baseVO;
+                    ibsContact = constructIbsContact(insCompanyVO.getContactAndAddrDetails());
+
                     IbsInsuranceCompany ibsInsuranceCompany = constructIbsInsCompany(baseVO);
+                    ibsInsuranceCompany.setIbsContact(ibsContact);
                     ibsContact.setIbsInsuranceCompanies(constructSetOfPOJOForRecType(recordType
                         .getPojoClass()));
                     ibsContact.getIbsInsuranceCompanies().add(ibsInsuranceCompany);
                     break;
                 case COMPANY_BRANCH:
-                	BranchVO branchVO=(BranchVO)baseVO;
-            		ibsContact = constructIbsContact(branchVO.getInchargeContactAndAddrDets());	
+                    BranchVO branchVO=(BranchVO)baseVO;
+                    ibsContact = constructIbsContact(branchVO.getInchargeContactAndAddrDets()); 
                     break;
                 case PORTFOLIO:
                     break;
@@ -288,15 +293,66 @@ public class DAOUtils {
         ibsInsCompany.setCode(companyVO.getCode());
         ibsInsCompany.setName(companyVO.getName());
         ibsInsCompany.setShortname(companyVO.getShortName());
-        ibsInsCompany.setStatus(companyVO.getIsStatusActive() == "Y"? "1" : "0");
+        ibsInsCompany.setStatus(companyVO.getIsStatusActive());
         
         //populate company product details
         
+
         return ibsInsCompany;
     }
 
-    private static IbsInsuranceCompanyContact constructIbsInsCompanyContact(BaseVO baseVO) {
-        return null;
+/**
+     * 
+     * @param baseVO
+     * @return
+     */
+    public static List<IbsInsuranceCompanyContact> constructIbsInsCompanyContact(BaseVO baseVO) {
+        
+        if(Utils.isEmpty(baseVO)) {
+            return null;
+        }
+        List<IbsInsuranceCompanyContact> contacts = new ArrayList<IbsInsuranceCompanyContact>();
+        InsCompanyVO insCompanyVO = (InsCompanyVO) baseVO;
+        
+        IbsInsuranceCompanyContact contact = null;
+        for(Entry<ProductVO, ContactVO> entry : insCompanyVO.getContactForProduct().entrySet()) {
+            contact = new IbsInsuranceCompanyContact();
+            contact.setIbsProductMaster(constructIbsProduct(entry.getKey()));
+            contact.setIbsContact(constructIbsContact(entry.getValue()));
+            contact.setStatus("Y");
+            contact.setCompanyName(insCompanyVO.getName());
+            IbsInsuranceCompany ibsInsCompany = new IbsInsuranceCompany();
+            ibsInsCompany.setCode(insCompanyVO.getCode());
+            contact.setIbsInsuranceCompany(ibsInsCompany);
+            contacts.add(contact);
+        }
+        
+        return contacts;
+    }
+    
+    /**
+     * 
+     * @param baseVO
+     * @return
+     */
+    public static List<IbsInsuranceCompProdLink> constructIbsInsuranceCompProdLink(BaseVO baseVO) {
+        if(Utils.isEmpty(baseVO)) {
+            return null;
+        }
+        List<IbsInsuranceCompProdLink> compProdLinkList = new ArrayList<IbsInsuranceCompProdLink>();
+        InsCompanyVO insCompanyVO = (InsCompanyVO) baseVO;
+        
+        IbsInsuranceCompProdLink compProdLink = null;
+        for(Entry<ProductVO, ContactVO> entry : insCompanyVO.getContactForProduct().entrySet()) {
+            compProdLink = new IbsInsuranceCompProdLink();
+            compProdLink.setCompanyCode(insCompanyVO.getCode());
+            compProdLink.setStatus("Y");
+            compProdLink.setIbsProductMaster(constructIbsProduct(entry.getKey()));
+            
+            compProdLinkList.add(compProdLink);
+        }
+        
+        return compProdLinkList;
     }
 
     private static IbsInsuredMaster constructIbsInsuredMaster(BaseVO baseVO) {
@@ -670,11 +726,12 @@ public class DAOUtils {
         QuoteDetailVO quoteDetailVO = null;
         InsCompanyVO insCompanyVO = null;
         for (Entry<InsCompanyVO, QuoteDetailVO> entry : quoteDetails.entrySet()) {
+
             insCompanyVO = entry.getKey();
             quoteDetailVO = entry.getValue();
             
             
-            	
+                
             ibsUwTranDetails = constructIbsUwTransactionDetails(quoteDetailVO);
 
             for (IbsUwTransactionDetail ibsUwTransDetail : ibsUwTranDetails) {
@@ -704,10 +761,12 @@ public class DAOUtils {
                     
                     //Added by Hafeezur:8th June 2014
                     ibsUwTransDetail.setTotalPremium(premiumVO.getTotalPremium());
+
                     if (!Utils.isEmpty(premiumVO.getTotalPremium())) {
                         ibsUwTransDetail.setSumInsured(premiumVO.getTotalPremium().longValue());
                     }
                 }
+
                 //Added by Hafeezur:8th June 2014
                ibsUwTransDetail.setPolicyStartDate(constructSqlDate(policyVO.getPolicyEffectiveDate()));
                ibsUwTransDetail.setPolicyExpiryDate(constructSqlDate(policyVO.getPolicyExpiryDate()));
@@ -796,6 +855,7 @@ public class DAOUtils {
                     .getProductDetails()));
            // ibsQuoteDetail.setIbsProductUwFields(constructIbsProductUwField(uwFieldVO));
             ibsQuoteDetail.setQuoteNo(quoteDetailVO.getQuoteNo());
+
             IbsQuoteComparisionHeader ibsQuoteComparisionHeader = new IbsQuoteComparisionHeader();
             ibsQuoteComparisionHeader.setId(quoteDetailVO.getQuoteId());
             ibsQuoteDetail.setIbsQuoteComparisionHeader(ibsQuoteComparisionHeader);
@@ -936,6 +996,7 @@ public class DAOUtils {
         ibsClaims.setLossDescription(claimsVO.getLossDescription());
         
         return ibsClaims;
+
     }
 
 }

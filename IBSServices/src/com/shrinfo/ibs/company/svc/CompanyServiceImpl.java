@@ -30,16 +30,15 @@ public class CompanyServiceImpl extends BaseService implements CompanyService {
 
     @Override
     public BaseVO createCompany(BaseVO baseVO) {
-        // TODO Auto-generated method stub
-        return null;
+        return companyDao.createCompany(baseVO);
     }
 
-    
+
     /**
      * @param companyDao the companyDao to set
      */
     public void setCompanyDao(CompanyDao companyDao) {
         this.companyDao = companyDao;
     }
-    
+
 }

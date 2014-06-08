@@ -22,7 +22,7 @@ public enum RecordType {
     USER(1, IbsInsuredMaster.class), CUSTOMER(2, IbsCustomer.class), COMPANY(3, IbsCompany.class), INSURANCE_COMPANY(
             4, IbsInsuranceCompany.class), COMPANY_BRANCH(5, IbsCompanyBranch.class), PORTFOLIO(6,
             IbsInsuranceCompanyContact.class), INSURED(7, IbsInsuredMaster.class), ENQUIRY_CONTACT(
-            8, IbsCustomerEnquiry.class);
+            8, IbsCustomerEnquiry.class), INS_COMPANY_CONTACT(9, IbsInsuranceCompanyContact.class);
 
     private int recordType;
 

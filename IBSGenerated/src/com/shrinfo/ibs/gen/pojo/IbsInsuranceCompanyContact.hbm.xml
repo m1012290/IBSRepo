@@ -6,12 +6,14 @@
     <class name="com.shrinfo.ibs.gen.pojo.IbsInsuranceCompanyContact" table="IBS_INSURANCE_COMPANY_CONTACT" schema="IBSUSER">
         <id name="id" type="java.lang.Long">
             <column name="ID" precision="22" scale="0" />
-            <generator class="assigned" />
+            <generator class="sequence" >
+            	<param name="sequence">IBS_INS_COMPANY_CONTACT_SEQ</param>
+            </generator>
         </id>
         <many-to-one name="ibsProductMaster" class="com.shrinfo.ibs.gen.pojo.IbsProductMaster" fetch="select">
             <column name="PRODUCT_CLASS" precision="22" scale="0" />
         </many-to-one>
-        <many-to-one name="ibsContact" class="com.shrinfo.ibs.gen.pojo.IbsContact" fetch="select">
+        <many-to-one name="ibsContact" cascade="save-update"  class="com.shrinfo.ibs.gen.pojo.IbsContact" fetch="select">
             <column name="CONTACT_ID" precision="25" scale="0" />
         </many-to-one>
         <many-to-one name="ibsInsuranceCompany" class="com.shrinfo.ibs.gen.pojo.IbsInsuranceCompany" fetch="select">

@@ -1,5 +1,7 @@
 package com.shrinfo.ibs.company.dao;
 
+import java.util.List;
+
 import org.hibernate.HibernateException;
 
 import com.shrinfo.ibs.base.dao.BaseDBDAO;
@@ -10,7 +12,9 @@ import com.shrinfo.ibs.dao.utils.DAOUtils;
 import com.shrinfo.ibs.dao.utils.MapperUtil;
 import com.shrinfo.ibs.gen.pojo.IbsCompany;
 import com.shrinfo.ibs.gen.pojo.IbsContact;
+import com.shrinfo.ibs.gen.pojo.IbsInsuranceCompProdLink;
 import com.shrinfo.ibs.gen.pojo.IbsInsuranceCompany;
+import com.shrinfo.ibs.gen.pojo.IbsInsuranceCompanyContact;
 import com.shrinfo.ibs.vo.app.RecordType;
 import com.shrinfo.ibs.vo.business.BrokingCompany;
 import com.shrinfo.ibs.vo.business.CompanyVO;
@@ -53,13 +57,23 @@ public class CompanyDaoImpl extends BaseDBDAO implements CompanyDao {
             if (baseVO instanceof InsCompanyVO) {
                 ibsContact =
                     DAOUtils.constructIbsContactForRecType(baseVO, RecordType.INSURANCE_COMPANY);
+                saveOrUpdate(ibsContact);
+                // persist company product contact details
+                List<IbsInsuranceCompanyContact> contactList = DAOUtils.constructIbsInsCompanyContact(baseVO);
+                saveOrUpdateAll(contactList);
+                // Persist company product details
+               List<IbsInsuranceCompProdLink> compProdLinkList =
+                    DAOUtils.constructIbsInsuranceCompProdLink(baseVO);
+                saveOrUpdateAll(compProdLinkList);
+                
             } else if (baseVO instanceof BrokingCompany) {
                 ibsContact = DAOUtils.constructIbsContactForRecType(baseVO, RecordType.COMPANY);
+                saveOrUpdate(ibsContact);
             }
-            saveOrUpdate(ibsContact);
+            
             
             if (baseVO instanceof InsCompanyVO) {
-                companyVO.setCode(((IbsCompany)ibsContact.getIbsInsuranceCompanies().toArray()[0]).getCode());
+                companyVO.setCode(((IbsInsuranceCompany)ibsContact.getIbsInsuranceCompanies().toArray()[0]).getCode());
             } else if (baseVO instanceof BrokingCompany) {
                 companyVO.setCode(((IbsCompany)ibsContact.getIbsCompanies().toArray()[0]).getCode());
             }

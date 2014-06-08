@@ -1,5 +1,6 @@
 package com.shrinfo.ibs.vo.business;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -11,7 +12,7 @@ public class InsCompanyVO extends CompanyVO {
 
     private static final long serialVersionUID = 2860672426234918139L;
 
-    private Map<ProductVO, ContactVO> contactForProduct;
+    private Map<ProductVO, ContactVO> contactForProduct = new HashMap<ProductVO, ContactVO>();;
 
     /**
      * @return Map consisting of contacts for each of the products portfolio
