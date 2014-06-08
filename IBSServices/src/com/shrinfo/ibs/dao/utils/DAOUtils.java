@@ -670,9 +670,11 @@ public class DAOUtils {
         QuoteDetailVO quoteDetailVO = null;
         InsCompanyVO insCompanyVO = null;
         for (Entry<InsCompanyVO, QuoteDetailVO> entry : quoteDetails.entrySet()) {
-
             insCompanyVO = entry.getKey();
             quoteDetailVO = entry.getValue();
+            
+            
+            	
             ibsUwTranDetails = constructIbsUwTransactionDetails(quoteDetailVO);
 
             for (IbsUwTransactionDetail ibsUwTransDetail : ibsUwTranDetails) {
@@ -699,17 +701,25 @@ public class DAOUtils {
                             .setDiscountPercentage((long) premiumVO.getDiscountPercentage());
                     ibsUwTransDetail.setLoadingPercentage((long) premiumVO.getLoadingPercentage());
                     ibsUwTransDetail.setPolicyPremium(premiumVO.getPremium());
-                    ibsUwTransDetail.setTotalPremium(premiumVO.getTotalPremium());// Added by
-                                                                                  // Hafeezur
+                    
+                    //Added by Hafeezur:8th June 2014
+                    ibsUwTransDetail.setTotalPremium(premiumVO.getTotalPremium());
                     if (!Utils.isEmpty(premiumVO.getTotalPremium())) {
                         ibsUwTransDetail.setSumInsured(premiumVO.getTotalPremium().longValue());
                     }
                 }
-
-                ibsQuoteComparisionHeader.setId(quoteDetailVO.getQuoteId());
+                //Added by Hafeezur:8th June 2014
+               ibsUwTransDetail.setPolicyStartDate(constructSqlDate(policyVO.getPolicyEffectiveDate()));
+               ibsUwTransDetail.setPolicyExpiryDate(constructSqlDate(policyVO.getPolicyExpiryDate()));
+               ibsUwTransDetail.setPolicyTerm(BigDecimal.valueOf(quoteDetailVO.getPolicyTerm()));
+               ibsUwTransDetail.setCoverDescription(quoteDetailVO.getQuoteSlipPrmDetails().getCoverDescription());
+               
+               
+               ibsQuoteComparisionHeader.setId(quoteDetailVO.getQuoteId());
             }
-            // since there will be only one insurance company record for a policy, break out after
-            // first iteration
+        
+        // since there will be only one insurance company record for a policy, break out after
+           // first iteration
             break;
         }
         ibsUwTranHeader.setIbsUwTransactionDetails(ibsUwTranDetails);
@@ -761,6 +771,9 @@ public class DAOUtils {
         for (ProductUWFieldVO uwFieldVO : productVO.getUwFieldsList()) {
             ibsQuoteDetail = new IbsUwTransactionDetail();
             ibsQuoteDetail.setPolicyCompanyCode(quoteDetailVO.getCompanyCode());
+            
+            
+            ibsQuoteDetail.setProductUwFieldAnswer(uwFieldVO.getResponse());
             PremiumVO premiumVO = quoteDetailVO.getQuoteSlipPrmDetails();
             ibsQuoteDetail.setIbsProductUwFields(constructIbsProductUwField(uwFieldVO));
             StatusVO statusVO = new StatusVO();
@@ -781,14 +794,12 @@ public class DAOUtils {
             }
             ibsQuoteDetail.setIbsProductMaster(constructIbsProduct(quoteDetailVO
                     .getProductDetails()));
-            ibsQuoteDetail.setIbsProductUwFields(constructIbsProductUwField(uwFieldVO));
+           // ibsQuoteDetail.setIbsProductUwFields(constructIbsProductUwField(uwFieldVO));
             ibsQuoteDetail.setQuoteNo(quoteDetailVO.getQuoteNo());
-
-            ibsQuoteDetail.setProductUwFieldAnswer(uwFieldVO.getFieldValue());
-            ibsQuoteDetail.setIbsProductUwFields(constructIbsProductUwField(uwFieldVO));
             IbsQuoteComparisionHeader ibsQuoteComparisionHeader = new IbsQuoteComparisionHeader();
             ibsQuoteComparisionHeader.setId(quoteDetailVO.getQuoteId());
             ibsQuoteDetail.setIbsQuoteComparisionHeader(ibsQuoteComparisionHeader);
+            
             comparisionDetails.add(ibsQuoteDetail);
         }
 
