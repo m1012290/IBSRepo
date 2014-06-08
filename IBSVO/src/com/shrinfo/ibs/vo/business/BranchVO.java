@@ -16,7 +16,7 @@ public class BranchVO extends BaseVO {
 
     private CompanyVO company;
 
-    private ContactVO inchargeContactAndAddrDets;
+    private ContactVO inchargeContactAndAddrDets=new ContactVO();
 
     /**
      * @return the code
