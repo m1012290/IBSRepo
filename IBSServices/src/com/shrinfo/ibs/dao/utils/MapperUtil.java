@@ -38,6 +38,7 @@ import com.shrinfo.ibs.vo.app.EnquiryType;
 import com.shrinfo.ibs.vo.business.AddressVO;
 import com.shrinfo.ibs.vo.business.ContactVO;
 import com.shrinfo.ibs.vo.business.CustomerVO;
+import com.shrinfo.ibs.vo.business.CustomersListVO;
 import com.shrinfo.ibs.vo.business.DocumentVO;
 import com.shrinfo.ibs.vo.business.EnquiryVO;
 import com.shrinfo.ibs.vo.business.IBSUserVO;
@@ -887,5 +888,43 @@ public class MapperUtil {
 
         populateAuditFields(insCompanyVO, ibsInsuranceCompany);
 
+    }
+    
+    /**
+     * Populates CustomersListVO with the values available from ibsCustomerList
+     * @param customersListVO
+     * @param ibsCustomerList
+     */
+    public static void populateCustomersListVO(CustomersListVO customersListVO, List<IbsCustomer> ibsCustomerList){
+    	CustomerVO customerVO = null;
+    	ContactVO contactVO = null;
+    	List<CustomerVO> customersList = new ArrayList<CustomerVO>();
+    	if(!Utils.isEmpty(ibsCustomerList)){
+    		if(Utils.isEmpty(customersListVO)){
+    			customersListVO = new CustomersListVO();
+    		}
+    		for( IbsCustomer ibsCustomer : ibsCustomerList ){
+    			customerVO = new CustomerVO();
+    			contactVO  = new ContactVO();
+    			if (!Utils.isEmpty(ibsCustomer.getId())) {
+    	            customerVO.setCustomerId(ibsCustomer.getId());
+    			}
+    	        customerVO.setName(ibsCustomer.getName());
+    	        customerVO.setCategory(ibsCustomer.getCategory());
+    	        customerVO.setClassification(ibsCustomer.getClassification());
+    	        customerVO.setCustomerId(ibsCustomer.getId().longValue());
+    	        customerVO.setGroup(ibsCustomer.getCustGroup());
+    	        // customerVO.setIsStatusActive(ibsCustomer.get)
+    	        customerVO.setSalutation(ibsCustomer.getSalutation());
+    	        customerVO.setSalesExecutive(ibsCustomer.getSalesExecutive());
+    	        customerVO.setSourceOfBusiness(ibsCustomer.getSource());
+
+    	        contactVO = new ContactVO();
+    	        populateContactVO(contactVO, ibsCustomer.getIbsContact());
+    	        customerVO.setContactAndAddrDets(contactVO);
+    	        customersList.add(customerVO);
+    		}
+    		customersListVO.setCustomersList(customersList);
+    	}
     }
 }

@@ -4,6 +4,7 @@
 package com.shrinfo.ibs.mb;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -13,7 +14,10 @@ import javax.faces.context.FacesContext;
 import com.shrinfo.ibs.cmn.exception.BusinessException;
 import com.shrinfo.ibs.cmn.exception.SystemException;
 import com.shrinfo.ibs.cmn.logger.Logger;
+import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
+import com.shrinfo.ibs.vo.business.CustomerVO;
+import com.shrinfo.ibs.vo.business.CustomersListVO;
 import com.shrinfo.ibs.vo.business.EnquiryVO;
 /**
  * @author sunilk
@@ -34,6 +38,7 @@ public class CustomerMasterMB extends BaseManagedBean implements Serializable{
 	
 	private EnquiryVO enquiryVO = new EnquiryVO();
 
+	private List<CustomerVO> customersList;
     //private Map<String,String> salutations=new HashMap<String, String>();
 
 	
@@ -76,7 +81,7 @@ public class CustomerMasterMB extends BaseManagedBean implements Serializable{
                     "ERROR_CUSTOMERMASTER_SAVE",
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
                         "Unexpected error encountered, please try again after sometime"));
-                return null;
+            return null;
     	}catch(SystemException se){
     		logger.error(se, "Exception [" + se
                     + "] encountered while saving customer details");
@@ -84,11 +89,44 @@ public class CustomerMasterMB extends BaseManagedBean implements Serializable{
                     "ERROR_CUSTOMERMASTER_SAVE",
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
                         "Unexpected error encountered, please try again after sometime"));
-                return null;
+            return null;
     	}
     	return null;
     }
 
+    /**
+     * This method returns all the customers list available in the system. This method can be used wherever 
+     * we need list of customers ex :- on customer list autocomplete drop down.
+     * @return
+     */
+    public List<CustomerVO> getCustomersList(){
+    	try{
+    	   if(Utils.isEmpty(this.customersList)){
+	     	   CustomersListVO responseVO = (CustomersListVO) ServiceTaskExecutor.INSTANCE.executeSvc("customerEnquirySvc",
+	                    "getAllCustomers", this.enquiryVO);
+	     	  this.customersList = responseVO.getCustomersList();
+    	   }
+     	   return this.customersList;
+     	}catch(BusinessException be){
+     		logger.error(be, "Exception [" + be
+                     + "] encountered while saving customer details");
+                 FacesContext.getCurrentInstance().addMessage(
+                     "ERROR_CUSTOMER_LIST_RETRIEVAL",
+                     new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+                         "Unexpected error encountered, please try again after sometime"));
+                 return null;
+     	}catch(SystemException se){
+     		logger.error(se, "Exception [" + se
+                     + "] encountered while saving customer details");
+                 FacesContext.getCurrentInstance().addMessage(
+                     "ERROR_CUSTOMERMASTER_SAVE",
+                     new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+                         "Unexpected error encountered, please try again after sometime"));
+                 return null;
+     	}
+     
+    }
+    
 	@Override
 	protected void reinitializeBeanFields() {
 		this.enquiryVO = new EnquiryVO();

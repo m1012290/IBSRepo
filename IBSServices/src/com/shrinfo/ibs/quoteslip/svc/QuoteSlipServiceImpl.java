@@ -44,6 +44,9 @@ public class QuoteSlipServiceImpl extends BaseService implements QuoteSlipServic
         if("updateEmailedQuoteSlipFlag".equals(methodName)){
             returnValue = updateEmailedQuoteSlipFlag((BaseVO) args[0]);
         }
+        if("createInsuredDetails".equals(methodName)){
+        	returnValue = createInsuredDetails((BaseVO) args[0]);
+        }
 
         return returnValue;
     }
@@ -91,14 +94,15 @@ public class QuoteSlipServiceImpl extends BaseService implements QuoteSlipServic
         // TODO Auto-generated method stub
         return null;
     }
-
-
-
+    
+    @Override
+    public BaseVO createInsuredDetails(BaseVO baseVO) {
+    	return insuredDao.createInsuredDetails(baseVO);
+    }
 
     public void setQuoteSlipDao(QuoteSlipDao quoteSlipDao) {
         this.quoteSlipDao = quoteSlipDao;
     }
-
 
 
 

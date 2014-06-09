@@ -260,3 +260,13 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#febf01', end
 }
 
 .ui-widget-header .ui-icon{background-image:url("/IBSWeb/faces/javax.faces.resource/images/ui-icons_ffffff_256x240.png?ln=primefaces-aristo");}
+
+.ui-autocomplete-panel .ui-autocomplete-table th, .ui-autocomplete-panel .ui-autocomplete-table td{
+	border-width: 0px none;
+	border-style: none;
+}
+
+.ui-outputlabel .ui-outputlabel-rfi{
+	margin-left:0.4em;
+	color: #cd0a0a;
+}

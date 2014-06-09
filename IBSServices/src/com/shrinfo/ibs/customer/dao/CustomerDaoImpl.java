@@ -1,6 +1,7 @@
 package com.shrinfo.ibs.customer.dao;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.hibernate.HibernateException;
 
@@ -14,6 +15,7 @@ import com.shrinfo.ibs.gen.pojo.IbsContact;
 import com.shrinfo.ibs.gen.pojo.IbsCustomer;
 import com.shrinfo.ibs.vo.app.RecordType;
 import com.shrinfo.ibs.vo.business.CustomerVO;
+import com.shrinfo.ibs.vo.business.CustomersListVO;
 
 
 public class CustomerDaoImpl extends BaseDBDAO implements CustomerDao {
@@ -80,5 +82,26 @@ public class CustomerDaoImpl extends BaseDBDAO implements CustomerDao {
         return customerVO;
     }
 
+    @SuppressWarnings("unchecked")
+	@Override
+    public BaseVO getAllCustomers(BaseVO baseVO) {
+        List<IbsCustomer> ibsCustomerList = null;
+
+        try {
+        	ibsCustomerList =
+                (List<IbsCustomer>) getHibernateTemplate().find(
+                    " from IbsCustomer ibsCustomer");
+        } catch (HibernateException he) {
+            throw new SystemException("pas.gi.couldNotGetCustDetails", he,
+                "Error while retrieving all the existing customers in the system");
+        } catch(Exception ex){
+        	throw new SystemException("pas.gi.couldNotGetCustDetails", ex,
+                    "Error while retrieving all the existing customers in the system");
+        }
+        
+        CustomersListVO customersListVO = new  CustomersListVO();
+    	MapperUtil.populateCustomersListVO(customersListVO, ibsCustomerList);
+    	return customersListVO;
+    }
 
 }

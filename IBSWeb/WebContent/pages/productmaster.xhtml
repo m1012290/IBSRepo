@@ -16,50 +16,49 @@
     				
     		<p:messages id="messages" autoUpdate="true" closable="true" /> 
     		<p:panel header="Product Details" style="margin-bottom:10px; width:100%;"> 
-                <p:panelGrid columns="08" style="width:100%; border:0px !important;">
-                    <h:outputLabel for="productname" value="Name* " />
-					<p:inputText value="#{productMB.productDetails.name}" required="true" requiredMessage="Please enter name for the product"/>
-					<h:outputLabel for="shortname" value="Short Name" />
-                    <p:inputText value="#{productMB.productDetails.shortName}"/>
-                    <h:outputLabel for="productcategory" value="Category*"  /> 
+                <h:panelGrid columns="08" style="width:100%; border:1px !important;">
+                    <p:outputLabel for="productname" value="Name" />
+					<p:inputText id="productname" value="#{productMB.productDetails.name}" required="true" requiredMessage="Please enter name for the product"/>
+					<p:outputLabel for="shortname" value="Short Name" />
+                    <p:inputText id="shortname" value="#{productMB.productDetails.shortName}"/>
+                    <p:outputLabel for="productcategory" value="Category"  /> 
 			        <p:selectOneMenu id="productcategory" value="#{productMB.productDetails.category}" required="true" requiredMessage="Please select category for the product">  
 	            		<f:selectItem itemLabel="Select Category" itemValue="" />
 	            			<f:selectItems value="#{productMB.custCategories}" />
 	        		</p:selectOneMenu>
-	        		<h:outputLabel for="insurancecompanies" value="Companies*" />  
-        						<p:selectManyMenu id="insurancecompanies" value="#{productMB.productDetails.applicableInsCompanies}" required="true" requiredMessage="Please select atleast one company for the product">
-        							<f:selectItem itemLabel="Select Companies" itemValue="" />
-        							<f:selectItems value="#{productMB.insCompanies}"/>
-        						</p:selectManyMenu>                                        
-                </p:panelGrid>
+	        		<p:outputLabel for="insurancecompanies" value="Companies" />  
+     						<p:selectManyMenu id="insurancecompanies" value="#{productMB.productDetails.applicableInsCompanies}" required="true" requiredMessage="Please select atleast one company for the product">
+     							<f:selectItem itemLabel="Select Companies" itemValue="" />
+     							<f:selectItems value="#{productMB.insCompanies}"/>
+     						</p:selectManyMenu>                                        
+                </h:panelGrid>
                 <p:spacer height="30px;"/>
 			</p:panel>
 			<p:panel id="uwdetailsaddsection"  header="Product Underwriting Details">
 				<h:panelGrid columns="8" style="width:100%; ">
-                    <h:outputLabel for="srlno" value="SRL No*" />
+                    <p:outputLabel for="srlno" value="SRL No" />
 					
 					<p:inputText id="srlno" value="#{productMB.fieldSrlNo}" required="true" requiredMessage="Please enter srl no for the field" converterMessage="Alphabets are not allowed for Srl No field">
 						<f:convertNumber  integerOnly="true" type="number" for="srlno" pattern="###"/>
 					</p:inputText>
 					
-					<h:outputLabel for="fieldname" value="Field Name*" />
-				    <p:inputText value="#{productMB.productUWDetails.fieldName}" required="true" requiredMessage="Please enter name for the field" />
+					<p:outputLabel for="fieldname" value="Field Name" />
+				    <p:inputText  id="fieldname" value="#{productMB.productUWDetails.fieldName}" required="true" requiredMessage="Please enter name for the field" />
                   
-                    <h:outputLabel for="fieldtype" value="Field Type*" />
-                   
+                    <p:outputLabel for="fieldtype" value="Field Type" />
                     <p:selectOneMenu id="fieldtype" value="#{productMB.productUWDetails.fieldType}" required="true" requiredMessage="Please select field type for the field">  
 	            		<f:selectItem itemLabel="Select Category" itemValue="" />  
 	            		<f:selectItem itemLabel="Textbox" itemValue="textbox"/>
 	            		<f:selectItem itemLabel="Datepicker" itemValue="datepicker"/>
 	        		</p:selectOneMenu>
 	        		 
-	        		<h:outputLabel for="fieldvaluetype" value="Field Value Type*" />
+	        		<p:outputLabel for="fieldvaluetype" value="Field Value Type" />
                     <p:selectOneMenu id="fieldvaluetype" value="#{productMB.productUWDetails.fieldValueType}" required="true" requiredMessage="Please select field value type for the field">
 						<f:selectItem itemLabel="Select Category" itemValue="" />
 						<f:selectItems value="#{productMB.uwFieldValueTypes}" />
 	        		</p:selectOneMenu>
 	        		
-                    <h:outputLabel for="fieldlength" value="Field Length" />
+                    <p:outputLabel for="fieldlength" value="Field Length" />
                     <p:inputText id="fieldlength" value="#{productMB.fieldLength}" converterMessage="Alphabets are not allowed for Field Length">
                     	<f:convertNumber  integerOnly="true" type="number" for="fieldlength" pattern="###"/>
                     </p:inputText>
@@ -92,8 +91,5 @@
 	   		</h:form>
     		</ui:define>
     	</ui:composition>
-    	
-    	
     </h:body>
-
 </html>

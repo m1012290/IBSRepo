@@ -22,4 +22,6 @@ public interface QuoteSlipService {
     public BaseVO emailQuoteSlip(BaseVO baseVO, List<BaseVO> companies);
 
     public BaseVO updateEmailedQuoteSlipFlag(BaseVO baseVO);
+    
+    public BaseVO createInsuredDetails(BaseVO baseVO);
 }

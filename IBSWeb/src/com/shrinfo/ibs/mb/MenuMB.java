@@ -51,10 +51,11 @@ public class MenuMB {
         DefaultSubMenu submenuMaster = new DefaultSubMenu("Masters entry");        
         List<DefaultMenuItem> productMenuList = new ArrayList<DefaultMenuItem>();
         productMenuList.add(getItem("Customer Master", null, 1, "customermaster.xhtml"));
-        productMenuList.add(getItem("Product Master", null, 2, "productmaster.xhtml"));   
-        productMenuList.add(getItem("User Master", null, 3, "usermaster.xhtml"));
-        productMenuList.add(getItem("Insurance Company Master", null, 4, "inscompanymaster.xhtml")); 
-        productMenuList.add(getItem("Branch Master", null, 5, "branchcompanymaster.xhtml"));
+        productMenuList.add(getItem("Insured Master", null, 2, "insuredmaster.xhtml"));
+        productMenuList.add(getItem("Product Master", null, 3, "productmaster.xhtml"));   
+        productMenuList.add(getItem("User Master", null, 4, "usermaster.xhtml"));
+        productMenuList.add(getItem("Insurance Company Master", null, 5, "inscompanymaster.xhtml")); 
+        productMenuList.add(getItem("Branch Master", null, 6, "branchcompanymaster.xhtml"));
         
         for(DefaultMenuItem item : productMenuList) {
             submenuMaster.addElement(item);

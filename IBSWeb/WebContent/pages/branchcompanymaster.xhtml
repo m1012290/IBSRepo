@@ -19,28 +19,28 @@
     			<p:panel id="companyDetails"  header="Branch Company Details">
 					<h:panelGrid columns="6" style="width:100%; ">
 					
-		                <h:outputLabel for="name" value="Company Name*" />
+		                <p:outputLabel for="name" value="Company Name" />
 						<p:inputText id="name"
 							value="#{branchCompanyMB.branchVO.name}"
 							required="true" requiredMessage="Please enter Company name" validatorMessage="Company name should not be less than 5 and more than 10 characters">
 					    <f:validateLength  minimum="5" maximum="10"/> 
 					    </p:inputText>
 					    
-					    <h:outputLabel for="shortName" value="Short Name*" />
+					    <p:outputLabel for="shortName" value="Short Name" />
 						<p:inputText id="shortName"
 							value="#{branchCompanyMB.branchVO.name}"
 							required="true" requiredMessage="Please enter Short Name" validatorMessage="Short Name should not be less than 5 and more than 10 characters">
 					    <f:validateLength minimum="5" maximum="10"/> 
 					    </p:inputText>
 					    
-					    <h:outputLabel for="code" value="Company Code*" />
+					    <p:outputLabel for="code" value="Company Code" />
 						<p:inputText id="code"
 							value="#{branchCompanyMB.branchVO.code}"
 							required="true" requiredMessage="Please enter Company Code" validatorMessage="Short Name should not be more than 10 characters">
 					    <f:validateLength maximum="10"/> 
 					    </p:inputText>
 						
-						<h:outputLabel value="Status*" />
+						<p:outputLabel for="status" value="Status" />
 						<p:selectOneMenu id="status" value="#{branchCompanyMB.branchVO.isStatusActive}" required="true">
 							<f:selectItems value="#{userMB.userStatusMap}" />					
 						</p:selectOneMenu>
@@ -53,7 +53,7 @@
 
 					<h:panelGrid columns="6" style="width:100%;">
 						
-						<h:outputLabel for="firstName" value="First Name*" />
+						<p:outputLabel for="firstName" value="First Name" />
 						<p:inputText id="firstName"
 							value="#{branchCompanyMB.branchVO.inchargeContactAndAddrDets.firstName}"
 							required="true" requiredMessage="Please enter First name" validatorMessage="First Name should not be more than 50 characters">
@@ -67,14 +67,14 @@
 					    <f:validateLength  maximum="50"/> 
 					    </p:inputText>
 
-						<h:outputLabel for="lastName" value="Last Name*" />
+						<p:outputLabel for="lastName" value="Last Name" />
 						<p:inputText id="lastName"
 							value="#{branchCompanyMB.branchVO.inchargeContactAndAddrDets.lastName}"
 							required="true" requiredMessage="Please enter Last name"  validatorMessage="Last Name should not be more than 50 characters">
 					    <f:validateLength  maximum="50"/> 
 					    </p:inputText>
 
-						<h:outputLabel for="primaryEmailID" value="EmailID *" />
+						<p:outputLabel for="primaryEmailID" value="EmailID" />
 						<p:inputText id="primaryEmailID"
 							value="#{branchCompanyMB.branchVO.inchargeContactAndAddrDets.emailId}"
 							required="true"  label="EmailID" requiredMessage="Please enter the EmailID" validatorMessage="Invalid email format, Please enter the correct EmailID">
@@ -82,7 +82,7 @@
 						pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 					   </p:inputText>
 
-						<h:outputLabel for="primMobNum" value="MobileNumber *  +968" />
+						<p:outputLabel for="primMobNum" value="MobileNumber +968" />
 						<p:inputText id="primMobNum"
 							value="#{branchCompanyMB.branchVO.inchargeContactAndAddrDets.mobileNo}"
 							required="true" label="Mobile Number"  requiredMessage="Please enter the MobileNumber" converterMessage="Alphabets are not allowed , Please Enter the Correct Mobile Number" validatorMessage="MobileNumber should be of 8 digits">
@@ -91,7 +91,7 @@
 						<f:validateLength minimum="8" maximum="8"  for="primMobNum"/>  
 						</p:inputText>
 
-						<h:outputLabel for="primLandNum" value="LandLine Number" />
+						<p:outputLabel for="primLandNum" value="LandLine Number" />
 						<p:inputText id="primLandNum"
 							value="#{branchCompanyMB.branchVO.inchargeContactAndAddrDets.landlineNo}"
 							required="false" converterMessage="Alphabets are not allowed , Please enter the correct LandLine Number" validatorMessage="LandLine Number should be of 8 digits">
@@ -99,7 +99,7 @@
 						<f:validateLength minimum="8" maximum="8"  for="primLandNum"/>  
 						</p:inputText>
 
-						<h:outputLabel for="faxNum" value="Fax Number" />
+						<p:outputLabel for="faxNum" value="Fax Number" />
 						<p:inputText id="faxNum"
 							value="#{branchCompanyMB.branchVO.inchargeContactAndAddrDets.faxNo}"
 							required="false" converterMessage="Alphabets are not allowed ,Please enter the correct Fax Number" validatorMessage="fax number should not be more than 25 digits">
@@ -107,7 +107,7 @@
 						<f:validateLength maximum="25"  for="faxNum"/>  	
 						</p:inputText>
 
-						<h:outputLabel for="city" value="City" />
+						<p:outputLabel for="city" value="City" />
 						<p:inputText id="city"
 							value="#{branchCompanyMB.branchVO.inchargeContactAndAddrDets.addressVO.city}" validatorMessage="Numbers\Special characters are not allowed in the city field"
 							required="false" >
@@ -123,14 +123,14 @@
 						<f:validateLength maximum="50"  for="City"/>  	
 					    </p:inputText>
 
-						<h:outputLabel for="address" value="Address" />
+						<p:outputLabel for="address" value="Address" />
 						<p:inputText id="address"
 							value="#{branchCompanyMB.branchVO.inchargeContactAndAddrDets.addressVO.address}"
 							required="false" validatorMessage="Address should not be more than 100 characters">
 						<f:validateLength maximum="100"  for="address"/> 
 						</p:inputText>
 
-						<h:outputLabel for="poBox" value="PO Box *" />
+						<p:outputLabel for="poBox" value="PO Box" />
 						<p:inputText id="poBox"
 							value="#{branchCompanyMB.branchVO.inchargeContactAndAddrDets.addressVO.poBox}"
 							required="true"  label="PO Box" requiredMessage="Please enter the PO Box Number" converterMessage="Alphabets are not allowed, Please enter the correct PO Box Number" validatorMessage="POBox number should not be more than 10 digits">
@@ -138,7 +138,7 @@
 					   <f:validateLength maximum="10"  for="poBox"/> 
 					   </p:inputText>
 
-						<h:outputLabel for="locLatitude" value="Location Latitude" />
+						<p:outputLabel for="locLatitude" value="Location Latitude" />
 						<p:inputText id="locLatitude"
 							value="#{branchCompanyMB.branchVO.inchargeContactAndAddrDets.addressVO.lattitude}"
 							required="false" converterMessage="Location Latitude should be a Number" validatorMessage="Location Latitude should not be more than 5 digits">
@@ -146,7 +146,7 @@
 						<f:validateLength maximum="5"  for="locLatitude"/> 
 						</p:inputText>
 
-						<h:outputLabel for="locLongitude" value="Location Longitude" />
+						<p:outputLabel for="locLongitude" value="Location Longitude" />
 						<p:inputText id="locLongitude"
 							value="#{branchCompanyMB.branchVO.inchargeContactAndAddrDets.addressVO.longitude}"
 							required="false" converterMessage="Location Longitude should be a Number" validatorMessage="Location Longitude should not be more than 5 digits">
@@ -154,7 +154,7 @@
 						<f:validateLength maximum="5"  for="locLatitude"/> 
 						</p:inputText>
 
-						<h:outputLabel for="altEmailID1" value="Alternate EmailID1" />
+						<p:outputLabel for="altEmailID1" value="Alternate EmailID1" />
 						<p:inputText id="altEmailID1"
 							value="#{branchCompanyMB.branchVO.inchargeContactAndAddrDets.alternateEmailId1}"
 							required="false" >
@@ -162,7 +162,7 @@
 						<f:validator validatorId="custom.stringValidator" /> 
 					   </p:inputText>					   
 					   
-						<h:outputLabel for="altMobNum1" value="Alternate MobileNumber1 +968" />
+						<p:outputLabel for="altMobNum1" value="Alternate MobileNumber1 +968" />
 						<p:inputText id="altMobNum1"
 							value="#{branchCompanyMB.branchVO.inchargeContactAndAddrDets.alternateMobileNo1}"
 							required="false" label="Alternate MobileNumber1" converterMessage="Alphabets are not allowed , Please Enter the Correct Alternate MobileNumber1" validatorMessage="Alternate MobileNumber1 should be of 8 digits">
@@ -170,7 +170,7 @@
 						<f:validateLength minimum="8" maximum="8"  for="altMobNum1"/>  
 						</p:inputText>
 
-						<h:outputLabel for="altLandNum1" value="Alternate LandLineNumber1" />
+						<p:outputLabel for="altLandNum1" value="Alternate LandLineNumber1" />
 						<p:inputText id="altLandNum1"
 							value="#{branchCompanyMB.branchVO.inchargeContactAndAddrDets.alternateLandlineNo1}"
 							required="false" converterMessage="Alphabets are not allowed , Please enter the correct Alternate LandLineNumber1" validatorMessage="Alternate LandLineNumber1 should be of 8 digits">
@@ -178,14 +178,14 @@
 						<f:validateLength minimum="8" maximum="8"  for="altLandNum1"/>  
 						</p:inputText>
 
-						<h:outputLabel for="altEmailID2" value="Alternate EmailID2" />
+						<p:outputLabel for="altEmailID2" value="Alternate EmailID2" />
 						<p:inputText id="altEmailID2"
 							value="#{branchCompanyMB.branchVO.inchargeContactAndAddrDets.alternateEmailId2}"
 							required="false" >
 						<f:validator validatorId="custom.stringValidator" /> 
 					   </p:inputText>					   
 
-						<h:outputLabel for="altMobNum2" value="Alternate MobileNumber2 +968" />
+						<p:outputLabel for="altMobNum2" value="Alternate MobileNumber2 +968" />
 						<p:inputText id="altMobNum2"
 							value="#{branchCompanyMB.branchVO.inchargeContactAndAddrDets.alternateMobileNo2}"
 							required="false" label="Alternate MobileNumber2" converterMessage="Alphabets are not allowed , Please Enter the Correct Alternate MobileNumber2" validatorMessage="Alternate MobileNumber2 should be of 8 digits">
@@ -193,7 +193,7 @@
 						<f:validateLength minimum="8" maximum="8"  for="altMobNum2"/>  
 						</p:inputText>
 
-						<h:outputLabel for="altLandNum2" value="Alternate LandLineNumber2" />
+						<p:outputLabel for="altLandNum2" value="Alternate LandLineNumber2" />
 						<p:inputText id="altLandNum2"
 							value="#{branchCompanyMB.branchVO.inchargeContactAndAddrDets.alternateLandLineNo2}"
 							required="false" converterMessage="Alphabets are not allowed , Please enter the correct Alternate LandLineNumber2" validatorMessage="Alternate LandLineNumber2 should be of 8 digits">

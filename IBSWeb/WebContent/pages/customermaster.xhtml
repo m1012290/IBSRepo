@@ -16,14 +16,14 @@
 					style="margin-bottom:10px;">
 
 					<h:panelGrid columns="6" style="width:100%;">
-						<h:outputLabel for="salutation" value="Salutation *"  style="red" styleClass="lableCls" />
+						<p:outputLabel for="salutation" value="Salutation" styleClass="lableCls" />
 						<p:selectOneMenu id="salutation" style="width:158px;"
 							value="#{customerMasterMB.enquiryVO.customerDetails.salutation}" required="true" label="Salutation" requiredMessage="Please select the Salutation">
 							<f:selectItem itemLabel="---Select Salutation---" itemValue="" />
 							<f:selectItems value="#{customerMasterMB.salutations}" />
 						</p:selectOneMenu>
 
-						<h:outputLabel for="name" value="Name *" />
+						<p:outputLabel for="name" value="Name" />
 						<p:inputText id="name"
 							value="#{customerMasterMB.enquiryVO.customerDetails.name}"
 							required="true" label="Name" requiredMessage="Please enter the Name" validatorMessage="Name should be minimum of 4 character and maximum of 50 characters" >
@@ -31,7 +31,7 @@
 						</p:inputText> 
 
 
-						<h:outputLabel for="firstName" value="First Name" />
+						<p:outputLabel for="firstName" value="First Name" />
 						<p:inputText id="firstName"
 							value="#{customerMasterMB.enquiryVO.customerDetails.contactAndAddrDets.firstName}"
 							required="false" validatorMessage="First Name should not be more than 50 characters">
@@ -51,7 +51,7 @@
 
 
 
-						<h:outputLabel for="lastName" value="Last Name" />
+						<p:outputLabel for="lastName" value="Last Name" />
 						<p:inputText id="lastName"
 							value="#{customerMasterMB.enquiryVO.customerDetails.contactAndAddrDets.lastName}"
 							required="false" validatorMessage="Last Name should not be more than 50 characters">
@@ -62,7 +62,7 @@
 
 
 
-						<h:outputLabel for="custGroup" value="Group" />
+						<p:outputLabel for="custGroup" value="Group" />
 						<p:inputText id="custGroup"
 							value="#{customerMasterMB.enquiryVO.customerDetails.group}"
 							required="false" validatorMessage="Group should not be more than 50 characters">
@@ -71,7 +71,7 @@
 
 
 
-						<h:outputLabel for="custCat" value="Category" />
+						<p:outputLabel for="custCat" value="Category" />
 						<p:selectOneMenu id="custCat"
 							value="#{customerMasterMB.enquiryVO.customerDetails.category}">
 							<f:selectItem itemLabel="----Select Category---" itemValue="" />
@@ -79,7 +79,7 @@
 						</p:selectOneMenu>
 
 
-						<h:outputLabel for="custClass" value="Classification" />
+						<p:outputLabel for="custClass" value="Classification" />
 						<p:selectOneMenu id="custClass" style="width:158px;"
 							value="#{customerMasterMB.enquiryVO.customerDetails.classification}">
 							<f:selectItem itemLabel="-Select Classification-" itemValue="" />
@@ -87,7 +87,7 @@
 								value="#{customerMasterMB.custClassifications}" />
 						</p:selectOneMenu>
 
-						<h:outputLabel for="sourceOfBusiness" value="Source of Business" />
+						<p:outputLabel for="sourceOfBusiness" value="Source of Business" />
 						<p:inputText id="sourceOfBusiness"
 							value="#{customerMasterMB.enquiryVO.customerDetails.sourceOfBusiness}"
 							required="false" validatorMessage="Source of Business field should not be more than 50 characters">
@@ -96,7 +96,7 @@
 
 
 
-						<h:outputLabel for="salesExe" value="Sales Executive" />
+						<p:outputLabel for="salesExe" value="Sales Executive" />
 						<p:inputText id="salesExe"
 							value="#{customerMasterMB.enquiryVO.customerDetails.salesExecutive}"
 							required="false" validatorMessage="Sales Executive field should not be more than 50 characters">
@@ -105,7 +105,7 @@
 
 
 
-						<h:outputLabel for="title" value="Title" />
+						<p:outputLabel for="title" value="Title" />
 						<p:selectOneMenu id="title" style="width:158px;"
 							value="#{customerMasterMB.enquiryVO.customerDetails.contactAndAddrDets.title}">
 							<f:selectItem itemLabel="------Select Title-------" itemValue="" />
@@ -113,7 +113,7 @@
 						</p:selectOneMenu>
 
 
-						<h:outputLabel for="primaryEmailID" value="EmailID *" />
+						<p:outputLabel for="primaryEmailID" value="EmailID" />
 						<p:inputText id="primaryEmailID"
 							value="#{customerMasterMB.enquiryVO.customerDetails.contactAndAddrDets.emailId}"
 							required="true"  label="EmailID" requiredMessage="Please enter the EmailID" validatorMessage="Invalid email format, Please enter the correct EmailID">
@@ -122,7 +122,7 @@
 					   </p:inputText>
 
 
-						<h:outputLabel for="primMobNum" value="MobileNumber *  +968" />
+						<p:outputLabel for="primMobNum" value="MobileNumber +968" />
 						<p:inputText id="primMobNum"
 							value="#{customerMasterMB.enquiryVO.customerDetails.contactAndAddrDets.mobileNo}"
 							required="true" label="Mobile Number"  requiredMessage="Please enter the MobileNumber" converterMessage="Alphabets are not allowed , Please Enter the Correct Mobile Number" validatorMessage="MobileNumber should be of 8 digits">
@@ -132,7 +132,7 @@
 						</p:inputText>
 
 
-						<h:outputLabel for="primLandNum" value="LandLine Number" />
+						<p:outputLabel for="primLandNum" value="LandLine Number" />
 						<p:inputText id="primLandNum"
 							value="#{customerMasterMB.enquiryVO.customerDetails.contactAndAddrDets.landlineNo}"
 							required="false" converterMessage="Alphabets are not allowed , Please enter the correct LandLine Number" validatorMessage="LandLine Number should be of 8 digits">
@@ -142,7 +142,7 @@
 						
 
 
-						<h:outputLabel for="faxNum" value="Fax Number" />
+						<p:outputLabel for="faxNum" value="Fax Number" />
 						<p:inputText id="faxNum"
 							value="#{customerMasterMB.enquiryVO.customerDetails.contactAndAddrDets.faxNo}"
 							required="false" converterMessage="Alphabets are not allowed ,Please enter the correct Fax Number" validatorMessage="fax number should not be more than 25 digits">
@@ -151,7 +151,7 @@
 						</p:inputText> 
 
 
-						<h:outputLabel for="city" value="City" />
+						<p:outputLabel for="city" value="City" />
 						<p:inputText id="city"
 							value="#{customerMasterMB.enquiryVO.customerDetails.contactAndAddrDets.addressVO.city}" validatorMessage="Numbers\Special characters are not allowed in the city field"
 							required="false" >
@@ -167,7 +167,7 @@
 						<f:validateLength maximum="50"  for="City"/>  	
 					    </p:inputText>
 
-						<h:outputLabel for="address" value="Address" />
+						<p:outputLabel for="address" value="Address" />
 						<p:inputText id="address"
 							value="#{customerMasterMB.enquiryVO.customerDetails.contactAndAddrDets.addressVO.address}"
 							required="false" validatorMessage="Address should not be more than 100 characters">
@@ -177,7 +177,7 @@
 
 
 
-						<h:outputLabel for="poBox" value="PO Box *" />
+						<p:outputLabel for="poBox" value="PO Box" />
 						<p:inputText id="poBox"
 							value="#{customerMasterMB.enquiryVO.customerDetails.contactAndAddrDets.addressVO.poBox}"
 							required="true"  label="PO Box" requiredMessage="Please enter the PO Box Number" converterMessage="Alphabets are not allowed, Please enter the correct PO Box Number" validatorMessage="POBox number should not be more than 10 digits">
@@ -187,7 +187,7 @@
 							
 
 
-						<h:outputLabel for="locLatitude" value="Location Latitude" />
+						<p:outputLabel for="locLatitude" value="Location Latitude" />
 						<p:inputText id="locLatitude"
 							value="#{customerMasterMB.enquiryVO.customerDetails.contactAndAddrDets.addressVO.lattitude}"
 							required="false" converterMessage="Location Latitude should be a Number" validatorMessage="Location Latitude should not be more than 5 digits">
@@ -196,7 +196,7 @@
 						</p:inputText>
 
 
-						<h:outputLabel for="locLongitude" value="Location Longitude" />
+						<p:outputLabel for="locLongitude" value="Location Longitude" />
 						<p:inputText id="locLongitude"
 							value="#{customerMasterMB.enquiryVO.customerDetails.contactAndAddrDets.addressVO.longitude}"
 							required="false" converterMessage="Location Longitude should be a Number" validatorMessage="Location Longitude should not be more than 5 digits">
@@ -205,7 +205,7 @@
 						</p:inputText>
 
 
-						<h:outputLabel for="altEmailID1" value="Alternate EmailID1" />
+						<p:outputLabel for="altEmailID1" value="Alternate EmailID1" />
 						<p:inputText id="altEmailID1"
 							value="#{customerMasterMB.enquiryVO.customerDetails.contactAndAddrDets.alternateEmailId1}"
 							required="false" >
@@ -214,7 +214,7 @@
 					   </p:inputText>
 					   
 					   
-						<h:outputLabel for="altMobNum1" value="Alternate MobileNumber1 +968" />
+						<p:outputLabel for="altMobNum1" value="Alternate MobileNumber1 +968" />
 						<p:inputText id="altMobNum1"
 							value="#{customerMasterMB.enquiryVO.customerDetails.contactAndAddrDets.alternateMobileNo1}"
 							required="false" label="Alternate MobileNumber1" converterMessage="Alphabets are not allowed , Please Enter the Correct Alternate MobileNumber1" validatorMessage="Alternate MobileNumber1 should be of 8 digits">
@@ -223,7 +223,7 @@
 						</p:inputText>
 
 
-						<h:outputLabel for="altLandNum1" value="Alternate LandLineNumber1" />
+						<p:outputLabel for="altLandNum1" value="Alternate LandLineNumber1" />
 						<p:inputText id="altLandNum1"
 							value="#{customerMasterMB.enquiryVO.customerDetails.contactAndAddrDets.alternateLandlineNo1}"
 							required="false" converterMessage="Alphabets are not allowed , Please enter the correct Alternate LandLineNumber1" validatorMessage="Alternate LandLineNumber1 should be of 8 digits">
@@ -232,7 +232,7 @@
 						</p:inputText>
 
 
-						<h:outputLabel for="altEmailID2" value="Alternate EmailID2" />
+						<p:outputLabel for="altEmailID2" value="Alternate EmailID2" />
 						<p:inputText id="altEmailID2"
 							value="#{customerMasterMB.enquiryVO.customerDetails.contactAndAddrDets.alternateEmailId2}"
 							required="false" >
@@ -240,7 +240,7 @@
 					   </p:inputText>
 					   
 
-						<h:outputLabel for="altMobNum2" value="Alternate MobileNumber2 +968" />
+						<p:outputLabel for="altMobNum2" value="Alternate MobileNumber2 +968" />
 						<p:inputText id="altMobNum2"
 							value="#{customerMasterMB.enquiryVO.customerDetails.contactAndAddrDets.alternateMobileNo2}"
 							required="false" label="Alternate MobileNumber2" converterMessage="Alphabets are not allowed , Please Enter the Correct Alternate MobileNumber2" validatorMessage="Alternate MobileNumber2 should be of 8 digits">
@@ -249,7 +249,7 @@
 						</p:inputText>
 
 
-						<h:outputLabel for="altLandNum2" value="Alternate LandLineNumber2" />
+						<p:outputLabel for="altLandNum2" value="Alternate LandLineNumber2" />
 						<p:inputText id="altLandNum2"
 							value="#{customerMasterMB.enquiryVO.customerDetails.contactAndAddrDets.alternateLandLineNo2}"
 							required="false" converterMessage="Alphabets are not allowed , Please enter the correct Alternate LandLineNumber2" validatorMessage="Alternate LandLineNumber2 should be of 8 digits">
@@ -257,7 +257,7 @@
 						<f:validateLength minimum="8" maximum="8"  for="altLandNum2"/> 
 						</p:inputText>
 
-						<h:outputLabel for="custId" value="CustomerId" />
+						<p:outputLabel for="custId" value="CustomerId" />
 						<p:inputText id="custId"
 							value="#{customerMasterMB.enquiryVO.customerDetails.customerId}"
 							disabled="true" required="false" />

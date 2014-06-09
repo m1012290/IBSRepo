@@ -35,13 +35,13 @@
 	    		<p:panel id="panelPolicy" header="Policy Details" style="margin-bottom:10px;"> 
 	       			 <h:panelGrid id="panelGridPolicy" columns="6">
 	            						
-	  						<h:outputLabel for="totalPremium" value="Total Premium" />  
+	  						<p:outputLabel for="totalPremium" value="Total Premium" />  
 	  						<p:inputText id="totalPremium" value="#{claimsMB.policyVO.premiumDetails.totalPremium}"  disabled="true"/>
 	  						
-	  						<h:outputLabel for="policyEffectiveDate" value="Policy Effective Date" />  
+	  						<p:outputLabel for="policyEffectiveDate" value="Policy Effective Date" />  
 	  						<p:calendar id="policyEffectiveDate" value="#{claimsMB.policyVO.policyEffectiveDate}" pattern="dd/MM/yyyy" disabled="true"/>
 	  						
-	  						<h:outputLabel for="policyExpiryDate" value="Policy Expiry Date" />  
+	  						<p:outputLabel for="policyExpiryDate" value="Policy Expiry Date" />  
 	  						<p:calendar id="policyExpiryDate" value="#{claimsMB.policyVO.policyExpiryDate}" pattern="dd/MM/yyyy" disabled="true"/>
 	        						
 	      			</h:panelGrid>
@@ -50,14 +50,14 @@
 	    		<p:panel id="panelClaims" header="Claims Details" style="margin-bottom:10px;"> 
 	       			 <h:panelGrid columns="4">
 	   						
-	   						<h:outputLabel for="lossDate" value="Date of Loss" />  
+	   						<p:outputLabel for="lossDate" value="Date of Loss" />  
 	   						<p:calendar id="lossDate" value="#{claimsMB.claimsVO.lossDateTime}" pattern="dd/MM/yyyy HH:mm" readonlyInput="true" />
 	   						
-	   						<h:outputLabel for="lossAmount" value="Estimated Amount of Loss" />  
+	   						<p:outputLabel for="lossAmount" value="Estimated Amount of Loss" />  
 	   						<p:inputText id="lossAmount" value="#{claimsMB.claimsVO.lossAmountEstimate}" />
 	   						
-	   						<h:outputLabel for="lossDescription" value="Loss Description" /> 
-	   						<p:inputTextarea rows="6" cols="50" value="#{claimsMB.claimsVO.lossDescription}"> 
+	   						<p:outputLabel for="lossDescription" value="Loss Description" /> 
+	   						<p:inputTextarea id="lossDescription" rows="6" cols="50" value="#{claimsMB.claimsVO.lossDescription}"> 
 	   						</p:inputTextarea>	
 	        						
 	      			</h:panelGrid>

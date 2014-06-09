@@ -20,19 +20,19 @@
     					<p:panel id="panelInsured" header="Insured Details" style="margin-bottom:10px;"> 
 				       			 <h:panelGrid columns="8" style="width:100%;">  
 				       			 
-				       			 	<h:outputLabel for="salutation" value="Salutation" />  
+				       			 	<p:outputLabel for="salutation" value="Salutation" />  
             						<p:selectOneMenu id="salutation" value="#{quoteSlipMB.insuredDetails.salutation}" style="width:160px;"  required="true"  label="Salutation" requiredMessage="Please select the Salutation">  
                 						<f:selectItem itemLabel="Select Salutation" itemValue="" />  
                 						<f:selectItems value="#{editCustEnqDetailsMB.salutations}" />  
             						</p:selectOneMenu>  
 				   
-						       		<h:outputLabel for="name" value="Name *" />  
+						       		<p:outputLabel for="name" value="Name" />  
 						            <p:inputText id="name" value="#{quoteSlipMB.insuredDetails.name}" 
 						            required="true" label="Name" requiredMessage="Please enter the Name" validatorMessage="Name should be minimum of 4 character and maximum of 50 characters">
 									<f:validateLength minimum="4" maximum="50"/>  
 									</p:inputText>  
 						            			              
-						            <h:outputLabel for="primaryEmailID" value="EmailID *" />  
+						            <p:outputLabel for="primaryEmailID" value="EmailID" />  
 						            <p:inputText id="primaryEmailID" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.emailId}" 
 										required="true"  label="EmailID" requiredMessage="Please enter the EmailID" validatorMessage="Invalid email format, Please enter the correct EmailID">
 									<f:validateRegex 
@@ -40,28 +40,28 @@
 					   				</p:inputText>
 					   				
 						            
-						            <h:outputLabel for="primMobNum" value="Mobile Number *" />  
+						            <p:outputLabel for="primMobNum" value="Mobile Number" />  
 						            <p:inputText id="primMobNum" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.mobileNo}" 
 						            	required="true" label="Mobile Number"  requiredMessage="Please enter the MobileNumber" converterMessage="Alphabets are not allowed , Please Enter the Correct Mobile Number" validatorMessage="MobileNumber should be of 8 digits">
 										<f:convertNumber integerOnly="true" type="number" for="primMobNum" pattern="###"/>
 										<f:validateLength minimum="8" maximum="8"  for="primMobNum"/>  
 									</p:inputText>
 						            
-						            <h:outputLabel for="primLandNum" value="LandLine Number" /> 
+						            <p:outputLabel for="primLandNum" value="LandLine Number" /> 
 						       		<p:inputText id="primLandNum" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.landlineNo}" 
 						       		required="false" converterMessage="Alphabets are not allowed , Please enter the correct LandLine Number" validatorMessage="LandLine Number should be of 8 digits">
 									<f:convertNumber integerOnly="true" type="number" for="primLandNum" pattern="###"/>
 									<f:validateLength minimum="8" maximum="8"  for="primLandNum"/>  
 									</p:inputText> 
             					
-						            <h:outputLabel for="faxNum" value="Fax Number" />  
+						            <p:outputLabel for="faxNum" value="Fax Number" />  
 						            <p:inputText id="faxNum" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.faxNo}" 
 						            required="false" converterMessage="Alphabets are not allowed ,Please enter the correct Fax Number" validatorMessage="Fax Number should not be more than 50 characters">
 									<f:convertNumber integerOnly="true" type="number" for="faxNum" pattern="###"/>
 									<f:validateLength maximum="25"  for="faxNum"/>  	
 									</p:inputText>
 						            
-						            <h:outputLabel for="city" value="City"/>  
+						            <p:outputLabel for="city" value="City"/>  
 						            <p:inputText id="city" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.addressVO.city}" validatorMessage="Numbers\Special characters are not allowed in the city field"
 									required="false" >
 									<f:validateRegex pattern="[a-zA-Z]*"></f:validateRegex> 
@@ -77,20 +77,20 @@
            			 				</p:inputText> 
            			 				 
 
-						            <h:outputLabel for="address" value="Address" />  
+						            <p:outputLabel for="address" value="Address" />  
 						            <p:inputText id="address" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.addressVO.address}"  
 						            required="false" validatorMessage="Address should not be more than 100 characters">
 									<f:validateLength maximum="100"  for="address"/> 
 									</p:inputText>   
 						  
-						            <h:outputLabel for="poBox" value="PO Box *" />  
+						            <p:outputLabel for="poBox" value="PO Box" />  
 						            <p:inputText id="poBox" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.addressVO.poBox}" 
 						            required="true"  label="PO Box" requiredMessage="Please enter the PO Box Number" converterMessage="Alphabets are not allowed, Please enter the correct PO Box Number">
 					   				<f:convertNumber integerOnly="true" type="number" for="poBox" pattern="###"/>
 					   				<f:validateLength maximum="10"  for="poBox"/> 
 					   				</p:inputText> 
 						            
-						            <h:outputLabel for="insuredID" value="Insured ID" />  
+						            <p:outputLabel for="insuredID" value="Insured ID" />  
 						            <p:inputText id="insuredID" value="#{quoteSlipMB.insuredDetails.id}" readonly="true" required="false" />  
 						       
 			       				</h:panelGrid>
@@ -98,32 +98,32 @@
 					   <p:panel id="panelProductDetails" header="Product Details" style="margin-bottom:10px;">
 								<h:panelGrid columns="6" style="width:100%;">
 								
-								 	<h:outputLabel for="quoteSlipID" value="Quote Slip Number" />  
+								 	<p:outputLabel for="quoteSlipID" value="Quote Slip Number" />  
 						            <p:inputText id="quoteSlipID"  value="#{quoteSlipMB.quoteDetailVO.quoteSlipId}" readonly="true" required="false" /> 
 						            
-						            <h:outputLabel for="quoteSlipVersion" value="Quote Slip Version" />  
+						            <p:outputLabel for="quoteSlipVersion" value="Quote Slip Version" />  
 						            <p:inputText id="quoteSlipVersion" value="#{quoteSlipMB.quoteDetailVO.quoteSlipVersion}" readonly="true" required="false" />  
 						            
-						            <h:outputLabel for="quoteSlipDate" value="Quote Slip Date" />  
+						            <p:outputLabel for="popupCal" value="Quote Slip Date" /> 
 						            <p:calendar readonlyInput="true" pattern="dd/MM/yyyy" value="#{quoteSlipMB.quoteDetailVO.quoteSlipDate}" id="popupCal" />  
 						            	
 
-									<h:outputLabel value="Remarks: *" />
-								    <p:inputTextarea rows="6" cols="50" value="#{quoteSlipMB.quoteDetailVO.remarks}"
+									<p:outputLabel for="remarksid"  value="Remarks" />
+								    <p:inputTextarea  id="remarksid"  rows="6" cols="50" value="#{quoteSlipMB.quoteDetailVO.remarks}"
 								    required="true" requiredMessage="Please enter the Remarks" validatorMessage="Entered Remarks is short, Please enter the remarks in detail within 200 characters">
 
 								    <f:validateLength minimum="10" maximum="200"  for="Description:"/>  
 									</p:inputTextarea>
 																		
-						            <h:outputLabel for="products" value="Products" />  
+						            <p:outputLabel for="products" value="Products" />  
             						<p:selectOneMenu id="products" value="#{quoteSlipMB.quoteDetailVO.productDetails.productClass}" required="true" label="Product" style="width:160px" requiredMessage="Please select the Product">
             							<p:ajax listener="#{quoteSlipMB.retrieveProductUWFields}" update="panelProductDetails, panelUWDetails" />  
                 						<f:selectItem itemLabel="Select Product" itemValue="" />
                 						<f:selectItems value="#{quoteSlipMB.products}" />  
             						</p:selectOneMenu>
             						
-            						<h:outputLabel for="insurancecompanies" value="Companies" />  
-            						<p:selectManyMenu id="insurancecompanies" value="#{quoteSlipMB.selectedInsCompanies}" style="height:140px; width:170px;" >
+            						<p:outputLabel for="insurancecompanies" value="Companies" title="Multiple Insurance companies can be selected"/>  
+            						<p:selectManyMenu id="insurancecompanies" title="Multiple Insurance companies can be selected" value="#{quoteSlipMB.selectedInsCompanies}" style="height:140px; width:170px;" required="true" requiredMessage="Please select atleast one company">
             							<f:selectItem itemLabel="Select Companies" itemValue="" />
             							<f:selectItems value="#{quoteSlipMB.insCompanies}"/>
             						</p:selectManyMenu>
@@ -145,16 +145,16 @@
 						      <p:panel id="panelAudit" header="Audit Details" style="margin-bottom:10px;">
 							     <h:panelGrid columns="6" style=" width:100%;" >
 						            
-						            <h:outputLabel for="recCreatedUsrID" value="Record Created UserID" />  
+						            <p:outputLabel for="recCreatedUsrID" value="Record Created UserID" />  
 						            <p:inputText id="recCreatedUsrID"  value="#{editCustEnqDetailsMB.recCreatedUserID}"  readonly="true" required="false" /> 
 						            
-						            <h:outputLabel for="recCreatedDate" value="Record Created Date" />  
+						            <p:outputLabel for="recCreatedDate" value="Record Created Date" />  
 						            <p:inputText id="recCreatedDate"  value="#{editCustEnqDetailsMB.recCreatedDate}"  readonly="true" required="false" /> 
 						            
-						            <h:outputLabel for="recUpdUsrID" value="Record Updated UserID" />  
+						            <p:outputLabel for="recUpdUsrID" value="Record Updated UserID" />  
 						            <p:inputText id="recUpdUsrID"  value="#{editCustEnqDetailsMB.recUpdatedUserID}"  readonly="true" required="false" /> 
 						            
-						            <h:outputLabel for="recUpdDate" value="Record Updated Date" />  
+						            <p:outputLabel for="recUpdDate" value="Record Updated Date" />  
 						            <p:inputText id="recUpdDate"  value="#{editCustEnqDetailsMB.recUpdatedDate}"  readonly="true" required="false" /> 
 						            
 						           	
@@ -165,16 +165,16 @@
 					<p:messages id="referralmessages" autoUpdate="true" closable="true" />
 					<p:panel id="referralsection">	
 						<h:panelGrid columns="4">
-							<h:outputLabel for="name" value="Referred By" />  
+							<p:outputLabel for="name" value="Referred By" />  
 						    <p:inputText id="referredby" value="#{quoteSlipMB.assignerUser}" readonly="true" required="false" />	 	
 							
-							<h:outputLabel value="Refer To" />
+							<p:outputLabel value="Refer To" />
 							<p:selectOneMenu id="referredto" value="#{quoteSlipMB.assigneeUser}" >
 								<f:selectItem itemLabel="---Select User---" itemValue="" />	
 								<f:selectItems value="#{quoteSlipMB.usersList}" />			
 							</p:selectOneMenu>
 							
-							<h:outputLabel value="Referral Description"/>
+							<p:outputLabel value="Referral Description"/>
 							<p:inputTextarea  id="referraldesc" value="#{quoteSlipMB.referralDesc}" />
 						</h:panelGrid>	  				
 	  					<p:commandButton value="Save" action="#{quoteSlipMB.saveReferralTask}" update="referralmessages" icon="ui-icon-disk" style="float:right:20px;" />
@@ -187,8 +187,8 @@
    			 <p:dialog id="dialog" header="PrintQuoteSlip" widgetVar="dlg">  
   				<p:panel id="printdocsection">
 	      		  <h:panelGrid columns="2" cellpadding="2">  
-	      			<h:outputLabel value=" Please Select the Company Name " />
-	      			<h:outputLabel value=" and Click on the Print link" />
+	      			<p:outputLabel value=" Please Select the Company Name " />
+	      			<p:outputLabel value=" and Click on the Print link" />
 		           <p:selectOneMenu value="#{quoteSlipMB.quoteDetailVO.companyCode}" >
 	                            <f:selectItem itemLabel="---Select Company Name---" itemValue="" />
 	            				<f:selectItems value="#{quoteSlipMB.selectedInsCompaniesMap}"/>
@@ -203,8 +203,8 @@
 
 
 			<p:commandButton value="Back" action="#{quoteSlipMB.back}" process="@this" style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
-			<p:commandButton id="quoteslipsavebtn" ajax="false" value="Save" action="#{quoteSlipMB.save}"  update="messages, panelProductDetails, panelInsured, referralsection, printdocsection" oncomplete="handleSaveResponse(xhr, status, args)" icon="ui-icon-disk"  style="float:right:20px;" disabled="#{quoteSlipMB.navigationDisbled}" />&nbsp;&nbsp;&nbsp;&nbsp;
-			<p:commandButton id="quoteslipnextbtn" ajax="false" value="Next" action="#{quoteSlipMB.next}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" style="float:right:20px;" disabled="#{quoteSlipMB.navigationDisbled}" />&nbsp;&nbsp;&nbsp;&nbsp;
+			<p:commandButton id="quoteslipsavebtn" value="Save" action="#{quoteSlipMB.save}"  update="messages, panelProductDetails, panelInsured, referralsection, printdocsection" oncomplete="handleSaveResponse(xhr, status, args)" icon="ui-icon-disk"  style="float:right:20px;" disabled="#{quoteSlipMB.navigationDisbled}" />&nbsp;&nbsp;&nbsp;&nbsp;
+			<p:commandButton id="quoteslipnextbtn" value="Next" action="#{quoteSlipMB.next}"  update="messages,referralsection" oncomplete="handleSaveResponse(xhr, status, args)" style="float:right:20px;" disabled="#{quoteSlipMB.navigationDisbled}" />&nbsp;&nbsp;&nbsp;&nbsp;
 			<p:commandButton id="generatequoteslipbtn" value="GenerateAndEmailQuoteSlip" action="#{quoteSlipMB.generatePDFForQuoteSlip()}" update="messages,referralsection, printdocsection" oncomplete="handleSaveResponse(xhr, status, args)" style="float:right:20px;" disabled="#{quoteSlipMB.navigationDisbled}" />
 			<p:commandButton id="dynamicDialogButton" value="PrintQuoteSlip" onclick="PF('dlg').show();" type="button"  icon="ui-icon-extlink"/> 
 			<p:commandButton value="Edit" action="#{quoteSlipMB.makeTransactionEditable}" onclick="PF('bui').hide()" style="float:right:20px;" rendered="#{quoteSlipMB.editVisible}"/>&nbsp;&nbsp;&nbsp;&nbsp;

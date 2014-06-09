@@ -244,8 +244,8 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
                     this.policyDetails.setAppFlow(AppFlow.REFERRAL_APPROVAL);
                 }
             }
-            this.policyDetails.getEnquiryDetails().setEnquiryNo(editCustEnqDetailsMB.getEnquiryVO().getEnquiryNo());
-            
+            //this.policyDetails.getEnquiryDetails().setEnquiryNo(editCustEnqDetailsMB.getEnquiryVO().getEnquiryNo());
+            this.policyDetails.setEnquiryDetails(editCustEnqDetailsMB.getEnquiryVO());
             Map<InsCompanyVO, QuoteDetailVO> quoteDetailsMap =
                 new HashMap<InsCompanyVO, QuoteDetailVO>();
             InsCompanyVO insComp = new InsCompanyVO();

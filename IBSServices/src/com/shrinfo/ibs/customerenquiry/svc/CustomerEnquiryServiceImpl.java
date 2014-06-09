@@ -5,6 +5,7 @@ import com.shrinfo.ibs.cmn.vo.BaseVO;
 import com.shrinfo.ibs.customer.dao.CustomerDao;
 import com.shrinfo.ibs.enquiry.dao.EnquiryDao;
 import com.shrinfo.ibs.vo.business.CustomerVO;
+import com.shrinfo.ibs.vo.business.CustomersListVO;
 import com.shrinfo.ibs.vo.business.EnquiryVO;
 
 
@@ -27,6 +28,9 @@ public class CustomerEnquiryServiceImpl extends BaseService implements CustomerE
         }
         if("createCustomer".equals(methodName)){
         	returnValue = createCustomer((BaseVO) args[0]);
+        }
+        if("getAllCustomers".equals(methodName)){
+        	returnValue = getAllCustomers((BaseVO) args[0]);
         }
         return returnValue;
     }
@@ -51,6 +55,12 @@ public class CustomerEnquiryServiceImpl extends BaseService implements CustomerE
        CustomerVO customerVO = (CustomerVO) customerDao.createCustomer(enquiryVO.getCustomerDetails());
        enquiryVO.setCustomerDetails(customerVO);
        return enquiryVO;
+    }
+    
+    @Override
+    public BaseVO getAllCustomers(BaseVO baseVO) {
+    	CustomersListVO customersListVO = (CustomersListVO) customerDao.getAllCustomers(baseVO);
+    	return customersListVO;
     }
 
     public void setCustomerDao(CustomerDao customerDao) {

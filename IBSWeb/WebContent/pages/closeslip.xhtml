@@ -23,29 +23,29 @@
 
 				       			 <h:panelGrid columns="6" style="width:100%;">  
 
-						       		<h:outputLabel for="name" value="Name *" />  
+						       		<p:outputLabel for="name" value="Name" />  
 						            <p:inputText id="name" value="#{quotationMB.insuredDetails.name}" readonly="true" />
 
-						            <h:outputLabel for="products" value="Products" />  
+						            <p:outputLabel for="products" value="Products" />  
             						<p:selectOneMenu id="products"  style="width:158px;" value="#{quotationMB.quoteDetailVO.productDetails.productClass}" disabled="true">
 
                 						<f:selectItem itemLabel="Select Product-" itemValue="" />  
                 						<f:selectItems value="#{quotationMB.products}" />  
             						</p:selectOneMenu>
 
-            						<h:outputLabel for="insurancecompanies" value="Companies" />  
+            						<p:outputLabel for="insurancecompanies" value="Companies" />  
             						<p:selectManyMenu id="insurancecompanies" value="#{quoteSlipMB.selectedInsCompanies}" disabled="true">
 
             							<f:selectItems value="#{quotationMB.insCompanies}"/>
             						</p:selectManyMenu>
 
-            						<h:outputLabel for="quoteSlipID" value="Quote Slip Number" />  
+            						<p:outputLabel for="quoteSlipID" value="Quote Slip Number" />  
 						            <p:inputText id="quoteSlipID"  value="#{quotationMB.quoteDetailVO.quoteSlipId}" readonly="true" required="false" /> 
 
-				                  	<h:outputLabel for="quoteSlipVersion" value="Quote Slip Version" />  
+				                  	<p:outputLabel for="quoteSlipVersion" value="Quote Slip Version" />  
 						            <p:inputText id="quoteSlipVersion" value="#{quotationMB.quoteDetailVO.quoteSlipVersion}" readonly="true"  required="false" />  
 
-						            <h:outputLabel for="insuredID" value="Insured ID" />  
+						            <p:outputLabel for="insuredID" value="Insured ID" />  
 						            <p:inputText id="insuredID" value="#{quoteSlipMB.insuredDetails.id}" readonly="true" required="false" />  
  
 			       				</h:panelGrid>
@@ -61,29 +61,29 @@
 
                <p:panelGrid styleClass="closeSlipTable" columns="6" style="width:100%; padding:0px;">
 
-                    <h:outputLabel for="compName" value="CompanyName" />
-					<p:selectOneMenu value="#{quotationMB.companyCodeForQuote}" >
+                    <p:outputLabel for="compName" value="CompanyName" />
+					<p:selectOneMenu id="compName"   value="#{quotationMB.companyCodeForQuote}" >
                             <f:selectItem itemLabel="---Select Company Name---" itemValue="" />
             				<f:selectItems value="#{quotationMB.selectedInsCompaniesMap}"/>
                    `</p:selectOneMenu>
-                   	<h:outputLabel for="quoteNum" value="Quotation Number" />
-                    <p:inputText value="#{quotationMB.quoteDetailVO.quoteNo}" required="false" >
+                   	<p:outputLabel for="quoteNum" value="Quotation Number" />
+                    <p:inputText id="quoteNum" value="#{quotationMB.quoteDetailVO.quoteNo}" required="false" >
 				   </p:inputText>
 
-                    <h:outputLabel for="quotedPremium" value="Quoted Premium" />
-                    <p:inputText  value="#{quotationMB.quoteDetailVO.quoteSlipPrmDetails.premium}">
+                    <p:outputLabel for="quotedPremium" value="Quoted Premium" />
+                    <p:inputText  id="quotedPremium" value="#{quotationMB.quoteDetailVO.quoteSlipPrmDetails.premium}">
 				   </p:inputText>
        
-                    <h:outputLabel for="sumInsured" value="Sum Insured" />
-                    <p:inputText value="#{quotationMB.quoteDetailVO.sumInsured}" >  
+                    <p:outputLabel for="sumInsured" value="Sum Insured" />
+                    <p:inputText id="sumInsured" value="#{quotationMB.quoteDetailVO.sumInsured}" >  
 				   </p:inputText>
      
-                    <h:outputLabel for="policyTerm" value="Policy Term" />
-                    <p:inputText  value="#{quotationMB.quoteDetailVO.policyTerm}" > 
+                    <p:outputLabel for="policyTerm" value="Policy Term" />
+                    <p:inputText  id="policyTerm" value="#{quotationMB.quoteDetailVO.policyTerm}" > 
 				   </p:inputText>
 				   
                     
-                    <h:outputLabel  for="coverDesc" value="Cover Description" />
+                    <p:outputLabel  for="coverDesc" value="Cover Description" />
 						<p:inputTextarea rows="6" cols="50" id="coverDesc" 
 							value="#{quotationMB.quoteDetailVO.quoteSlipPrmDetails.coverDescription}">
 
@@ -91,7 +91,7 @@
                     
                     
                      
-                    <!-- <h:outputLabel  for="recSummary" value="Recommendation Summary" />
+                    <!-- <p:outputLabel  for="recSummary" value="Recommendation Summary" />
 						<p:inputTextarea rows="6" cols="50" id="recSummary" 
 							value="#{quotationMB.quoteDetailVO.recommendationSummary}" required="false" >
 					  </p:inputTextarea> -->
@@ -118,29 +118,29 @@
 						<p:ajax event="close" listener="#{quotationMB.handleClose}"/>
 						<p:panelGrid columns="2" style="width:100%">
 
-							<h:outputLabel value="Recommended" />
+							<p:outputLabel value="Recommended" />
 							<h:selectBooleanCheckbox value="#{quote.isQuoteRecommended}" />
 
-							<h:outputLabel value="Quote number" />
+							<p:outputLabel value="Quote number" />
 							<h:inputText value="#{quote.quoteNo}" />
 
-							<h:outputLabel value="Quoted premium" />
+							<p:outputLabel value="Quoted premium" />
 							<h:inputText value="#{quote.quoteSlipPrmDetails.premium}" />
 
-							<h:outputLabel value="Sum Insured" />
+							<p:outputLabel value="Sum Insured" />
 							<h:inputText value="#{quote.sumInsured}" />
 
-							<h:outputLabel value="Policy Term" />
+							<p:outputLabel value="Policy Term" />
 							<h:inputText value="#{quote.policyTerm}" />
 
-							<h:outputLabel value="Cover Description" />
+							<p:outputLabel value="Cover Description" />
 							<h:inputText
 								value="#{quote.quoteSlipPrmDetails.coverDescription}" />
 
-							<h:outputLabel value="Recommendation Summary" />
+							<p:outputLabel value="Recommendation Summary" />
 							<h:inputText value="#{quote.recommendationSummary}" />
 
-							<h:outputLabel value="UW fields" />							
+							<p:outputLabel value="UW fields" />							
 							<p:commandLink update=":form:uwFieldDetail"
 								oncomplete="PF('uwFieldDetailDialog').show()"
 								title="View Detail">
@@ -182,19 +182,19 @@
 					<p:messages id="referralmessages" autoUpdate="true" closable="true" />
 					<p:panel id="referralsection">	
 						<h:panelGrid columns="4">
-							<h:outputLabel for="name" value="Referred By" />  
+							<p:outputLabel for="referredby" value="Referred By" />  
 						    <p:inputText id="referredby" value="#{quotationMB.assignerUser}" readonly="true" required="false" />	 	
 
 
 							
-							<h:outputLabel value="Refer To" />
+							<p:outputLabel for="referredto" value="Refer To" />
 							<p:selectOneMenu id="referredto" value="#{quotationMB.assigneeUser}">
 								<f:selectItem itemLabel="---Select User---" itemValue="" />	
 								<f:selectItems value="#{quotationMB.usersList}" />					
 							</p:selectOneMenu>
 
 							
-							<h:outputLabel value="Referral Description"/>
+							<p:outputLabel for="referraldesc" value="Referral Description"/>
 							<p:inputTextarea  id="referraldesc" value="#{quotationMB.referralDesc}"/>
 							
 						</h:panelGrid>	  				
@@ -209,8 +209,8 @@
    			 <p:dialog id="dialog" header="PrintCloseSlip" widgetVar="dlg">  
   				<p:panel id="printdocsection">
 	      		  <h:panelGrid columns="2" cellpadding="2">  
-					<h:outputLabel value=" Please Select the Company Name" />
-	      			<h:outputLabel value="and Click on the Print link" />
+					<p:outputLabel value=" Please Select the Company Name" />
+	      			<p:outputLabel value="and Click on the Print link" />
 	      			<p:selectOneMenu value="#{quotationMB.quoteDetailVO.companyCode}">
 	                            <f:selectItem itemLabel="---Select Company Name---" itemValue="" />
 	            				<f:selectItems value="#{quotationMB.selectedInsCompaniesMap}"/>

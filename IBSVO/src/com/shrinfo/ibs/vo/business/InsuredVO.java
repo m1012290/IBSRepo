@@ -24,6 +24,8 @@ public class InsuredVO extends BaseVO {
     private ContactVO contactAndAddrDetails=new ContactVO();
 
     private CustomerVO customerDetails;
+    
+    private String salesExecutive;
 
 	public Long getId() {
 		return id;
@@ -79,5 +81,13 @@ public class InsuredVO extends BaseVO {
 
 	public void setCustomerDetails(CustomerVO customerDetails) {
 		this.customerDetails = customerDetails;
+	}
+
+	public String getSalesExecutive() {
+		return salesExecutive;
+	}
+
+	public void setSalesExecutive(String salesExecutive) {
+		this.salesExecutive = salesExecutive;
 	}
 }

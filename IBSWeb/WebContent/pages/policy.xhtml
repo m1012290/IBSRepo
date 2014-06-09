@@ -21,34 +21,34 @@
     					<p:panel id="panelPolicy" header="Policy Details" style="margin-bottom:10px;"> 
 				       			 <h:panelGrid columns="8">  
 				       			 
-				       			 	<h:outputLabel for="insuredID" value="Insured ID" />  
+				       			 	<p:outputLabel for="insuredID" value="Insured ID" />  
 						            <p:inputText id="insuredID" value="#{policyMB.insuredDetails.id}" readonly="true" required="false" /> 
 						            
-						       		<h:outputLabel for="name" value="Insured Name" />  
+						       		<p:outputLabel for="name" value="Insured Name" />  
 						            <p:inputText id="name" value="#{policyMB.insuredDetails.name}" readonly="true" required="false" />  
 						            
-            						<h:outputLabel for="products" value="Product" />  
+            						<p:outputLabel for="products" value="Product" />  
             						<p:selectOneMenu id="products"  value="#{policyMB.quoteDetailVO.productDetails.productClass}" disabled="true">
                 						<f:selectItem itemLabel="Select Product-" itemValue="" />  
                 						<f:selectItems value="#{quotationMB.products}" />  
             						</p:selectOneMenu>
                 						
-            						<h:outputLabel for="companyName" value="Company Name" />  
+            						<p:outputLabel for="companyName" value="Company Name" />  
             						<p:inputText id="companyName" value="#{policyMB.quoteDetailVO.companyCode}"  readonly="true"/>
             						
-            						<h:outputLabel for="quoteSlipID" value="Quote Slip Number" />  
+            						<p:outputLabel for="quoteSlipID" value="Quote Slip Number" />  
 						            <p:inputText id="quoteSlipID"  value="#{policyMB.quoteDetailVO.quoteSlipId}" readonly="true" required="false" /> 
 						            
-						           	<h:outputLabel for="quoteSlipVersion" value="Quote Slip Version" />  
+						           	<p:outputLabel for="quoteSlipVersion" value="Quote Slip Version" />  
 						            <p:inputText id="quoteSlipVersion" value="#{policyMB.quoteDetailVO.quoteSlipVersion}" readonly="true"  required="false" />  
 						            
-						            <h:outputLabel for="quoteSlipDate" value="Quote Slip Date" />  
+						            <p:outputLabel for="quoteSlipDate" value="Quote Slip Date" />  
 						            <p:calendar id="quoteSlipDate" readonly="true" disabled="true" pattern="dd/MM/yyyy" value="#{policyMB.quoteDetailVO.quoteSlipDate}" required="false"/> 
 						            						    
-						            <h:outputLabel for="policyNum" value="Policy Number" />  
+						            <p:outputLabel for="policyNum" value="Policy Number" />  
 						            <p:inputText id="policyNum" value="#{policyMB.policyVO.policyNo}" required="true" />  
 						            
-						             <h:outputLabel for="policyID" value="Policy ID" />  
+						             <p:outputLabel for="policyID" value="Policy ID" />  
 						            <p:inputText id="policyID" value="#{policyMB.policyVO.policyId}" readonly="true"  required="false" />   			            
 						       
 			       				</h:panelGrid>
@@ -56,29 +56,29 @@
 					   <p:panel id="panelPremium" header="Premium Details" style="margin-bottom:10px;"> 
 				       			 <h:panelGrid columns="2">  
 				       			 
-				       			 	<h:outputLabel for="premium" value="Premium" />  
-						            <p:inputText id="premium" value="#{policyMB.policyVO.premiumDetails.premium}" required="true"> 
+				       			 	<p:outputLabel for="premium" value="Premium" />  
+						            <p:inputText id="premium" value="#{policyMB.policyVO.premiumDetails.premium}" required="true" requiredMessage="Please enter a value for premium"> 
 						            	<p:ajax event="blur" update="totalPremium" listener="#{policyMB.calculatePremiumBasedOnPremiumChange}" process="discountPercentage,loadingpercentage,premium" partialSubmit="true"/> 
 						         	</p:inputText>
 						      			
-						       		<h:outputLabel for="discountPercentage" value="Discount Percentage" />  
+						       		<p:outputLabel for="discountPercentage" value="Discount Percentage" />  
 						            <p:inputText id="discountPercentage" value="#{policyMB.policyVO.premiumDetails.discountPercentage}" required="false">  
 						         		<p:ajax event="blur" update="totalPremium,loadingpercentage" listener="#{policyMB.calculatePremiumBasedOnDiscPercentage}" process="discountPercentage,loadingpercentage,premium" partialSubmit="true"/> 
 						         	</p:inputText> 
 						            
-						            <h:outputLabel for="loadingpercentage" value="Loading Percentage" />  
+						            <p:outputLabel for="loadingpercentage" value="Loading Percentage" />  
             						<p:inputText id="loadingpercentage" value="#{policyMB.policyVO.premiumDetails.loadingPercentage}">
             							<p:ajax event="blur" update="totalPremium,discountPercentage"  listener="#{policyMB.calculatePremiumBasedOnLoadPercentage}" process="loadingpercentage,discountPercentage,premium" partialSubmit="true" /> 
             						</p:inputText>
             						
                 						
-            						<h:outputLabel for="totalPremium" value="Total Premium" />  
+            						<p:outputLabel for="totalPremium" value="Total Premium" />  
             						<p:inputText id="totalPremium" value="#{policyMB.policyVO.premiumDetails.totalPremium}"  readonly="true"/>
             						
-            						<h:outputLabel for="policyEffectiveDate" value="Policy Effective Date" />  
+            						<p:outputLabel for="policyEffectiveDate" value="Policy Effective Date" />  
             						<p:calendar id="policyEffectiveDate" value="#{policyMB.policyVO.policyEffectiveDate}" pattern="dd/MM/yyyy" readonlyInput="true" required="true" navigator="true"/>
             						
-            						<h:outputLabel for="policyExpiryDate" value="Policy Expiry Date" />  
+            						<p:outputLabel for="policyExpiryDate" value="Policy Expiry Date" />  
             						<p:calendar id="policyExpiryDate" value="#{policyMB.policyVO.policyExpiryDate}" pattern="dd/MM/yyyy" readonlyInput="true" required="true" navigator="true"/>
             						
 			       				</h:panelGrid>
@@ -99,16 +99,16 @@
 				 <p:panel id="panelAudit" header="Audit Details" style="margin-bottom:10px;">
 									<h:panelGrid columns="8">
 						            
-						            <h:outputLabel for="recCreatedUsrID" value="Record Created UserID" />  
+						            <p:outputLabel for="recCreatedUsrID" value="Record Created UserID" />  
 						            <p:inputText id="recCreatedUsrID"  value="#{editCustEnqDetailsMB.recCreatedUserID}"  readonly="true" required="false" /> 
 						            
-						            <h:outputLabel for="recCreatedDate" value="Record Created Date" />  
+						            <p:outputLabel for="recCreatedDate" value="Record Created Date" />  
 						            <p:inputText id="recCreatedDate"  value="#{editCustEnqDetailsMB.recCreatedDate}"  readonly="true" required="false" /> 
 						            
-						            <h:outputLabel for="recUpdUsrID" value="Record Updated UserID" />  
+						            <p:outputLabel for="recUpdUsrID" value="Record Updated UserID" />  
 						            <p:inputText id="recUpdUsrID"  value="#{editCustEnqDetailsMB.recUpdatedUserID}"  readonly="true" required="false" /> 
 						            
-						            <h:outputLabel for="recUpdDate" value="Record Updated Date" />  
+						            <p:outputLabel for="recUpdDate" value="Record Updated Date" />  
 						            <p:inputText id="recUpdDate"  value="#{editCustEnqDetailsMB.recUpdatedDate}"  readonly="true" required="false" /> 
 						            
 						           
@@ -120,16 +120,16 @@
 						<p:messages id="referralmessages" autoUpdate="true" closable="true" />
 						<p:panel id="referralsection">
 							<h:panelGrid columns="4">
-								<h:outputLabel for="name" value="Referred By" />  
+								<p:outputLabel for="name" value="Referred By" />  
 							    <p:inputText id="referredby" value="#{policyMB.assignerUser}" readonly="true" required="false" />	 	
 								
-								<h:outputLabel value="Refer To" />
+								<p:outputLabel value="Refer To" />
 								<p:selectOneMenu id="referredto" value="#{policyMB.assigneeUser}" >
 									<f:selectItem itemLabel="---Select User---" itemValue="" />	
 									<f:selectItems value="#{policyMB.usersList}" />			
 								</p:selectOneMenu>
 								
-								<h:outputLabel value="Referral Description"/>
+								<p:outputLabel value="Referral Description"/>
 								<p:inputTextarea  id="referraldesc" value="#{policyMB.referralDesc}" />
 							</h:panelGrid>	  				
 		  					<p:commandButton value="Save" action="#{policyMB.saveReferralTask}" update="referralmessages" icon="ui-icon-disk" style="float:right:20px;" />
