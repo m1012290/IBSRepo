@@ -25,6 +25,9 @@ public class CustomerEnquiryServiceImpl extends BaseService implements CustomerE
         if ("createCustomerEnquiry".equals(methodName)) {
             returnValue = createCustomerEnquiry((BaseVO) args[0]);
         }
+        if("createCustomer".equals(methodName)){
+        	returnValue = createCustomer((BaseVO) args[0]);
+        }
         return returnValue;
     }
 
@@ -42,6 +45,13 @@ public class CustomerEnquiryServiceImpl extends BaseService implements CustomerE
         return enquiryVO;
     }
 
+    @Override
+    public BaseVO createCustomer(BaseVO baseVO) {
+	   EnquiryVO enquiryVO = (EnquiryVO)baseVO;
+       CustomerVO customerVO = (CustomerVO) customerDao.createCustomer(enquiryVO.getCustomerDetails());
+       enquiryVO.setCustomerDetails(customerVO);
+       return enquiryVO;
+    }
 
     public void setCustomerDao(CustomerDao customerDao) {
         this.customerDao = customerDao;
@@ -50,8 +60,5 @@ public class CustomerEnquiryServiceImpl extends BaseService implements CustomerE
     public void setEnquiryDao(EnquiryDao enquiryDao) {
         this.enquiryDao = enquiryDao;
     }
-
-
-
 
 }

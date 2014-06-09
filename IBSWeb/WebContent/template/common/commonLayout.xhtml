@@ -13,13 +13,10 @@
  -->
 </h:head>
 
-<h:body>
-
+<h:body style="background: #ffffff !important;">
 	<div id="page">
-
 		<p:layout fullPage="true">
-
-			<p:layoutUnit position="north" size="120" style="border:none;height:200px !important;">
+			<p:layoutUnit position="north" size="120" style="border:none;height:200px !important;" resizable="true" collapsible="true">
 				<div align="center" id="header">
 					<ui:insert name="header">
 						<ui:include src="/template/common/commonHeader.xhtml" />
@@ -27,15 +24,15 @@
 				</div>
 			</p:layoutUnit>
 
-			<p:layoutUnit position="south" size="100" header="contact and support info here" style="border:none;">
-				<div align="left" id="footer">
+			<p:layoutUnit position="south" size="100" header="contact and support info here" style="border:none;background: #ffffff !important;" resizable="true" collapsible="true">
+				<div align="center" id="footer">
 					<ui:insert name="footer">
 						<ui:include src="/template/common/commonFooter.xhtml" />
 					</ui:insert>
 				</div>
 			</p:layoutUnit>
 
-			<p:layoutUnit position="center" style="border:none; top:200px !important;">
+			<p:layoutUnit position="center" style="border:none; top:200px !important;" resizable="true" collapsible="true">
 				<div id="content">
 					<ui:insert name="content">
 						<ui:include src="/template/common/commonContent.xhtml" />
@@ -45,9 +42,6 @@
 
 		</p:layout>
 
-
 	</div>
-
 </h:body>
-
 </html>

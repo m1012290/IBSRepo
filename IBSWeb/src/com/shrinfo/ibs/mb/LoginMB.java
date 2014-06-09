@@ -120,7 +120,7 @@ public class LoginMB extends BaseManagedBean implements Serializable {
                 FacesContext fc = FacesContext.getCurrentInstance();
                 Map map = fc.getExternalContext().getSessionMap();
                 loadTaskList();
-                return "enquiry";
+                FacesContext.getCurrentInstance().getExternalContext().redirect("enquiry.xhtml");
             }
             else {
                 FacesContext.getCurrentInstance().addMessage("MESSAGE_FAILURE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Username or password entered doesn't match with our records, please check the same",""));
@@ -130,6 +130,7 @@ public class LoginMB extends BaseManagedBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage("MESSAGE_FAILURE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Unexpected error encountered, please try again after sometime"));
             return null;
         }
+        return null;
     }
 
     public String getUserName() {

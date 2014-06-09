@@ -8,5 +8,7 @@ public interface CustomerEnquiryService {
     public BaseVO getCustomerEnquiry(BaseVO baseVO);
 
     public BaseVO createCustomerEnquiry(BaseVO baseVO);
+    
+    public BaseVO createCustomer(BaseVO baseVO);
 
 }
