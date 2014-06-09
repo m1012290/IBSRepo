@@ -18,7 +18,7 @@
     				
     				<p:panel id="referalpanel" style="padding:0px; border: none">
     					<p:panel id="panelInsured" header="Insured Details" style="margin-bottom:10px;"> 
-				       			 <h:panelGrid columns="8">  
+				       			 <h:panelGrid columns="8" style="width:100%;">  
 				       			 
 				       			 	<h:outputLabel for="salutation" value="Salutation" />  
             						<p:selectOneMenu id="salutation" value="#{quoteSlipMB.insuredDetails.salutation}" style="width:160px;"  required="true"  label="Salutation" requiredMessage="Please select the Salutation">  
@@ -96,7 +96,7 @@
 			       				</h:panelGrid>
 					   </p:panel>
 					   <p:panel id="panelProductDetails" header="Product Details" style="margin-bottom:10px;">
-								<h:panelGrid columns="6">
+								<h:panelGrid columns="6" style="width:100%;">
 								
 								 	<h:outputLabel for="quoteSlipID" value="Quote Slip Number" />  
 						            <p:inputText id="quoteSlipID"  value="#{quoteSlipMB.quoteDetailVO.quoteSlipId}" readonly="true" required="false" /> 
