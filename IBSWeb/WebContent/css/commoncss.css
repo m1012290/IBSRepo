@@ -121,6 +121,11 @@ text-decoration:none !important;
 	background: linear-gradient(to right,  #356aa0 0%,#356aa0 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#356aa0', endColorstr='#356aa0',GradientType=1 ); /* IE6-9 */
 }
+
+.ui-menu, .ui-menu .ui-menu-child{
+	background : rgb(0,32,96);
+}
+
 span.ui-state-default{
 	
 	background: #356aa0; /* Old browsers */
@@ -146,7 +151,7 @@ background: #ff5db1; /* Old browsers */
 .ui-button{
 	color:#fff !important;
 	
-background: #febf01; /* Old browsers */
+background: rgb(244,187,74); /* Old browsers */
 background: -moz-linear-gradient(left, #febf01 0%, #febf01 100%) !important;/* FF3.6+ */
 background: -webkit-gradient(linear, left top, right top, color-stop(0%,#febf01), color-stop(100%,#febf01)) !important; /* Chrome,Safari4+ */
 background: -webkit-linear-gradient(left, #febf01 0%,#febf01 100%) !important; /* Chrome10+,Safari5.1+ */
