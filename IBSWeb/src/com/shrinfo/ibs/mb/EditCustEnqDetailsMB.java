@@ -3,12 +3,16 @@ package com.shrinfo.ibs.mb;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 
 import org.primefaces.event.SelectEvent;
 
@@ -21,6 +25,7 @@ import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
 import com.shrinfo.ibs.util.AppConstants;
 import com.shrinfo.ibs.vo.business.AppFlow;
 import com.shrinfo.ibs.vo.business.ContactVO;
+import com.shrinfo.ibs.vo.business.CustomerVO;
 import com.shrinfo.ibs.vo.business.EnquiryVO;
 import com.shrinfo.ibs.vo.business.InsuredVO;
 import com.shrinfo.ibs.vo.business.PolicyVO;
@@ -126,7 +131,15 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
     
     private Boolean screenFreeze = Boolean.FALSE;
 
-        
+	//private List<CustomerVO> selectedCustomersList;
+	
+	//This property will be injected through dependency injection
+	@ManagedProperty("#{customerMasterMB}")
+	private CustomerMasterMB customerMasterMB;
+	
+	private CustomerVO customerVO;
+
+    
     public Boolean getScreenFreeze() {
         return screenFreeze;
     }
@@ -191,6 +204,8 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
         this.setAppFlow(null);//reinitialize appflow value
         this.setEditApproved(Boolean.FALSE);
         this.setNavigationDisbled(Boolean.FALSE);
+        this.customerVO = null;
+        this.customerMasterMB = null;
     }
 
     public EditCustEnqDetailsMB() {
@@ -674,7 +689,27 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
         }
     }
 
-    // Save Customer and Enquiry details
+	public CustomerMasterMB getCustomerMasterMB() {
+		return customerMasterMB;
+	}
+
+
+	public void setCustomerMasterMB(CustomerMasterMB customerMasterMB) {
+		this.customerMasterMB = customerMasterMB;
+	}
+
+
+	public CustomerVO getCustomerVO() {
+		return customerVO;
+	}
+
+
+	public void setCustomerVO(CustomerVO customerVO) {
+		this.customerVO = customerVO;
+	}
+
+
+	// Save Customer and Enquiry details
     /**
      * 
      * @return
@@ -751,4 +786,27 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
         
         return "quoteslip";
     }
+    
+    
+    /**
+	 * This is the method which will provide filtered customers list depending
+	 * on queried value from Customer
+	 * @param query
+	 * @return
+	 */
+	public List<CustomerVO> completeCustomersListMethod(String query){
+		List<CustomerVO> allCustomers = customerMasterMB.getCustomersList();
+		List<CustomerVO> filteredCustomers = new ArrayList<CustomerVO>();
+		for(CustomerVO customerVO : allCustomers){
+			if(customerVO.getName().toLowerCase().startsWith(query)){
+				filteredCustomers.add(customerVO);
+			}
+		}
+		return filteredCustomers;
+	}
+	
+	public void valueChangeEventForCustName(AjaxBehaviorEvent ajaxBehaviorEvent){
+		System.out.println("valueChangeEvent-->"+ajaxBehaviorEvent);
+		this.enquiryVO.setCustomerDetails(this.customerVO);
+	}
 }

@@ -28,14 +28,17 @@
 							<f:selectItem itemLabel="---Select Salutation---" itemValue="" />
 							<f:selectItems value="#{editCustEnqDetailsMB.salutations}" />
 						</p:selectOneMenu>
-
-						<p:outputLabel for="name" value="Name" />
-						<p:inputText id="name"
-							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.name}"
-							required="true" label="Name" requiredMessage="Please enter the Name" validatorMessage="Name should be minimum of 4 character and maximum of 50 characters" >
-						<f:validateLength minimum="4" maximum="50"/>  
-						</p:inputText> 
-
+						
+						<p:outputLabel value="Customer" for="customerid" title="Existing customers whose name starts with entered value will be listed"/>
+				        <p:autoComplete title="Existing customers whose name starts with entered value will be listed"   placeholder="Enter Customer Name"  id="customerid" value="#{editCustEnqDetailsMB.customerVO}" completeMethod="#{editCustEnqDetailsMB.completeCustomersListMethod}"
+				                        var="customer" itemLabel="#{customer.name}" itemValue="#{customer}"  converter="customerConverter" required="true" requiredMessage="Please select existing customer or add new one" validatorMessage="Name should be minimum of 4 character and maximum of 50 characters"
+				                        forceSelection="true">
+				            <p:column>
+				                <h:outputText value="#{customer.name}" />
+				            </p:column>
+				            <p:ajax event="itemSelect" update="panelCustomer"  listener="#{editCustEnqDetailsMB.valueChangeEventForCustName}" process="customerid" partialSubmit="true"/>
+				            <f:validateLength minimum="4" maximum="50"/>
+				        </p:autoComplete>
 
 						<p:outputLabel for="firstName" value="First Name" />
 						<p:inputText id="firstName"

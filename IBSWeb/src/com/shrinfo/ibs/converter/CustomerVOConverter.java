@@ -18,11 +18,20 @@ import com.shrinfo.ibs.vo.business.CustomerVO;
 	        if(value != null && value.trim().length() > 0) {
 	        	CustomerMasterMB service = (CustomerMasterMB) fc.getExternalContext().getSessionMap().get("customerMasterMB");
 	            if(!Utils.isEmpty(service)) {
-	            	List<CustomerVO> customersList = service.getCustomersList();
-	            	for(CustomerVO customerVO : customersList){
-	            		if( customerVO.getCustomerId().longValue() == Long.valueOf(value).longValue()){
-	            			return customerVO;
-	            		}
+	            	try{
+		            	List<CustomerVO> customersList = service.getCustomersList();
+		            	for(CustomerVO customerVO : customersList){
+		            		if( customerVO.getCustomerId().longValue() == Long.valueOf(value).longValue()){
+		            			return customerVO;
+		            		}
+		            	}
+	            	}catch(NumberFormatException nfe){
+	            		//since we are converting the value which was submitted to a number we would like to catch this 
+	            		//exception because we might get a string value here in case we have forceSelection set as "false"
+	            		//for autocomplete tag and user enters value of his/her choice
+	            		CustomerVO customerVO = new CustomerVO();
+	            		customerVO.setName(value);
+	            		return customerVO;
 	            	}
 	            }
 	        }
