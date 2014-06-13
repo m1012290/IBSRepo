@@ -18,12 +18,14 @@ import com.shrinfo.ibs.cmn.logger.Logger;
 import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.cmn.vo.BaseVO;
 import com.shrinfo.ibs.cmn.vo.UserVO;
+import com.shrinfo.ibs.gen.pojo.IbsClaims;
 import com.shrinfo.ibs.gen.pojo.IbsContact;
 import com.shrinfo.ibs.gen.pojo.IbsCustomer;
 import com.shrinfo.ibs.gen.pojo.IbsCustomerEnquiry;
 import com.shrinfo.ibs.gen.pojo.IbsDocumentTable;
 import com.shrinfo.ibs.gen.pojo.IbsInsuranceCompany;
 import com.shrinfo.ibs.gen.pojo.IbsInsuredMaster;
+import com.shrinfo.ibs.gen.pojo.IbsProductDocMaster;
 import com.shrinfo.ibs.gen.pojo.IbsProductMaster;
 import com.shrinfo.ibs.gen.pojo.IbsProductUwFields;
 import com.shrinfo.ibs.gen.pojo.IbsQuoteComparisionDetail;
@@ -36,6 +38,7 @@ import com.shrinfo.ibs.gen.pojo.IbsUwTransactionDetail;
 import com.shrinfo.ibs.gen.pojo.IbsUwTransactionHeader;
 import com.shrinfo.ibs.vo.app.EnquiryType;
 import com.shrinfo.ibs.vo.business.AddressVO;
+import com.shrinfo.ibs.vo.business.ClaimsVO;
 import com.shrinfo.ibs.vo.business.ContactVO;
 import com.shrinfo.ibs.vo.business.CustomerVO;
 import com.shrinfo.ibs.vo.business.CustomersListVO;
@@ -926,5 +929,42 @@ public class MapperUtil {
     		}
     		customersListVO.setCustomersList(customersList);
     	}
+    }
+    
+    /**
+     * 
+     * @param documentVO
+     * @param ibsProductDocMaster
+     */
+    public static void populateProductDocumentVO(DocumentVO documentVO,
+            IbsProductDocMaster ibsProductDocMaster) {
+        
+        documentVO.setName(ibsProductDocMaster.getDocName());
+        documentVO.setFormat(ibsProductDocMaster.getDocFormatType());
+        documentVO.setSize(ibsProductDocMaster.getDocSize());
+        
+    }
+
+    /**
+     * 
+     * @param claimsVO
+     * @param ibsClaims
+     */
+    public static void populateClaimsVO(ClaimsVO claimsVO, IbsClaims ibsClaims) {
+
+        claimsVO.setId(ibsClaims.getId());
+        claimsVO.setLossAmountEstimate(ibsClaims.getLossAmount());
+        claimsVO.setLossDateTime(ibsClaims.getLossDate());
+        claimsVO.setLossDescription(ibsClaims.getLossDescription());
+        CustomerVO customerVO = new CustomerVO();
+        populateCustomerVO(customerVO, ibsClaims.getIbsCustomer());
+        claimsVO.setCustomerDetails(customerVO);
+        InsuredVO insuredDetails = new InsuredVO();
+        populateInsuredVO(insuredDetails, ibsClaims.getIbsInsuredMaster());
+        claimsVO.setInsuredDetails(insuredDetails);
+        PolicyVO policyDetails = new PolicyVO();
+        populatePolicyVO(policyDetails, ibsClaims.getIbsUwTransactionHeader());
+        claimsVO.setPolicyDetails(policyDetails);
+
     }
 }

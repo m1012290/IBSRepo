@@ -109,5 +109,11 @@
             </key>
             <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsQuoteComparisionHeader" />
         </set>
+        <set name="ibsProductDocMasters" table="IBS_PRODUCT_DOC_MASTER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="PRODUCT_CLASS" precision="22" scale="0" not-null="true" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsProductDocMaster" />
+        </set>
     </class>
 </hibernate-mapping>

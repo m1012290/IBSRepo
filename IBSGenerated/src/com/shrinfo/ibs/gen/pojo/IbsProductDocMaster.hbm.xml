@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 10, 2014 11:20:03 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.shrinfo.ibs.gen.pojo.IbsProductDocMaster" table="IBS_PRODUCT_DOC_MASTER" schema="IBSUSER">
+        <id name="id" type="java.lang.Long">
+            <column name="ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="ibsProductMaster" class="com.shrinfo.ibs.gen.pojo.IbsProductMaster" fetch="select">
+            <column name="PRODUCT_CLASS" precision="22" scale="0" not-null="true" />
+        </many-to-one>
+        <property name="docName" type="string">
+            <column name="DOC_NAME" length="20" not-null="true" />
+        </property>
+        <property name="docFormatType" type="string">
+            <column name="DOC_FORMAT_TYPE" length="10" not-null="true" />
+        </property>
+        <property name="docSize" type="java.lang.Long">
+            <column name="DOC_SIZE" precision="10" scale="0">
+                <comment>in KB</comment>
+            </column>
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" length="1" not-null="true" />
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="30" />
+        </property>
+        <property name="recCreUserId" type="java.lang.Long">
+            <column name="REC_CRE_USER_ID" precision="22" scale="0" />
+        </property>
+        <property name="recCreDate" type="java.sql.Date">
+            <column name="REC_CRE_DATE" />
+        </property>
+        <property name="recUpdUserId" type="java.lang.Long">
+            <column name="REC_UPD_USER_ID" precision="22" scale="0" />
+        </property>
+        <property name="recUpdDate" type="java.sql.Date">
+            <column name="REC_UPD_DATE" />
+        </property>
+    </class>
+</hibernate-mapping>

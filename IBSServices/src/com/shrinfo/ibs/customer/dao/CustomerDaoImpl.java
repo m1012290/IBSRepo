@@ -1,6 +1,5 @@
 package com.shrinfo.ibs.customer.dao;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.hibernate.HibernateException;
@@ -40,7 +39,7 @@ public class CustomerDaoImpl extends BaseDBDAO implements CustomerDao {
             ibsCustomer =
                 (IbsCustomer) getHibernateTemplate().find(
                     " from IbsCustomer ibsCustomer where ibsCustomer.id = ?",
-                    BigDecimal.valueOf(((CustomerVO) baseVO).getCustomerId())).get(0);
+                    ((CustomerVO) baseVO).getCustomerId()).get(0);
         } catch (HibernateException hibernateException) {
             throw new BusinessException("pas.gi.couldNotGetCustDetails", hibernateException,
                 "Error while insured search");

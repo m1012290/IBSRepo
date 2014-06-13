@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 10, 2014 11:20:03 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.shrinfo.ibs.gen.pojo.IbsTransactionMaster" table="IBS_TRANSACTION_MASTER" schema="IBSUSER">
+        <id name="id" type="java.lang.Long">
+            <column name="ID" precision="22" scale="0" />
+            <generator class="assigned" />
+        </id>
+        <property name="name" type="string">
+            <column name="NAME" length="30" />
+        </property>
+        <property name="status" type="string">
+            <column name="STATUS" length="1" />
+        </property>
+        <property name="recCreUserId" type="java.lang.Long">
+            <column name="REC_CRE_USER_ID" precision="22" scale="0" />
+        </property>
+        <property name="recCreDate" type="java.sql.Date">
+            <column name="REC_CRE_DATE" />
+        </property>
+        <property name="recUpdUserId" type="java.lang.Long">
+            <column name="REC_UPD_USER_ID" precision="22" scale="0" />
+        </property>
+        <property name="recUpdDate" type="java.sql.Date">
+            <column name="REC_UPD_DATE" />
+        </property>
+    </class>
+</hibernate-mapping>

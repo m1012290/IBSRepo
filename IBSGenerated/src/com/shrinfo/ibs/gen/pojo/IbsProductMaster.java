@@ -1,6 +1,6 @@
 package com.shrinfo.ibs.gen.pojo;
 
-// Generated Mar 25, 2014 2:46:55 AM by Hibernate Tools 3.4.0.CR1
+// Generated Jun 11, 2014 12:19:08 AM by Hibernate Tools 3.4.0.CR1
 
 
 import java.sql.Date;
@@ -33,36 +33,38 @@ public class IbsProductMaster implements java.io.Serializable {
 
     private Long subclass;
 
+    private Set<IbsCustomerEnquiry> ibsCustomerEnquiries = new HashSet<IbsCustomerEnquiry>(0);
+
     private Set<IbsRolesProductPrivileges> ibsRolesProductPrivilegeses =
         new HashSet<IbsRolesProductPrivileges>(0);
 
+    private Set<IbsInsuranceCompanyContact> ibsInsuranceCompanyContacts =
+        new HashSet<IbsInsuranceCompanyContact>(0);
+
+    private Set<IbsQuoteComparisionHeader> ibsQuoteComparisionHeaders =
+        new HashSet<IbsQuoteComparisionHeader>(0);
+
     private Set<IbsUwTransactionHeader> ibsUwTransactionHeaders =
         new HashSet<IbsUwTransactionHeader>(0);
-
-    private Set<IbsCustomerEnquiry> ibsCustomerEnquiries = new HashSet<IbsCustomerEnquiry>(0);
-
-    private Set<IbsUwTransactionDetail> ibsUwTransactionDetails =
-        new HashSet<IbsUwTransactionDetail>(0);
 
     private Set<IbsQuoteSlipHeader> ibsQuoteSlipHeaders = new HashSet<IbsQuoteSlipHeader>(0);
 
     private Set<IbsQuoteComparisionDetail> ibsQuoteComparisionDetails =
         new HashSet<IbsQuoteComparisionDetail>(0);
 
-    private Set<IbsInsuranceCompanyContact> ibsInsuranceCompanyContacts =
-        new HashSet<IbsInsuranceCompanyContact>(0);
-
-    private Set<IbsUserProductLink> ibsUserProductLinks = new HashSet<IbsUserProductLink>(0);
-
-    private Set<IbsProductUwFields> ibsProductUwFieldses = new HashSet<IbsProductUwFields>(0);
-
-    private Set<IbsQuoteSlipDetail> ibsQuoteSlipDetails = new HashSet<IbsQuoteSlipDetail>(0);
-
     private Set<IbsInsuranceCompProdLink> ibsInsuranceCompProdLinks =
         new HashSet<IbsInsuranceCompProdLink>(0);
 
-    private Set<IbsQuoteComparisionHeader> ibsQuoteComparisionHeaders =
-        new HashSet<IbsQuoteComparisionHeader>(0);
+    private Set<IbsQuoteSlipDetail> ibsQuoteSlipDetails = new HashSet<IbsQuoteSlipDetail>(0);
+
+    private Set<IbsProductUwFields> ibsProductUwFieldses = new HashSet<IbsProductUwFields>(0);
+
+    private Set<IbsProductDocMaster> ibsProductDocMasters = new HashSet<IbsProductDocMaster>(0);
+
+    private Set<IbsUserProductLink> ibsUserProductLinks = new HashSet<IbsUserProductLink>(0);
+
+    private Set<IbsUwTransactionDetail> ibsUwTransactionDetails =
+        new HashSet<IbsUwTransactionDetail>(0);
 
     public IbsProductMaster() {}
 
@@ -73,18 +75,19 @@ public class IbsProductMaster implements java.io.Serializable {
 
     public IbsProductMaster(Long class_, String name, String shortname, String categorisation,
             String status, Long recCreUserId, Date recCreDate, Long recUpdUserId, Date recUpdDate,
-            Long subclass, Set<IbsRolesProductPrivileges> ibsRolesProductPrivilegeses,
+            Long subclass, Set<IbsCustomerEnquiry> ibsCustomerEnquiries,
+            Set<IbsRolesProductPrivileges> ibsRolesProductPrivilegeses,
+            Set<IbsInsuranceCompanyContact> ibsInsuranceCompanyContacts,
+            Set<IbsQuoteComparisionHeader> ibsQuoteComparisionHeaders,
             Set<IbsUwTransactionHeader> ibsUwTransactionHeaders,
-            Set<IbsCustomerEnquiry> ibsCustomerEnquiries,
-            Set<IbsUwTransactionDetail> ibsUwTransactionDetails,
             Set<IbsQuoteSlipHeader> ibsQuoteSlipHeaders,
             Set<IbsQuoteComparisionDetail> ibsQuoteComparisionDetails,
-            Set<IbsInsuranceCompanyContact> ibsInsuranceCompanyContacts,
-            Set<IbsUserProductLink> ibsUserProductLinks,
-            Set<IbsProductUwFields> ibsProductUwFieldses,
-            Set<IbsQuoteSlipDetail> ibsQuoteSlipDetails,
             Set<IbsInsuranceCompProdLink> ibsInsuranceCompProdLinks,
-            Set<IbsQuoteComparisionHeader> ibsQuoteComparisionHeaders) {
+            Set<IbsQuoteSlipDetail> ibsQuoteSlipDetails,
+            Set<IbsProductUwFields> ibsProductUwFieldses,
+            Set<IbsProductDocMaster> ibsProductDocMasters,
+            Set<IbsUserProductLink> ibsUserProductLinks,
+            Set<IbsUwTransactionDetail> ibsUwTransactionDetails) {
         this.class_ = class_;
         this.name = name;
         this.shortname = shortname;
@@ -95,18 +98,19 @@ public class IbsProductMaster implements java.io.Serializable {
         this.recUpdUserId = recUpdUserId;
         this.recUpdDate = recUpdDate;
         this.subclass = subclass;
-        this.ibsRolesProductPrivilegeses = ibsRolesProductPrivilegeses;
-        this.ibsUwTransactionHeaders = ibsUwTransactionHeaders;
         this.ibsCustomerEnquiries = ibsCustomerEnquiries;
-        this.ibsUwTransactionDetails = ibsUwTransactionDetails;
+        this.ibsRolesProductPrivilegeses = ibsRolesProductPrivilegeses;
+        this.ibsInsuranceCompanyContacts = ibsInsuranceCompanyContacts;
+        this.ibsQuoteComparisionHeaders = ibsQuoteComparisionHeaders;
+        this.ibsUwTransactionHeaders = ibsUwTransactionHeaders;
         this.ibsQuoteSlipHeaders = ibsQuoteSlipHeaders;
         this.ibsQuoteComparisionDetails = ibsQuoteComparisionDetails;
-        this.ibsInsuranceCompanyContacts = ibsInsuranceCompanyContacts;
-        this.ibsUserProductLinks = ibsUserProductLinks;
-        this.ibsProductUwFieldses = ibsProductUwFieldses;
-        this.ibsQuoteSlipDetails = ibsQuoteSlipDetails;
         this.ibsInsuranceCompProdLinks = ibsInsuranceCompProdLinks;
-        this.ibsQuoteComparisionHeaders = ibsQuoteComparisionHeaders;
+        this.ibsQuoteSlipDetails = ibsQuoteSlipDetails;
+        this.ibsProductUwFieldses = ibsProductUwFieldses;
+        this.ibsProductDocMasters = ibsProductDocMasters;
+        this.ibsUserProductLinks = ibsUserProductLinks;
+        this.ibsUwTransactionDetails = ibsUwTransactionDetails;
     }
 
     public Long getClass_() {
@@ -189,6 +193,14 @@ public class IbsProductMaster implements java.io.Serializable {
         this.subclass = subclass;
     }
 
+    public Set<IbsCustomerEnquiry> getIbsCustomerEnquiries() {
+        return this.ibsCustomerEnquiries;
+    }
+
+    public void setIbsCustomerEnquiries(Set<IbsCustomerEnquiry> ibsCustomerEnquiries) {
+        this.ibsCustomerEnquiries = ibsCustomerEnquiries;
+    }
+
     public Set<IbsRolesProductPrivileges> getIbsRolesProductPrivilegeses() {
         return this.ibsRolesProductPrivilegeses;
     }
@@ -198,28 +210,30 @@ public class IbsProductMaster implements java.io.Serializable {
         this.ibsRolesProductPrivilegeses = ibsRolesProductPrivilegeses;
     }
 
+    public Set<IbsInsuranceCompanyContact> getIbsInsuranceCompanyContacts() {
+        return this.ibsInsuranceCompanyContacts;
+    }
+
+    public void setIbsInsuranceCompanyContacts(
+            Set<IbsInsuranceCompanyContact> ibsInsuranceCompanyContacts) {
+        this.ibsInsuranceCompanyContacts = ibsInsuranceCompanyContacts;
+    }
+
+    public Set<IbsQuoteComparisionHeader> getIbsQuoteComparisionHeaders() {
+        return this.ibsQuoteComparisionHeaders;
+    }
+
+    public void setIbsQuoteComparisionHeaders(
+            Set<IbsQuoteComparisionHeader> ibsQuoteComparisionHeaders) {
+        this.ibsQuoteComparisionHeaders = ibsQuoteComparisionHeaders;
+    }
+
     public Set<IbsUwTransactionHeader> getIbsUwTransactionHeaders() {
         return this.ibsUwTransactionHeaders;
     }
 
     public void setIbsUwTransactionHeaders(Set<IbsUwTransactionHeader> ibsUwTransactionHeaders) {
         this.ibsUwTransactionHeaders = ibsUwTransactionHeaders;
-    }
-
-    public Set<IbsCustomerEnquiry> getIbsCustomerEnquiries() {
-        return this.ibsCustomerEnquiries;
-    }
-
-    public void setIbsCustomerEnquiries(Set<IbsCustomerEnquiry> ibsCustomerEnquiries) {
-        this.ibsCustomerEnquiries = ibsCustomerEnquiries;
-    }
-
-    public Set<IbsUwTransactionDetail> getIbsUwTransactionDetails() {
-        return this.ibsUwTransactionDetails;
-    }
-
-    public void setIbsUwTransactionDetails(Set<IbsUwTransactionDetail> ibsUwTransactionDetails) {
-        this.ibsUwTransactionDetails = ibsUwTransactionDetails;
     }
 
     public Set<IbsQuoteSlipHeader> getIbsQuoteSlipHeaders() {
@@ -239,29 +253,12 @@ public class IbsProductMaster implements java.io.Serializable {
         this.ibsQuoteComparisionDetails = ibsQuoteComparisionDetails;
     }
 
-    public Set<IbsInsuranceCompanyContact> getIbsInsuranceCompanyContacts() {
-        return this.ibsInsuranceCompanyContacts;
+    public Set<IbsInsuranceCompProdLink> getIbsInsuranceCompProdLinks() {
+        return this.ibsInsuranceCompProdLinks;
     }
 
-    public void setIbsInsuranceCompanyContacts(
-            Set<IbsInsuranceCompanyContact> ibsInsuranceCompanyContacts) {
-        this.ibsInsuranceCompanyContacts = ibsInsuranceCompanyContacts;
-    }
-
-    public Set<IbsUserProductLink> getIbsUserProductLinks() {
-        return this.ibsUserProductLinks;
-    }
-
-    public void setIbsUserProductLinks(Set<IbsUserProductLink> ibsUserProductLinks) {
-        this.ibsUserProductLinks = ibsUserProductLinks;
-    }
-
-    public Set<IbsProductUwFields> getIbsProductUwFieldses() {
-        return this.ibsProductUwFieldses;
-    }
-
-    public void setIbsProductUwFieldses(Set<IbsProductUwFields> ibsProductUwFieldses) {
-        this.ibsProductUwFieldses = ibsProductUwFieldses;
+    public void setIbsInsuranceCompProdLinks(Set<IbsInsuranceCompProdLink> ibsInsuranceCompProdLinks) {
+        this.ibsInsuranceCompProdLinks = ibsInsuranceCompProdLinks;
     }
 
     public Set<IbsQuoteSlipDetail> getIbsQuoteSlipDetails() {
@@ -272,21 +269,36 @@ public class IbsProductMaster implements java.io.Serializable {
         this.ibsQuoteSlipDetails = ibsQuoteSlipDetails;
     }
 
-    public Set<IbsInsuranceCompProdLink> getIbsInsuranceCompProdLinks() {
-        return this.ibsInsuranceCompProdLinks;
+    public Set<IbsProductUwFields> getIbsProductUwFieldses() {
+        return this.ibsProductUwFieldses;
     }
 
-    public void setIbsInsuranceCompProdLinks(Set<IbsInsuranceCompProdLink> ibsInsuranceCompProdLinks) {
-        this.ibsInsuranceCompProdLinks = ibsInsuranceCompProdLinks;
+    public void setIbsProductUwFieldses(Set<IbsProductUwFields> ibsProductUwFieldses) {
+        this.ibsProductUwFieldses = ibsProductUwFieldses;
     }
 
-    public Set<IbsQuoteComparisionHeader> getIbsQuoteComparisionHeaders() {
-        return this.ibsQuoteComparisionHeaders;
+    public Set<IbsProductDocMaster> getIbsProductDocMasters() {
+        return this.ibsProductDocMasters;
     }
 
-    public void setIbsQuoteComparisionHeaders(
-            Set<IbsQuoteComparisionHeader> ibsQuoteComparisionHeaders) {
-        this.ibsQuoteComparisionHeaders = ibsQuoteComparisionHeaders;
+    public void setIbsProductDocMasters(Set<IbsProductDocMaster> ibsProductDocMasters) {
+        this.ibsProductDocMasters = ibsProductDocMasters;
+    }
+
+    public Set<IbsUserProductLink> getIbsUserProductLinks() {
+        return this.ibsUserProductLinks;
+    }
+
+    public void setIbsUserProductLinks(Set<IbsUserProductLink> ibsUserProductLinks) {
+        this.ibsUserProductLinks = ibsUserProductLinks;
+    }
+
+    public Set<IbsUwTransactionDetail> getIbsUwTransactionDetails() {
+        return this.ibsUwTransactionDetails;
+    }
+
+    public void setIbsUwTransactionDetails(Set<IbsUwTransactionDetail> ibsUwTransactionDetails) {
+        this.ibsUwTransactionDetails = ibsUwTransactionDetails;
     }
 
 
