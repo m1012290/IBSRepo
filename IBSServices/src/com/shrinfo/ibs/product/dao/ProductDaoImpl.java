@@ -2,6 +2,7 @@ package com.shrinfo.ibs.product.dao;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -15,8 +16,11 @@ import com.shrinfo.ibs.cmn.vo.BaseVO;
 import com.shrinfo.ibs.dao.utils.DAOUtils;
 import com.shrinfo.ibs.dao.utils.MapperUtil;
 import com.shrinfo.ibs.gen.pojo.IbsInsuranceCompProdLink;
+import com.shrinfo.ibs.gen.pojo.IbsProductDocMaster;
 import com.shrinfo.ibs.gen.pojo.IbsProductMaster;
 import com.shrinfo.ibs.gen.pojo.IbsProductUwFields;
+import com.shrinfo.ibs.vo.business.DocumentListVO;
+import com.shrinfo.ibs.vo.business.DocumentVO;
 import com.shrinfo.ibs.vo.business.ProductUWFieldVO;
 import com.shrinfo.ibs.vo.business.ProductVO;
 
@@ -89,6 +93,38 @@ public class ProductDaoImpl extends BaseDBDAO implements ProductDao {
             throw new SystemException(he, "Hibernate Exception ["+ he +"] encountered while performing product details save operation");
         }
         return baseVO;
+    }
+
+    @Override
+    public DocumentListVO getProductDocuList(BaseVO baseVO) {
+        if (null == baseVO) {
+            throw new BusinessException("cmn.unknownError", null, "Product details cannot be null");
+        }
+        if (!(baseVO instanceof ProductVO)) {
+            throw new BusinessException("cmn.unknownError", null, "Product details are invalid");
+        }
+        DocumentListVO documentListVO = new DocumentListVO();
+        List<DocumentVO> docuList = new ArrayList<DocumentVO>();
+        List ibsProductDocObjList = null;
+        try {
+            ibsProductDocObjList =
+                getHibernateTemplate()
+                        .find(
+                            " from IbsProductDocMaster ibsProductDocMaster where ibsProductDocMaster.ibsProductMaster.class_ = ? ",
+                            Long.valueOf(((ProductVO) baseVO).getProductClass()));
+        } catch (HibernateException hibernateException) {
+            throw new BusinessException("ibs.gi.couldNotGetProductDetails", hibernateException,
+                "Error while retreiving product details");
+        }
+        Iterator it = ibsProductDocObjList.iterator();
+        DocumentVO documentVO = null;
+        while (it.hasNext()) {
+            documentVO = new DocumentVO();
+            MapperUtil.populateProductDocumentVO(documentVO, (IbsProductDocMaster) it.next());
+            docuList.add(documentVO);
+        }
+        documentListVO.setDocumentVOs(docuList);
+        return documentListVO;
     }
 
 }
