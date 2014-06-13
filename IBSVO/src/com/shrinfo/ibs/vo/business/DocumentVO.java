@@ -24,6 +24,12 @@ public class DocumentVO extends BaseVO {
     private byte[] document;
 
     private String docType;
+    
+    private String name;
+    
+    private String format;
+    
+    private Long size;
 
     /**
      * @return the id
@@ -117,6 +123,54 @@ public class DocumentVO extends BaseVO {
      */
     public void setDocType(String docType) {
         this.docType = docType;
+    }
+    
+    
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    
+    /**
+     * @return the format
+     */
+    public String getFormat() {
+        return format;
+    }
+
+    
+    /**
+     * @param format the format to set
+     */
+    public void setFormat(String format) {
+        this.format = format;
+    }
+
+    
+    /**
+     * @return the size
+     */
+    public Long getSize() {
+        return size;
+    }
+
+    
+    /**
+     * @param size the size to set
+     */
+    public void setSize(Long size) {
+        this.size = size;
     }
 
     /**

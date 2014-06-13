@@ -2,11 +2,25 @@ package com.shrinfo.ibs.docgen;
 // File Name SendHTMLEmail.java
 
 
-import java.util.*;
-import javax.mail.*;
-import javax.mail.internet.*;
+import java.io.File;
+import java.util.List;
+import java.util.Properties;
+
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.mail.Authenticator;
+import javax.mail.BodyPart;
+import javax.mail.FolderNotFoundException;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
-import javax.activation.*;
 
 import com.shrinfo.ibs.cmn.logger.Logger;
 import com.shrinfo.ibs.cmn.utils.Utils;
@@ -72,6 +86,58 @@ public class SendEmail {
 			catch (MessagingException ex) {
 				ex.printStackTrace();			}
 			}
+	
+    public static void sendEmail(String subject, String body, List<File> attachments, List<String> recipientList) {
+
+        Properties props = System.getProperties();
+        props.setProperty("mail.smtp.port", Utils.getSingleValueAppConfig("SMTPPORT"));
+        props.setProperty("mail.smtp.host", Utils.getSingleValueAppConfig("SMTPSERVER"));
+        props.setProperty("mail.smtp.starttls.enable", "true");
+        props.setProperty("mail.smtp.auth", "true");
+
+        Authenticator auth = new MyAuthenticator();
+        Session session = Session.getInstance(props, auth);
+        session.setDebug(true);
+        String from = "hafeezur.r1@gmail.com";
+        // Sender's email ID needs to be mentioned
+
+        try {
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(from));
+           
+            for(String recipient : recipientList) {
+                message.addRecipient(Message.RecipientType.TO,
+                    new InternetAddress(recipient));
+            }
+            message.setSubject(subject);
+            // Email body
+            Multipart multipart = new MimeMultipart();
+            BodyPart messageBodyPart = new MimeBodyPart();
+            messageBodyPart.setText(body);
+            multipart.addBodyPart(messageBodyPart);
+            
+            // Email attachments
+           /* for(File file : attachments) {
+                DataSource source = new ByteArrayDataSource(attachment, "application/pdf");
+                BodyPart pdfBodypart = new MimeBodyPart();
+                pdfBodypart.setDataHandler(new DataHandler(source));
+                System.out.println("filePath=====" + attachment);                
+                pdfBodypart.setFileName(companyName + "_quotelslip.pdf");
+                multipart.addBodyPart(pdfBodypart);
+            }      */     
+            
+
+            // Send the complete message parts
+            message.setContent(multipart);
+            Transport.send(message);
+
+
+        } catch (FolderNotFoundException ex) {
+            ex.printStackTrace();
+        } catch (MessagingException ex) {
+            ex.printStackTrace();
+        }
+    }
 				
 	public static void main(String[] args) {
 		//sendEmail();

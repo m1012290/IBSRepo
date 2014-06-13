@@ -3,6 +3,7 @@ package com.shrinfo.ibs.product.svc;
 import com.shrinfo.ibs.base.service.BaseService;
 import com.shrinfo.ibs.cmn.vo.BaseVO;
 import com.shrinfo.ibs.product.dao.ProductDao;
+import com.shrinfo.ibs.vo.business.DocumentListVO;
 
 
 public class ProductServiceImpl extends BaseService implements ProductService {
@@ -18,6 +19,9 @@ public class ProductServiceImpl extends BaseService implements ProductService {
     	 if("saveProductDetails".equals(methodName)){
     	     returnValue = saveProductDetails((BaseVO) args[0]);
     	 }
+    	 if("getProductDocuList".equals(methodName)){
+             returnValue = getProductDocuList((BaseVO) args[0]);
+         }
          return returnValue;
     }
 
@@ -34,5 +38,10 @@ public class ProductServiceImpl extends BaseService implements ProductService {
 	public BaseVO saveProductDetails(BaseVO baseVO) {
 		return productDao.saveProductDetails(baseVO);
 	}
+
+    @Override
+    public DocumentListVO getProductDocuList(BaseVO baseVO) {        
+        return productDao.getProductDocuList(baseVO);
+    }
 
 }
