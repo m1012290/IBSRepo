@@ -57,6 +57,8 @@ public abstract class BaseManagedBean implements Serializable {
     Map<String, String> branchCodeNameMap;
     
     Map<String, String> userStatusMap = new HashMap<String, String>();
+    
+    private Map<String,String> priorityMap = new HashMap<String, String>();
 
     public Map<String, String> getTitles() {
         return this.titles;
@@ -294,6 +296,23 @@ public abstract class BaseManagedBean implements Serializable {
         this.userStatusMap = userStatusMap;
     }
 
+    
+    /**
+     * @return the priorityMap
+     */
+    public Map<String, String> getPriorityMap() {
+        return priorityMap;
+    }
+
+
+    
+    /**
+     * @param priorityMap the priorityMap to set
+     */
+    public void setPriorityMap(Map<String, String> priorityMap) {
+        this.priorityMap = priorityMap;
+    }
+
 
     //public constructor
     public BaseManagedBean(){
@@ -328,6 +347,12 @@ public abstract class BaseManagedBean implements Serializable {
         uwFieldValueTypes.put(AppConstants.UW_FIELD_VALUE_TYPE_CHARACTERS, AppConstants.UW_FIELD_VALUE_TYPE_CHARACTERS);
         uwFieldValueTypes.put(AppConstants.UW_FIELD_VALUE_TYPE_ALPHANUMERIC, AppConstants.UW_FIELD_VALUE_TYPE_ALPHANUMERIC);
         uwFieldValueTypes.put(AppConstants.UW_FIELD_VALUE_TYPE_DATE, AppConstants.UW_FIELD_VALUE_TYPE_DATE);
+        
+        this.priorityMap.put("Urgent", "URGENT");
+        this.priorityMap.put("Very High", "VERYHIGH");
+        this.priorityMap.put("High", "HIGH");
+        this.priorityMap.put("Medium", "MEDIUM");
+        this.priorityMap.put("Low", "LOW");
     }
 
     //to be implemented by each of the child beans to reinitialize the state of declared instance fields

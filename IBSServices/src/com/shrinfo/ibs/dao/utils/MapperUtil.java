@@ -224,7 +224,10 @@ public class MapperUtil {
         }
         populateAuditFields(enquiryVO, ibsCustomerEnquiry);
 
-        enquiryVO.setEnquiryNo(ibsCustomerEnquiry.getEnquiryNo().longValue());
+        if(!Utils.isEmpty(ibsCustomerEnquiry.getEnquiryNo())) {
+            enquiryVO.setEnquiryNo(ibsCustomerEnquiry.getEnquiryNo().longValue());
+        }
+        
         enquiryVO.setEnquirySme(ibsCustomerEnquiry.getEnquirySubjectmatterExpert());
         if (!Utils.isEmpty(ibsCustomerEnquiry.getType())) {
             enquiryVO.setType(EnquiryType.valueOf(ibsCustomerEnquiry.getType()));

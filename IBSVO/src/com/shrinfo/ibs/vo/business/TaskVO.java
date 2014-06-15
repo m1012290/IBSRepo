@@ -1,5 +1,7 @@
 package com.shrinfo.ibs.vo.business;
 
+import java.util.Date;
+
 import com.shrinfo.ibs.cmn.vo.BaseVO;
 import com.shrinfo.ibs.cmn.vo.UserVO;
 
@@ -18,15 +20,19 @@ public class TaskVO extends BaseVO {
 
     private String desc;
 
-    private UserVO assignerUser;
+    private UserVO assignerUser = new IBSUserVO();
 
-    private UserVO assigneeUser;
+    private UserVO assigneeUser = new IBSUserVO();
 
     private StatusVO statusVO;
 
     private Integer taskType;
     
     private Integer taskSectionType;
+    
+    private Date dueDate;
+    
+    private String priority;
     
     /**
      * @return the id
@@ -151,7 +157,40 @@ public class TaskVO extends BaseVO {
     
     public void setTaskSectionType(Integer taskSectionType) {
         this.taskSectionType = taskSectionType;
+    }    
+
+    
+    /**
+     * @return the dueDate
+     */
+    public Date getDueDate() {
+        return dueDate;
     }
+
+    
+    /**
+     * @param dueDate the dueDate to set
+     */
+    public void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    
+    /**
+     * @return the priority
+     */
+    public String getPriority() {
+        return priority;
+    }
+
+    
+    /**
+     * @param priority the priority to set
+     */
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+    
 
     @Override
     public String toString() {

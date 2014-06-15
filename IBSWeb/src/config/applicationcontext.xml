@@ -69,6 +69,8 @@
 		<value>com/shrinfo/ibs/gen/pojo/IbsUwTransactionHeader.hbm.xml</value>
 		<value>com/shrinfo/ibs/gen/pojo/IbsUwTransactionDetail.hbm.xml</value>
 		<value>com/shrinfo/ibs/gen/pojo/IbsClaims.hbm.xml</value>
+		<value>com/shrinfo/ibs/gen/pojo/IbsProductDocMaster.hbm.xml</value>
+		<value>com/shrinfo/ibs/gen/pojo/IbsTransactionMaster.hbm.xml</value>
 		</list>
 		</property>
 		

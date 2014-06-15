@@ -15,6 +15,7 @@ import javax.faces.context.FacesContext;
 
 import com.shrinfo.ibs.cmn.exception.BusinessException;
 import com.shrinfo.ibs.cmn.exception.SystemException;
+import com.shrinfo.ibs.cmn.logger.Logger;
 import com.shrinfo.ibs.cmn.vo.UserVO;
 import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
 import com.shrinfo.ibs.util.EncryptionUtil;
@@ -28,6 +29,8 @@ import com.shrinfo.ibs.vo.business.TaskItemsVO;
 @ManagedBean(name = "loginBean")
 @SessionScoped
 public class LoginMB extends BaseManagedBean implements Serializable {
+    
+    private static Logger logger = Logger.getLogger(LoginMB.class);
 
     private String userName;
 
@@ -127,7 +130,8 @@ public class LoginMB extends BaseManagedBean implements Serializable {
                 return null;
             }
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage("MESSAGE_FAILURE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Unexpected error encountered, please try again after sometime"));
+            logger.error(e, "Error logging-in");
+            FacesContext.getCurrentInstance().addMessage("MESSAGE_FAILURE", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Unexpected error encountered, please try again after sometime", "Unexpected error encountered, please try again after sometime"));
             return null;
         }
         return null;

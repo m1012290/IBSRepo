@@ -36,8 +36,8 @@ public class TaskDaoImpl extends BaseDBDAO implements TaskDao {
         try {
             ibsTaskObjList =
                 getHibernateTemplate().find(
-                    " from IbsTask ibsTask where ibsTask.assigneeUserId = ? and ibsTask.ibsStatusMaster.code = ?",
-                    ((UserVO) userVO).getUserId(), 3l);
+                    " from IbsTask ibsTask where ibsTask.assigneeUserId = ?",
+                    ((UserVO) userVO).getUserId());
         } catch (HibernateException hibernateException) {
             throw new BusinessException("pas.gi.couldNotGetTaskDetails", hibernateException,
                 "Error while fecthing Task details");
@@ -50,8 +50,11 @@ public class TaskDaoImpl extends BaseDBDAO implements TaskDao {
             ibsTaskRaw = it.next();
             if (ibsTaskRaw instanceof IbsTask) {
                 taskVO = new TaskVO();
-                MapperUtil.populateTaskVO(taskVO, (IbsTask) ibsTaskRaw);
-                taskVOs.add(taskVO);
+                Long statusCode = ((IbsTask) ibsTaskRaw).getIbsStatusMaster().getCode();
+                if( statusCode.intValue() == 3 || statusCode.intValue() == 1) {
+                    MapperUtil.populateTaskVO(taskVO, (IbsTask) ibsTaskRaw);
+                    taskVOs.add(taskVO);
+                }                
             }
         }
         taskItemsVO.setTaskVOs(taskVOs);

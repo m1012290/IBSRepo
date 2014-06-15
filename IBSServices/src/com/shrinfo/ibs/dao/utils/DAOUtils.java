@@ -899,8 +899,13 @@ public class DAOUtils {
         } else {
             logger.warn("Enquiry details can not be null in task. Please check data");
         }
-        ibsTask.setTaskType(Long.valueOf(taskVO.getTaskType().longValue()));
-        ibsTask.setTaskSectionType(Long.valueOf(taskVO.getTaskSectionType().longValue()));
+        if(!Utils.isEmpty(taskVO.getTaskType())) {
+            ibsTask.setTaskType(Long.valueOf(taskVO.getTaskType().longValue()));
+        }
+        if(!Utils.isEmpty(taskVO.getTaskSectionType())) {
+            ibsTask.setTaskSectionType(Long.valueOf(taskVO.getTaskSectionType().longValue()));
+        }        
+        
         ibsTask.setIbsStatusMaster(constructIbsStatusMaster(taskVO.getStatusVO()));
         ibsTask.setId(taskVO.getId());
 
