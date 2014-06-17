@@ -5,6 +5,8 @@ package com.shrinfo.ibs.mb;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
@@ -16,11 +18,13 @@ import javax.faces.context.FacesContext;
 import com.shrinfo.ibs.cmn.exception.BusinessException;
 import com.shrinfo.ibs.cmn.exception.SystemException;
 import com.shrinfo.ibs.cmn.logger.Logger;
+import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.cmn.vo.UserVO;
 import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
 import com.shrinfo.ibs.util.EncryptionUtil;
 import com.shrinfo.ibs.vo.business.IBSUserVO;
 import com.shrinfo.ibs.vo.business.TaskItemsVO;
+import com.shrinfo.ibs.vo.business.TaskVO;
 
 /**
  * @author Sunil Kumar
@@ -37,10 +41,14 @@ public class LoginMB extends BaseManagedBean implements Serializable {
     private String password;
 
     private UserVO userDetails;
-
-    private TaskItemsVO referralTaskItems = new TaskItemsVO();   
+    
+    List<TaskVO> referralTaskList = new ArrayList<TaskVO>();
+    
+    List<TaskVO> customTaskList = new ArrayList<TaskVO>();
 
     private TaskItemVODataModel taskDataModel;
+    
+    private TaskItemVODataModel customTaskDataModel;
 
     public String getPassword() {
         return password;
@@ -58,22 +66,6 @@ public class LoginMB extends BaseManagedBean implements Serializable {
         this.userDetails = userDetails;
     }
 
-    /**
-     * @return the referralTaskItems
-     */
-    public TaskItemsVO getReferralTaskItems() {
-        return referralTaskItems;
-    }
-
-
-
-    /**
-     * @param referralTaskItems the referralTaskItems to set
-     */
-    public void setReferralTaskItems(TaskItemsVO referralTaskItems) {
-        this.referralTaskItems = referralTaskItems;
-    }
-
 
     /**
      * @return the taskDataModel
@@ -89,6 +81,54 @@ public class LoginMB extends BaseManagedBean implements Serializable {
      */
     public void setTaskDataModel(TaskItemVODataModel taskDataModel) {
         this.taskDataModel = taskDataModel;
+    }    
+
+    
+    /**
+     * @return the referralTaskList
+     */
+    public List<TaskVO> getReferralTaskList() {
+        return referralTaskList;
+    }
+
+    
+    /**
+     * @param referralTaskList the referralTaskList to set
+     */
+    public void setReferralTaskList(List<TaskVO> referralTaskList) {
+        this.referralTaskList = referralTaskList;
+    }
+
+    
+    /**
+     * @return the customTaskList
+     */
+    public List<TaskVO> getCustomTaskList() {
+        return customTaskList;
+    }
+
+    
+    /**
+     * @param customTaskList the customTaskList to set
+     */
+    public void setCustomTaskList(List<TaskVO> customTaskList) {
+        this.customTaskList = customTaskList;
+    }
+
+    
+    /**
+     * @return the customTaskDataModel
+     */
+    public TaskItemVODataModel getCustomTaskDataModel() {
+        return customTaskDataModel;
+    }
+
+    
+    /**
+     * @param customTaskDataModel the customTaskDataModel to set
+     */
+    public void setCustomTaskDataModel(TaskItemVODataModel customTaskDataModel) {
+        this.customTaskDataModel = customTaskDataModel;
     }
 
     public String submit() {
@@ -150,10 +190,24 @@ public class LoginMB extends BaseManagedBean implements Serializable {
         FacesContext fc = FacesContext.getCurrentInstance();
         Map map = fc.getExternalContext().getSessionMap();
         LoginMB loginManageBean = (LoginMB) map.get("loginBean");
-        this.referralTaskItems =
-            (TaskItemsVO) ServiceTaskExecutor.INSTANCE.executeSvc("referralTaskSvc", "getTasks",
-                loginManageBean.getUserDetails());
-        this.taskDataModel = new TaskItemVODataModel(this.referralTaskItems.getTaskVOs());
+        
+        TaskItemsVO itemsVO = (TaskItemsVO) ServiceTaskExecutor.INSTANCE.executeSvc("referralTaskSvc", "getTasks",
+            loginManageBean.getUserDetails());
+        
+        this.referralTaskList = new ArrayList<TaskVO>();
+        this.customTaskList = new ArrayList<TaskVO>();
+        if(!Utils.isEmpty(itemsVO.getTaskVOs())) {
+            for(TaskVO taskVO : itemsVO.getTaskVOs()) {
+                if(taskVO.getTaskType() == Integer.parseInt(Utils.getSingleValueAppConfig("TASK_TYPE_REFERRAL"))) {
+                    referralTaskList.add(taskVO);
+                } else if (taskVO.getTaskType() == Integer.parseInt(Utils.getSingleValueAppConfig("TASK_TYPE_CUSTOM"))) {
+                    customTaskList.add(taskVO);
+                }
+            }
+        }       
+            
+        this.taskDataModel = new TaskItemVODataModel(this.referralTaskList);
+        this.customTaskDataModel = new TaskItemVODataModel(this.customTaskList);
     }
     
     public void logout() throws IOException {

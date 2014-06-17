@@ -46,5 +46,11 @@
         <property name="taskSectionType" type="java.lang.Long">
             <column name="TASK_SECTION_TYPE" precision="22" scale="0" />
         </property>
+        <property name="dueDate" type="date">
+            <column name="DUE_DATE" length="7" />
+        </property>
+        <property name="priority" type="string">
+            <column name="PRIORITY" length="20" />
+        </property>
     </class>
 </hibernate-mapping>

@@ -822,6 +822,8 @@ public class MapperUtil {
         if(!Utils.isEmpty(ibsTask.getTaskSectionType())) {
             taskVO.setTaskSectionType(ibsTask.getTaskSectionType().intValue());
         }
+        taskVO.setPriority(ibsTask.getPriority());
+        taskVO.setDueDate(ibsTask.getDueDate());
     }
 
     private static void populateStatusVO(StatusVO statusVO, IbsStatusMaster ibsStatusMaster) {

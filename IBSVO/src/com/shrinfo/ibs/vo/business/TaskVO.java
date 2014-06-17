@@ -24,7 +24,7 @@ public class TaskVO extends BaseVO {
 
     private UserVO assigneeUser = new IBSUserVO();
 
-    private StatusVO statusVO;
+    private StatusVO statusVO = new StatusVO();
 
     private Integer taskType;
     

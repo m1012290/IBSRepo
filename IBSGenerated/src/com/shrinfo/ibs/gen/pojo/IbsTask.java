@@ -1,6 +1,6 @@
 package com.shrinfo.ibs.gen.pojo;
 
-// Generated Apr 28, 2014 3:21:32 AM by Hibernate Tools 3.4.0.CR1
+// Generated Jun 17, 2014 12:15:10 AM by Hibernate Tools 3.4.0.CR1
 
 
 import java.sql.Date;
@@ -37,6 +37,10 @@ public class IbsTask implements java.io.Serializable {
 
     private Long taskSectionType;
 
+    private java.util.Date dueDate;
+
+    private String priority;
+
     public IbsTask() {}
 
 
@@ -46,7 +50,8 @@ public class IbsTask implements java.io.Serializable {
 
     public IbsTask(Long id, IbsStatusMaster ibsStatusMaster, Long enquiryNo, String documentId,
             String referralDesc, Long assignorUserId, Long assigneeUserId, Long recCreUserId,
-            Date recCreDate, Long recUpdUserId, Date recUpdDate, Long taskType, Long taskSectionType) {
+            Date recCreDate, Long recUpdUserId, Date recUpdDate, Long taskType,
+            Long taskSectionType, java.util.Date dueDate, String priority) {
         this.id = id;
         this.ibsStatusMaster = ibsStatusMaster;
         this.enquiryNo = enquiryNo;
@@ -60,6 +65,8 @@ public class IbsTask implements java.io.Serializable {
         this.recUpdDate = recUpdDate;
         this.taskType = taskType;
         this.taskSectionType = taskSectionType;
+        this.dueDate = dueDate;
+        this.priority = priority;
     }
 
     public Long getId() {
@@ -164,6 +171,22 @@ public class IbsTask implements java.io.Serializable {
 
     public void setTaskSectionType(Long taskSectionType) {
         this.taskSectionType = taskSectionType;
+    }
+
+    public java.util.Date getDueDate() {
+        return this.dueDate;
+    }
+
+    public void setDueDate(java.util.Date dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public String getPriority() {
+        return this.priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
     }
 
 

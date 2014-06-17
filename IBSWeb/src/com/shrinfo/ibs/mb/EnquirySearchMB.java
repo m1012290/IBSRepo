@@ -10,9 +10,12 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
+import org.primefaces.event.SelectEvent;
+
 import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
 import com.shrinfo.ibs.util.AppConstants;
+import com.shrinfo.ibs.vo.business.IBSUserVO;
 import com.shrinfo.ibs.vo.business.SearchItemVO;
 import com.shrinfo.ibs.vo.business.SearchVO;
 import com.shrinfo.ibs.vo.business.StatusVO;
@@ -50,6 +53,8 @@ public class EnquirySearchMB extends BaseManagedBean implements Serializable {
     private TaskVO referralTask = new TaskVO();
     
     private TaskVO customTask = new TaskVO();
+    
+    private TaskVO selectedCustomTask = new TaskVO();
 
     //This is an important method which is overriden from parent managed bean
     // this is an reinitializer block which includes all the instance fields which are bound to form
@@ -66,6 +71,8 @@ public class EnquirySearchMB extends BaseManagedBean implements Serializable {
         this.searchItem = null;
         this.searchItemVODataModel = null;
         this.referralTask = new TaskVO();
+        this.customTask = new TaskVO();
+        this.customTask.setAssigneeUser(new IBSUserVO());
     }
 
 
@@ -222,6 +229,47 @@ public class EnquirySearchMB extends BaseManagedBean implements Serializable {
     }
 
 
+    
+    /**
+     * @return the selectedCustomTask
+     */
+    public TaskVO getSelectedCustomTask() {
+        return selectedCustomTask;
+    }
+
+
+    
+    /**
+     * @param selectedCustomTask the selectedCustomTask to set
+     */
+    public void setSelectedCustomTask(TaskVO selectedCustomTask) {
+        this.selectedCustomTask = selectedCustomTask;
+    }
+    
+    public void onCustomTaskSelect(SelectEvent event) {
+        TaskVO selectedTask = (TaskVO) event.getObject();
+        IBSUserVO assigneeUser = new IBSUserVO();
+        assigneeUser.setUserId(selectedTask.getAssigneeUser().getUserId());                
+        this.customTask.setAssigneeUser(assigneeUser);
+        IBSUserVO assignerUser = new IBSUserVO();
+        assignerUser.setUserId(selectedTask.getAssignerUser().getUserId());
+        this.customTask.setAssignerUser(assignerUser);
+        this.customTask.setDesc(selectedTask.getDesc());
+        this.customTask.setDueDate(selectedTask.getDueDate());
+        this.customTask.setId(selectedTask.getId());
+        this.customTask.setPriority(selectedTask.getPriority());
+        StatusVO statusVO = new StatusVO();
+        statusVO.setCode(selectedTask.getStatusVO().getCode());
+        this.customTask.setStatusVO(statusVO);
+        this.customTask.setTaskSectionType(selectedTask.getTaskSectionType());
+        this.customTask.setTaskType(selectedTask.getTaskType());
+    }
+    
+    public void onTaskPanelHide() {
+        this.customTask = new TaskVO();
+    }
+
+
     public String submit() {
         
         // TODO: this is a temporary fix.
@@ -251,12 +299,11 @@ public class EnquirySearchMB extends BaseManagedBean implements Serializable {
         return null;
     }
     
-    public String createCuctomTask() {
+    public String saveCustomTask() {
         
         try {
             Map map=FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
             
-            EditCustEnqDetailsMB editCustEnqDetailsMB=(EditCustEnqDetailsMB) map.get(AppConstants.BEAN_NAME_ENQUIRY_PAGE);
             LoginMB loginMB = (LoginMB)map.get(AppConstants.BEAN_NAME_LOGIN_PAGE);
             
             Boolean validFields = Boolean.TRUE;
@@ -280,10 +327,10 @@ public class EnquirySearchMB extends BaseManagedBean implements Serializable {
             }        
             
             //construct TaskVO to save referral desc
-            StatusVO statusVO = new StatusVO();
-            statusVO.setCode(Integer.valueOf(Utils.getSingleValueAppConfig("STATUS_ACTIVE")));//task status
-            statusVO.setDesc("Referred");
-            this.customTask.setStatusVO(statusVO);
+            //StatusVO statusVO = new StatusVO();
+            //statusVO.setCode(Integer.valueOf(Utils.getSingleValueAppConfig("STATUS_ACTIVE")));//task status
+            //statusVO.setDesc("Referred");
+            //this.customTask.setStatusVO(statusVO);
             this.customTask.setAssignerUser(loginMB.getUserDetails());
             this.customTask.setTaskType(Integer.valueOf(Utils.getSingleValueAppConfig("TASK_TYPE_CUSTOM")));
             //this.customTask.setTaskSectionType(Integer.valueOf(Utils.getSingleValueAppConfig("SECTION_ID_QUOTESLIP")));

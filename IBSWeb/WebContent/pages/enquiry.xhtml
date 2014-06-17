@@ -47,21 +47,50 @@
 			        
 	    			</p:dataTable> 
 	    			
-	    			<p:commandButton id="customTask" value="Create Custom Task" type="button" />
-				    <p:overlayPanel id="customPanel" for="customTask" hideEffect="fade" dynamic="true">
+	    			<h2>Pending Custom Tasks</h2>  
+    			   			
+    				<p:dataTable id ="custTaskTable" var="task" value="#{loginBean.customTaskDataModel}" paginator="true" rows="5"  
+                 	selection="#{enquirySearchMB.selectedCustomTask}" selectionMode="single">  
+                 	
+                 	<p:ajax event="rowSelect" oncomplete="customPanel.loadContents()" listener="#{enquirySearchMB.onCustomTaskSelect}"/>                 
+	                                      
+				        <p:column headerText="Description">  
+				            <h:outputText value="#{task.desc}" />  
+				        </p:column> 
+				        
+				        <p:column headerText="Due date">  
+				            <h:outputText value="#{task.dueDate}" />  
+				        </p:column> 
+				        
+				        <p:column headerText="priority">  
+				            <h:outputText value="#{task.priority}" />  
+				        </p:column> 
+				  
+				        <p:column headerText="Status">  
+				            <h:outputText value="#{task.statusVO.code}" />  
+				        </p:column>
+				        
+				        <p:column headerText="Assigned by">  
+				            <h:outputText value="#{task.assignerUser.userName}" />  
+				        </p:column>
+			        
+	    			</p:dataTable> 
+	    			
+	    			<p:commandButton onstart="#{enquirySearchMB.onTaskPanelHide()}" onclick="customPanel.show()" oncomplete="customPanel.loadContents()" action="#{enquirySearchMB.onTaskPanelHide()}"  value="Create Custom Task" type="button" />
+				    <p:overlayPanel id="customPanel" widgetVar="customPanel" for="custTaskTable" dynamic="true" >
 				    
 				    <h:panelGrid columns="4">
 				    
 				    		<p:outputLabel for="assignedBy" value="Assigned By" />  
 						    <p:inputText id="assignedBy" value="#{loginBean.userDetails.userName}" readonly="true"/>
 							
-							<p:outputLabel value="Refer To" />
+							<p:outputLabel for="referredto" value="Refer To" />
 							<p:selectOneMenu id="referredto" value="#{enquirySearchMB.customTask.assigneeUser.userId}" >
 								<f:selectItem itemLabel="---Select User---" itemValue="" />	
 								<f:selectItems value="#{enquirySearchMB.usersList}" />			
 							</p:selectOneMenu>						
 				    
-				    		<p:outputLabel for="dueDate" value="Due Date" /> 				    		
+				    		<p:outputLabel for="dueDate" value="Due Date" /> 	    		
 							<p:calendar id="dueDate" value="#{enquirySearchMB.customTask.dueDate}" pattern="dd/MM/yyyy" readonlyInput="true"/>
 							
 							<p:outputLabel for="priority" value="Priority" />
@@ -69,12 +98,17 @@
 								<f:selectItems value="#{enquirySearchMB.priorityMap}" />
 							</p:selectOneMenu>
 							
-							<p:outputLabel value="Referral Description"/>
+							<p:outputLabel for="referraldesc" value="Referral Description"/>
 							<p:inputTextarea  id="referraldesc" value="#{enquirySearchMB.customTask.desc}" />
+							
+							<p:outputLabel for="status" value="Status"/>
+							<p:selectOneMenu id="status" value="#{enquirySearchMB.customTask.statusVO.code}">
+								<f:selectItems value="#{enquirySearchMB.taskStatusMap}" />
+							</p:selectOneMenu>
 							
 							
 					</h:panelGrid>
-					<p:commandButton value="Create Task" ajax="false" action="#{enquirySearchMB.createCuctomTask()}" update="messages" style="float:right:20px;" />
+					<p:commandButton value="Save Task" ajax="false" action="#{enquirySearchMB.saveCustomTask()}" update="messages" style="float:right:20px;" />
 				    
 				    </p:overlayPanel>
     		

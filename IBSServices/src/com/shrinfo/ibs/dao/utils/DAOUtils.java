@@ -908,6 +908,9 @@ public class DAOUtils {
         
         ibsTask.setIbsStatusMaster(constructIbsStatusMaster(taskVO.getStatusVO()));
         ibsTask.setId(taskVO.getId());
+        
+        ibsTask.setPriority(taskVO.getPriority());
+        ibsTask.setDueDate(taskVO.getDueDate());
 
         return ibsTask;
     }

@@ -59,6 +59,7 @@ public abstract class BaseManagedBean implements Serializable {
     Map<String, String> userStatusMap = new HashMap<String, String>();
     
     private Map<String,String> priorityMap = new HashMap<String, String>();
+    private Map<String,String> taskStatusMap = new HashMap<String, String>();
 
     public Map<String, String> getTitles() {
         return this.titles;
@@ -313,6 +314,23 @@ public abstract class BaseManagedBean implements Serializable {
         this.priorityMap = priorityMap;
     }
 
+    
+    /**
+     * @return the taskStatusMap
+     */
+    public Map<String, String> getTaskStatusMap() {
+        return taskStatusMap;
+    }
+
+
+    
+    /**
+     * @param taskStatusMap the taskStatusMap to set
+     */
+    public void setTaskStatusMap(Map<String, String> taskStatusMap) {
+        this.taskStatusMap = taskStatusMap;
+    }
+
 
     //public constructor
     public BaseManagedBean(){
@@ -353,6 +371,10 @@ public abstract class BaseManagedBean implements Serializable {
         this.priorityMap.put("High", "HIGH");
         this.priorityMap.put("Medium", "MEDIUM");
         this.priorityMap.put("Low", "LOW");
+        
+        this.taskStatusMap.put("Open", "7");
+        this.taskStatusMap.put("Work In-Progress", "8");
+        this.taskStatusMap.put("Completed", "9");
     }
 
     //to be implemented by each of the child beans to reinitialize the state of declared instance fields

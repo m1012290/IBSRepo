@@ -51,7 +51,7 @@ public class TaskDaoImpl extends BaseDBDAO implements TaskDao {
             if (ibsTaskRaw instanceof IbsTask) {
                 taskVO = new TaskVO();
                 Long statusCode = ((IbsTask) ibsTaskRaw).getIbsStatusMaster().getCode();
-                if( statusCode.intValue() == 3 || statusCode.intValue() == 1) {
+                if( statusCode.intValue() == 3 || statusCode.intValue() == 1 || statusCode.intValue() == 7 || statusCode.intValue() == 8) {
                     MapperUtil.populateTaskVO(taskVO, (IbsTask) ibsTaskRaw);
                     taskVOs.add(taskVO);
                 }                
