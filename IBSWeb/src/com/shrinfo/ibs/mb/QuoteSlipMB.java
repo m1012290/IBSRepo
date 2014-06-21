@@ -538,7 +538,7 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
             while(iterator.hasNext()){
                 insCompanyVO = iterator.next();
                 //this.selectedInsCompanies.add(insCompanyVO.getCode());
-                insCompanyVO =  (InsCompanyVO)ServiceTaskExecutor.INSTANCE.executeSvc("companySvc","getPolicy",insCompanyVO);
+                insCompanyVO =  (InsCompanyVO)ServiceTaskExecutor.INSTANCE.executeSvc("companySvc","getCompany",insCompanyVO);
                 quoteSlipPDFGenerator.generatePDF(this.quoteDetailVO, this.insuredDetails, insCompanyVO.getContactAndAddrDetails(),insCompanyVO.getName(), Utils.getSingleValueAppConfig("quoteSlipfilePath")+"_"+new Date().getTime(), Utils.getSingleValueAppConfig("imagePath"));
             }
             
@@ -631,7 +631,7 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
            InsCompanyVO inscompanyVO=new InsCompanyVO();
             inscompanyVO.setCode(this.quoteDetailVO.getCompanyCode());
             
-            inscompanyVO =  (InsCompanyVO)ServiceTaskExecutor.INSTANCE.executeSvc("companySvc","getPolicy",inscompanyVO);
+            inscompanyVO =  (InsCompanyVO)ServiceTaskExecutor.INSTANCE.executeSvc("companySvc","getCompany",inscompanyVO);
     
             document.add(new Paragraph("  "+inscompanyVO.getName(),catFont));
             

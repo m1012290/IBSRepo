@@ -4,8 +4,11 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -14,6 +17,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 
 import com.shrinfo.ibs.cmn.exception.BusinessException;
@@ -26,11 +30,16 @@ import com.shrinfo.ibs.util.AppConstants;
 import com.shrinfo.ibs.vo.business.AppFlow;
 import com.shrinfo.ibs.vo.business.ContactVO;
 import com.shrinfo.ibs.vo.business.CustomerVO;
+import com.shrinfo.ibs.vo.business.CustomersListVO;
 import com.shrinfo.ibs.vo.business.EnquiryVO;
+import com.shrinfo.ibs.vo.business.IBSUserVO;
+import com.shrinfo.ibs.vo.business.InsCompanyListVO;
+import com.shrinfo.ibs.vo.business.InsCompanyVO;
 import com.shrinfo.ibs.vo.business.InsuredVO;
 import com.shrinfo.ibs.vo.business.PolicyVO;
 import com.shrinfo.ibs.vo.business.QuoteDetailVO;
 import com.shrinfo.ibs.vo.business.SearchItemVO;
+import com.shrinfo.ibs.vo.business.StatusVO;
 import com.shrinfo.ibs.vo.business.TaskVO;
 
 
@@ -137,7 +146,132 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
 	@ManagedProperty("#{customerMasterMB}")
 	private CustomerMasterMB customerMasterMB;
 	
-	private CustomerVO customerVO;
+	private CustomerVO customerVO;	
+	
+	private TaskVO referralTask = new TaskVO();
+
+    private TaskVO customTask = new TaskVO();
+
+    private Map<String,String> customerMap = new HashMap<String, String>();
+    
+    private Map<String,String> insCompanyMap = new HashMap<String, String>();
+    
+    private Long customerId;
+    
+    private Long insCompanyId;
+    
+    private boolean isCustom = Boolean.TRUE;
+
+    
+    /**
+     * @return the isCustom
+     */
+    public boolean getIsCustom() {
+        return isCustom;
+    }
+
+    
+    /**
+     * @param isCustom the isCustom to set
+     */
+    public void setIsCustom(boolean isCustom) {
+        this.isCustom = isCustom;
+    }
+
+
+    /**
+     * @return the customerId
+     */
+    public Long getCustomerId() {
+        return customerId;
+    }
+
+    
+    /**
+     * @param customerId the customerId to set
+     */
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
+
+    
+    /**
+     * @return the insCompanyId
+     */
+    public Long getInsCompanyId() {
+        return insCompanyId;
+    }
+
+    
+    /**
+     * @param insCompanyId the insCompanyId to set
+     */
+    public void setInsCompanyId(Long insCompanyId) {
+        this.insCompanyId = insCompanyId;
+    }
+
+
+    /**
+     * @return the customerMap
+     */
+    public Map<String, String> getCustomerMap() {
+        
+        CustomersListVO responseVO = (CustomersListVO) ServiceTaskExecutor.INSTANCE.executeSvc("customerEnquirySvc",
+            "getAllCustomers", this.enquiryVO);
+        for(CustomerVO customer : responseVO.getCustomersList()) {
+            customerMap.put(customer.getName(), customer.getCustomerId().toString());
+        }
+        return customerMap;
+    }
+
+    
+    /**
+     * @param customerMap the customerMap to set
+     */
+    public void setCustomerMap(Map<String, String> customerMap) {
+        this.customerMap = customerMap;
+    }
+
+    
+    /**
+     * @return the insCompanyMap
+     */
+    public Map<String, String> getInsCompanyMap() {
+        InsCompanyVO insCompanyVO = new InsCompanyVO();
+        InsCompanyListVO companyListVO =
+            (InsCompanyListVO) ServiceTaskExecutor.INSTANCE.executeSvc("companySvc",
+                "getCompany", insCompanyVO);
+        if(!Utils.isEmpty(companyListVO)) {
+            for(InsCompanyVO company : companyListVO.getCompaniList()) {
+                insCompanyMap.put(company.getName(), company.getCode());
+            }
+        }
+        return insCompanyMap;
+    }
+
+    
+    /**
+     * @param insCompanyMap the insCompanyMap to set
+     */
+    public void setInsCompanyMap(Map<String, String> insCompanyMap) {
+        this.insCompanyMap = insCompanyMap;
+    }
+
+
+    /**
+     * @return the referralTask
+     */
+    public TaskVO getReferralTask() {
+        return referralTask;
+    }
+
+
+    /**
+     * @param referralTask the referralTask to set
+     */
+    public void setReferralTask(TaskVO referralTask) {
+        this.referralTask = referralTask;
+    } 
 
     
     public Boolean getScreenFreeze() {
@@ -206,6 +340,9 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
         this.setNavigationDisbled(Boolean.FALSE);
         this.customerVO = null;
         this.customerMasterMB = null;
+        
+        this.customTask = new TaskVO();
+        this.isCustom = Boolean.TRUE;
     }
 
     public EditCustEnqDetailsMB() {
@@ -556,11 +693,61 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
     public void setPolicyVO(PolicyVO policyVO) {
         this.policyVO = policyVO;
     }
+   
+    
+    /**
+     * @return the customTask
+     */
+    public TaskVO getCustomTask() {
+        return customTask;
+    }
+
+
+    
+    /**
+     * @param customTask the customTask to set
+     */
+    public void setCustomTask(TaskVO customTask) {
+        this.customTask = customTask;
+    }
+    
+    public void customTaskReset() {
+        this.customTask = new TaskVO();
+    }
+
 
     public void onTaskSelect(SelectEvent event) {
 
         try {
+            this.isCustom = Boolean.FALSE;
             TaskVO taskVO = (TaskVO) event.getObject();
+            RequestContext context = RequestContext.getCurrentInstance();
+            context.execute("customPanel.hide()");
+            if(taskVO.getTaskType() == Integer.parseInt(Utils.getSingleValueAppConfig("TASK_TYPE_CUSTOM"))) {                
+                context.execute("customPanel.show()");
+                this.isCustom = Boolean.TRUE;
+                IBSUserVO assigneeUser = new IBSUserVO();
+                assigneeUser.setUserId(taskVO.getAssigneeUser().getUserId());                
+                this.customTask.setAssigneeUser(assigneeUser);
+                IBSUserVO assignerUser = new IBSUserVO();
+                assignerUser.setUserId(taskVO.getAssignerUser().getUserId());
+                this.customTask.setAssignerUser(assignerUser);
+                this.customTask.setDesc(taskVO.getDesc());
+                this.customTask.setDueDate(taskVO.getDueDate());
+                this.customTask.setId(taskVO.getId());
+                this.customTask.setPriority(taskVO.getPriority());
+                StatusVO statusVO = new StatusVO();
+                statusVO.setCode(taskVO.getStatusVO().getCode());
+                this.customTask.setStatusVO(statusVO);
+                this.customTask.setTaskSectionType(taskVO.getTaskSectionType());
+                this.customTask.setTaskType(taskVO.getTaskType());
+                if(1 == taskVO.getTaskSectionType()) {
+                    this.setCustomerId(Long.parseLong(taskVO.getDocumentId()));
+                } else if(2 == taskVO.getTaskSectionType()) {
+                    this.setInsCompanyId(Long.parseLong(taskVO.getDocumentId()));
+                }
+                return;
+            }
             this.enquiryVO.setEnquiryNo(taskVO.getEnquiry().getEnquiryNo());
             this.enquiryVO =
                 (EnquiryVO) ServiceTaskExecutor.INSTANCE.executeSvc("customerEnquirySvc",
@@ -597,7 +784,6 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
                     "Unexpected error encountered, please try again after sometime"));
         }
-
 
     }
 
@@ -811,4 +997,69 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
 		System.out.println("valueChangeEvent-->"+ajaxBehaviorEvent);
 		this.enquiryVO.setCustomerDetails(this.customerVO);
 	}
+	
+	 public String saveCustomTask() {
+	        
+	        try {
+	            Map map=FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+	            
+	            LoginMB loginMB = (LoginMB)map.get(AppConstants.BEAN_NAME_LOGIN_PAGE);
+	            
+	            Boolean validFields = Boolean.TRUE;
+	            //validate the task fields
+	            if(Utils.isEmpty(this.customTask.getDesc())){
+	                validFields = false;
+	                FacesContext.getCurrentInstance().addMessage("TASK_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Task Desc cannot be blank", null));
+	            }
+	            if(Utils.isEmpty(this.customTask.getAssigneeUser().getUserId()) && 0 == this.customTask.getAssigneeUser().getUserId()){
+	                validFields = false;
+	                FacesContext.getCurrentInstance().addMessage("TASK_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Please select a user as assignee", null));
+	            }
+	            Date currenDate = new Date();
+	            if(Utils.isEmpty(this.customTask.getDueDate()) || currenDate.getTime() > this.customTask.getDueDate().getTime()) {
+	                validFields = false;
+	                FacesContext.getCurrentInstance().addMessage("TASK_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Please select Valid Due date", null));
+	            }
+	            if(0 == this.customTask.getTaskSectionType()) {
+	                validFields = false;
+                    FacesContext.getCurrentInstance().addMessage("TASK_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Please select either customer or Ins Company", null));
+	            }
+	            if(this.getCustomerId().intValue() == 0 && this.getInsCompanyId().intValue() == 0) {
+	                validFields = false;
+                    FacesContext.getCurrentInstance().addMessage("TASK_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Please select entity value", null));
+	            }
+	            
+	            if(!validFields) {
+	                return null;
+	            }        
+	            
+	            this.customTask.setAssignerUser(loginMB.getUserDetails());
+	            this.customTask.setTaskType(Integer.valueOf(Utils.getSingleValueAppConfig("TASK_TYPE_CUSTOM")));
+	            if(1 == this.customTask.getTaskSectionType()) {
+	                this.customTask.setDocumentId(this.getCustomerId().toString());
+	                for(Entry<String, String> entry : this.customerMap.entrySet()) {
+	                    if(Long.parseLong(entry.getValue()) == this.getCustomerId()) {
+	                        this.customTask.setDocumentName(entry.getKey());
+	                        break;
+	                    }
+	                }
+	                
+	            } else if (2 == this.customTask.getTaskSectionType()) {
+	                this.customTask.setDocumentId(this.getInsCompanyId().toString());
+	                for(Entry<String, String> entry : this.insCompanyMap.entrySet()) {
+                        if(Long.parseLong(entry.getValue()) == this.getInsCompanyId()) {
+                            this.customTask.setDocumentName(entry.getKey());
+                            break;
+                        }
+                    }
+	            }
+	            
+	            this.saveReferralTask(this.customTask);//perform referral save task
+	            return super.saveReferralTask();
+	        }catch(Exception e) {
+	            FacesContext.getCurrentInstance().addMessage("TASK_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Error creating custom task", null));
+	            return null;
+	        }
+	        
+	    }
 }

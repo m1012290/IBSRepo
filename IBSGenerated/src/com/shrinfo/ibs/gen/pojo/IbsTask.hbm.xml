@@ -52,5 +52,8 @@
         <property name="priority" type="string">
             <column name="PRIORITY" length="20" />
         </property>
+        <property name="docName" type="string">
+            <column name="DOC_NAME" length="30" />
+        </property>
     </class>
 </hibernate-mapping>

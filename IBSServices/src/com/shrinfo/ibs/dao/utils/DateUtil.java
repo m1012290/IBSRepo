@@ -40,15 +40,20 @@ public class DateUtil {
 
     /**
      * 
+     * @param obj
      * @return
      */
-    public static Timestamp constructTimeStamp(Date date) {
-
-        if (Utils.isEmpty(date)) {
-            date = new Date(System.currentTimeMillis());
+    public static Timestamp constructTimestamp(Object obj) {
+        if(Utils.isEmpty(obj)) {
+            return null;
         }
-        Timestamp timestamp = new Timestamp(date.getTime());
-
+        Timestamp timestamp = null;
+        if(obj instanceof java.sql.Date) {
+            timestamp = new Timestamp(((java.sql.Date)obj).getTime());
+        } else if (obj instanceof java.util.Date) {
+            timestamp = new Timestamp(((java.util.Date)obj).getTime());
+        }
+        
         return timestamp;
     }
 

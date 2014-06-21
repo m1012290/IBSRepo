@@ -883,7 +883,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
                             quoteDetVO.setPolicyTerm(quoteDetailVO.getPolicyTerm());
                             
                             insCompanyVO.setCode(quoteDetailVO.getCompanyCode());
-                            insCompanyVO =  (InsCompanyVO)ServiceTaskExecutor.INSTANCE.executeSvc("companySvc","getPolicy",insCompanyVO);
+                            insCompanyVO =  (InsCompanyVO)ServiceTaskExecutor.INSTANCE.executeSvc("companySvc","getCompany",insCompanyVO);
 
                             quoteSlipPDFGenerator.generatePDFForCloseSlip(quoteDetVO, this.insuredDetails, insCompanyVO.getContactAndAddrDetails(),insCompanyVO.getName(), Utils.getSingleValueAppConfig("quoteSlipfilePath")+"_"+new Date().getTime(), Utils.getSingleValueAppConfig("imagePath"));
                         }
@@ -903,7 +903,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 
                 insCompanyVO = iterator.next();
                 QuoteDetailVO qdVO=mapOfQuoteDets.get(insCompanyVO);
-                insCompanyVO =  (InsCompanyVO)ServiceTaskExecutor.INSTANCE.executeSvc("companySvc","getPolicy",insCompanyVO);
+                insCompanyVO =  (InsCompanyVO)ServiceTaskExecutor.INSTANCE.executeSvc("companySvc","getCompany",insCompanyVO);
                 quoteSlipPDFGenerator.generatePDFForCloseSlip(qdVO, this.insuredDetails, insCompanyVO.getContactAndAddrDetails(),insCompanyVO.getName(), Utils.getSingleValueAppConfig("quoteSlipfilePath")+"_"+new Date().getTime(), Utils.getSingleValueAppConfig("imagePath"));
 
 
@@ -1042,7 +1042,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
                             InsCompanyVO inscompanyVO=new InsCompanyVO();
                             inscompanyVO.setCode(this.quoteDetailVO.getCompanyCode());
                             
-                            inscompanyVO =  (InsCompanyVO)ServiceTaskExecutor.INSTANCE.executeSvc("companySvc","getPolicy",inscompanyVO);
+                            inscompanyVO =  (InsCompanyVO)ServiceTaskExecutor.INSTANCE.executeSvc("companySvc","getCompany",inscompanyVO);
                     
                             document.add(new Paragraph(inscompanyVO.getName(),catFont));
                             

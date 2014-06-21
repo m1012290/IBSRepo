@@ -34,6 +34,8 @@ public class TaskVO extends BaseVO {
     
     private String priority;
     
+    private String documentName;
+    
     /**
      * @return the id
      */
@@ -189,6 +191,22 @@ public class TaskVO extends BaseVO {
      */
     public void setPriority(String priority) {
         this.priority = priority;
+    }    
+
+    
+    /**
+     * @return the documentName
+     */
+    public String getDocumentName() {
+        return documentName;
+    }
+
+    
+    /**
+     * @param documentName the documentName to set
+     */
+    public void setDocumentName(String documentName) {
+        this.documentName = documentName;
     }
     
 

@@ -1,11 +1,11 @@
 package com.shrinfo.ibs.dao.utils;
 
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -602,10 +602,10 @@ public class MapperUtil {
             baseVO.setUpdatedByUserId((Long) getFieldValue(pojo, "getRecUpdUserId"));
         }
         if (null != getFieldValue(pojo, "getRecCreDate")) {
-            baseVO.setCreatedDate((Timestamp) getFieldValue(pojo, "getRecCreDate"));
+            baseVO.setCreatedDate(DateUtil.constructTimestamp(getFieldValue(pojo, "getRecCreDate")));
         }
         if (null != getFieldValue(pojo, "getRecUpdDate")) {
-            baseVO.setUpdatedDate((Timestamp) getFieldValue(pojo, "getRecUpdDate"));
+            baseVO.setUpdatedDate(DateUtil.constructTimestamp(getFieldValue(pojo, "getRecUpdDate")));
         }
     }
 
@@ -616,12 +616,21 @@ public class MapperUtil {
         }
         try {
             Method m = obj.getClass().getMethod(method);
-            // m.invoke(obj);
+            return m.invoke(obj);
         } catch (SecurityException e) {
             logger.info(e, "No method with name:" + method);
             e.printStackTrace();
         } catch (NoSuchMethodException e) {
             logger.info(e, "No method with name:" + method);
+        } catch (IllegalArgumentException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
         return null;
     }
@@ -824,6 +833,11 @@ public class MapperUtil {
         }
         taskVO.setPriority(ibsTask.getPriority());
         taskVO.setDueDate(ibsTask.getDueDate());
+        
+        taskVO.setDocumentId(ibsTask.getDocumentId());
+        taskVO.setDocumentName(ibsTask.getDocName());
+        
+        populateAuditFields(taskVO, ibsTask);
     }
 
     private static void populateStatusVO(StatusVO statusVO, IbsStatusMaster ibsStatusMaster) {
