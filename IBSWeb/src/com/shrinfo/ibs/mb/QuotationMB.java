@@ -34,6 +34,7 @@ import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfAction;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.shrinfo.ibs.cmn.constants.CommonConstants;
 import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.cmn.vo.UserVO;
 import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
@@ -692,17 +693,20 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
      * @return
      */
     public String loadQuotationsDetail() {
-
-        int closeSlipSectionCode = Integer.valueOf(Utils.getSingleValueAppConfig("SECTION_ID_CLOSESLIP"));
-        this.loadQuoteSlipDetails();
-        this.loadQuotations();
-        
-        FacesContext fc = FacesContext.getCurrentInstance();
+    	FacesContext fc = FacesContext.getCurrentInstance();
         Map map=fc.getExternalContext().getSessionMap();        
         
         // Referral
         EditCustEnqDetailsMB editCustEnqDetailsMB = (EditCustEnqDetailsMB) map.get("editCustEnqDetailsMB");
         LoginMB loginManageBean = (LoginMB) map.get(AppConstants.BEAN_NAME_LOGIN_PAGE);
+        int closeSlipSectionCode = Integer.valueOf(Utils.getSingleValueAppConfig("SECTION_ID_CLOSESLIP"));
+        this.loadQuoteSlipDetails();
+        if(editCustEnqDetailsMB.getEnquiryVO().getType().getEnquiryType().equals(CommonConstants.ENQUIRY_TYPE_ENDORSEMENT)){
+        	this.policyDetails = editCustEnqDetailsMB.getPolicyVO();
+        }
+        if(!editCustEnqDetailsMB.getEnquiryVO().getType().getEnquiryType().equals(CommonConstants.ENQUIRY_TYPE_ENDORSEMENT)){
+        	this.loadQuotations();
+        }
         this.setAssignerUser(loginManageBean.getUserDetails().getUserName());
         UserVO loggedInUser = loginManageBean.getUserDetails();
         

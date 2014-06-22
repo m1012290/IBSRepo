@@ -16,6 +16,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 
 import com.shrinfo.ibs.base.dao.BaseDBDAO;
+import com.shrinfo.ibs.cmn.constants.CommonConstants;
 import com.shrinfo.ibs.cmn.exception.BusinessException;
 import com.shrinfo.ibs.cmn.logger.Logger;
 import com.shrinfo.ibs.cmn.utils.Utils;
@@ -72,7 +73,7 @@ public class PolicyDaoImpl extends BaseDBDAO implements PolicyDao {
         try {
             return (IbsUwTransactionHeader) getHibernateTemplate().find(
                 " from IbsUwTransactionHeader ibsUwTransactionHeader "
-                    + "where ibsUwTransactionHeader.id.id = ?", ((PolicyVO) baseVO).getPolicyId())
+                    + "where ibsUwTransactionHeader.id.id = ? and ibsUwTransactionHeader.ibsStatusMaster.code = ?", ((PolicyVO) baseVO).getPolicyId(), 1l)
                     .get(0);
 
         } catch (HibernateException hibernateException) {
@@ -91,8 +92,8 @@ public class PolicyDaoImpl extends BaseDBDAO implements PolicyDao {
             headerList =
                 getHibernateTemplate().find(
                     " from IbsUwTransactionHeader ibsUwTransactionHeader "
-                        + "where ibsUwTransactionHeader.ibsQuoteComparisionHeader.id = ?",
-                    ((PolicyVO) baseVO).getQuoteId());
+                        + "where ibsUwTransactionHeader.ibsQuoteComparisionHeader.id = ? and ibsUwTransactionHeader.ibsStatusMaster.code = ?",
+                    ((PolicyVO) baseVO).getQuoteId(), 1l);
 
             if (Utils.isEmpty(headerList)) {
                 logger.info("No policy data found for Quotation ID:"
@@ -113,12 +114,16 @@ public class PolicyDaoImpl extends BaseDBDAO implements PolicyDao {
     private IbsUwTransactionHeader getPolicyBasedOnPolicyNumber(BaseVO baseVO) {
         List headerList = null;
         try {
+        	String[] paramNames = new String[2];
+        	paramNames[0] = "policyNo";
+        	paramNames[1] = "status";
+        	Object[] values = new Object[2];
+        	values[0] =  ((PolicyVO) baseVO).getPolicyNo();
+        	values[1] = 1l;
             headerList =
                 getHibernateTemplate().findByNamedParam(
                     " from IbsUwTransactionHeader ibsUwTransactionHeader "
-                        + "where ibsUwTransactionHeader.policyNo =:policyNo", "policyNo",
-                    ((PolicyVO) baseVO).getPolicyNo());
-
+                        + "where ibsUwTransactionHeader.policyNo =:policyNo and ibsUwTransactionHeader.ibsStatusMaster.code = :status", paramNames, values);
             if (Utils.isEmpty(headerList)) {
                 logger.info("No policy data found for Policy Number :"
                     + ((PolicyVO) baseVO).getPolicyNo());
@@ -157,34 +162,62 @@ public class PolicyDaoImpl extends BaseDBDAO implements PolicyDao {
             if (!Utils.isEmpty(ibsUwTranHeaderToBeSaved.getId())
                 && !Utils.isEmpty(ibsUwTranHeaderToBeSaved.getId().getId())) {
                 headerId.setId(ibsUwTranHeaderToBeSaved.getId().getId());
+                
                 logger.info("This is a policy edit flow. Plicy ID:"
                     + ibsUwTranHeaderToBeSaved.getId().getId());
-
+                headerId.setPolicyVersion(ibsUwTranHeaderToBeSaved.getId().getPolicyVersion());
                 ibsUwTranHeaderRetrieved =
                     (IbsUwTransactionHeader) getHibernateTemplate()
                             .find(
                                 " from IbsUwTransactionHeader ibsUwTransactionHeader "
-                                    + "where ibsUwTransactionHeader.id.id = ? and ibsUwTransactionHeader.id.policyVersion = ?",
+                                    + "where ibsUwTransactionHeader.id.id = ? and ibsUwTransactionHeader.ibsStatusMaster.code = ? ",
                                 ibsUwTranHeaderToBeSaved.getId().getId(), 1l).get(0);
                 ibsUwTranHeaderToBeSaved.setIbsUwTransactionDetails(getPolicyDetailsToBePersisted(
                     ibsUwTranHeaderToBeSaved.getIbsUwTransactionDetails(),
                     ibsUwTranHeaderRetrieved.getIbsUwTransactionDetails()));
-
+                
                 getHibernateTemplate().evict(ibsUwTranHeaderRetrieved);
                 for (IbsUwTransactionDetail detail : ibsUwTranHeaderRetrieved
                         .getIbsUwTransactionDetails()) {
                     getHibernateTemplate().evict(detail);
                 }
-
             } else {
                 headerId.setId(NextSequenceValue.getNextSequence("IBS_QUOTE_SLIP_HEADER_SEQ",
                     getHibernateTemplate()));
-
+                //if the flow is endorsement flow then policy version to be +1 on top
+                //of existing policy version
+                if(policyVO.getEnquiryDetails().getType().getEnquiryType().equals(CommonConstants.ENQUIRY_TYPE_ENDORSEMENT)){
+                	headerId.setPolicyVersion(Long.valueOf( policyVO.getPolicyVersion() + 1 ));
+                }else{
+                	headerId.setPolicyVersion(1l);
+                }
             }
-            headerId.setPolicyVersion(1l);
+            
+            //if endorsement update previous records status to as expired
+            if(policyVO.getEnquiryDetails().getType().getEnquiryType().equals(CommonConstants.ENQUIRY_TYPE_ENDORSEMENT) && !Utils.isEmpty(ibsUwTranHeaderToBeSaved.getId()) && Utils.isEmpty(ibsUwTranHeaderToBeSaved.getId().getId())){
+            	//fetch existing policy record and then update the status as expired as we are going to new insert
+            	//record to policy tables
+            	IbsUwTransactionHeader ibsuwtxnheader = getPolicyBasedOnPolicyNumber(policyVO);
+            	Set<IbsUwTransactionDetail> txnDetailsSet = ibsuwtxnheader.getIbsUwTransactionDetails();
+            	Iterator<IbsUwTransactionDetail> txnDetailsIterator = txnDetailsSet.iterator();
+            	IbsStatusMaster statusMaster = null;
+            	while(txnDetailsIterator.hasNext()){
+            		IbsUwTransactionDetail ibsTxnDetail = txnDetailsIterator.next();
+            		statusMaster = new IbsStatusMaster();
+            		statusMaster.setCode(6l);
+            		ibsTxnDetail.setIbsStatusMaster(statusMaster);
+            	}
+            	ibsuwtxnheader.setIbsUwTransactionDetails(txnDetailsSet);
+            	IbsStatusMaster ibsStatusMaster = new IbsStatusMaster();
+            	ibsStatusMaster.setCode(6l);
+            	ibsuwtxnheader.setIbsStatusMaster(ibsStatusMaster);
+            	update(ibsuwtxnheader);
+            }
+            
             ibsUwTranHeaderToBeSaved.setId(headerId);
-
+           
             saveOrUpdate(ibsUwTranHeaderToBeSaved);
+            
             
             //once save is performed check if we are in referral approval then we also need to
             //update task table records status.
@@ -207,7 +240,7 @@ public class PolicyDaoImpl extends BaseDBDAO implements PolicyDao {
                 }
             }
             
-
+            
             policyVO.setPolicyId(ibsUwTranHeaderToBeSaved.getId().getId());
             policyVO.setPolicyVersion(ibsUwTranHeaderToBeSaved.getId().getPolicyVersion()
                     .intValue());

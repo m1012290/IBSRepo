@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -13,9 +15,12 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.smartcardio.CommandAPDU;
+import javax.xml.rpc.ServiceException;
 
 import org.primefaces.event.SelectEvent;
 
+import com.shrinfo.ibs.cmn.constants.CommonConstants;
 import com.shrinfo.ibs.cmn.exception.BusinessException;
 import com.shrinfo.ibs.cmn.exception.SystemException;
 import com.shrinfo.ibs.cmn.logger.Logger;
@@ -27,6 +32,7 @@ import com.shrinfo.ibs.vo.business.AppFlow;
 import com.shrinfo.ibs.vo.business.ContactVO;
 import com.shrinfo.ibs.vo.business.CustomerVO;
 import com.shrinfo.ibs.vo.business.EnquiryVO;
+import com.shrinfo.ibs.vo.business.InsCompanyVO;
 import com.shrinfo.ibs.vo.business.InsuredVO;
 import com.shrinfo.ibs.vo.business.PolicyVO;
 import com.shrinfo.ibs.vo.business.QuoteDetailVO;
@@ -131,7 +137,8 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
     
     private Boolean screenFreeze = Boolean.FALSE;
 
-	//private List<CustomerVO> selectedCustomersList;
+	private Boolean existingEnquiryFlow = Boolean.FALSE;
+    //private List<CustomerVO> selectedCustomersList;
 	
 	//This property will be injected through dependency injection
 	@ManagedProperty("#{customerMasterMB}")
@@ -206,6 +213,7 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
         this.setNavigationDisbled(Boolean.FALSE);
         this.customerVO = null;
         this.customerMasterMB = null;
+        this.existingEnquiryFlow = Boolean.FALSE;
     }
 
     public EditCustEnqDetailsMB() {
@@ -557,7 +565,17 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
         this.policyVO = policyVO;
     }
 
-    public void onTaskSelect(SelectEvent event) {
+    public Boolean getExistingEnquiryFlow() {
+		return existingEnquiryFlow;
+	}
+
+
+	public void setExistingEnquiryFlow(Boolean existingEnquiryFlow) {
+		this.existingEnquiryFlow = existingEnquiryFlow;
+	}
+
+
+	public void onTaskSelect(SelectEvent event) {
 
         try {
             TaskVO taskVO = (TaskVO) event.getObject();
@@ -573,6 +591,7 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
                 this.quoteSlipId = policyVO.getQuoteDetails().entrySet().iterator().next().getValue().getQuoteSlipId();
             }
             this.setAppFlow(AppFlow.REFERRAL_APPROVAL);
+            this.existingEnquiryFlow = Boolean.TRUE;
             FacesContext.getCurrentInstance().getExternalContext().redirect("editenquiry.xhtml");
         } catch (IOException e) {
             logger.error(e, "Exception [" + e
@@ -619,6 +638,7 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
             this.policyVO.setPolicyNo(this.policyNum);
             setCustomerVO(this.enquiryVO.getCustomerDetails());
             setReferralFlag();
+            this.existingEnquiryFlow = Boolean.TRUE;
             FacesContext.getCurrentInstance().getExternalContext().redirect("editenquiry.xhtml");
         } catch (IOException e) {
             e.printStackTrace();
@@ -719,7 +739,12 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
     public String save() {
         EnquiryVO responseVO = null;
         try {
-
+        	boolean validDataForEndt = validationsForEndtFlow();
+        	if(!validDataForEndt){
+        		// raise exception since we have invalid data for endorsement flow, hence cannot proceed further
+        		FacesContext.getCurrentInstance().addMessage("ERROR_ENQUIRY_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid data for endorsements, please check if policy number is blank or invalid", null));
+        		return CommonConstants.RETURNING_EXCEPTION;
+        	}
             ContactVO enquiryContact = new ContactVO();
             if (!Utils.isEmpty(this.enquiryVO.getEnquiryContact())) {
                 enquiryContact.setContactId(this.enquiryVO.getEnquiryContact().getContactId());
@@ -741,7 +766,7 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
             enquiryContact.setFaxNo(this.faxNum);
 
             this.enquiryVO.setEnquiryContact(enquiryContact);
-            this.policyVO.setPolicyNo(this.policyNum);
+            //this.policyVO.setPolicyNo(this.policyNum);
             responseVO =
                 (EnquiryVO) ServiceTaskExecutor.INSTANCE.executeSvc("customerEnquirySvc",
                     "createCustomerEnquiry", this.enquiryVO);
@@ -753,7 +778,7 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
                         "ERROR_ENQUIRY_SAVE",
                         new FacesMessage(FacesMessage.SEVERITY_ERROR,
                             "Unexpected error encountered", null));
-            return null;
+            return CommonConstants.RETURNING_EXCEPTION;
         } catch (SystemException se) {
             logger.error(se, "Exception [" + se
                 + "] encountered while saving customer/enquiry details");
@@ -761,7 +786,7 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
                 "ERROR_ENQUIRY_SAVE",
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
                     "Unexpected error encountered, please try again after sometime"));
-            return null;
+            return CommonConstants.RETURNING_EXCEPTION;
         }
         logger.info("Customer and enquiry details saved successfully");
         this.enquiryVO = responseVO;
@@ -778,7 +803,10 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
      */
     public String next() {
         //perform save operation first on click of next button
-        save();
+        String saveResult = save();
+        if(!Utils.isEmpty(saveResult) && saveResult.equals(CommonConstants.RETURNING_EXCEPTION)){
+        	return null;
+        }
         //next check if quote slip mb is already available in session if so then invoke retrieveInsuredQuoteDetails method
         //on the bean
         QuoteSlipMB quoteSlipMB = (QuoteSlipMB)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(AppConstants.BEAN_NAME_QUOTE_SLIP_PAGE);
@@ -808,7 +836,40 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
 	}
 	
 	public void valueChangeEventForCustName(AjaxBehaviorEvent ajaxBehaviorEvent){
-		System.out.println("valueChangeEvent-->"+ajaxBehaviorEvent);
 		this.enquiryVO.setCustomerDetails(this.customerVO);
+	}
+	
+	//Method which returns false in case flow is an endorsement flow and policy number entered is blank or 
+	//invalid
+	private boolean validationsForEndtFlow(){
+		boolean validData = true;
+		if(this.enquiryVO.getType().getEnquiryType().equals(CommonConstants.ENQUIRY_TYPE_ENDORSEMENT)){
+			if(Utils.isEmpty(this.policyVO.getPolicyNo())){
+				validData = false;
+				return validData;
+			}
+			
+			//if policy no is entered validate if the policy number is valid
+			PolicyVO serviceCallResult = (PolicyVO) ServiceTaskExecutor.INSTANCE.executeSvc("policySvc", "getPolicy", this.policyVO);
+			
+			if(Utils.isEmpty(serviceCallResult)){
+				validData = false;
+				return validData;
+			}
+			Map<InsCompanyVO, QuoteDetailVO>  mapOfQuoteDets = serviceCallResult.getQuoteDetails();
+			Set<InsCompanyVO> setOfInsCompanies = mapOfQuoteDets.keySet();
+            Iterator<InsCompanyVO> iterator = setOfInsCompanies.iterator();
+            InsCompanyVO insCompanyVO = null;
+            while(iterator.hasNext()){
+                insCompanyVO = iterator.next();
+            }
+            QuoteDetailVO quoteDetVO = mapOfQuoteDets.get(insCompanyVO);
+            
+			//update quoteslip id retrieved to instance QuoteSlipId
+			this.setQuoteSlipId(quoteDetVO.getQuoteSlipId());
+			this.policyVO = serviceCallResult;
+			this.enquiryVO.setInsuredDetails(this.policyVO.getInsuredDetails());
+		}
+		return validData;
 	}
 }

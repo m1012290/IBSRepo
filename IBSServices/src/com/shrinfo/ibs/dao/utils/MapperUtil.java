@@ -656,6 +656,7 @@ public class MapperUtil {
         enquiryVO.setEnquiryNo(ibsUwTransactionHeader.getEnquiryNo());
         policyVO.setEnquiryDetails(enquiryVO);
         // set insured details
+        
         InsuredVO insuredVO = new InsuredVO();
         insuredVO.setId(ibsUwTransactionHeader.getInsuredId());
         insuredVO.setName(ibsUwTransactionHeader.getInsuredName());
@@ -701,7 +702,7 @@ public class MapperUtil {
             insCompanyVO = new InsCompanyVO();
             insCompanyVO.setCode(ibsInsCmpnyQuoteDetailsEntry.getKey());
             quoteDetailVO = new QuoteDetailVO();
-
+            
             // Populate product UW fields and some more fields which exists only
             // in UE transaction details table
             populatePolicyDetailVO(quoteDetailVO, ibsInsCmpnyQuoteDetailsEntry.getValue());
@@ -712,7 +713,7 @@ public class MapperUtil {
             ProductVO productVO = new ProductVO();
             populateProductVO(productVO, ibsUwTransactionHeader.getIbsProductMaster());
             quoteDetailVO.setProductDetails(productVO);
-
+            quoteDetailVO.setQuoteSlipId(ibsUwTransactionHeader.getIbsQuoteSlipHeader().getId().getId());
             insCmpnyPolicyDetails.put(insCompanyVO, quoteDetailVO);
 
             // populate the values from detail table in policyVO

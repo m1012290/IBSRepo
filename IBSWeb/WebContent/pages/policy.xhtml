@@ -46,41 +46,42 @@
 						            <p:calendar id="quoteSlipDate" readonly="true" disabled="true" pattern="dd/MM/yyyy" value="#{policyMB.quoteDetailVO.quoteSlipDate}" required="false"/> 
 						            						    
 						            <p:outputLabel for="policyNum" value="Policy Number" />  
-						            <p:inputText id="policyNum" value="#{policyMB.policyVO.policyNo}" required="true" />  
+						            <p:inputText id="policyNum" value="#{policyMB.policyDetails.policyNo}" required="true" disabled="#{policyMB.endorsementFlow}"/>  
 						            
-						             <p:outputLabel for="policyID" value="Policy ID" />  
-						            <p:inputText id="policyID" value="#{policyMB.policyVO.policyId}" readonly="true"  required="false" />   			            
+						            <p:outputLabel for="policyID" value="Policy ID" />  
+						            <p:inputText id="policyID" value="#{policyMB.policyDetails.policyId}" disabled="true"  required="false" />   			            
 						       
+						       		<p:outputLabel for="policyversion" value="Policy Version" />
+						       		<p:inputText id="policyversion" value="#{policyMB.policyDetails.policyVersion}" disabled="true"  required="false" />
 			       				</h:panelGrid>
 					   </p:panel>
 					   <p:panel id="panelPremium" header="Premium Details" style="margin-bottom:10px;"> 
 				       			 <h:panelGrid columns="2">  
 				       			 
 				       			 	<p:outputLabel for="premium" value="Premium" />  
-						            <p:inputText id="premium" value="#{policyMB.policyVO.premiumDetails.premium}" required="true" requiredMessage="Please enter a value for premium"> 
+						            <p:inputText id="premium" value="#{policyMB.policyDetails.premiumDetails.premium}" required="true" requiredMessage="Please enter a value for premium"> 
 						            	<p:ajax event="blur" update="totalPremium" listener="#{policyMB.calculatePremiumBasedOnPremiumChange}" process="discountPercentage,loadingpercentage,premium" partialSubmit="true"/> 
 						         	</p:inputText>
 						      			
 						       		<p:outputLabel for="discountPercentage" value="Discount Percentage" />  
-						            <p:inputText id="discountPercentage" value="#{policyMB.policyVO.premiumDetails.discountPercentage}" required="false">  
+						            <p:inputText id="discountPercentage" value="#{policyMB.policyDetails.premiumDetails.discountPercentage}" required="false">  
 						         		<p:ajax event="blur" update="totalPremium,loadingpercentage" listener="#{policyMB.calculatePremiumBasedOnDiscPercentage}" process="discountPercentage,loadingpercentage,premium" partialSubmit="true"/> 
 						         	</p:inputText> 
 						            
 						            <p:outputLabel for="loadingpercentage" value="Loading Percentage" />  
-            						<p:inputText id="loadingpercentage" value="#{policyMB.policyVO.premiumDetails.loadingPercentage}">
+            						<p:inputText id="loadingpercentage" value="#{policyMB.policyDetails.premiumDetails.loadingPercentage}">
             							<p:ajax event="blur" update="totalPremium,discountPercentage"  listener="#{policyMB.calculatePremiumBasedOnLoadPercentage}" process="loadingpercentage,discountPercentage,premium" partialSubmit="true" /> 
             						</p:inputText>
             						
                 						
             						<p:outputLabel for="totalPremium" value="Total Premium" />  
-            						<p:inputText id="totalPremium" value="#{policyMB.policyVO.premiumDetails.totalPremium}"  readonly="true"/>
+            						<p:inputText id="totalPremium" value="#{policyMB.policyDetails.premiumDetails.totalPremium}"  readonly="true"/>
             						
             						<p:outputLabel for="policyEffectiveDate" value="Policy Effective Date" />  
-            						<p:calendar id="policyEffectiveDate" value="#{policyMB.policyVO.policyEffectiveDate}" pattern="dd/MM/yyyy" readonlyInput="true" required="true" navigator="true"/>
+            						<p:calendar id="policyEffectiveDate" value="#{policyMB.policyDetails.policyEffectiveDate}" pattern="dd/MM/yyyy" readonlyInput="true" required="true" navigator="true" disabled="#{policyMB.endorsementFlow}"/>
             						
             						<p:outputLabel for="policyExpiryDate" value="Policy Expiry Date" />  
-            						<p:calendar id="policyExpiryDate" value="#{policyMB.policyVO.policyExpiryDate}" pattern="dd/MM/yyyy" readonlyInput="true" required="true" navigator="true"/>
-            						
+            						<p:calendar id="policyExpiryDate" value="#{policyMB.policyDetails.policyExpiryDate}" pattern="dd/MM/yyyy" readonlyInput="true" required="true" navigator="true" disabled="#{policyMB.endorsementFlow}"/>
 			       				</h:panelGrid>
 					   </p:panel>
 					   

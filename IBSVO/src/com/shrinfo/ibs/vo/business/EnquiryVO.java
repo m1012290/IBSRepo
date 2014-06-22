@@ -17,7 +17,9 @@ public class EnquiryVO extends BaseVO {
     private EnquiryType type;
 
     private CustomerVO customerDetails=new CustomerVO();
-
+   
+    private InsuredVO insuredDetails = new InsuredVO();
+    
     private ContactVO enquiryContact;
 
     private Date recievedDate;
@@ -60,7 +62,17 @@ public class EnquiryVO extends BaseVO {
     }
 
 
-    public ContactVO getEnquiryContact() {
+    public InsuredVO getInsuredDetails() {
+		return insuredDetails;
+	}
+
+
+	public void setInsuredDetails(InsuredVO insuredDetails) {
+		this.insuredDetails = insuredDetails;
+	}
+
+
+	public ContactVO getEnquiryContact() {
         return enquiryContact;
     }
 

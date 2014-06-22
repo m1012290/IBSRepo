@@ -46,5 +46,12 @@
             </key>
             <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsClaims" />
         </set>
+               <set name="ibsCustomerEnquiries" table="IBS_CUSTOMER_ENQUIRY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="INSURED_ID" precision="22" scale="0" />
+            </key>
+            <one-to-many class="com.shrinfo.ibs.gen.pojo.IbsCustomerEnquiry" />
+        </set>
+        
     </class>
 </hibernate-mapping>

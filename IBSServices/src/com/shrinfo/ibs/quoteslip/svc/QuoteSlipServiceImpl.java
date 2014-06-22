@@ -6,11 +6,13 @@ import com.shrinfo.ibs.base.service.BaseService;
 import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.cmn.vo.BaseVO;
 import com.shrinfo.ibs.document.dao.DocumentDao;
+import com.shrinfo.ibs.enquiry.dao.EnquiryDao;
 import com.shrinfo.ibs.insured.dao.InsuredDao;
 import com.shrinfo.ibs.quoteslip.dao.QuoteSlipDao;
 import com.shrinfo.ibs.vo.business.ContactVO;
 import com.shrinfo.ibs.vo.business.DocumentListVO;
 import com.shrinfo.ibs.vo.business.DocumentVO;
+import com.shrinfo.ibs.vo.business.EnquiryVO;
 import com.shrinfo.ibs.vo.business.InsuredVO;
 import com.shrinfo.ibs.vo.business.PolicyVO;
 import com.shrinfo.ibs.vo.business.QuoteDetailVO;
@@ -24,6 +26,8 @@ public class QuoteSlipServiceImpl extends BaseService implements QuoteSlipServic
     InsuredDao insuredDao;
     
     DocumentDao documentDao;
+    
+    EnquiryDao enquiryDao;
 
     @Override
     public Object invokeMethod(String methodName, Object... args) {
@@ -66,15 +70,19 @@ public class QuoteSlipServiceImpl extends BaseService implements QuoteSlipServic
     @Override
     public BaseVO createQuoteSlip(BaseVO baseVO) {
         PolicyVO policyVO = (PolicyVO) baseVO;
+        EnquiryVO enquiryDetails = policyVO.getEnquiryDetails();
         InsuredVO insuredVO =
             (InsuredVO) insuredDao.createInsuredDetails(policyVO.getInsuredDetails());
         policyVO.setInsuredDetails(insuredVO);
         policyVO = (PolicyVO) quoteSlipDao.createQuoteSlip(baseVO);
-        
+        policyVO.setEnquiryDetails(enquiryDetails);
+        policyVO.getEnquiryDetails().setInsuredDetails(insuredVO);
+        policyVO.getEnquiryDetails().setCustomerDetails(insuredVO.getCustomerDetails());
+        EnquiryVO enquiryVO = (EnquiryVO) enquiryDao.createEnquiry(policyVO.getEnquiryDetails());
+        policyVO.setEnquiryDetails(enquiryVO);
         DocumentListVO documentListVO = policyVO.getDocListUploaded();
         
-        // populate policy related details in document list.    
-
+        // populate policy related details in document list.
         if(!Utils.isEmpty(documentListVO) && !Utils.isEmpty(documentListVO.getDocumentVOs())) {
             for(DocumentVO document : documentListVO.getDocumentVOs()){
                 document.setDocSlipId(policyVO.getPolicyId());
@@ -116,7 +124,9 @@ public class QuoteSlipServiceImpl extends BaseService implements QuoteSlipServic
         this.documentDao = documentDao;
     }
 
-
+    public void setEnquiryDao(EnquiryDao enquiryDao){
+    	this.enquiryDao = enquiryDao;
+    }
 
     @Override
     public BaseVO createQuoteSlipFile(QuoteDetailVO quoteDetails, InsuredVO insuredDetails,

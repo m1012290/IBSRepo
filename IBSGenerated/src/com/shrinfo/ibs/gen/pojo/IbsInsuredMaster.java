@@ -36,6 +36,8 @@ public class IbsInsuredMaster implements java.io.Serializable {
     private Date recUpdDate;
 
     private Set<IbsClaims> ibsClaimses = new HashSet<IbsClaims>(0);
+    
+	private Set<IbsCustomerEnquiry> ibsCustomerEnquiries = new HashSet<IbsCustomerEnquiry>(0);
 
     public IbsInsuredMaster() {}
 
@@ -44,23 +46,26 @@ public class IbsInsuredMaster implements java.io.Serializable {
         this.id = id;
     }
 
-    public IbsInsuredMaster(Long id, IbsCustomer ibsCustomer, IbsContact ibsContact,
-            String salutation, String name, String source, String salesExecutive,
-            Long recCreUserId, Date recCreDate, Long recUpdUserId, Date recUpdDate,
-            Set<IbsClaims> ibsClaimses) {
-        this.id = id;
-        this.ibsCustomer = ibsCustomer;
-        this.ibsContact = ibsContact;
-        this.salutation = salutation;
-        this.name = name;
-        this.source = source;
-        this.salesExecutive = salesExecutive;
-        this.recCreUserId = recCreUserId;
-        this.recCreDate = recCreDate;
-        this.recUpdUserId = recUpdUserId;
-        this.recUpdDate = recUpdDate;
-        this.ibsClaimses = ibsClaimses;
-    }
+	public IbsInsuredMaster(Long id, IbsCustomer ibsCustomer,
+			IbsContact ibsContact, String salutation, String name,
+			String source, String salesExecutive, Long recCreUserId,
+			Date recCreDate, Long recUpdUserId, Date recUpdDate,
+			Set<IbsClaims> ibsClaimses,
+			Set<IbsCustomerEnquiry> ibsCustomerEnquiries) {
+		this.id = id;
+		this.ibsCustomer = ibsCustomer;
+		this.ibsContact = ibsContact;
+		this.salutation = salutation;
+		this.name = name;
+		this.source = source;
+		this.salesExecutive = salesExecutive;
+		this.recCreUserId = recCreUserId;
+		this.recCreDate = recCreDate;
+		this.recUpdUserId = recUpdUserId;
+		this.recUpdDate = recUpdDate;
+		this.ibsClaimses = ibsClaimses;
+		this.ibsCustomerEnquiries = ibsCustomerEnquiries;
+	}
 
     public Long getId() {
         return this.id;
@@ -158,7 +163,14 @@ public class IbsInsuredMaster implements java.io.Serializable {
         this.ibsClaimses = ibsClaimses;
     }
 
+    public Set<IbsCustomerEnquiry> getIbsCustomerEnquiries() {
+		return this.ibsCustomerEnquiries;
+	}
 
+	public void setIbsCustomerEnquiries(
+			Set<IbsCustomerEnquiry> ibsCustomerEnquiries) {
+		this.ibsCustomerEnquiries = ibsCustomerEnquiries;
+	}
 
 
 }

@@ -1,16 +1,24 @@
 package com.shrinfo.ibs.enquiry.dao;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.smartcardio.CommandAPDU;
+
 import org.hibernate.HibernateException;
 
 import com.shrinfo.ibs.base.dao.BaseDBDAO;
+import com.shrinfo.ibs.cmn.constants.CommonConstants;
 import com.shrinfo.ibs.cmn.exception.BusinessException;
 import com.shrinfo.ibs.cmn.exception.SystemException;
+import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.cmn.vo.BaseVO;
 import com.shrinfo.ibs.dao.utils.DAOUtils;
 import com.shrinfo.ibs.dao.utils.MapperUtil;
 import com.shrinfo.ibs.gen.pojo.IbsContact;
 import com.shrinfo.ibs.gen.pojo.IbsCustomer;
 import com.shrinfo.ibs.gen.pojo.IbsCustomerEnquiry;
+import com.shrinfo.ibs.gen.pojo.IbsInsuredMaster;
 import com.shrinfo.ibs.vo.app.RecordType;
 import com.shrinfo.ibs.vo.business.EnquiryVO;
 
@@ -70,6 +78,21 @@ public class EnquiryDaoImpl extends BaseDBDAO implements EnquiryDao {
                 (IbsCustomer) getHibernateTemplate().get(IbsCustomer.class,
                     enquiryVO.getCustomerDetails().getCustomerId());
             customerEnquiry.setIbsCustomer(customerFromSession);
+            if(!Utils.isEmpty(enquiryVO.getInsuredDetails().getId()) && !enquiryVO.getType().getEnquiryType().equals(CommonConstants.ENQUIRY_TYPE_ENDORSEMENT)){
+            	ibsContactForEnquiry = (IbsContact) getHibernateTemplate().get(IbsContact.class,
+                        enquiryVO.getEnquiryContact().getContactId());
+            	IbsCustomerEnquiry enquiryObjectFromSession = (IbsCustomerEnquiry)((ibsContactForEnquiry.getIbsCustomerEnquiries().toArray())[0]);
+            	IbsInsuredMaster insuredFromSession = (IbsInsuredMaster) getHibernateTemplate().get(IbsInsuredMaster.class,
+                enquiryVO.getInsuredDetails().getId());
+            	enquiryObjectFromSession.setIbsInsuredMaster(insuredFromSession);
+            }
+            if(!Utils.isEmpty(enquiryVO.getInsuredDetails().getId())){
+            	IbsInsuredMaster insuredFromSession = (IbsInsuredMaster) getHibernateTemplate().get(IbsInsuredMaster.class,
+                        enquiryVO.getInsuredDetails().getId());
+                IbsCustomerEnquiry ibsEnquiry =
+                    (IbsCustomerEnquiry) ((ibsContactForEnquiry.getIbsCustomerEnquiries().toArray())[0]);
+                ibsEnquiry.setIbsInsuredMaster(insuredFromSession);
+            }
             saveOrUpdate(ibsContactForEnquiry);
 
             IbsCustomerEnquiry ibsEnquiry =

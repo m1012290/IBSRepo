@@ -1,6 +1,7 @@
 package com.shrinfo.ibs.mb;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,6 +28,7 @@ import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.shrinfo.ibs.cmn.constants.CommonConstants;
 import com.shrinfo.ibs.cmn.exception.BusinessException;
 import com.shrinfo.ibs.cmn.exception.SystemException;
 import com.shrinfo.ibs.cmn.logger.Logger;
@@ -310,6 +312,7 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
             }            
             documentListVO.setDocumentVOs(docVOList);
             policyVO.setDocListUploaded(documentListVO);
+            policyVO.setEnquiryDetails(editCustEnqDetailsMB.getEnquiryVO());
             policyVO=(PolicyVO) ServiceTaskExecutor.INSTANCE.executeSvc("quoteSlipSvc","createQuoteSlip",policyVO);
             this.policyVO = policyVO;
             Set<Entry<InsCompanyVO, QuoteDetailVO>> quouEntries = policyVO.getQuoteDetails().entrySet();
@@ -386,11 +389,11 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
 
         // Fetch editcustenqdetailsMB from Session in order to retain search results required
         // for loading screens
+    	FacesContext fc = FacesContext.getCurrentInstance();
+        Map beansMap=fc.getExternalContext().getSessionMap();
+        EditCustEnqDetailsMB editCustEnqDetailsMB=(EditCustEnqDetailsMB) beansMap.get("editCustEnqDetailsMB");
+        LoginMB loginManageBean = (LoginMB) beansMap.get(AppConstants.BEAN_NAME_LOGIN_PAGE);
         try{
-            FacesContext fc = FacesContext.getCurrentInstance();
-            Map beansMap=fc.getExternalContext().getSessionMap();
-            EditCustEnqDetailsMB editCustEnqDetailsMB=(EditCustEnqDetailsMB) beansMap.get("editCustEnqDetailsMB");
-            LoginMB loginManageBean = (LoginMB) beansMap.get(AppConstants.BEAN_NAME_LOGIN_PAGE);
             //populate logged in user id to assigner user field which will be used within referral window
             this.setAssignerUser(loginManageBean.getUserDetails().getUserName());
             if(!Utils.isEmpty(editCustEnqDetailsMB.getQuoteSlipId())){
@@ -469,7 +472,7 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
                     if(3 != this.getTaskVO().getStatusVO().getCode() && quoteSlipSectionCode == this.getTaskVO().getTaskSectionType()
                        && loggedInUser.getUserId().longValue() != this.getTaskVO().getAssigneeUser().getUserId()) {
                         this.setEditVisible(Boolean.TRUE);
-                    }                    
+                    }                
                 }
 
                 
@@ -485,6 +488,20 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
             }
         }catch(Exception ex){
             FacesContext.getCurrentInstance().addMessage("ERROR_INSURED_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Error loading quote details, please try again after sometime"));
+        }
+        
+        if(editCustEnqDetailsMB.getEnquiryVO().getType().getEnquiryType().equals(CommonConstants.ENQUIRY_TYPE_ENDORSEMENT)){
+            //next check if quote slip mb is already available in session if so then invoke retrieveInsuredQuoteDetails method
+            //on the bean
+            QuotationMB quoteMB = (QuotationMB)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(AppConstants.BEAN_NAME_CLOSING_SLIP_PAGE);
+            if(!Utils.isEmpty(quoteMB)){
+                quoteMB.loadQuotationsDetail();
+            }
+        	try {
+				FacesContext.getCurrentInstance().getExternalContext().redirect("closeslip.xhtml");
+			} catch (IOException ioe) {
+				logger.error(ioe, "Exception while redirecting to closeslip.xhtml form during endorsement flow");
+			}
         }
         return "quoteslip";
     }

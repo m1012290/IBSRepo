@@ -13,6 +13,9 @@
         <many-to-one name="ibsCustomer" class="com.shrinfo.ibs.gen.pojo.IbsCustomer" fetch="select" lazy="false">
             <column name="CUSTOMER_ID" precision="22" scale="0" />
         </many-to-one>
+       <many-to-one name="ibsInsuredMaster" class="com.shrinfo.ibs.gen.pojo.IbsInsuredMaster" fetch="select">
+            <column name="INSURED_ID" precision="22" scale="0" />
+        </many-to-one>
         <many-to-one name="ibsProductMaster" class="com.shrinfo.ibs.gen.pojo.IbsProductMaster" fetch="select" lazy="false">
             <column name="PRODUCT_CLASS" precision="22" scale="0" />
         </many-to-one>

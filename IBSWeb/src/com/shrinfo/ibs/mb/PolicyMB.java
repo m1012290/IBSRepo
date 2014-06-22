@@ -16,6 +16,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.UploadedFile;
 
+import com.shrinfo.ibs.cmn.constants.CommonConstants;
 import com.shrinfo.ibs.cmn.logger.Logger;
 import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.cmn.vo.UserVO;
@@ -61,6 +62,7 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
     
     private Boolean screenFreeze = Boolean.FALSE;
 
+    private Boolean endorsementFlow = Boolean.FALSE;
     // This is an important method which is overriden from parent managed bean
     // this is an reinitializer block which includes all the instance fields which are bound to form
     // this method is necessary as managed beans are defined as sessionscoped beans
@@ -73,6 +75,7 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
         this.screenFreeze = Boolean.FALSE;
         this.setEditApproved(Boolean.FALSE);
         this.setNavigationDisbled(Boolean.FALSE);
+        this.setEndorsementFlow(Boolean.FALSE);
         this.setAppFlow(null);
     }
     
@@ -90,13 +93,22 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
         this.quoteDetailVO = quoteDetailVO;
     }
 
-    public PolicyVO getPolicyVO() {
+    public PolicyVO getPolicyDetails() {
+		return policyDetails;
+	}
+
+	public void setPolicyDetails(PolicyVO policyDetails) {
+		this.policyDetails = policyDetails;
+	}
+
+	/*
+	public PolicyVO getPolicyVO() {
         return policyDetails;
     }
 
     public void setPolicyVO(PolicyVO policyVO) {
         this.policyDetails = policyVO;
-    }
+    }*/
 
     public InsuredVO getInsuredDetails() {
         return insuredDetails;
@@ -164,7 +176,15 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
         this.screenFreeze = screenFreeze;
     }
 
-    public void calculatePremiumBasedOnPremiumChange(AjaxBehaviorEvent event) {
+    public Boolean getEndorsementFlow() {
+		return endorsementFlow;
+	}
+
+	public void setEndorsementFlow(Boolean endorsementFlow) {
+		this.endorsementFlow = endorsementFlow;
+	}
+
+	public void calculatePremiumBasedOnPremiumChange(AjaxBehaviorEvent event) {
 
         BigDecimal premium = this.policyDetails.getPremiumDetails().getPremium();
         double premiumDiscount = this.policyDetails.getPremiumDetails().getDiscountPercentage();
@@ -227,7 +247,7 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
     public String save() {
         PolicyVO policyDetailsOP = null;
         try {
-            if(this.getPolicyVO().getPolicyEffectiveDate().getTime() >= this.getPolicyVO().getPolicyExpiryDate().getTime()) {
+            if(this.getPolicyDetails().getPolicyEffectiveDate().getTime() >= this.getPolicyDetails().getPolicyExpiryDate().getTime()) {
                 FacesContext.getCurrentInstance()
                 .addMessage(
                     "ERROR_POLICY_SAVE",
@@ -367,8 +387,19 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
         FacesContext fc = FacesContext.getCurrentInstance();
         Map map=fc.getExternalContext().getSessionMap();
         
-        QuotationMB quotation = (QuotationMB) map.get("quotationMB");
-        QuoteSlipMB quoteSlipMB = (QuoteSlipMB) map.get("quoteSlipMB");
+        QuotationMB quotation = (QuotationMB) map.get(AppConstants.BEAN_NAME_CLOSING_SLIP_PAGE);
+        QuoteSlipMB quoteSlipMB = (QuoteSlipMB) map.get(AppConstants.BEAN_NAME_QUOTE_SLIP_PAGE);
+        EditCustEnqDetailsMB editCustEnqDetailsMB = (EditCustEnqDetailsMB) map.get(AppConstants.BEAN_NAME_ENQUIRY_PAGE);
+        LoginMB loginManageBean = (LoginMB) map.get(AppConstants.BEAN_NAME_LOGIN_PAGE);
+        
+        this.setEndorsementFlow(editCustEnqDetailsMB.getEnquiryVO().getType().getEnquiryType().equals(CommonConstants.ENQUIRY_TYPE_ENDORSEMENT)?Boolean.TRUE:Boolean.FALSE);
+        this.policyDetails = quotation.getPolicyDetails();
+        
+        if(editCustEnqDetailsMB.getEnquiryVO().getType().getEnquiryType().equals(CommonConstants.ENQUIRY_TYPE_ENDORSEMENT)){
+        	//this is in case of new endorsement where in we want to create new record in UW_TXN_HEADER
+        	// and UW_TXN_DETAILS table. Hence we ensure that policy id available
+        	this.policyDetails.setPolicyId(null);
+        }
         this.quoteDetailVO = quotation.getQuoteDetailVOClosed();
         this.quoteDetailVO.setQuoteSlipDate(quoteSlipMB.getQuoteDetailVO().getQuoteSlipDate());
         this.insuredDetails = quotation.getInsuredDetails();
@@ -392,8 +423,7 @@ public class PolicyMB extends BaseManagedBean implements Serializable {
               
         // Referral
         int policySectioncode = Integer.valueOf(Utils.getSingleValueAppConfig("SECTION_ID_POLICY"));
-        EditCustEnqDetailsMB editCustEnqDetailsMB = (EditCustEnqDetailsMB) map.get("editCustEnqDetailsMB");
-        LoginMB loginManageBean = (LoginMB) map.get(AppConstants.BEAN_NAME_LOGIN_PAGE);
+        
         this.setAssignerUser(loginManageBean.getUserDetails().getUserName());
         UserVO loggedInUser = loginManageBean.getUserDetails();
         

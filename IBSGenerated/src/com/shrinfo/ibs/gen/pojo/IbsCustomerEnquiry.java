@@ -14,6 +14,8 @@ public class IbsCustomerEnquiry implements java.io.Serializable {
     private Long enquiryNo;
 
     private IbsCustomer ibsCustomer;
+    
+    private IbsInsuredMaster ibsInsuredMaster;
 
     private IbsProductMaster ibsProductMaster;
 
@@ -45,23 +47,27 @@ public class IbsCustomerEnquiry implements java.io.Serializable {
     }
 
     public IbsCustomerEnquiry(Long enquiryNo, IbsCustomer ibsCustomer,
-            IbsProductMaster ibsProductMaster, IbsContact ibsContact, String type,
-            Date receivedDate, String enquiryDescription, String enquirySubjectmatterExpert,
-            Long recCreUserId, Date recCreDate, Long recUpdUserId, Date recUpdDate, String isActive) {
-        this.enquiryNo = enquiryNo;
-        this.ibsCustomer = ibsCustomer;
-        this.ibsProductMaster = ibsProductMaster;
-        this.ibsContact = ibsContact;
-        this.type = type;
-        this.receivedDate = receivedDate;
-        this.enquiryDescription = enquiryDescription;
-        this.enquirySubjectmatterExpert = enquirySubjectmatterExpert;
-        this.recCreUserId = recCreUserId;
-        this.recCreDate = recCreDate;
-        this.recUpdUserId = recUpdUserId;
-        this.recUpdDate = recUpdDate;
-        this.isActive = isActive;
-    }
+			IbsInsuredMaster ibsInsuredMaster,
+			IbsProductMaster ibsProductMaster, IbsContact ibsContact,
+			String type, Date receivedDate, String enquiryDescription,
+			String enquirySubjectmatterExpert, Long recCreUserId,
+			Date recCreDate, Long recUpdUserId, Date recUpdDate, String isActive) {
+		this.enquiryNo = enquiryNo;
+
+		this.ibsCustomer = ibsCustomer;
+		this.ibsInsuredMaster = ibsInsuredMaster;
+		this.ibsProductMaster = ibsProductMaster;
+		this.ibsContact = ibsContact;
+		this.type = type;
+		this.receivedDate = receivedDate;
+		this.enquiryDescription = enquiryDescription;
+		this.enquirySubjectmatterExpert = enquirySubjectmatterExpert;
+		this.recCreUserId = recCreUserId;
+		this.recCreDate = recCreDate;
+		this.recUpdUserId = recUpdUserId;
+		this.recUpdDate = recUpdDate;
+		this.isActive = isActive;
+	}
 
     public Long getEnquiryNo() {
         return this.enquiryNo;
@@ -78,6 +84,14 @@ public class IbsCustomerEnquiry implements java.io.Serializable {
     public void setIbsCustomer(IbsCustomer ibsCustomer) {
         this.ibsCustomer = ibsCustomer;
     }
+    
+	public IbsInsuredMaster getIbsInsuredMaster() {
+		return this.ibsInsuredMaster;
+	}
+
+	public void setIbsInsuredMaster(IbsInsuredMaster ibsInsuredMaster) {
+		this.ibsInsuredMaster = ibsInsuredMaster;
+	}
 
     public IbsProductMaster getIbsProductMaster() {
         return this.ibsProductMaster;

@@ -288,7 +288,7 @@
 
 						<p:outputLabel for="enqType" value="Enquiry Type" />
 						<p:selectOneMenu id="enqType" style="width:160px;"
-							value="#{editCustEnqDetailsMB.enquiryVO.type}" required="true" requiredMessage="Please select the EnquiryType">
+							value="#{editCustEnqDetailsMB.enquiryVO.type}" required="true" requiredMessage="Please select the EnquiryType" disabled="#{editCustEnqDetailsMB.existingEnquiryFlow}">
 							<f:selectItem itemLabel="Select Enquiry Type" itemValue="" />
 							<f:selectItems value="#{editCustEnqDetailsMB.enquiryTypes}" />
 						</p:selectOneMenu>
@@ -299,9 +299,7 @@
 							readonly="true" required="false" />
 
 						<p:outputLabel for="polNum" value="Policy Number" />
-						<p:inputText id="polNum"
-							value="#{editCustEnqDetailsMB.policyVO.policyNo}" readonly="true"
-							required="false" />
+						<p:inputText id="polNum" value="#{editCustEnqDetailsMB.policyVO.policyNo}" required="false" />
 
 						<p:outputLabel for="Description" value="Description" />
 						<p:inputTextarea rows="6" cols="50" id="Description" validatorMessage="Enquiry Description entered is short, Please Enter the Full Description within 500 characters "
@@ -350,7 +348,7 @@
 					update="messages, panelCustomer, panelEnquiry"  validateClient="true" icon="ui-icon-disk"
 					style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;						
 				
-				<p:commandButton id="nextbtn" value="Next" action="#{editCustEnqDetailsMB.next}" style="float:right:20px;" />
+				<p:commandButton id="nextbtn" value="Next" ajax="false" action="#{editCustEnqDetailsMB.next}" style="float:right:20px;" />
 							
 				<p:blockUI block="referalpanel" widgetVar="bui" blocked="#{editCustEnqDetailsMB.screenFreeze}"/>
 				<p:blockUI block="referalpanel" trigger="savebtn">

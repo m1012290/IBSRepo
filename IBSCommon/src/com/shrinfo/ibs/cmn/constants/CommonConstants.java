@@ -34,4 +34,6 @@ public class CommonConstants {
     public static final String WEB_XML_PARAM_APP_NAME = "appName";
     
     public static final String APP_CONFIG_WEB_INITIALIZERS = "WEB_INITIALIZERS";
+    
+    public static final String RETURNING_EXCEPTION = "EXCEPTION";
 }
