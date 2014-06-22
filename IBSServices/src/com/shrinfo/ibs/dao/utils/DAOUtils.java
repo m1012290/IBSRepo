@@ -919,7 +919,9 @@ public class DAOUtils {
         if(Utils.isEmpty(ibsTask.getId())) {
             java.util.Date date = new java.util.Date();
             ibsTask.setRecCreDate(DateUtil.constructSqlDate(date));
-        }        
+        } else {
+            ibsTask.setRecCreDate(DateUtil.constructSqlDate(taskVO.getCreatedDate()));
+        }
 
         return ibsTask;
     }
