@@ -956,6 +956,13 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
     
     public String back() {
         this.setEditApproved(Boolean.FALSE);
+        FacesContext fc = FacesContext.getCurrentInstance();
+        Map map=fc.getExternalContext().getSessionMap();        
+        
+        EditCustEnqDetailsMB editCustEnqDetailsMB = (EditCustEnqDetailsMB) map.get(AppConstants.BEAN_NAME_ENQUIRY_PAGE);
+        if(editCustEnqDetailsMB.getEnquiryVO().getType().getEnquiryType().equals(CommonConstants.ENQUIRY_TYPE_ENDORSEMENT)){
+        	return "editenquiry";
+        }
         return "quoteslip";
     }
     
