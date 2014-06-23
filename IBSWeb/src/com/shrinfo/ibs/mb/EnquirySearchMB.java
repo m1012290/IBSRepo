@@ -1,25 +1,16 @@
 package com.shrinfo.ibs.mb;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
-import org.primefaces.event.SelectEvent;
-
 import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
-import com.shrinfo.ibs.util.AppConstants;
-import com.shrinfo.ibs.vo.business.IBSUserVO;
 import com.shrinfo.ibs.vo.business.SearchItemVO;
 import com.shrinfo.ibs.vo.business.SearchVO;
-import com.shrinfo.ibs.vo.business.StatusVO;
-import com.shrinfo.ibs.vo.business.TaskVO;
 
 @ManagedBean(name = "enquirySearchMB")
 @SessionScoped
@@ -50,11 +41,6 @@ public class EnquirySearchMB extends BaseManagedBean implements Serializable {
 
     private SearchItemVODataModel searchItemVODataModel;
     
-    private TaskVO referralTask = new TaskVO();
-    
-    private TaskVO customTask = new TaskVO();
-    
-    private TaskVO selectedCustomTask = new TaskVO();
 
     //This is an important method which is overriden from parent managed bean
     // this is an reinitializer block which includes all the instance fields which are bound to form
@@ -70,9 +56,6 @@ public class EnquirySearchMB extends BaseManagedBean implements Serializable {
         this.searchList = null;
         this.searchItem = null;
         this.searchItemVODataModel = null;
-        this.referralTask = new TaskVO();
-        this.customTask = new TaskVO();
-        this.customTask.setAssigneeUser(new IBSUserVO());
     }
 
 
@@ -192,82 +175,7 @@ public class EnquirySearchMB extends BaseManagedBean implements Serializable {
 
     public void setSearchItemVODataModel(SearchItemVODataModel searchItemVODataModel) {
         this.searchItemVODataModel = searchItemVODataModel;
-    }
-
-
-    /**
-     * @return the referralTask
-     */
-    public TaskVO getReferralTask() {
-        return referralTask;
-    }
-
-
-    /**
-     * @param referralTask the referralTask to set
-     */
-    public void setReferralTask(TaskVO referralTask) {
-        this.referralTask = referralTask;
     }    
-
-
-    
-    /**
-     * @return the customTask
-     */
-    public TaskVO getCustomTask() {
-        return customTask;
-    }
-
-
-    
-    /**
-     * @param customTask the customTask to set
-     */
-    public void setCustomTask(TaskVO customTask) {
-        this.customTask = customTask;
-    }
-
-
-    
-    /**
-     * @return the selectedCustomTask
-     */
-    public TaskVO getSelectedCustomTask() {
-        return selectedCustomTask;
-    }
-
-
-    
-    /**
-     * @param selectedCustomTask the selectedCustomTask to set
-     */
-    public void setSelectedCustomTask(TaskVO selectedCustomTask) {
-        this.selectedCustomTask = selectedCustomTask;
-    }
-    
-    public void onCustomTaskSelect(SelectEvent event) {
-        TaskVO selectedTask = (TaskVO) event.getObject();
-        IBSUserVO assigneeUser = new IBSUserVO();
-        assigneeUser.setUserId(selectedTask.getAssigneeUser().getUserId());                
-        this.customTask.setAssigneeUser(assigneeUser);
-        IBSUserVO assignerUser = new IBSUserVO();
-        assignerUser.setUserId(selectedTask.getAssignerUser().getUserId());
-        this.customTask.setAssignerUser(assignerUser);
-        this.customTask.setDesc(selectedTask.getDesc());
-        this.customTask.setDueDate(selectedTask.getDueDate());
-        this.customTask.setId(selectedTask.getId());
-        this.customTask.setPriority(selectedTask.getPriority());
-        StatusVO statusVO = new StatusVO();
-        statusVO.setCode(selectedTask.getStatusVO().getCode());
-        this.customTask.setStatusVO(statusVO);
-        this.customTask.setTaskSectionType(selectedTask.getTaskSectionType());
-        this.customTask.setTaskType(selectedTask.getTaskType());
-    }
-    
-    public void onTaskPanelHide() {
-        this.customTask = new TaskVO();
-    }
 
 
     public String submit() {
@@ -297,51 +205,8 @@ public class EnquirySearchMB extends BaseManagedBean implements Serializable {
         searchItemVODataModel = new SearchItemVODataModel(searchList);
 
         return null;
-    }
-    
-    public String saveCustomTask() {
-        
-        try {
-            Map map=FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
-            
-            LoginMB loginMB = (LoginMB)map.get(AppConstants.BEAN_NAME_LOGIN_PAGE);
-            
-            Boolean validFields = Boolean.TRUE;
-            //validate the task fields
-            if(Utils.isEmpty(this.customTask.getDesc())){
-                validFields = false;
-                FacesContext.getCurrentInstance().addMessage("TASK_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Referral Desc cannot be blank", null));
-            }
-            if(Utils.isEmpty(this.customTask.getAssigneeUser().getUserId()) && 0 == this.customTask.getAssigneeUser().getUserId()){
-                validFields = false;
-                FacesContext.getCurrentInstance().addMessage("TASK_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Please select a user as assignee", null));
-            }
-            Date currenDate = new Date();
-            if(Utils.isEmpty(this.customTask.getDueDate()) || currenDate.getTime() > this.customTask.getDueDate().getTime()) {
-                validFields = false;
-                FacesContext.getCurrentInstance().addMessage("TASK_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Please select Valid Due date", null));
-            }
-            
-            if(!validFields) {
-                return null;
-            }        
-            
-            //construct TaskVO to save referral desc
-            //StatusVO statusVO = new StatusVO();
-            //statusVO.setCode(Integer.valueOf(Utils.getSingleValueAppConfig("STATUS_ACTIVE")));//task status
-            //statusVO.setDesc("Referred");
-            //this.customTask.setStatusVO(statusVO);
-            this.customTask.setAssignerUser(loginMB.getUserDetails());
-            this.customTask.setTaskType(Integer.valueOf(Utils.getSingleValueAppConfig("TASK_TYPE_CUSTOM")));
-            //this.customTask.setTaskSectionType(Integer.valueOf(Utils.getSingleValueAppConfig("SECTION_ID_QUOTESLIP")));
-            this.saveReferralTask(this.customTask);//perform referral save task
-            return super.saveReferralTask();
-        }catch(Exception e) {
-            FacesContext.getCurrentInstance().addMessage("TASK_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Error creating custom task", null));
-            return null;
-        }
-        
-    }
+    }    
+   
 
     public String newEnquiry() {
 

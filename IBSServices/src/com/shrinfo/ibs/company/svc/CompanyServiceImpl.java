@@ -13,7 +13,7 @@ public class CompanyServiceImpl extends BaseService implements CompanyService {
     public Object invokeMethod(String methodName, Object... args) {
         Object returnValue = null;
 
-        if ("getPolicy".equals(methodName)) {
+        if ("getCompany".equals(methodName)) {
             returnValue = getCompany((BaseVO) args[0]);
         }
         if ("createCompany".equals(methodName)) {
@@ -24,7 +24,6 @@ public class CompanyServiceImpl extends BaseService implements CompanyService {
 
     @Override
     public BaseVO getCompany(BaseVO baseVO) {
-        // TODO Auto-generated method stub
         return companyDao.getCompany(baseVO);
     }
 

@@ -1,5 +1,6 @@
 package com.shrinfo.ibs.mb;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +11,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultUploadedFile;
+import org.primefaces.model.UploadedFile;
+
 import com.shrinfo.ibs.cmn.exception.BusinessException;
 import com.shrinfo.ibs.cmn.exception.SystemException;
 import com.shrinfo.ibs.cmn.utils.Utils;
+import com.shrinfo.ibs.dao.utils.IOUtil;
 import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
 import com.shrinfo.ibs.docgen.SendEmail;
 import com.shrinfo.ibs.vo.business.ClaimsVO;
@@ -37,6 +43,12 @@ public class ClaimsMB extends BaseManagedBean implements Serializable {
 
     private ClaimsVO claimsVO = new ClaimsVO();
 
+    private DocumentListVO documentListVO = new DocumentListVO();
+
+    private List<UploadedFile> uploadedFiles = new ArrayList<UploadedFile>();
+
+    private UploadedFile uploadedFile = new DefaultUploadedFile();
+
     // This is an important method which is overriden from parent managed bean
     // this is an reinitializer block which includes all the instance fields which are bound to form
     // this method is necessary as managed beans are defined as sessionscoped beans
@@ -44,6 +56,9 @@ public class ClaimsMB extends BaseManagedBean implements Serializable {
         this.policyVO = new PolicyVO();
         this.claimsVO = new ClaimsVO();
         this.policyNo = "";
+        documentListVO = new DocumentListVO();
+        uploadedFiles = new ArrayList<UploadedFile>();
+        uploadedFile = new DefaultUploadedFile();
     }
 
     public ClaimsMB() {
@@ -51,6 +66,9 @@ public class ClaimsMB extends BaseManagedBean implements Serializable {
         this.policyNo = "";
         this.policyVO = new PolicyVO();
         this.claimsVO = new ClaimsVO();
+        documentListVO = new DocumentListVO();
+        uploadedFiles = new ArrayList<UploadedFile>();
+        uploadedFile = new DefaultUploadedFile();
     }
 
 
@@ -82,6 +100,58 @@ public class ClaimsMB extends BaseManagedBean implements Serializable {
         this.claimsVO = claimsVO;
     }
 
+
+    /**
+     * @return the documentListVO
+     */
+    public DocumentListVO getDocumentListVO() {
+        return documentListVO;
+    }
+
+
+    /**
+     * @param documentListVO the documentListVO to set
+     */
+    public void setDocumentListVO(DocumentListVO documentListVO) {
+        this.documentListVO = documentListVO;
+    }
+
+
+    /**
+     * @return the uploadedFiles
+     */
+    public List<UploadedFile> getUploadedFiles() {
+        return uploadedFiles;
+    }
+
+
+    /**
+     * @param uploadedFiles the uploadedFiles to set
+     */
+    public void setUploadedFiles(List<UploadedFile> uploadedFiles) {
+        this.uploadedFiles = uploadedFiles;
+    }
+
+
+
+    /**
+     * @return the uploadedFile
+     */
+    public UploadedFile getUploadedFile() {
+        return uploadedFile;
+    }
+
+
+    /**
+     * @param uploadedFile the uploadedFile to set
+     */
+    public void setUploadedFile(UploadedFile uploadedFile) {
+        this.uploadedFile = uploadedFile;
+    }
+
+    /**
+     * Search policy and claims entry based on policy number entered (not the policy ID).
+     */
     public void policySearch() {
 
         try {
@@ -97,9 +167,18 @@ public class ClaimsMB extends BaseManagedBean implements Serializable {
                         null));
             }
 
-            this.claimsVO =
-                (ClaimsVO) ServiceTaskExecutor.INSTANCE.executeSvc("claimsSvc", "getclaim",
-                    this.policyVO);
+            if (!Utils.isEmpty(this.policyVO) && !Utils.isEmpty(this.policyVO.getPolicyId())) {
+                this.claimsVO =
+                    (ClaimsVO) ServiceTaskExecutor.INSTANCE.executeSvc("claimsSvc", "getclaim",
+                        this.policyVO);
+                ProductVO productVO =
+                    this.policyVO.getQuoteDetails().entrySet().iterator().next().getValue()
+                            .getProductDetails();
+                this.documentListVO =
+                    (DocumentListVO) ServiceTaskExecutor.INSTANCE.executeSvc("productSvc",
+                        "getProductDocuList", productVO);
+            }
+
 
         } catch (BusinessException be) {
             logger.error(be, "Exception [" + be + "] encountered retreiving policy details");
@@ -119,6 +198,11 @@ public class ClaimsMB extends BaseManagedBean implements Serializable {
     }
 
 
+    /**
+     * Save claim, send documents email, upload documents
+     * 
+     * @return
+     */
     public String submit() {
 
         try {
@@ -147,35 +231,44 @@ public class ClaimsMB extends BaseManagedBean implements Serializable {
             customerVO.setCustomerId(this.policyVO.getQuoteDetails().entrySet().iterator().next()
                     .getValue().getCustomerId());
             this.claimsVO.setCustomerDetails(customerVO);
+
+            // If claims entry for the first time, then send email. Else do not send email.
+            if (Utils.isEmpty(this.claimsVO.getId())) {
+                StringBuffer stringBuffer = new StringBuffer();
+                stringBuffer.append("Dear sir/mam, \n");
+                stringBuffer
+                        .append(" Claim is successfully submitted for your policy. For further processing please submit the below mentiond documents.");
+                if (!Utils.isEmpty(this.documentListVO)
+                    && !Utils.isEmpty(this.documentListVO.getDocumentVOs())) {
+                    for (DocumentVO documentVO : this.documentListVO.getDocumentVOs()) {
+                        stringBuffer.append("Document name:" + documentVO.getName());
+                        stringBuffer.append("| Document format type:" + documentVO.getFormat());
+                        stringBuffer.append("\n");
+                    }
+                }
+
+                stringBuffer.append("Regards, \n Broking company");
+
+                String subject = "Documents to be submitted for claims";
+                String body = stringBuffer.toString();
+                List<String> recipientList = new ArrayList<String>();
+                customerVO =
+                    (CustomerVO) ServiceTaskExecutor.INSTANCE.executeSvc("customerSvc",
+                        "getCustomer", customerVO);
+                recipientList.add(customerVO.getContactAndAddrDets().getEmailId());
+
+                SendEmail.sendEmail(subject, body, null, recipientList);
+            }
+
+            // Save the claims
             this.claimsVO =
                 (ClaimsVO) ServiceTaskExecutor.INSTANCE.executeSvc("claimsSvc", "saveClaim",
                     this.claimsVO);
 
-            ProductVO productVO =
-                this.policyVO.getQuoteDetails().entrySet().iterator().next().getValue()
-                        .getProductDetails();
-            DocumentListVO documentListVO =
-                (DocumentListVO) ServiceTaskExecutor.INSTANCE.executeSvc("productSvc",
-                    "getProductDocuList", productVO);
-            StringBuffer stringBuffer = new StringBuffer();
-            stringBuffer.append("Dear sir/mam, \n");
-            for (DocumentVO documentVO : documentListVO.getDocumentVOs()) {
-                stringBuffer.append("Document name:" + documentVO.getName());
-                stringBuffer.append("Document format type:" + documentVO.getFormat());
-                stringBuffer.append("\n");
-            }
-
-            stringBuffer.append("Regards, \n Broking company");
-
-            String subject = "Documents to be submitted for claims";
-            String body = stringBuffer.toString();
-            List<String> recipientList = new ArrayList<String>();
-            customerVO =
-                (CustomerVO) ServiceTaskExecutor.INSTANCE.executeSvc("customerSvc", "getCustomer",
-                    customerVO);
-            recipientList.add(customerVO.getContactAndAddrDets().getEmailId());
-
-            SendEmail.sendEmail(subject, body, null, recipientList);
+            FacesContext.getCurrentInstance().addMessage(
+                "ERROR_POLICY_SEARCH",
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Claims saved successfully",
+                    "Claims saved successfully"));
 
         } catch (BusinessException be) {
             logger.error(be, "Exception [" + be + "] encountered retreiving policy details");
@@ -188,11 +281,63 @@ public class ClaimsMB extends BaseManagedBean implements Serializable {
             logger.error(se, "Exception [" + se + "] encountered retreiving policy details");
             FacesContext.getCurrentInstance().addMessage(
                 "ERROR_POLICY_SEARCH",
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "encountered retreiving policy details, please try again after sometime",
                     "encountered retreiving policy details, please try again after sometime"));
         }
 
         return null;
+    }
+
+    public void handleFileUpload(FileUploadEvent event) {
+
+        try {
+            
+            if(Utils.isEmpty(this.claimsVO) || Utils.isEmpty(this.claimsVO.getId())) {
+                FacesContext.getCurrentInstance().addMessage(
+                    "ERROR_CLAIMS_UPLOAD",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "Please add claims before uploading documents",
+                        "Please add claims before uploading documents"));
+                return;
+            }
+            
+            DocumentListVO documentListVO = new DocumentListVO();
+            List<DocumentVO> docVOList = new ArrayList<DocumentVO>();
+
+            // Document upload
+            if (!Utils.isEmpty(event.getFile())) {
+                DocumentVO document = new DocumentVO();
+                // document.setEnquiry(this.policyDetails.getEnquiryDetails());
+                document.setDocType("CLAIMS");
+                document.setDocSlipId(this.claimsVO.getId());
+                document.setDocument(IOUtil.getFilaDataAsArray(event.getFile().getInputstream()));
+                docVOList.add(document);
+            }
+            documentListVO.setDocumentVOs(docVOList);
+            
+            ServiceTaskExecutor.INSTANCE.executeSvc("documentSvc", "saveDocumentList",
+                documentListVO);
+            FacesMessage message =
+                    new FacesMessage("Succesful. ", event.getFile().getFileName() + " is uploaded.");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+            
+        } catch (IOException e) {
+            logger.error(e, "Exception [" + e + "] encountered uploading file");
+            FacesContext.getCurrentInstance().addMessage(
+                "ERROR_CLAIMS_UPLOAD",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Encountered error uploading file, please try again after sometime",
+                    "Encountered error uploading file, please try again after sometime"));
+        } catch (Exception e) {
+            logger.error(e, "Exception [" + e + "] encountered uploading file");
+            FacesContext.getCurrentInstance().addMessage(
+                "ERROR_CLAIMS_UPLOAD",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Encountered error uploading file, please try again after sometime",
+                    "Encountered error uploading file, please try again after sometime"));
+        }
+
     }
 
     public void back() {

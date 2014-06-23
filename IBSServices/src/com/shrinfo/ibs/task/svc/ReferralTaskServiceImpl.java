@@ -51,8 +51,9 @@ public class ReferralTaskServiceImpl extends BaseService implements ReferralTask
                     enquiryVO = new EnquiryVO();
                     enquiryVO.setEnquiryNo(task.getEnquiry().getEnquiryNo());
                     task.setEnquiry((EnquiryVO) enquiryDao.getEnquiryDetail(enquiryVO));
+                    task.setDocumentName(task.getEnquiry().getCustomerDetails().getName());
                 }                
-                task.setAssignerUser((UserVO)userDetailsDao.getUserDetails(task.getAssignerUser()));                
+                task.setAssignerUser((UserVO)userDetailsDao.getUserDetails(task.getAssignerUser()));          
             }
         }
         return taskItemsVO;

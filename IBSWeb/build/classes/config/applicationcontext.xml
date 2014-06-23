@@ -68,6 +68,9 @@
         <value>com/shrinfo/ibs/gen/pojo/IbsQuoteComparisionHeader.hbm.xml</value>
 		<value>com/shrinfo/ibs/gen/pojo/IbsUwTransactionHeader.hbm.xml</value>
 		<value>com/shrinfo/ibs/gen/pojo/IbsUwTransactionDetail.hbm.xml</value>
+		<value>com/shrinfo/ibs/gen/pojo/IbsClaims.hbm.xml</value>
+		<value>com/shrinfo/ibs/gen/pojo/IbsProductDocMaster.hbm.xml</value>
+		<value>com/shrinfo/ibs/gen/pojo/IbsTransactionMaster.hbm.xml</value>
 		</list>
 		</property>
 		
@@ -178,6 +181,13 @@
 		<property name="hibernateTemplate" ref="hibernateTemplate" />
 	</bean>
 	
+	<bean id="customerSvc" parent="baseProxyBean">
+		<property name="target" ref="customerSvcBean" />
+	</bean>
+	<bean id="customerSvcBean" class="com.shrinfo.ibs.customer.svc.CustomerServiceImpl">
+		<property name="customerDao" ref="customerSvcDAOBean" />
+	</bean>
+	
 	
 	<bean id="enquirySvc" parent="baseProxyBean">
 		<property name="target" ref="enquirySvcBean" />
@@ -195,6 +205,8 @@
 	<bean id="quoteSlipSvcBean" class="com.shrinfo.ibs.quoteslip.svc.QuoteSlipServiceImpl">
 		<property name="quoteSlipDao" ref="quoteSlipDAOBean" />
 		<property name="insuredDao" ref="insuredDAOBean" />
+		<property name="documentDao" ref="documentSvcDAOBean" />
+		<property name="enquiryDao" ref="enquirySvcDAOBean" />
 	</bean>
 	<bean id="quoteSlipDAOBean" class="com.shrinfo.ibs.quoteslip.dao.QuoteSlipDaoImpl">
 		<property name="hibernateTemplate" ref="hibernateTemplate" />
@@ -281,6 +293,33 @@
 	</bean>
 	<bean id="companySvcDAOBean" class="com.shrinfo.ibs.company.dao.CompanyDaoImpl">
 		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+	
+	<bean id="claimsSvc" parent="baseProxyBean">
+		<property name="target" ref="claimsSvcBean" />
+	</bean>
+	<bean id="claimsSvcBean" class="com.shrinfo.ibs.claims.svc.ClaimsServiceImpl">
+		<property name="claimsDao" ref="claimsSvcDAOBean" />
+	</bean>
+	<bean id="claimsSvcDAOBean" class="com.shrinfo.ibs.claims.dao.ClaimsDaoImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+	
+	<bean id="branchSvc" parent="baseProxyBean">
+		<property name="target" ref="branchSvcBean" />
+	</bean>
+	<bean id="branchSvcBean" class="com.shrinfo.ibs.branchcomp.svc.BranchDetailsSvcImpl">
+		<property name="branchDetailsDao" ref="branchSvcDAOBean" />
+	</bean>
+	<bean id="branchSvcDAOBean" class="com.shrinfo.ibs.branchcomp.dao.BranchDetailsDaoImpl">
+		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+	
+	<bean id="documentSvc" parent="baseProxyBean">
+		<property name="target" ref="documentSvcBean" />
+	</bean>
+	<bean id="documentSvcBean" class="com.shrinfo.ibs.document.svc.DocumentServiceImpl">
+		<property name="documentDao" ref="documentSvcDAOBean" />
 	</bean>
 
 </beans>

@@ -14,7 +14,7 @@
     	
     		<ui:define name="content">    			
     			
-    		<h:form id="form">    				
+    		<h:form id="form" enctype="multipart/form-data" prependId="false">    				
    				<p:messages id="messages" autoUpdate="true" closable="true" />
    				<h2>Policy Search</h2>
    			 
@@ -28,7 +28,7 @@
 			        </h:panelGrid> 
 			    </p:panel>  
 				    
-			 	<p:commandButton id="searchbtn" value="Search" action="#{claimsMB.policySearch()}"  ajax="true"  update="panelPolicy" style="margin-right:20px;" /> 
+			 	<p:commandButton id="searchbtn" value="Search" action="#{claimsMB.policySearch()}"  ajax="true"  update="panelPolicy,panelClaims,documentPanel" style="margin-right:20px;" /> 
 			 			 		 
 			 
     		
@@ -48,7 +48,7 @@
 				</p:panel>  		
     		
 	    		<p:panel id="panelClaims" header="Claims Details" style="margin-bottom:10px;"> 
-	       			 <h:panelGrid columns="4">
+	       			 <h:panelGrid columns="6">
 	   						
 	   						<p:outputLabel for="lossDate" value="Date of Loss" />  
 	   						<p:calendar id="lossDate" value="#{claimsMB.claimsVO.lossDateTime}" pattern="dd/MM/yyyy HH:mm" readonlyInput="true" />
@@ -63,9 +63,22 @@
 	      			</h:panelGrid>
 				</p:panel>
 				
+				<p:panel id="documentPanel" header="Claims Documents" >
+					<p:column headerText="File Upload">
+			           <p:fileUpload value="#{claimsMB.uploadedFile}"  fileUploadListener="#{claimsMB.handleFileUpload}" mode="advanced" />
+			        </p:column>
+					<!-- <p:dataTable id ="taskTable" rowIndexVar="i"  var="doc" value="#{claimsMB.documentListVO.documentVOs}" > 
+	                                      
+	                    <p:column headerText="Document Name">  
+				            <h:outputText value="#{doc.name}" />  
+				        </p:column>	        
+			        
+	    			</p:dataTable> -->
+				</p:panel>
+				
 				<p:commandButton id="claimsbackbtn" value="Back" action="#{claimsMB.back()}" process="@this" style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
 				
-				<p:commandButton id="claimssavebtn" value="Save" action="#{claimsMB.submit()}" style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
+				<p:commandButton id="claimssavebtn" value="Save" action="#{claimsMB.submit()}" ajax="false" style="float:right:20px;" />&nbsp;&nbsp;&nbsp;&nbsp;
     		
 		 		<p:blockUI block="panelPolicy,panelClaims" trigger="claimssavebtn">
 					LOADING<br />  

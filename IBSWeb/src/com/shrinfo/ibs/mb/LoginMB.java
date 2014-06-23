@@ -205,8 +205,12 @@ public class LoginMB extends BaseManagedBean implements Serializable {
                 }
             }
         }       
+        
+        List<TaskVO> taskList = new ArrayList<TaskVO>();
+        taskList.addAll(referralTaskList);
+        taskList.addAll(customTaskList);
             
-        this.taskDataModel = new TaskItemVODataModel(this.referralTaskList);
+        this.taskDataModel = new TaskItemVODataModel(taskList);
         this.customTaskDataModel = new TaskItemVODataModel(this.customTaskList);
     }
     

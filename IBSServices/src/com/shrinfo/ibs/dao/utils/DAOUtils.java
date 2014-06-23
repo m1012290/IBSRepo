@@ -890,9 +890,12 @@ public class DAOUtils {
         if (!Utils.isEmpty(taskVO.getDocument())
             && !Utils.isEmpty(taskVO.getDocument().getDocSlipId())) {
             ibsTask.setDocumentId(taskVO.getDocument().getDocSlipId().toString());
+        } else if (!Utils.isEmpty(taskVO.getDocumentId())) {
+                ibsTask.setDocumentId(taskVO.getDocumentId());
         } else {
             logger.warn("Document can not be null in task. Please check data");
         }
+        ibsTask.setDocName(taskVO.getDocumentName());
         ibsTask.setReferralDesc(taskVO.getDesc());
         if (!Utils.isEmpty(taskVO.getEnquiry())) {
             ibsTask.setEnquiryNo(taskVO.getEnquiry().getEnquiryNo());
@@ -911,6 +914,14 @@ public class DAOUtils {
         
         ibsTask.setPriority(taskVO.getPriority());
         ibsTask.setDueDate(taskVO.getDueDate());
+        
+        // Audit fields
+        if(Utils.isEmpty(ibsTask.getId())) {
+            java.util.Date date = new java.util.Date();
+            ibsTask.setRecCreDate(DateUtil.constructSqlDate(date));
+        } else {
+            ibsTask.setRecCreDate(DateUtil.constructSqlDate(taskVO.getCreatedDate()));
+        }
 
         return ibsTask;
     }

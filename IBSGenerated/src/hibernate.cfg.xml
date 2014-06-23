@@ -40,5 +40,7 @@
         <mapping resource="com/shrinfo/ibs/gen/pojo/IbsClaims.hbm.xml" />
         <mapping resource="com/shrinfo/ibs/gen/pojo/IbsInsuranceCompany.hbm.xml" />
         <mapping resource="com/shrinfo/ibs/gen/pojo/IbsQuoteComparisionHeader.hbm.xml" />
+        <mapping resource="com/shrinfo/ibs/gen/pojo/IbsProductDocMaster.hbm.xml" />
+
     </session-factory>
 </hibernate-configuration>

@@ -18,97 +18,98 @@
     				<p:growl id="growl" showDetail="true"/>
     				<p:messages id="messages" autoUpdate="true" closable="true" /> 
     				
-    				<h2>Pending Referral Tasks</h2>  
+    				<h2>Pending Tasks</h2>  
     			   			
     				<p:dataTable id ="taskTable" var="task" value="#{loginBean.taskDataModel}" paginator="true" rows="5"  
-                 	selection="#{enquirySearchMB.referralTask}" selectionMode="single">  
+                 	selection="#{editCustEnqDetailsMB.referralTask}" selectionMode="single">  
                  
-	                   <p:ajax event="rowSelect" listener="#{editCustEnqDetailsMB.onTaskSelect}"/> 
+	                   <p:ajax event="rowSelect" listener="#{editCustEnqDetailsMB.onTaskSelect}" oncomplete="customPanel.loadContents()" /> 
 	                    
-				        <p:column headerText="Enquiry Number">  
-				            <h:outputText value="#{task.enquiry.enquiryNo}" />  
-				        </p:column> 
+	                    <p:column headerText="Referral description">  
+				            <h:outputText value="#{task.desc}" />  
+				        </p:column>
+				        
+				        <p:column headerText="Assigned by">  
+				            <h:outputText value="#{task.assignerUser.userName}" />  
+				        </p:column>
+				        
+				        <p:column headerText="Assigned On">  
+				            <h:outputText value="#{task.createdDate}" />  
+				        </p:column>
 				        
 				        <p:column headerText="Customer name">  
-				            <h:outputText value="#{task.enquiry.customerDetails.name}" />  
-				        </p:column> 
-				        
-				        <p:column headerText="Customer ID">  
-				            <h:outputText value="#{task.enquiry.customerDetails.customerId}" />  
-				        </p:column> 
-				  
-				        <p:column headerText="Referral description">  
-				            <h:outputText value="#{task.desc}" />  
+				            <h:outputText value="#{task.documentName}" />  
 				        </p:column>
 				        
-				        <p:column headerText="Assigned by">  
-				            <h:outputText value="#{task.assignerUser.userName}" />  
+				        <p:column headerText="Enquiry Number">  
+				            <h:outputText value="#{task.enquiry.enquiryNo}" />  
+				        </p:column>
+				        
+				        <p:column headerText="Task Type">  
+				            <h:outputText value="Referral" rendered="#{task.taskType == 1}"/>  
+				            <h:outputText value="Custom" rendered="#{task.taskType == 2}"/>
 				        </p:column>
 			        
 	    			</p:dataTable> 
-	    			
-	    			<h2>Pending Custom Tasks</h2>  
-    			   			
-    				<p:dataTable id ="custTaskTable" var="task" value="#{loginBean.customTaskDataModel}" paginator="true" rows="5"  
-                 	selection="#{enquirySearchMB.selectedCustomTask}" selectionMode="single">  
-                 	
-                 	<p:ajax event="rowSelect" oncomplete="customPanel.loadContents()" listener="#{enquirySearchMB.onCustomTaskSelect}"/>                 
-	                                      
-				        <p:column headerText="Description">  
-				            <h:outputText value="#{task.desc}" />  
-				        </p:column> 
-				        
-				        <p:column headerText="Due date">  
-				            <h:outputText value="#{task.dueDate}" />  
-				        </p:column> 
-				        
-				        <p:column headerText="priority">  
-				            <h:outputText value="#{task.priority}" />  
-				        </p:column> 
-				  
-				        <p:column headerText="Status">  
-				            <h:outputText value="#{task.statusVO.code}" />  
-				        </p:column>
-				        
-				        <p:column headerText="Assigned by">  
-				            <h:outputText value="#{task.assignerUser.userName}" />  
-				        </p:column>
-			        
-	    			</p:dataTable> 
-	    			
-	    			<p:commandButton onstart="#{enquirySearchMB.onTaskPanelHide()}" onclick="customPanel.show()" oncomplete="customPanel.loadContents()" action="#{enquirySearchMB.onTaskPanelHide()}"  value="Create Custom Task" type="button" />
-				    <p:overlayPanel id="customPanel" widgetVar="customPanel" for="custTaskTable" dynamic="true" >
+	    				    			
+	    			<p:commandButton id="createTask" onclick="customPanel.loadContents();customPanel.show()" action="#{editCustEnqDetailsMB.customTaskReset}" value="Create Custom Task" type="button" />
+				    <p:overlayPanel my="left center" at="left bottom" id="customPanel" widgetVar="customPanel" for="createTask" dynamic="true" rendered="#{editCustEnqDetailsMB.isCustom}">
 				    
-				    <h:panelGrid columns="4">
+				    <h:panelGrid columns="4">	    
 				    
 				    		<p:outputLabel for="assignedBy" value="Assigned By" />  
 						    <p:inputText id="assignedBy" value="#{loginBean.userDetails.userName}" readonly="true"/>
 							
 							<p:outputLabel for="referredto" value="Refer To" />
-							<p:selectOneMenu id="referredto" value="#{enquirySearchMB.customTask.assigneeUser.userId}" >
+							<p:selectOneMenu id="referredto" value="#{editCustEnqDetailsMB.customTask.assigneeUser.userId}" >
 								<f:selectItem itemLabel="---Select User---" itemValue="" />	
-								<f:selectItems value="#{enquirySearchMB.usersList}" />			
+								<f:selectItems value="#{editCustEnqDetailsMB.usersList}" />			
 							</p:selectOneMenu>						
 				    
 				    		<p:outputLabel for="dueDate" value="Due Date" /> 	    		
-							<p:calendar id="dueDate" value="#{enquirySearchMB.customTask.dueDate}" pattern="dd/MM/yyyy" readonlyInput="true"/>
+							<p:calendar id="dueDate" value="#{editCustEnqDetailsMB.customTask.dueDate}" pattern="dd/MM/yyyy" readonlyInput="true"/>
 							
 							<p:outputLabel for="priority" value="Priority" />
-							<p:selectOneMenu id="priority" value="#{enquirySearchMB.customTask.priority}">
-								<f:selectItems value="#{enquirySearchMB.priorityMap}" />
+							<p:selectOneMenu id="priority" value="#{editCustEnqDetailsMB.customTask.priority}">
+								<f:selectItems value="#{editCustEnqDetailsMB.priorityMap}" />
 							</p:selectOneMenu>
 							
 							<p:outputLabel for="referraldesc" value="Referral Description"/>
-							<p:inputTextarea  id="referraldesc" value="#{enquirySearchMB.customTask.desc}" />
+							<p:inputTextarea  id="referraldesc" value="#{editCustEnqDetailsMB.customTask.desc}" />
 							
 							<p:outputLabel for="status" value="Status"/>
-							<p:selectOneMenu id="status" value="#{enquirySearchMB.customTask.statusVO.code}">
-								<f:selectItems value="#{enquirySearchMB.taskStatusMap}" />
+							<p:selectOneMenu id="status" value="#{editCustEnqDetailsMB.customTask.statusVO.code}">
+								<f:selectItems value="#{editCustEnqDetailsMB.taskStatusMap}" />
 							</p:selectOneMenu>
 							
 							
+							
 					</h:panelGrid>
-					<p:commandButton value="Save Task" ajax="false" action="#{enquirySearchMB.saveCustomTask()}" update="messages" style="float:right:20px;" />
+					
+						<p:selectOneRadio id="customRadio" value="#{editCustEnqDetailsMB.customTask.taskSectionType}" layout="custom">
+				            <f:selectItem itemLabel="Customer" itemValue="1" />
+				            <f:selectItem itemLabel="Ins Company" itemValue="2" />
+				        </p:selectOneRadio>
+				 
+				        <h:panelGrid columns="3" cellpadding="5">
+				            <p:radioButton id="opt1" for="customRadio" itemIndex="0" />
+				            <h:outputLabel for="opt1" value="Customer" />
+				            <p:selectOneMenu id="opt1i" value="#{editCustEnqDetailsMB.customerId}" >
+								<f:selectItem itemLabel="---Select Customer---" itemValue="0" />
+								<f:selectItems value="#{editCustEnqDetailsMB.customerMap}" />
+							</p:selectOneMenu>
+				 
+				            <p:radioButton id="opt2" for="customRadio" itemIndex="1" />
+				            <h:outputLabel for="opt2" value="Ins Company" />
+				            <p:selectOneMenu id="opt2i" value="#{editCustEnqDetailsMB.insCompanyId}" >
+								<f:selectItem itemLabel="---Select Ins Company---" itemValue="0" />	
+								<f:selectItems value="#{editCustEnqDetailsMB.insCompanyMap}" />			
+							</p:selectOneMenu>
+				 
+				        </h:panelGrid>
+					
+						
+					<p:commandButton value="Save Task" ajax="false" action="#{editCustEnqDetailsMB.saveCustomTask()}" update="messages" style="float:right:20px;" />
 				    
 				    </p:overlayPanel>
     		
@@ -151,7 +152,8 @@
 				            <p:inputText id="policyNumber" value="#{enquirySearchMB.policyNumber}" 
 				           	required="false" converterMessage="Policy Number should be a Number" >
 							<f:convertNumber integerOnly="true" type="number" for="policyNumber" pattern="###"/>
-							</p:inputText>   
+							</p:inputText>   						
+								
 				            
 				        </h:panelGrid> 
 				    </p:panel>  

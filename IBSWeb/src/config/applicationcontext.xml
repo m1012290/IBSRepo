@@ -181,6 +181,13 @@
 		<property name="hibernateTemplate" ref="hibernateTemplate" />
 	</bean>
 	
+	<bean id="customerSvc" parent="baseProxyBean">
+		<property name="target" ref="customerSvcBean" />
+	</bean>
+	<bean id="customerSvcBean" class="com.shrinfo.ibs.customer.svc.CustomerServiceImpl">
+		<property name="customerDao" ref="customerSvcDAOBean" />
+	</bean>
+	
 	
 	<bean id="enquirySvc" parent="baseProxyBean">
 		<property name="target" ref="enquirySvcBean" />
@@ -306,6 +313,13 @@
 	</bean>
 	<bean id="branchSvcDAOBean" class="com.shrinfo.ibs.branchcomp.dao.BranchDetailsDaoImpl">
 		<property name="hibernateTemplate" ref="hibernateTemplate" />
+	</bean>
+	
+	<bean id="documentSvc" parent="baseProxyBean">
+		<property name="target" ref="documentSvcBean" />
+	</bean>
+	<bean id="documentSvcBean" class="com.shrinfo.ibs.document.svc.DocumentServiceImpl">
+		<property name="documentDao" ref="documentSvcDAOBean" />
 	</bean>
 
 </beans>

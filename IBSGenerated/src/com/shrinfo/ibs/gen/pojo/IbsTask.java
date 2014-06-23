@@ -1,6 +1,6 @@
 package com.shrinfo.ibs.gen.pojo;
 
-// Generated Jun 17, 2014 12:15:10 AM by Hibernate Tools 3.4.0.CR1
+// Generated Jun 21, 2014 12:07:50 AM by Hibernate Tools 3.4.0.CR1
 
 
 import java.sql.Date;
@@ -41,6 +41,8 @@ public class IbsTask implements java.io.Serializable {
 
     private String priority;
 
+    private String docName;
+
     public IbsTask() {}
 
 
@@ -51,7 +53,7 @@ public class IbsTask implements java.io.Serializable {
     public IbsTask(Long id, IbsStatusMaster ibsStatusMaster, Long enquiryNo, String documentId,
             String referralDesc, Long assignorUserId, Long assigneeUserId, Long recCreUserId,
             Date recCreDate, Long recUpdUserId, Date recUpdDate, Long taskType,
-            Long taskSectionType, java.util.Date dueDate, String priority) {
+            Long taskSectionType, java.util.Date dueDate, String priority, String docName) {
         this.id = id;
         this.ibsStatusMaster = ibsStatusMaster;
         this.enquiryNo = enquiryNo;
@@ -67,6 +69,7 @@ public class IbsTask implements java.io.Serializable {
         this.taskSectionType = taskSectionType;
         this.dueDate = dueDate;
         this.priority = priority;
+        this.docName = docName;
     }
 
     public Long getId() {
@@ -187,6 +190,14 @@ public class IbsTask implements java.io.Serializable {
 
     public void setPriority(String priority) {
         this.priority = priority;
+    }
+
+    public String getDocName() {
+        return this.docName;
+    }
+
+    public void setDocName(String docName) {
+        this.docName = docName;
     }
 
 
