@@ -57,6 +57,49 @@ public class ProductMB extends BaseManagedBean implements java.io.Serializable{
         //productUWFieldVO.setFieldLength(this.productUWDetails.getFieldLength());
         productUWFieldVO.setFieldLength(this.fieldLength);
         productUWFieldVO.setFieldValueType(this.productUWDetails.getFieldValueType());
+        
+        //perform validations for product data entry form
+        /*
+         *  <p:outputLabel for="srlno" value="SRL No" />
+					
+					<p:inputText id="srlno" value="#{productMB.fieldSrlNo}" requiredMessage="Please enter srl no for the field" converterMessage="Alphabets are not allowed for Srl No field">
+						<f:convertNumber  integerOnly="true" type="number" for="srlno" pattern="###"/>
+					</p:inputText>
+					
+					<p:outputLabel for="fieldname" value="Field Name" />
+				    <p:inputText  id="fieldname" value="#{productMB.productUWDetails.fieldName}" required="true" requiredMessage="Please enter name for the field" />
+                  
+                    <p:outputLabel for="fieldtype" value="Field Type" />
+                    <p:selectOneMenu id="fieldtype" value="#{productMB.productUWDetails.fieldType}" required="true" requiredMessage="Please select field type for the field">  
+	            		<f:selectItem itemLabel="Select Category" itemValue="" />  
+	            		<f:selectItem itemLabel="Textbox" itemValue="textbox"/>
+	            		<f:selectItem itemLabel="Datepicker" itemValue="datepicker"/>
+	        		</p:selectOneMenu>
+	        		 
+	        		<p:outputLabel for="fieldvaluetype" value="Field Value Type" />
+                    <p:selectOneMenu id="fieldvaluetype" value="#{productMB.productUWDetails.fieldValueType}" required="true" requiredMessage="Please select field value type for the field">
+						<f:selectItem itemLabel="Select Category" itemValue="" />
+						<f:selectItems value="#{productMB.uwFieldValueTypes}" />
+	        		</p:selectOneMenu>
+	        		
+         */
+        
+        if(Utils.isEmpty(this.fieldSrlNo) || this.fieldSrlNo == 0){
+        	 FacesContext.getCurrentInstance().addMessage("ERROR_PRODUCT_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Please enter srl no value other than 0", "Please enter srl no value other than 0"));
+             return null;
+        }
+        if(Utils.isEmpty(this.productUWDetails.getFieldName())){
+        	FacesContext.getCurrentInstance().addMessage("ERROR_PRODUCT_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Please enter underwriting field name", "Please enter underwriting field name"));
+            return null;
+        }
+        if(Utils.isEmpty(this.productUWDetails.getFieldType())){
+        	FacesContext.getCurrentInstance().addMessage("ERROR_PRODUCT_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Please select field type for the field", "Please select field type for the field"));
+            return null;
+        }
+        if(Utils.isEmpty(this.productUWDetails.getFieldValueType())){
+        	FacesContext.getCurrentInstance().addMessage("ERROR_PRODUCT_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Please select field value type for the field", "Please select field value type for the field"));
+            return null;
+        }
         if( this.productDetails.getUwFieldsList().contains(productUWFieldVO) ){
             FacesContext.getCurrentInstance().addMessage("ERROR_PRODUCT_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Underwriting field with same srl no has already been added", "Underwriting field with same srl no has already been added"));
             return null;
@@ -83,6 +126,10 @@ public class ProductMB extends BaseManagedBean implements java.io.Serializable{
     
     public String save(){
         try{
+        	if(Utils.isEmpty(this.productDetails.getUwFieldsList())){
+        		FacesContext.getCurrentInstance().addMessage("ERROR_PRODUCT_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,"Atleast one underwriting field has to be present for the product","Atleast one underwriting field has to be present for the product"));
+                return null;
+        	}
             this.productDetails.setIsStatusActive("Y");
             ServiceTaskExecutor.INSTANCE.executeSvc("productSvc", "saveProductDetails", this.productDetails);
         }catch(Exception ex){

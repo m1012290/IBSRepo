@@ -6,6 +6,7 @@ package com.shrinfo.ibs.mb;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -39,10 +40,10 @@ public class MenuMB {
         //default constructor
         simpleMenuModel = new DefaultMenuModel(); 
         simpleMenuModel.addElement(getItem("Home", "#{menuMB.redirectToHomePage}", 1, null));
-        simpleMenuModel.addElement(getItem("Enquiry Details", null, 2, "editenquiry.xhtml"));
-        simpleMenuModel.addElement(getItem("Quote Slip Details", null, 3, "quoteslip.xhtml"));
-        simpleMenuModel.addElement(getItem("Closing Slip Details", null, 4, "closeslip.xhtml"));
-        simpleMenuModel.addElement(getItem("Policy Details", null, 5, "policy.xhtml"));
+        simpleMenuModel.addElement(getItem("Enquiry Details", null, 2, "#"));
+        simpleMenuModel.addElement(getItem("Quote Slip Details", null, 3, "#"));
+        simpleMenuModel.addElement(getItem("Closing Slip Details", null, 4, "#"));
+        simpleMenuModel.addElement(getItem("Policy Details", null, 5, "#"));
         //simpleMenuModel.addElement(getItem("Product Master", null, 6, "productmaster.xhtml"));
         
         
@@ -59,7 +60,8 @@ public class MenuMB {
         
         for(DefaultMenuItem item : productMenuList) {
             submenuMaster.addElement(item);
-        }        
+        }
+        
         mainMenuModel.addElement(submenuMaster);
         
         // Add claims menu item
@@ -104,10 +106,7 @@ public class MenuMB {
      */
     public String redirectToHomePage(){
         try {
-            //reinitialise managed beans of all the screens
-            for( String beanName : Utils.getMultiValueAppConfig(AppConstants.APP_PAGES_IN_ORDER)){
-                resetBeanInstanceFields(beanName);
-            }
+        	resetBeanInstanceFields();
             HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
             String redirectURL = Utils.concat(request.getContextPath(), AppConstants.HOME_PAGE_URI);
             FacesContext.getCurrentInstance().getExternalContext().redirect(redirectURL);
@@ -118,11 +117,21 @@ public class MenuMB {
         return null;
     }
     
+    public void resetBeanInstanceFields(){
+    	//reinitialise managed beans of all the screens
+        for( String beanName : Utils.getMultiValueAppConfig(AppConstants.APP_PAGES_IN_ORDER)){
+            resetBeanInstanceFields(beanName);
+        }
+    }
     // This method reinitialises instance fields on the passed bean
     private void resetBeanInstanceFields(String beanName){
-       BaseManagedBean baseManagedBean = (BaseManagedBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(beanName);
-       if(!Utils.isEmpty(baseManagedBean)){
-           baseManagedBean.reinitializeBeanFields();
+    	FacesContext fc = FacesContext.getCurrentInstance();
+        Map map=fc.getExternalContext().getSessionMap();
+         
+        BaseManagedBean baseManagedBean = (BaseManagedBean) map.get(beanName);
+        //BaseManagedBean baseManagedBean = (BaseManagedBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(beanName);
+        if(!Utils.isEmpty(baseManagedBean)){
+        	baseManagedBean.reinitializeBeanFields();
        }
     }
 }

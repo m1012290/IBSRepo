@@ -15,7 +15,7 @@
     			<p:growl id="messages1" showDetail="true"/>
     				
     		<p:messages id="messages" autoUpdate="true" closable="true" /> 
-    		<p:panel header="Product Details" style="margin-bottom:10px; width:100%;"> 
+    		<p:panel id="productdetails" header="Product Details" style="margin-bottom:10px; width:100%;"> 
                 <h:panelGrid columns="08" style="width:100%; border:1px !important;">
                     <p:outputLabel for="productname" value="Name" />
 					<p:inputText id="productname" value="#{productMB.productDetails.name}" required="true" requiredMessage="Please enter name for the product"/>
@@ -38,22 +38,22 @@
 				<h:panelGrid columns="8" style="width:100%; ">
                     <p:outputLabel for="srlno" value="SRL No" />
 					
-					<p:inputText id="srlno" value="#{productMB.fieldSrlNo}" required="true" requiredMessage="Please enter srl no for the field" converterMessage="Alphabets are not allowed for Srl No field">
+					<p:inputText id="srlno" value="#{productMB.fieldSrlNo}" requiredMessage="Please enter srl no for the field" converterMessage="Alphabets are not allowed for Srl No field">
 						<f:convertNumber  integerOnly="true" type="number" for="srlno" pattern="###"/>
 					</p:inputText>
 					
 					<p:outputLabel for="fieldname" value="Field Name" />
-				    <p:inputText  id="fieldname" value="#{productMB.productUWDetails.fieldName}" required="true" requiredMessage="Please enter name for the field" />
+				    <p:inputText  id="fieldname" value="#{productMB.productUWDetails.fieldName}" requiredMessage="Please enter name for the field" />
                   
                     <p:outputLabel for="fieldtype" value="Field Type" />
-                    <p:selectOneMenu id="fieldtype" value="#{productMB.productUWDetails.fieldType}" required="true" requiredMessage="Please select field type for the field">  
+                    <p:selectOneMenu id="fieldtype" value="#{productMB.productUWDetails.fieldType}"  requiredMessage="Please select field type for the field">  
 	            		<f:selectItem itemLabel="Select Category" itemValue="" />  
 	            		<f:selectItem itemLabel="Textbox" itemValue="textbox"/>
 	            		<f:selectItem itemLabel="Datepicker" itemValue="datepicker"/>
 	        		</p:selectOneMenu>
 	        		 
 	        		<p:outputLabel for="fieldvaluetype" value="Field Value Type" />
-                    <p:selectOneMenu id="fieldvaluetype" value="#{productMB.productUWDetails.fieldValueType}" required="true" requiredMessage="Please select field value type for the field">
+                    <p:selectOneMenu id="fieldvaluetype" value="#{productMB.productUWDetails.fieldValueType}" requiredMessage="Please select field value type for the field">
 						<f:selectItem itemLabel="Select Category" itemValue="" />
 						<f:selectItems value="#{productMB.uwFieldValueTypes}" />
 	        		</p:selectOneMenu>
@@ -88,6 +88,7 @@
         		</p:dataTable>
         	</p:panel>
 			<p:commandButton value="Save" action="#{productMB.save}"  update="messages" icon="ui-icon-disk"  style="float:right:20px;" />
+	   		<p:commandButton value="Clear Form" update="productdetails,uwdetailsaddsection,uwdetailstable" action="#{menuMB.resetBeanInstanceFields}"></p:commandButton>
 	   		</h:form>
     		</ui:define>
     	</ui:composition>

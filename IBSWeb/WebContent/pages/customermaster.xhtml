@@ -16,21 +16,21 @@
 					style="margin-bottom:10px;">
 
 					<h:panelGrid columns="6" style="width:100%;">
+						
+						<p:outputLabel for="name" value="Name" />
+						<p:inputText id="name"
+							value="#{customerMasterMB.enquiryVO.customerDetails.name}"
+							required="true" label="Name" requiredMessage="Please enter the Name" validatorMessage="Name should be minimum of 4 character and maximum of 50 characters" >
+						<f:validateLength minimum="4" maximum="50"/>  
+						</p:inputText>
+						
 						<p:outputLabel for="salutation" value="Salutation" styleClass="lableCls" />
 						<p:selectOneMenu id="salutation" style="width:158px;"
 							value="#{customerMasterMB.enquiryVO.customerDetails.salutation}" required="true" label="Salutation" requiredMessage="Please select the Salutation">
 							<f:selectItem itemLabel="---Select Salutation---" itemValue="" />
 							<f:selectItems value="#{customerMasterMB.salutations}" />
 						</p:selectOneMenu>
-
-						<p:outputLabel for="name" value="Name" />
-						<p:inputText id="name"
-							value="#{customerMasterMB.enquiryVO.customerDetails.name}"
-							required="true" label="Name" requiredMessage="Please enter the Name" validatorMessage="Name should be minimum of 4 character and maximum of 50 characters" >
-						<f:validateLength minimum="4" maximum="50"/>  
-						</p:inputText> 
-
-
+						
 						<p:outputLabel for="firstName" value="First Name" />
 						<p:inputText id="firstName"
 							value="#{customerMasterMB.enquiryVO.customerDetails.contactAndAddrDets.firstName}"
@@ -268,6 +268,7 @@
 				<p:commandButton id="savebtn" value="Save" action="#{customerMasterMB.save}"
 					update="messages, panelCustomer"  validateClient="true" icon="ui-icon-disk"
 					style="float:right:20px;" />
+				<p:commandButton value="Clear Form" update="panelCustomer" action="#{menuMB.resetBeanInstanceFields}"></p:commandButton>
 				<p:blockUI block="panelCustomer" trigger="savebtn">
 					LOADING<br />  
       				<p:graphicImage value="../images/ajax-loader.gif"/>

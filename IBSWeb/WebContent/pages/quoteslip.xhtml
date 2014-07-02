@@ -20,17 +20,17 @@
     					<p:panel id="panelInsured" header="Insured Details" style="margin-bottom:10px;"> 
 				       			 <h:panelGrid columns="8" style="width:100%;">  
 				       			 
-				       			 	<p:outputLabel for="salutation" value="Salutation" />  
-            						<p:selectOneMenu id="salutation" value="#{quoteSlipMB.insuredDetails.salutation}" style="width:160px;"  required="true"  label="Salutation" requiredMessage="Please select the Salutation">  
-                						<f:selectItem itemLabel="Select Salutation" itemValue="" />  
-                						<f:selectItems value="#{editCustEnqDetailsMB.salutations}" />  
-            						</p:selectOneMenu>  
-				   
 						       		<p:outputLabel for="name" value="Name" />  
 						            <p:inputText id="name" value="#{quoteSlipMB.insuredDetails.name}" 
 						            required="true" label="Name" requiredMessage="Please enter the Name" validatorMessage="Name should be minimum of 4 character and maximum of 50 characters">
 									<f:validateLength minimum="4" maximum="50"/>  
 									</p:inputText>  
+						            	 	<p:outputLabel for="salutation" value="Salutation" />  
+            						<p:selectOneMenu id="salutation" value="#{quoteSlipMB.insuredDetails.salutation}" style="width:160px;"  required="true"  label="Salutation" requiredMessage="Please select the Salutation">  
+                						<f:selectItem itemLabel="Select Salutation" itemValue="" />  
+                						<f:selectItems value="#{editCustEnqDetailsMB.salutations}" />  
+            						</p:selectOneMenu>  
+				   
 						            			              
 						            <p:outputLabel for="primaryEmailID" value="EmailID" />  
 						            <p:inputText id="primaryEmailID" value="#{quoteSlipMB.insuredDetails.contactAndAddrDetails.emailId}" 

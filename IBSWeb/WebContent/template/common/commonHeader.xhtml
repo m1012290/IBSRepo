@@ -24,7 +24,7 @@
 			<h2>XYZ Insurance Brokers</h2>
 			
 			<h:form id="headerform"> 
-				<p:menubar model="#{menuMB.mainMenuModel}">
+				<p:menubar model="#{menuMB.mainMenuModel}" style="border: none; z-index: 9998; overflow: visible">
 							   
 				<f:facet name="options">
 					<p:outputLabel style="margin-right:30px;">Welcome : #{loginBean.userDetails.userName}</p:outputLabel>
@@ -35,7 +35,7 @@
 				</f:facet>
 				</p:menubar>
 				<p:breadCrumb 
-					model="#{menuMB.simpleMenuModel}">
+					model="#{menuMB.simpleMenuModel}" >
 				</p:breadCrumb>
 	    	</h:form>
 	    </ui:composition>

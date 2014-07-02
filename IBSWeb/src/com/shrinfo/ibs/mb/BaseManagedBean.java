@@ -341,6 +341,7 @@ public abstract class BaseManagedBean implements Serializable {
         this.custCategories.put("Retail", "Retail");
         this.custCategories.put("Corporate","Corporate");
 
+        this.custClassifications.put("Individual","Individual");
         this.custClassifications.put("Govt Limited", "Govt Limited");
         this.custClassifications.put("Pvt Limited","Pvt Limited");
         this.custClassifications.put("Public Limited", "Public Limited");
