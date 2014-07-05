@@ -22,12 +22,6 @@
 
 					<h:panelGrid columns="6" style="width:100%;">
 
-						<p:outputLabel for="salutation" value="Salutation"  styleClass="lableCls" />
-						<p:selectOneMenu id="salutation" style="width:158px;"
-							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.salutation}" required="true" label="Salutation" requiredMessage="Please select the Salutation">
-							<f:selectItem itemLabel="---Select Salutation---" itemValue="" />
-							<f:selectItems value="#{editCustEnqDetailsMB.salutations}" />
-						</p:selectOneMenu>
 						
 						<p:outputLabel value="Customer" for="customerid" title="Existing customers whose name starts with entered value will be listed"/>
 				        <p:autoComplete title="Existing customers whose name starts with entered value will be listed"   placeholder="Enter Customer Name"  id="customerid" value="#{editCustEnqDetailsMB.customerVO}" completeMethod="#{editCustEnqDetailsMB.completeCustomersListMethod}"
@@ -39,7 +33,13 @@
 				            <p:ajax event="itemSelect" update="panelCustomer"  listener="#{editCustEnqDetailsMB.valueChangeEventForCustName}" process="customerid" partialSubmit="true"/>
 				            <f:validateLength minimum="4" maximum="50"/>
 				        </p:autoComplete>
-
+							<p:outputLabel for="salutation" value="Salutation"  styleClass="lableCls" />
+						<p:selectOneMenu id="salutation" style="width:158px;"
+							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.salutation}" required="true" label="Salutation" requiredMessage="Please select the Salutation">
+							<f:selectItem itemLabel="---Select Salutation---" itemValue="" />
+							<f:selectItems value="#{editCustEnqDetailsMB.salutations}" />
+						</p:selectOneMenu>
+						
 						<p:outputLabel for="firstName" value="First Name" />
 						<p:inputText id="firstName"
 							value="#{editCustEnqDetailsMB.enquiryVO.customerDetails.contactAndAddrDets.firstName}"

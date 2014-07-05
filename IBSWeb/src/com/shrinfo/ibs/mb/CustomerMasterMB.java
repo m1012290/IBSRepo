@@ -101,11 +101,11 @@ public class CustomerMasterMB extends BaseManagedBean implements Serializable{
      */
     public List<CustomerVO> getCustomersList(){
     	try{
-    	   if(Utils.isEmpty(this.customersList)){
+    	   //if(Utils.isEmpty(this.customersList)){
 	     	   CustomersListVO responseVO = (CustomersListVO) ServiceTaskExecutor.INSTANCE.executeSvc("customerEnquirySvc",
 	                    "getAllCustomers", this.enquiryVO);
-	     	  this.customersList = responseVO.getCustomersList();
-    	   }
+	     	   this.customersList = responseVO.getCustomersList();
+    	   //}
      	   return this.customersList;
      	}catch(BusinessException be){
      		logger.error(be, "Exception [" + be
