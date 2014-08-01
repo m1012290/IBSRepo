@@ -396,6 +396,8 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
         try{
             //populate logged in user id to assigner user field which will be used within referral window
             this.setAssignerUser(loginManageBean.getUserDetails().getUserName());
+            //update the products list since there could be new product template within this session
+            setProducts(MasterDataRetrievalUtil.getProductDetails());
             if(!Utils.isEmpty(editCustEnqDetailsMB.getQuoteSlipId())){
                 this.renderCustomUWComponent = true;
                 this.insuredDetails.setId(editCustEnqDetailsMB.getInsuredDetails().getId());
@@ -699,47 +701,7 @@ public class QuoteSlipMB  extends BaseManagedBean implements Serializable{
                    table.addCell(new Paragraph(" "));
                }
            }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           document.add(table);
-
-
-
-
-
-
-
-
-
-
-
           document.close();
           
            byte[] outputBytes = outputStream.toByteArray();
