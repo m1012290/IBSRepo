@@ -99,7 +99,19 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
     
     private Map<String,String> selectedInsCompaniesMap = new HashMap<String, String>();
         
-    public Boolean getScreenFreeze() {
+    private Map<String, String> recommendedInsCompanyMap = new HashMap<String, String>();
+    
+    private Boolean printBtnDisabledFlag = true;
+    
+    public Boolean getPrintBtnDisabledFlag() {
+		return printBtnDisabledFlag;
+	}
+
+	public void setPrintBtnDisabledFlag(Boolean printBtnDisabledFlag) {
+		this.printBtnDisabledFlag = printBtnDisabledFlag;
+	}
+
+	public Boolean getScreenFreeze() {
         return screenFreeze;
     }
     
@@ -135,6 +147,7 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
         this.setEditApproved(Boolean.FALSE);
         this.setNavigationDisbled(Boolean.FALSE);
         this.setAppFlow(null);
+        this.printBtnDisabledFlag = Boolean.TRUE;
     }
 
     /**
@@ -235,6 +248,15 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 
 	public void setCompanyCodeForQuote(String companyCodeForQuote) {
 		this.companyCodeForQuote = companyCodeForQuote;
+	}
+
+	public Map<String, String> getRecommendedInsCompanyMap() {
+		return recommendedInsCompanyMap;
+	}
+
+	public void setRecommendedInsCompanyMap(
+			Map<String, String> recommendedInsCompanyMap) {
+		this.recommendedInsCompanyMap = recommendedInsCompanyMap;
 	}
 
 	public Map<String, String> getSelectedInsCompaniesMap() {
@@ -591,14 +613,18 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
             this.policyDetails.setQuoteDetails(addedQuotes);
 
             if (1 < this.recommendedFlagcnt) {
+            	this.printBtnDisabledFlag = Boolean.TRUE; //disable print closing button
                 FacesContext.getCurrentInstance().addMessage(
                         "ERROR_QUOTATION_SAVE",
                         new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please select only one quotation to recommend/close",
                                 "Please select only one quotation to recommend"));
                 return null;
-
             }
 
+            //if exactly there is one quote detail recommended by the user, enable print button
+            if(this.recommendedFlagcnt == 1){
+            	this.printBtnDisabledFlag = Boolean.FALSE;
+            }
             // Before performing save operation let's check if there are any referrals
             //if(!Utils.isEmpty(this.getSaveFromReferralDialog()) && "true".equalsIgnoreCase(this.getSaveFromReferralDialog())){
             if((Utils.isEmpty(this.getSaveFromReferralDialog()) || "false".equalsIgnoreCase(this.getSaveFromReferralDialog())) 
@@ -622,10 +648,8 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
             String tempCompCode = null;
             for (Entry<InsCompanyVO, QuoteDetailVO> entry : policyDetails.getQuoteDetails()
                     .entrySet()) {
-                this.policyDetails.getQuoteDetails().put(entry.getKey(), entry.getValue());
+                //this.policyDetails.getQuoteDetails().put(entry.getKey(), entry.getValue());
                 if(entry.getValue().getIsQuoteRecommended()){
-                    // temp =
-
                     this.quoteDetailVOClosed = entry.getValue();
                     tempCompCode = entry.getKey().getCode();
                     this.quoteDetailVOClosed.setCompanyCode(tempCompCode);
@@ -641,9 +665,15 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
             ex.printStackTrace();
             return null;
         }
-
-
-
+        if(!Utils.isEmpty(this.quoteDetailVOClosed.getCompanyCode())){
+        	List<String> selectedCompanyCodes = new ArrayList<String>();
+        	selectedCompanyCodes.add(this.quoteDetailVOClosed.getCompanyCode());
+        	this.recommendedInsCompanyMap = this.getSelectedInsCompaniesMapFromList(this.insCompanies, selectedCompanyCodes);
+    	}else{
+    		this.printBtnDisabledFlag = Boolean.TRUE;
+    		this.recommendedInsCompanyMap = new HashMap<String, String>();//reset the values as may be user has unchecked isrecommended options against all the quotes
+    	}
+        
         FacesContext.getCurrentInstance()
         .addMessage(
                 "MESSAGE_SUCCESS",
@@ -805,7 +835,6 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
                 this.selectedInsCompanies.add(insCompanyVO.getCode()); // Added by Hafeezur
             }
         }
-		//this will be used within print dialog box
         this.selectedInsCompaniesMap = this.getSelectedInsCompaniesMapFromList(this.insCompanies, this.selectedInsCompanies);
         return "closeslip";
     }
@@ -862,14 +891,33 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
     }
  
     public String generatePDFForCloseSlip(){
-        //perform save operation first on click of next button
-        /*
-        if(Utils.isEmpty(this.save())){
-            return null;
-        }*/
+    	this.recommendedFlagcnt = 0;
         try {
             QuoteSlipPDFGenerator quoteSlipPDFGenerator=new QuoteSlipPDFGenerator();
+            for (QuoteDetailVO quoteDetailVO : this.quoteDetailList) {
+                if (quoteDetailVO.getIsQuoteRecommended()) {
+                	this.printBtnDisabledFlag = Boolean.TRUE;
+                	this.recommendedFlagcnt++;
+                	if (1 < this.recommendedFlagcnt) {
+                        FacesContext.getCurrentInstance().addMessage(
+                                "ERROR_QUOTATION_SAVE",
+                                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please select only one quotation to recommend/close",
+                                        "Please select only one quotation to recommend"));
+                        return null;
+                    }
+                }
+            }
+            if(this.recommendedFlagcnt == 0){ //there are no quotes recommended throw a validation exception
+            	FacesContext.getCurrentInstance().addMessage(
+                        "ERROR_QUOTATION_SAVE",
+                        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please select one quotation to recommend/close",
+                                "Please select one quotation to recommend"));
+                return null;
+            }
             
+            
+            this.recommendedFlagcnt = 0;
+            this.printBtnDisabledFlag = Boolean.FALSE; //enable print button since there is
             for (Entry<InsCompanyVO, QuoteDetailVO> entry : this.policyDetails.getQuoteDetails()
                     .entrySet()) {
                 QuoteDetailVO quoteDetVO = entry.getValue();
