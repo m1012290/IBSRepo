@@ -316,6 +316,16 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
 
 
         QuoteDetailVO temp = this.getQuoteDetailTableData(this.quoteDetailVO);
+        //set the company name also to quotedetailvo
+    	Set<Entry<String,String>> entrySet = this.insCompanies.entrySet();
+        Iterator<Entry<String, String>> iterator = entrySet.iterator();
+        while(iterator.hasNext()){
+        	Entry<String,String> entryObj = iterator.next();
+        	if(this.companyCodeForQuote.equals(entryObj.getValue())){
+        		temp.setCompanyDesc(entryObj.getKey());
+        		break;
+        	}
+        }
         ProductVO productVO = this.getProductFieldVOTableData(this.quoteDetailVO, "quoteAdding");
         if(Utils.isEmpty(productVO)){
             return null; //there must be some validation failure of underwriting fields hence breaking it here
@@ -811,7 +821,19 @@ public class QuotationMB extends BaseManagedBean implements java.io.Serializable
         }
         List<QuoteDetailVO> quoteDetails = new ArrayList<QuoteDetailVO>();
         for (Entry<InsCompanyVO, QuoteDetailVO> entry : policyVO.getQuoteDetails().entrySet()) {
-            quoteDetails.add(entry.getValue());
+            QuoteDetailVO temp = entry.getValue();
+            //set the company name also to quotedetailvo
+        	Set<Entry<String,String>> entrySet = this.insCompanies.entrySet();
+            Iterator<Entry<String, String>> iterator = entrySet.iterator();
+            while(iterator.hasNext()){
+            	Entry<String,String> entryObj = iterator.next();
+            	if(temp.getCompanyCode().equals(entryObj.getValue())){
+            		temp.setCompanyDesc(entryObj.getKey());
+            		break;
+            	}
+            }
+            //temp.setCompanyDesc(entry.getKey().getName());
+        	quoteDetails.add(temp);
             this.policyDetails.getQuoteDetails().put(entry.getKey(), entry.getValue());
             if(entry.getValue().getIsQuoteRecommended()){
                 this.quoteDetailVOClosed = entry.getValue();
