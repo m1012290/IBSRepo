@@ -190,11 +190,11 @@
 					    </p:inputText>
 					    
 					    <p:outputLabel for="password" value="Password" />
-						<p:inputText id="password"
+						<p:password id="password"
 							value="#{userMB.userDetails.password}"
 							required="true" requiredMessage="Please enter password" validatorMessage="Password should not be less than 5 and more than 10 characters">
 					    <f:validateLength minimum="5" maximum="10"/> 
-					    </p:inputText>
+					    </p:password>
 					    
 					    <p:outputLabel value="Role" />
 						<p:selectOneMenu id="role" value="#{userMB.selectedRole}" required="true" requiredMessage="Please select a role">
