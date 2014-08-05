@@ -21,6 +21,7 @@ import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.dao.utils.IOUtil;
 import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
 import com.shrinfo.ibs.docgen.SendEmail;
+import com.shrinfo.ibs.util.AppConstants;
 import com.shrinfo.ibs.vo.business.ClaimsVO;
 import com.shrinfo.ibs.vo.business.CustomerVO;
 import com.shrinfo.ibs.vo.business.DocumentListVO;
@@ -156,14 +157,17 @@ public class ClaimsMB extends BaseManagedBean implements Serializable {
 
         try {
             this.policyVO = new PolicyVO();
-            this.policyVO.setPolicyNo(this.policyNo);
+            Map map=FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+            EditCustEnqDetailsMB editCustEnqDetailsMB=(EditCustEnqDetailsMB) map.get(AppConstants.BEAN_NAME_ENQUIRY_PAGE);
+            this.policyVO = editCustEnqDetailsMB.getPolicyVO();
+            this.policyNo = this.policyVO.getPolicyNo();
             this.policyVO =
                 (PolicyVO) ServiceTaskExecutor.INSTANCE.executeSvc("policySvc", "getPolicy",
                     this.policyVO);
             if (Utils.isEmpty(this.policyVO)) {
                 FacesContext.getCurrentInstance().addMessage(
                     "ERROR_POLICY_SEARCH",
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Policy number doen not exist",
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Policy number doen not exist in the system",
                         null));
             }
 
@@ -207,9 +211,9 @@ public class ClaimsMB extends BaseManagedBean implements Serializable {
 
         try {
             if (Utils.isEmpty(this.policyVO) || Utils.isEmpty(this.policyVO.getPolicyNo())
-                || Utils.isEmpty(this.policyVO.getPremiumDetails().getTotalPremium())
+                /*|| Utils.isEmpty(this.policyVO.getPremiumDetails().getTotalPremium())
                 || Utils.isEmpty(this.policyVO.getPolicyEffectiveDate())
-                || Utils.isEmpty(this.policyVO.getPolicyExpiryDate())) {
+                || Utils.isEmpty(this.policyVO.getPolicyExpiryDate())*/) {
                 FacesContext.getCurrentInstance().addMessage(
                     "ERROR_CLAIMS_SAVE",
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please select a valid policy",

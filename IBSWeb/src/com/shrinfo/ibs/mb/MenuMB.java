@@ -65,7 +65,7 @@ public class MenuMB {
         mainMenuModel.addElement(submenuMaster);
         
         // Add claims menu item
-        mainMenuModel.addElement(getItem("Claims Entry", null, 2, "claims.xhtml"));
+        //mainMenuModel.addElement(getItem("Claims Entry", null, 2, "claims.xhtml"));
         // Add renewal notification menu item
         mainMenuModel.addElement(getItem("Renewal Notification", null, 3, "renewalnoticegeneration.xhtml"));
     }   

@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -927,6 +927,12 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
         		FacesContext.getCurrentInstance().addMessage("ERROR_ENQUIRY_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid data for endorsements, please check if policy number is blank or invalid", null));
         		return CommonConstants.RETURNING_EXCEPTION;
         	}
+        	
+        	if(!validationsForClaimsFlow()) {
+                FacesContext.getCurrentInstance().addMessage("ERROR_ENQUIRY_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid data for Claims, please check if policy number is blank or invalid", null));
+                return CommonConstants.RETURNING_EXCEPTION;
+            }      	
+        	
             ContactVO enquiryContact = new ContactVO();
             if (!Utils.isEmpty(this.enquiryVO.getEnquiryContact())) {
                 enquiryContact.setContactId(this.enquiryVO.getEnquiryContact().getContactId());
@@ -988,6 +994,18 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
         String saveResult = save();
         if(!Utils.isEmpty(saveResult) && saveResult.equals(CommonConstants.RETURNING_EXCEPTION)){
         	return null;
+        }
+        
+        if(this.enquiryVO.getType().getEnquiryType().equals(CommonConstants.ENQUIRY_TYPE_CLAIMS)){
+            ClaimsMB claimsMB = (ClaimsMB)FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get(AppConstants.BEAN_NAME_CLAIMS_PAGE);
+            if(!Utils.isEmpty(claimsMB)){
+                claimsMB.policySearch();
+            } else {
+                claimsMB = new ClaimsMB();
+                FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(AppConstants.BEAN_NAME_CLAIMS_PAGE, claimsMB);
+                claimsMB.policySearch();
+            }
+            return "claims";
         }
         //next check if quote slip mb is already available in session if so then invoke retrieveInsuredQuoteDetails method
         //on the bean
@@ -1053,7 +1071,33 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
 			this.enquiryVO.setInsuredDetails(this.policyVO.getInsuredDetails());
 		}
 		return validData;
-	}
+	}	
+	
+    /**
+     * 
+     * @return
+     */
+    private boolean validationsForClaimsFlow() {
+        boolean validData = true;
+        if (this.enquiryVO.getType().getEnquiryType().equals(CommonConstants.ENQUIRY_TYPE_CLAIMS)) {
+            if (Utils.isEmpty(this.policyVO.getPolicyNo())) {
+                validData = false;
+                return validData;
+            }
+
+            // if policy no is entered validate if the policy number is valid
+            /*PolicyVO serviceCallResult =
+                (PolicyVO) ServiceTaskExecutor.INSTANCE.executeSvc("policySvc", "getPolicy",
+                    this.policyVO);
+
+            if (Utils.isEmpty(serviceCallResult)) {
+                validData = false;
+                return validData;
+            }
+            this.policyVO = serviceCallResult;*/
+        }
+        return validData;
+    }
 
 	 public String saveCustomTask() {
 	        
