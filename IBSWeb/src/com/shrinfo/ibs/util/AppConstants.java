@@ -39,4 +39,6 @@ public class AppConstants {
 
 	public static final String APP_PAGES_IN_ORDER = "APP_PAGES_IN_ORDER";
 	public static final String APP_UI_DATE_FORMAT = "APP_UI_DATE_FORMAT";
+	
+	public static final String MASTER_TRAN_ROLES = "MASTER_TRAN_ROLES";
 }

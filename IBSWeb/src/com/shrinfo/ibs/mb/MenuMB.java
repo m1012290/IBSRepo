@@ -5,6 +5,7 @@ package com.shrinfo.ibs.mb;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +22,8 @@ import org.primefaces.model.menu.MenuModel;
 
 import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.util.AppConstants;
+import com.shrinfo.ibs.vo.business.IBSUserVO;
+import com.shrinfo.ibs.vo.business.UserRoleVO;
 
 
 /**
@@ -48,21 +51,38 @@ public class MenuMB {
         
         
         mainMenuModel = new DefaultMenuModel();
-        // Add masters menu items
-        DefaultSubMenu submenuMaster = new DefaultSubMenu("Masters entry");        
-        List<DefaultMenuItem> productMenuList = new ArrayList<DefaultMenuItem>();
-        productMenuList.add(getItem("Customer Master", null, 1, "customermaster.xhtml"));
-        productMenuList.add(getItem("Insured Master", null, 2, "insuredmaster.xhtml"));
-        productMenuList.add(getItem("Product Master", null, 3, "productmaster.xhtml"));   
-        productMenuList.add(getItem("User Master", null, 4, "usermaster.xhtml"));
-        productMenuList.add(getItem("Insurance Company Master", null, 5, "inscompanymaster.xhtml")); 
-        productMenuList.add(getItem("Branch Master", null, 6, "branchcompanymaster.xhtml"));
         
-        for(DefaultMenuItem item : productMenuList) {
-            submenuMaster.addElement(item);
+        Map map=FacesContext.getCurrentInstance().getExternalContext().getSessionMap();
+        LoginMB loginMB = (LoginMB) map.get(AppConstants.BEAN_NAME_LOGIN_PAGE);
+        IBSUserVO userVO = (IBSUserVO) loginMB.getUserDetails();
+        List<UserRoleVO> roleList = userVO.getRoles();
+        List<String> masterTranRoles =
+            Arrays.asList(Utils.getMultiValueAppConfig(AppConstants.MASTER_TRAN_ROLES));
+        Boolean addMasterEntry = Boolean.FALSE;
+        for (UserRoleVO role : roleList) {
+            if (masterTranRoles.contains(role.getName())) {
+                addMasterEntry = Boolean.TRUE;
+                break;
+            }
         }
-        
-        mainMenuModel.addElement(submenuMaster);
+        if (addMasterEntry) {
+            // Add masters menu items
+            DefaultSubMenu submenuMaster = new DefaultSubMenu("Masters entry");
+            List<DefaultMenuItem> productMenuList = new ArrayList<DefaultMenuItem>();
+            productMenuList.add(getItem("Customer Master", null, 1, "customermaster.xhtml"));
+            productMenuList.add(getItem("Insured Master", null, 2, "insuredmaster.xhtml"));
+            productMenuList.add(getItem("Product Master", null, 3, "productmaster.xhtml"));
+            productMenuList.add(getItem("User Master", null, 4, "usermaster.xhtml"));
+            productMenuList.add(getItem("Insurance Company Master", null, 5,
+                "inscompanymaster.xhtml"));
+            productMenuList.add(getItem("Branch Master", null, 6, "branchcompanymaster.xhtml"));
+
+            for (DefaultMenuItem item : productMenuList) {
+                submenuMaster.addElement(item);
+            }
+
+            mainMenuModel.addElement(submenuMaster);
+        }        
         
         // Add claims menu item
         //mainMenuModel.addElement(getItem("Claims Entry", null, 2, "claims.xhtml"));

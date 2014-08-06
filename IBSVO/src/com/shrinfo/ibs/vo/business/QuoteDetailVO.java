@@ -65,9 +65,28 @@ public class QuoteDetailVO extends BaseVO {
     
     private Long enquiryNum;
     
+    private String companyDesc;
+    
+    
+    /**
+     * @return the companyDesc
+     */
+    public String getCompanyDesc() {
+        return companyDesc;
+    }
+
 
 
     
+    /**
+     * @param companyDesc the companyDesc to set
+     */
+    public void setCompanyDesc(String companyDesc) {
+        this.companyDesc = companyDesc;
+    }
+
+
+
     public Long getEnquiryNum() {
         return enquiryNum;
     }
