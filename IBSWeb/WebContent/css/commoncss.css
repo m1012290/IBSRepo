@@ -8,6 +8,15 @@ body{
 	
 }
 
+.ui-layout-north .ui-layout-unit-content {
+    overflow: visible !important;
+}
+
+.ui-layout-north {
+    z-index: 30 !important;
+    overflow: visible !important;
+}
+
 tr.ui-state-hover{
 	/* background:url('../images/gradientBgodd.jpg')repeat-x !important; */
 	color:#fff !important;
