@@ -137,11 +137,11 @@ public class ProductMB extends BaseManagedBean implements java.io.Serializable{
             FacesContext.getCurrentInstance().addMessage("ERROR_PRODUCT_SAVE", new FacesMessage(FacesMessage.SEVERITY_ERROR,null, "Unexpected error encountered, please try again after sometime"));
             return null;
         }
-        FacesContext.getCurrentInstance().addMessage("ERROR_PRODUCT_SAVE", new FacesMessage(FacesMessage.SEVERITY_INFO,null, "Data Saved Successfully"));
-        FacesContext fc = FacesContext.getCurrentInstance();
+        FacesContext.getCurrentInstance().addMessage("ERROR_PRODUCT_SAVE", new FacesMessage(FacesMessage.SEVERITY_INFO, "Data Saved Successfully", "Data Saved Successfully"));
+        /*FacesContext fc = FacesContext.getCurrentInstance();
         Map map=fc.getExternalContext().getSessionMap();
         MenuMB menuMB = new MenuMB();
-        menuMB.redirectToHomePage();
+        menuMB.redirectToHomePage();*/
         return null;
     }
     

@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 
 import com.shrinfo.ibs.delegator.ServiceTaskExecutor;
 import com.shrinfo.ibs.vo.app.RecordType;
@@ -168,9 +170,25 @@ public class InsCompanyMB extends BaseManagedBean {
      */
     public String save() {
 
-        this.insCompanyVO =
-            (InsCompanyVO) ServiceTaskExecutor.INSTANCE.executeSvc("companySvc", "createCompany",
-                this.insCompanyVO);        
+        try {
+            
+            this.insCompanyVO =
+                    (InsCompanyVO) ServiceTaskExecutor.INSTANCE.executeSvc("companySvc", "createCompany",
+                        this.insCompanyVO);  
+                
+                FacesContext.getCurrentInstance().addMessage(
+                    "SUCCESS_USER_SAVE",
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Insurance company details Saved Successfully",
+                        "User details Saved Successfully"));
+            
+        } catch (Exception e) {
+            logger.error("Exception [" + e + "] encountered while saving Ins company");
+            FacesContext.getCurrentInstance().addMessage(
+                "ERROR_USER_SAVE",
+                new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Error while savin Insurance company",
+                    "Error while savin Insurance company"));
+        }
         
         return null;
     }
