@@ -7,6 +7,7 @@ import org.hibernate.HibernateException;
 import com.shrinfo.ibs.base.dao.BaseDBDAO;
 import com.shrinfo.ibs.cmn.exception.BusinessException;
 import com.shrinfo.ibs.cmn.exception.SystemException;
+import com.shrinfo.ibs.cmn.utils.Utils;
 import com.shrinfo.ibs.cmn.vo.BaseVO;
 import com.shrinfo.ibs.dao.utils.DAOUtils;
 import com.shrinfo.ibs.dao.utils.MapperUtil;
@@ -63,6 +64,11 @@ public class CustomerDaoImpl extends BaseDBDAO implements CustomerDao {
         }
         CustomerVO customerVO = (CustomerVO) baseVO;
         IbsContact ibsContact = null;
+        if(Utils.isEmpty(customerVO.getName()) || Utils.isEmpty(customerVO.getContactAndAddrDets()) || Utils.isEmpty(customerVO.getContactAndAddrDets().getMobileNo()) || Utils.isEmpty(Utils.isEmpty(customerVO.getContactAndAddrDets().getEmailId()))){
+        	//mandatory data is not completely available hence throwing an exception
+        	 throw new SystemException("ins.gi.couldNotSaveCustomerDetails", null,
+                     "Error while saving enquiry data as mandatory data not completely available for the service");
+        }
         try {
             ibsContact = DAOUtils.constructIbsContactForRecType(customerVO, RecordType.CUSTOMER);
             saveOrUpdate(ibsContact);

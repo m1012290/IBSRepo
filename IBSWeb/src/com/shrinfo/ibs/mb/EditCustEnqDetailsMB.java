@@ -1028,8 +1028,10 @@ public class EditCustEnqDetailsMB extends BaseManagedBean implements Serializabl
 		List<CustomerVO> allCustomers = customerMasterMB.getCustomersList();
 		List<CustomerVO> filteredCustomers = new ArrayList<CustomerVO>();
 		for(CustomerVO customerVO : allCustomers){
-			if(customerVO.getName().toLowerCase().startsWith(query.toLowerCase())){
-				filteredCustomers.add(customerVO);
+			if(!Utils.isEmpty(customerVO.getName())){
+				if(customerVO.getName().toLowerCase().startsWith(query.toLowerCase())){
+					filteredCustomers.add(customerVO);
+				}
 			}
 		}
 		return filteredCustomers;
